@@ -46,8 +46,8 @@ namespace HFM.Forms
 
             InitializeComponent();
 
-            udDecimalPlaces.Minimum = 0;
-            udDecimalPlaces.Maximum = MaxDecimalPlaces;
+            clientsDecimalPlacesUpDown.Minimum = 0;
+            clientsDecimalPlacesUpDown.Maximum = MaxDecimalPlaces;
 
             if (!Core.Application.IsRunningOnMono)
             {
@@ -200,35 +200,35 @@ namespace HFM.Forms
         private void LoadClientsTab()
         {
             // Configuration
-            txtDefaultConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
-            btnBrowseConfigFile.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
-            txtDefaultConfigFile.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFile));
+            clientsDefaultConfigFileTextBox.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFileEnabled));
+            clientsBrowseConfigFileButton.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFileEnabled));
+            clientsDefaultConfigFileTextBox.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFile));
 
-            chkDefaultConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.UseDefaultConfigFile));
-            chkAutoSave.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
+            clientsDefaultConfigFileEnabledCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DefaultConfigFileEnabled));
+            clientsAutoSaveConfig.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.AutoSaveConfig));
 
             // Refresh Client Data
-            ClientRefreshIntervalTextBox.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnSchedule));
-            ClientRefreshIntervalTextBox.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncTimeMinutes));
-            ClientRefreshIntervalCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnSchedule));
+            clientsRetrievalIntervalTextBox.BindEnabled(_presenter.Model.ClientsModel, nameof(ClientsModel.RetrievalEnabled));
+            clientsRetrievalIntervalTextBox.BindText(_presenter.Model.ClientsModel, nameof(ClientsModel.RetrievalInterval));
+            clientsRetrievalEnabledCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.RetrievalEnabled));
 
-            ClientSynchronousTextBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.SyncOnLoad));
+            clientsRetrievalIsSerialCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.RetrievalIsSerial));
 
             // Display / Production Options
-            chkOffline.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.OfflineLast));
-            chkColorLog.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
-            DuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
+            clientsOfflineLastCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.OfflineLast));
+            clientsColorLogFileCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
+            clientsDuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
 
-            PpdCalculationComboBox.DataSource = ClientsModel.PpdCalculationList;
-            PpdCalculationComboBox.DisplayMember = "DisplayMember";
-            PpdCalculationComboBox.ValueMember = "ValueMember";
-            PpdCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.PpdCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
-            BonusCalculationComboBox.DataSource = ClientsModel.BonusCalculationList;
-            BonusCalculationComboBox.DisplayMember = "DisplayMember";
-            BonusCalculationComboBox.ValueMember = "ValueMember";
-            BonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.CalculateBonus), false, DataSourceUpdateMode.OnPropertyChanged);
-            udDecimalPlaces.DataBindings.Add(ValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
-            chkEtaAsDate.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.EtaDate));
+            clientsPPDCalculationComboBox.DataSource = ClientsModel.PpdCalculationList;
+            clientsPPDCalculationComboBox.DisplayMember = "DisplayMember";
+            clientsPPDCalculationComboBox.ValueMember = "ValueMember";
+            clientsPPDCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.PPDCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
+            clientsBonusCalculationComboBox.DataSource = ClientsModel.BonusCalculationList;
+            clientsBonusCalculationComboBox.DisplayMember = "DisplayMember";
+            clientsBonusCalculationComboBox.ValueMember = "ValueMember";
+            clientsBonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.BonusCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
+            clientsDecimalPlacesUpDown.DataBindings.Add(ValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
+            clientsDisplayETADateCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DisplayETADate));
         }
 
         private void LoadReportingTab()
@@ -455,7 +455,7 @@ namespace HFM.Forms
         {
             if (_presenter.Model.ClientsModel.HasError)
             {
-                tabControl1.SelectedTab = ClientsTab;
+                tabControl1.SelectedTab = clientsTab;
             }
             else if (_presenter.Model.OptionsModel.HasError)
             {

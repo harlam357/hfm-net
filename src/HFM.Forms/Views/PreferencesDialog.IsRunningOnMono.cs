@@ -107,12 +107,12 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(ClientsModel.UseDefaultConfigFile):
-                    txtDefaultConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
-                    btnBrowseConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
+                case nameof(ClientsModel.DefaultConfigFileEnabled):
+                    clientsDefaultConfigFileTextBox.Enabled = _presenter.Model.ClientsModel.DefaultConfigFileEnabled;
+                    clientsBrowseConfigFileButton.Enabled = _presenter.Model.ClientsModel.DefaultConfigFileEnabled;
                     break;
-                case nameof(ClientsModel.SyncOnSchedule):
-                    ClientRefreshIntervalTextBox.Enabled = _presenter.Model.ClientsModel.SyncOnSchedule;
+                case nameof(ClientsModel.RetrievalEnabled):
+                    clientsRetrievalIntervalTextBox.Enabled = _presenter.Model.ClientsModel.RetrievalEnabled;
                     break;
             }
         }
@@ -122,7 +122,7 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case nameof(ClientsModel.DefaultConfigFile):
-                    txtDefaultConfigFile.Text = _presenter.Model.ClientsModel.DefaultConfigFile;
+                    clientsDefaultConfigFileTextBox.Text = _presenter.Model.ClientsModel.DefaultConfigFile;
                     break;
             }
         }

@@ -24,43 +24,43 @@ namespace HFM.Forms.Models
         public override void Load()
         {
             DefaultConfigFile = Preferences.Get<string>(Preference.DefaultConfigFile);
-            UseDefaultConfigFile = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
+            DefaultConfigFileEnabled = Preferences.Get<bool>(Preference.UseDefaultConfigFile);
+            AutoSaveConfig = Preferences.Get<bool>(Preference.AutoSaveConfig);
 
             var clientRetrievalTask = Preferences.Get<ClientRetrievalTask>(Preference.ClientRetrievalTask);
-            SyncTimeMinutes = clientRetrievalTask.Interval;
-            SyncOnSchedule = clientRetrievalTask.Enabled;
-            SyncOnLoad = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
+            RetrievalInterval = clientRetrievalTask.Interval;
+            RetrievalEnabled = clientRetrievalTask.Enabled;
+            RetrievalIsSerial = clientRetrievalTask.ProcessingMode == ProcessingMode.Serial.ToString();
 
             OfflineLast = Preferences.Get<bool>(Preference.OfflineLast);
             ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
-            AutoSaveConfig = Preferences.Get<bool>(Preference.AutoSaveConfig);
-            PpdCalculation = Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
+            PPDCalculation = Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
             DecimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
-            CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
-            EtaDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+            BonusCalculation = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
+            DisplayETADate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
             DuplicateProjectCheck = Preferences.Get<bool>(Preference.DuplicateProjectCheck);
         }
 
         public override void Save()
         {
             Preferences.Set(Preference.DefaultConfigFile, DefaultConfigFile);
-            Preferences.Set(Preference.UseDefaultConfigFile, UseDefaultConfigFile);
+            Preferences.Set(Preference.UseDefaultConfigFile, DefaultConfigFileEnabled);
+            Preferences.Set(Preference.AutoSaveConfig, AutoSaveConfig);
 
             var clientRetrievalTask = new ClientRetrievalTask
             {
-                Enabled = SyncOnSchedule,
-                Interval = SyncTimeMinutes,
-                ProcessingMode = (SyncOnLoad ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
+                Enabled = RetrievalEnabled,
+                Interval = RetrievalInterval,
+                ProcessingMode = (RetrievalIsSerial ? ProcessingMode.Serial : ProcessingMode.Parallel).ToString()
             };
             Preferences.Set(Preference.ClientRetrievalTask, clientRetrievalTask);
 
             Preferences.Set(Preference.OfflineLast, OfflineLast);
             Preferences.Set(Preference.ColorLogFile, ColorLogFile);
-            Preferences.Set(Preference.AutoSaveConfig, AutoSaveConfig);
-            Preferences.Set(Preference.PPDCalculation, PpdCalculation);
+            Preferences.Set(Preference.PPDCalculation, PPDCalculation);
             Preferences.Set(Preference.DecimalPlaces, DecimalPlaces);
-            Preferences.Set(Preference.BonusCalculation, CalculateBonus);
-            Preferences.Set(Preference.DisplayEtaAsDate, EtaDate);
+            Preferences.Set(Preference.BonusCalculation, BonusCalculation);
+            Preferences.Set(Preference.DisplayEtaAsDate, DisplayETADate);
             Preferences.Set(Preference.DuplicateProjectCheck, DuplicateProjectCheck);
         }
 
@@ -70,8 +70,8 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(SyncTimeMinutes):
-                        return ValidateSyncTimeMinutes() ? null : SyncTimeMinutesError;
+                    case nameof(RetrievalInterval):
+                        return ValidateRetrievalInterval() ? null : RetrievalIntervalError;
                     default:
                         return null;
                 }
@@ -84,7 +84,7 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(SyncTimeMinutes)
+                    nameof(RetrievalInterval)
                 };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
@@ -108,22 +108,22 @@ namespace HFM.Forms.Models
 
                     if (newValue.Length == 0)
                     {
-                        UseDefaultConfigFile = false;
+                        DefaultConfigFileEnabled = false;
                     }
                 }
             }
         }
 
-        private bool _useDefaultConfigFile;
+        private bool _defaultConfigFileEnabled;
 
-        public bool UseDefaultConfigFile
+        public bool DefaultConfigFileEnabled
         {
-            get { return _useDefaultConfigFile; }
+            get { return _defaultConfigFileEnabled; }
             set
             {
-                if (UseDefaultConfigFile != value)
+                if (DefaultConfigFileEnabled != value)
                 {
-                    _useDefaultConfigFile = value;
+                    _defaultConfigFileEnabled = value;
                     OnPropertyChanged();
                 }
             }
@@ -133,53 +133,53 @@ namespace HFM.Forms.Models
 
         #region Refresh Client Data
 
-        private int _syncTimeMinutes;
+        private int _retrievalInterval;
 
-        public int SyncTimeMinutes
+        public int RetrievalInterval
         {
-            get { return _syncTimeMinutes; }
+            get { return _retrievalInterval; }
             set
             {
-                if (SyncTimeMinutes != value)
+                if (RetrievalInterval != value)
                 {
-                    _syncTimeMinutes = value;
+                    _retrievalInterval = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private static string SyncTimeMinutesError { get; } = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
+        private static string RetrievalIntervalError { get; } = String.Format("Minutes must be a value from {0} to {1}.", ClientScheduledTasks.MinInterval, ClientScheduledTasks.MaxInterval);
 
-        private bool ValidateSyncTimeMinutes()
+        private bool ValidateRetrievalInterval()
         {
-            return !SyncOnSchedule || ClientScheduledTasks.ValidateInterval(SyncTimeMinutes);
+            return !RetrievalEnabled || ClientScheduledTasks.ValidateInterval(RetrievalInterval);
         }
 
-        private bool _syncOnSchedule;
+        private bool _retrievalEnabled;
 
-        public bool SyncOnSchedule
+        public bool RetrievalEnabled
         {
-            get { return _syncOnSchedule; }
+            get { return _retrievalEnabled; }
             set
             {
-                if (SyncOnSchedule != value)
+                if (RetrievalEnabled != value)
                 {
-                    _syncOnSchedule = value;
+                    _retrievalEnabled = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private bool _syncLoad;
+        private bool _retrievalIsSerial;
 
-        public bool SyncOnLoad
+        public bool RetrievalIsSerial
         {
-            get { return _syncLoad; }
+            get { return _retrievalIsSerial; }
             set
             {
-                if (SyncOnLoad != value)
+                if (RetrievalIsSerial != value)
                 {
-                    _syncLoad = value;
+                    _retrievalIsSerial = value;
                     OnPropertyChanged();
                 }
             }
@@ -236,12 +236,12 @@ namespace HFM.Forms.Models
 
         private PPDCalculation _ppdCalculation;
 
-        public PPDCalculation PpdCalculation
+        public PPDCalculation PPDCalculation
         {
             get { return _ppdCalculation; }
             set
             {
-                if (PpdCalculation != value)
+                if (PPDCalculation != value)
                 {
                     _ppdCalculation = value;
                     OnPropertyChanged();
@@ -264,31 +264,31 @@ namespace HFM.Forms.Models
             }
         }
 
-        private BonusCalculation _calculateBonus;
+        private BonusCalculation _bonusCalculation;
 
-        public BonusCalculation CalculateBonus
+        public BonusCalculation BonusCalculation
         {
-            get { return _calculateBonus; }
+            get { return _bonusCalculation; }
             set
             {
-                if (CalculateBonus != value)
+                if (BonusCalculation != value)
                 {
-                    _calculateBonus = value;
+                    _bonusCalculation = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private bool _etaDate;
+        private bool _displayETADate;
 
-        public bool EtaDate
+        public bool DisplayETADate
         {
-            get { return _etaDate; }
+            get { return _displayETADate; }
             set
             {
-                if (EtaDate != value)
+                if (DisplayETADate != value)
                 {
-                    _etaDate = value;
+                    _displayETADate = value;
                     OnPropertyChanged();
                 }
             }
