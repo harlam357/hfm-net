@@ -272,28 +272,28 @@ namespace HFM.Forms
         private void LoadWebProxyTab()
         {
             // Web Proxy Settings
-            txtProxyServer.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServer));
-            txtProxyServer.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyServer.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
+            webProxyServerTextBox.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Server));
+            webProxyServerTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webProxyServerTextBox.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Enabled));
 
-            txtProxyPort.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyPort));
-            txtProxyPort.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPort.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
-
-            // Finally, add the CheckBox.Checked Binding
-            chkUseProxy.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
-            chkUseProxyAuth.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxy));
-
-            txtProxyUser.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUser));
-            txtProxyUser.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyUser.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyAuthEnabled));
-
-            txtProxyPass.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyPass));
-            txtProxyPass.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
-            txtProxyPass.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.ProxyAuthEnabled));
+            webProxyPortTextBox.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Port));
+            webProxyPortTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.ServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webProxyPortTextBox.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Enabled));
 
             // Finally, add the CheckBox.Checked Binding
-            chkUseProxyAuth.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.UseProxyAuth));
+            webProxyEnabledCheckBox.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Enabled));
+            webProxyCredentialsEnabledCheckBox.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Enabled));
+
+            webProxyUsernameTextBox.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Username));
+            webProxyUsernameTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webProxyUsernameTextBox.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.AuthenticationEnabled));
+
+            webProxyPasswordTextBox.BindText(_presenter.Model.WebProxyModel, nameof(WebProxyModel.Password));
+            webProxyPasswordTextBox.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebProxyModel, nameof(WebProxyModel.CredentialsError), false, DataSourceUpdateMode.OnPropertyChanged);
+            webProxyPasswordTextBox.BindEnabled(_presenter.Model.WebProxyModel, nameof(WebProxyModel.AuthenticationEnabled));
+
+            // Finally, add the CheckBox.Checked Binding
+            webProxyCredentialsEnabledCheckBox.BindChecked(_presenter.Model.WebProxyModel, nameof(WebProxyModel.CredentialsEnabled));
         }
 
         private void LoadVisualStylesTab()
@@ -334,7 +334,7 @@ namespace HFM.Forms
         }
 
         // Reporting Tab
-        private void txtFromEmailAddress_MouseHover(object sender, EventArgs e)
+        private void reportingFromAddressTextBox_MouseHover(object sender, EventArgs e)
         {
             var fromAddressError = _presenter.Model.ReportingModel[nameof(ReportingModel.FromAddress)];
             if (!String.IsNullOrEmpty(fromAddressError))
@@ -352,7 +352,7 @@ namespace HFM.Forms
             _presenter.TestReportingEmail(SendMailService.Default);
         }
 
-        private void grpReportSelections_EnabledChanged(object sender, EventArgs e)
+        private void reportingSelectionsGroupBox_EnabledChanged(object sender, EventArgs e)
         {
             foreach (Control ctrl in reportingSelectionsGroupBox.Controls)
             {
@@ -364,17 +364,17 @@ namespace HFM.Forms
         }
 
         // Identity
-        private void TestEocUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void optionsTestEocUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestExtremeOverclockingUser(LocalProcessService.Default);
         }
 
-        private void TestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void optionsTestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestFoldingAtHomeUser(LocalProcessService.Default);
         }
 
-        private void TestFahTeamIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void optionsTestFahTeamIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestExtremeOverclockingTeam(LocalProcessService.Default);
         }
@@ -471,11 +471,11 @@ namespace HFM.Forms
             }
             else if (_presenter.Model.ReportingModel.HasError)
             {
-                tabControl1.SelectedTab = ReportingTab;
+                tabControl1.SelectedTab = reportingTab;
             }
             else if (_presenter.Model.WebProxyModel.HasError)
             {
-                tabControl1.SelectedTab = ProxyTab;
+                tabControl1.SelectedTab = webProxyTab;
             }
         }
 

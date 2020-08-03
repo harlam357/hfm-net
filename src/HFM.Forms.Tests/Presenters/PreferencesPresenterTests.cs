@@ -27,7 +27,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                presenter.Model.WebProxyModel.UseProxy = true;
+                presenter.Model.WebProxyModel.Enabled = true;
                 presenter.ShowDialog(null);
                 Assert.IsTrue(presenter.MockDialog.Shown);
                 // Act

@@ -19,22 +19,22 @@ namespace HFM.Forms.Models
 
         public override void Load()
         {
-            ProxyServer = Preferences.Get<string>(Preference.ProxyServer);
-            ProxyPort = Preferences.Get<int>(Preference.ProxyPort);
-            UseProxy = Preferences.Get<bool>(Preference.UseProxy);
-            ProxyUser = Preferences.Get<string>(Preference.ProxyUser);
-            ProxyPass = Preferences.Get<string>(Preference.ProxyPass);
-            UseProxyAuth = Preferences.Get<bool>(Preference.UseProxyAuth);
+            Server = Preferences.Get<string>(Preference.ProxyServer);
+            Port = Preferences.Get<int>(Preference.ProxyPort);
+            Enabled = Preferences.Get<bool>(Preference.UseProxy);
+            Username = Preferences.Get<string>(Preference.ProxyUser);
+            Password = Preferences.Get<string>(Preference.ProxyPass);
+            CredentialsEnabled = Preferences.Get<bool>(Preference.UseProxyAuth);
         }
 
         public override void Save()
         {
-            Preferences.Set(Preference.ProxyServer, ProxyServer);
-            Preferences.Set(Preference.ProxyPort, ProxyPort);
-            Preferences.Set(Preference.UseProxy, UseProxy);
-            Preferences.Set(Preference.ProxyUser, ProxyUser);
-            Preferences.Set(Preference.ProxyPass, ProxyPass);
-            Preferences.Set(Preference.UseProxyAuth, UseProxyAuth);
+            Preferences.Set(Preference.ProxyServer, Server);
+            Preferences.Set(Preference.ProxyPort, Port);
+            Preferences.Set(Preference.UseProxy, Enabled);
+            Preferences.Set(Preference.ProxyUser, Username);
+            Preferences.Set(Preference.ProxyPass, Password);
+            Preferences.Set(Preference.UseProxyAuth, CredentialsEnabled);
         }
 
         public string this[string columnName]
@@ -43,12 +43,12 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(ProxyServer):
-                    case nameof(ProxyPort):
-                        return ValidateProxyServerPort() ? null : ProxyServerPortError;
-                    case nameof(ProxyUser):
-                    case nameof(ProxyPass):
-                        return ValidateProxyUserPass() ? null : ProxyUserPassError;
+                    case nameof(Server):
+                    case nameof(Port):
+                        return ValidateServerPort() ? null : ServerPortError;
+                    case nameof(Username):
+                    case nameof(Password):
+                        return ValidateCredentials() ? null : CredentialsError;
                     default:
                         return null;
                 }
@@ -61,8 +61,8 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(ProxyServer),
-                    nameof(ProxyUser)
+                    nameof(Server),
+                    nameof(Username)
                 };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
@@ -71,130 +71,130 @@ namespace HFM.Forms.Models
 
         #region Web Proxy Settings
 
-        private string _proxyServer;
+        private string _server;
 
-        public string ProxyServer
+        public string Server
         {
-            get { return _proxyServer; }
+            get { return _server; }
             set
             {
-                if (ProxyServer != value)
+                if (Server != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _proxyServer = newValue;
-                    OnPropertyChanged(nameof(ProxyPort));
+                    _server = newValue;
+                    OnPropertyChanged(nameof(Port));
                     OnPropertyChanged();
                 }
             }
         }
 
-        private int _proxyPort;
+        private int _port;
 
-        public int ProxyPort
+        public int Port
         {
-            get { return _proxyPort; }
+            get { return _port; }
             set
             {
-                if (ProxyPort != value)
+                if (Port != value)
                 {
-                    _proxyPort = value;
-                    OnPropertyChanged(nameof(ProxyServer));
+                    _port = value;
+                    OnPropertyChanged(nameof(Server));
                     OnPropertyChanged();
                 }
             }
         }
 
-        public string ProxyServerPortError { get; private set; }
+        public string ServerPortError { get; private set; }
 
-        private bool ValidateProxyServerPort()
+        private bool ValidateServerPort()
         {
-            if (UseProxy == false) return true;
+            if (Enabled == false) return true;
 
-            var result = HostName.ValidateNameAndPort(ProxyServer, ProxyPort, out var message);
-            ProxyServerPortError = result ? String.Empty : message;
+            var result = HostName.ValidateNameAndPort(Server, Port, out var message);
+            ServerPortError = result ? String.Empty : message;
             return result;
         }
 
-        private bool _useProxy;
+        private bool _enabled;
 
-        public bool UseProxy
+        public bool Enabled
         {
-            get { return _useProxy; }
+            get { return _enabled; }
             set
             {
-                if (UseProxy != value)
+                if (Enabled != value)
                 {
-                    _useProxy = value;
+                    _enabled = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(ProxyAuthEnabled));
+                    OnPropertyChanged(nameof(AuthenticationEnabled));
                 }
             }
         }
 
-        private string _proxyUser;
+        private string _username;
 
-        public string ProxyUser
+        public string Username
         {
-            get { return _proxyUser; }
+            get { return _username; }
             set
             {
-                if (ProxyUser != value)
-                {
-                    string newValue = value == null ? String.Empty : value.Trim();
-                    _proxyUser = newValue;
-                    OnPropertyChanged(nameof(ProxyPass));
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _proxyPass;
-
-        public string ProxyPass
-        {
-            get { return _proxyPass; }
-            set
-            {
-                if (ProxyPass != value)
+                if (Username != value)
                 {
                     string newValue = value == null ? String.Empty : value.Trim();
-                    _proxyPass = newValue;
-                    OnPropertyChanged(nameof(ProxyUser));
+                    _username = newValue;
+                    OnPropertyChanged(nameof(Password));
                     OnPropertyChanged();
                 }
             }
         }
 
-        public string ProxyUserPassError { get; private set; }
+        private string _password;
 
-        private bool ValidateProxyUserPass()
+        public string Password
         {
-            if (ProxyAuthEnabled == false) return true;
+            get { return _password; }
+            set
+            {
+                if (Password != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _password = newValue;
+                    OnPropertyChanged(nameof(Username));
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-            var result = NetworkCredentialFactory.ValidateRequired(ProxyUser, ProxyPass, out var message);
-            ProxyUserPassError = result ? String.Empty : message;
+        public string CredentialsError { get; private set; }
+
+        private bool ValidateCredentials()
+        {
+            if (AuthenticationEnabled == false) return true;
+
+            var result = NetworkCredentialFactory.ValidateRequired(Username, Password, out var message);
+            CredentialsError = result ? String.Empty : message;
             return result;
         }
 
-        private bool _useProxyAuth;
+        private bool _credentialsEnabled;
 
-        public bool UseProxyAuth
+        public bool CredentialsEnabled
         {
-            get { return _useProxyAuth; }
+            get { return _credentialsEnabled; }
             set
             {
-                if (UseProxyAuth != value)
+                if (CredentialsEnabled != value)
                 {
-                    _useProxyAuth = value;
+                    _credentialsEnabled = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(ProxyAuthEnabled));
+                    OnPropertyChanged(nameof(AuthenticationEnabled));
                 }
             }
         }
 
-        public bool ProxyAuthEnabled
+        public bool AuthenticationEnabled
         {
-            get { return UseProxy && UseProxyAuth; }
+            get { return Enabled && CredentialsEnabled; }
         }
 
         #endregion

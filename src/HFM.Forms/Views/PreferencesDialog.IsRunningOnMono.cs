@@ -165,14 +165,14 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case nameof(WebProxyModel.UseProxy):
-                    txtProxyServer.Enabled = _presenter.Model.WebProxyModel.UseProxy;
-                    txtProxyPort.Enabled = _presenter.Model.WebProxyModel.UseProxy;
-                    chkUseProxyAuth.Enabled = _presenter.Model.WebProxyModel.UseProxy;
+                case nameof(WebProxyModel.Enabled):
+                    webProxyServerTextBox.Enabled = _presenter.Model.WebProxyModel.Enabled;
+                    webProxyPortTextBox.Enabled = _presenter.Model.WebProxyModel.Enabled;
+                    webProxyCredentialsEnabledCheckBox.Enabled = _presenter.Model.WebProxyModel.Enabled;
                     break;
-                case nameof(WebProxyModel.ProxyAuthEnabled):
-                    txtProxyUser.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
-                    txtProxyPass.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
+                case nameof(WebProxyModel.AuthenticationEnabled):
+                    webProxyUsernameTextBox.Enabled = _presenter.Model.WebProxyModel.AuthenticationEnabled;
+                    webProxyPasswordTextBox.Enabled = _presenter.Model.WebProxyModel.AuthenticationEnabled;
                     break;
             }
         }

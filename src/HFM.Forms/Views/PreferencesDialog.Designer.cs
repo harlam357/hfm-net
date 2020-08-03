@@ -59,21 +59,21 @@ namespace HFM.Forms
             this.clientsDecimalPlacesUpDown = new System.Windows.Forms.NumericUpDown();
             this.labelWrapper1 = new System.Windows.Forms.Label();
             this.optionsTab = new System.Windows.Forms.TabPage();
-            this.IdentityGroupBox = new System.Windows.Forms.GroupBox();
+            this.optionsIdentityGroupBox = new System.Windows.Forms.GroupBox();
             this.optionsEocUserStatsEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.EocUserIDLabel = new System.Windows.Forms.Label();
             this.FahUserIDLabel = new System.Windows.Forms.Label();
-            this.TestFahTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.optionsTestFahTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.optionsEocUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.optionsFahTeamIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.FahTeamIDLabel = new System.Windows.Forms.Label();
-            this.TestFahUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.optionsTestFahUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.optionsFahUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
-            this.TestEocUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.optionsTestEocUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.grpShowStyle = new System.Windows.Forms.GroupBox();
             this.optionsMinimizeToOptionComboBox = new System.Windows.Forms.ComboBox();
             this.labelWrapper2 = new System.Windows.Forms.Label();
-            this.LoggingGroupBox = new System.Windows.Forms.GroupBox();
+            this.optionsMessageLevelGroupBox = new System.Windows.Forms.GroupBox();
             this.optionsMessageLevelComboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.ExternalProgramsGroupBox = new System.Windows.Forms.GroupBox();
@@ -104,8 +104,8 @@ namespace HFM.Forms
             this.webGenerationUsernameLabel = new System.Windows.Forms.Label();
             this.webGenerationServerLabel = new System.Windows.Forms.Label();
             this.webGenerationFtpModeRadioPanel = new HFM.Forms.Controls.RadioPanel();
-            this.radioActive = new System.Windows.Forms.RadioButton();
-            this.radioPassive = new System.Windows.Forms.RadioButton();
+            this.webDeploymentFtpActiveRadioButton = new System.Windows.Forms.RadioButton();
+            this.webDeploymentFtpPassiveRadioButton = new System.Windows.Forms.RadioButton();
             this.lblFtpMode = new System.Windows.Forms.Label();
             this.webGenerationLimitLogSizeLengthUpDown = new System.Windows.Forms.NumericUpDown();
             this.webGenerationLimitLogSizeCheckBox = new System.Windows.Forms.CheckBox();
@@ -132,7 +132,7 @@ namespace HFM.Forms
             this.lblOverview = new System.Windows.Forms.Label();
             this.lbl1Preview = new System.Windows.Forms.Label();
             this.lbl1Style = new System.Windows.Forms.Label();
-            this.ReportingTab = new System.Windows.Forms.TabPage();
+            this.reportingTab = new System.Windows.Forms.TabPage();
             this.reportingSelectionsGroupBox = new System.Windows.Forms.GroupBox();
             this.grpEmailSettings = new System.Windows.Forms.GroupBox();
             this.reportingSendTestEmailLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -150,15 +150,15 @@ namespace HFM.Forms
             this.lblToAddress = new System.Windows.Forms.Label();
             this.reportingServerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.reportingToAddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
-            this.ProxyTab = new System.Windows.Forms.TabPage();
+            this.webProxyTab = new System.Windows.Forms.TabPage();
             this.grpWebProxy = new System.Windows.Forms.GroupBox();
-            this.chkUseProxy = new System.Windows.Forms.CheckBox();
-            this.chkUseProxyAuth = new System.Windows.Forms.CheckBox();
-            this.txtProxyPass = new HFM.Forms.Controls.DataErrorTextBox();
-            this.txtProxyUser = new HFM.Forms.Controls.DataErrorTextBox();
-            this.txtProxyPort = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webProxyEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.webProxyCredentialsEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.webProxyPasswordTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webProxyUsernameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webProxyPortTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.lbl3ProxyPass = new System.Windows.Forms.Label();
-            this.txtProxyServer = new HFM.Forms.Controls.DataErrorTextBox();
+            this.webProxyServerTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.lbl3ProxyUser = new System.Windows.Forms.Label();
             this.lbl3Port = new System.Windows.Forms.Label();
             this.lbl3Proxy = new System.Windows.Forms.Label();
@@ -171,9 +171,9 @@ namespace HFM.Forms
             this.optionsDisplayProductionOptionsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDecimalPlacesUpDown)).BeginInit();
             this.optionsTab.SuspendLayout();
-            this.IdentityGroupBox.SuspendLayout();
+            this.optionsIdentityGroupBox.SuspendLayout();
             this.grpShowStyle.SuspendLayout();
-            this.LoggingGroupBox.SuspendLayout();
+            this.optionsMessageLevelGroupBox.SuspendLayout();
             this.ExternalProgramsGroupBox.SuspendLayout();
             this.optionsStartupGroupBox.SuspendLayout();
             this.webGenerationTab.SuspendLayout();
@@ -182,9 +182,9 @@ namespace HFM.Forms
             this.webGenerationFtpModeRadioPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webGenerationLimitLogSizeLengthUpDown)).BeginInit();
             this.webVisualStylesTab.SuspendLayout();
-            this.ReportingTab.SuspendLayout();
+            this.reportingTab.SuspendLayout();
             this.grpEmailSettings.SuspendLayout();
-            this.ProxyTab.SuspendLayout();
+            this.webProxyTab.SuspendLayout();
             this.grpWebProxy.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -212,8 +212,8 @@ namespace HFM.Forms
             this.tabControl1.Controls.Add(this.optionsTab);
             this.tabControl1.Controls.Add(this.webGenerationTab);
             this.tabControl1.Controls.Add(this.webVisualStylesTab);
-            this.tabControl1.Controls.Add(this.ReportingTab);
-            this.tabControl1.Controls.Add(this.ProxyTab);
+            this.tabControl1.Controls.Add(this.reportingTab);
+            this.tabControl1.Controls.Add(this.webProxyTab);
             this.tabControl1.HotTrack = true;
             this.tabControl1.Location = new System.Drawing.Point(13, 13);
             this.tabControl1.Multiline = true;
@@ -479,9 +479,9 @@ namespace HFM.Forms
             // 
             // optionsTab
             // 
-            this.optionsTab.Controls.Add(this.IdentityGroupBox);
+            this.optionsTab.Controls.Add(this.optionsIdentityGroupBox);
             this.optionsTab.Controls.Add(this.grpShowStyle);
-            this.optionsTab.Controls.Add(this.LoggingGroupBox);
+            this.optionsTab.Controls.Add(this.optionsMessageLevelGroupBox);
             this.optionsTab.Controls.Add(this.ExternalProgramsGroupBox);
             this.optionsTab.Controls.Add(this.optionsStartupGroupBox);
             this.optionsTab.Location = new System.Drawing.Point(4, 22);
@@ -494,22 +494,22 @@ namespace HFM.Forms
             // 
             // IdentityGroupBox
             // 
-            this.IdentityGroupBox.Controls.Add(this.optionsEocUserStatsEnabledCheckBox);
-            this.IdentityGroupBox.Controls.Add(this.EocUserIDLabel);
-            this.IdentityGroupBox.Controls.Add(this.FahUserIDLabel);
-            this.IdentityGroupBox.Controls.Add(this.TestFahTeamIDLinkLabel);
-            this.IdentityGroupBox.Controls.Add(this.optionsEocUserIDTextBox);
-            this.IdentityGroupBox.Controls.Add(this.optionsFahTeamIDTextBox);
-            this.IdentityGroupBox.Controls.Add(this.FahTeamIDLabel);
-            this.IdentityGroupBox.Controls.Add(this.TestFahUserIDLinkLabel);
-            this.IdentityGroupBox.Controls.Add(this.optionsFahUserIDTextBox);
-            this.IdentityGroupBox.Controls.Add(this.TestEocUserIDLinkLabel);
-            this.IdentityGroupBox.Location = new System.Drawing.Point(6, 65);
-            this.IdentityGroupBox.Name = "IdentityGroupBox";
-            this.IdentityGroupBox.Size = new System.Drawing.Size(489, 77);
-            this.IdentityGroupBox.TabIndex = 8;
-            this.IdentityGroupBox.TabStop = false;
-            this.IdentityGroupBox.Text = "Identity";
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsEocUserStatsEnabledCheckBox);
+            this.optionsIdentityGroupBox.Controls.Add(this.EocUserIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.FahUserIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsTestFahTeamIDLinkLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsEocUserIDTextBox);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsFahTeamIDTextBox);
+            this.optionsIdentityGroupBox.Controls.Add(this.FahTeamIDLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsTestFahUserIDLinkLabel);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsFahUserIDTextBox);
+            this.optionsIdentityGroupBox.Controls.Add(this.optionsTestEocUserIDLinkLabel);
+            this.optionsIdentityGroupBox.Location = new System.Drawing.Point(6, 65);
+            this.optionsIdentityGroupBox.Name = "optionsIdentityGroupBox";
+            this.optionsIdentityGroupBox.Size = new System.Drawing.Size(489, 77);
+            this.optionsIdentityGroupBox.TabIndex = 8;
+            this.optionsIdentityGroupBox.TabStop = false;
+            this.optionsIdentityGroupBox.Text = "Identity";
             // 
             // optionsEocUserStatsEnabledCheckBox
             // 
@@ -541,14 +541,14 @@ namespace HFM.Forms
             // 
             // TestFahTeamIDLinkLabel
             // 
-            this.TestFahTeamIDLinkLabel.AutoSize = true;
-            this.TestFahTeamIDLinkLabel.Location = new System.Drawing.Point(211, 48);
-            this.TestFahTeamIDLinkLabel.Name = "TestFahTeamIDLinkLabel";
-            this.TestFahTeamIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestFahTeamIDLinkLabel.TabIndex = 8;
-            this.TestFahTeamIDLinkLabel.TabStop = true;
-            this.TestFahTeamIDLinkLabel.Text = "Test";
-            this.TestFahTeamIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahTeamIDLinkLabel_LinkClicked);
+            this.optionsTestFahTeamIDLinkLabel.AutoSize = true;
+            this.optionsTestFahTeamIDLinkLabel.Location = new System.Drawing.Point(211, 48);
+            this.optionsTestFahTeamIDLinkLabel.Name = "optionsTestFahTeamIDLinkLabel";
+            this.optionsTestFahTeamIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.optionsTestFahTeamIDLinkLabel.TabIndex = 8;
+            this.optionsTestFahTeamIDLinkLabel.TabStop = true;
+            this.optionsTestFahTeamIDLinkLabel.Text = "Test";
+            this.optionsTestFahTeamIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.optionsTestFahTeamIDLinkLabel_LinkClicked);
             // 
             // optionsEocUserIDTextBox
             // 
@@ -591,14 +591,14 @@ namespace HFM.Forms
             // 
             // TestFahUserIDLinkLabel
             // 
-            this.TestFahUserIDLinkLabel.AutoSize = true;
-            this.TestFahUserIDLinkLabel.Location = new System.Drawing.Point(211, 22);
-            this.TestFahUserIDLinkLabel.Name = "TestFahUserIDLinkLabel";
-            this.TestFahUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestFahUserIDLinkLabel.TabIndex = 7;
-            this.TestFahUserIDLinkLabel.TabStop = true;
-            this.TestFahUserIDLinkLabel.Text = "Test";
-            this.TestFahUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahUserIDLinkLabel_LinkClicked);
+            this.optionsTestFahUserIDLinkLabel.AutoSize = true;
+            this.optionsTestFahUserIDLinkLabel.Location = new System.Drawing.Point(211, 22);
+            this.optionsTestFahUserIDLinkLabel.Name = "optionsTestFahUserIDLinkLabel";
+            this.optionsTestFahUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.optionsTestFahUserIDLinkLabel.TabIndex = 7;
+            this.optionsTestFahUserIDLinkLabel.TabStop = true;
+            this.optionsTestFahUserIDLinkLabel.Text = "Test";
+            this.optionsTestFahUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.optionsTestFahUserIDLinkLabel_LinkClicked);
             // 
             // optionsFahUserIDTextBox
             // 
@@ -616,14 +616,14 @@ namespace HFM.Forms
             // 
             // TestEocUserIDLinkLabel
             // 
-            this.TestEocUserIDLinkLabel.AutoSize = true;
-            this.TestEocUserIDLinkLabel.Location = new System.Drawing.Point(447, 22);
-            this.TestEocUserIDLinkLabel.Name = "TestEocUserIDLinkLabel";
-            this.TestEocUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestEocUserIDLinkLabel.TabIndex = 6;
-            this.TestEocUserIDLinkLabel.TabStop = true;
-            this.TestEocUserIDLinkLabel.Text = "Test";
-            this.TestEocUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestEocUserIDLinkLabel_LinkClicked);
+            this.optionsTestEocUserIDLinkLabel.AutoSize = true;
+            this.optionsTestEocUserIDLinkLabel.Location = new System.Drawing.Point(447, 22);
+            this.optionsTestEocUserIDLinkLabel.Name = "optionsTestEocUserIDLinkLabel";
+            this.optionsTestEocUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.optionsTestEocUserIDLinkLabel.TabIndex = 6;
+            this.optionsTestEocUserIDLinkLabel.TabStop = true;
+            this.optionsTestEocUserIDLinkLabel.Text = "Test";
+            this.optionsTestEocUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.optionsTestEocUserIDLinkLabel_LinkClicked);
             // 
             // grpShowStyle
             // 
@@ -656,14 +656,14 @@ namespace HFM.Forms
             // 
             // LoggingGroupBox
             // 
-            this.LoggingGroupBox.Controls.Add(this.optionsMessageLevelComboBox);
-            this.LoggingGroupBox.Controls.Add(this.label6);
-            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 238);
-            this.LoggingGroupBox.Name = "LoggingGroupBox";
-            this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
-            this.LoggingGroupBox.TabIndex = 6;
-            this.LoggingGroupBox.TabStop = false;
-            this.LoggingGroupBox.Text = "Logging";
+            this.optionsMessageLevelGroupBox.Controls.Add(this.optionsMessageLevelComboBox);
+            this.optionsMessageLevelGroupBox.Controls.Add(this.label6);
+            this.optionsMessageLevelGroupBox.Location = new System.Drawing.Point(6, 238);
+            this.optionsMessageLevelGroupBox.Name = "optionsMessageLevelGroupBox";
+            this.optionsMessageLevelGroupBox.Size = new System.Drawing.Size(241, 54);
+            this.optionsMessageLevelGroupBox.TabIndex = 6;
+            this.optionsMessageLevelGroupBox.TabStop = false;
+            this.optionsMessageLevelGroupBox.Text = "Logging";
             // 
             // optionsMessageLevelComboBox
             // 
@@ -1019,8 +1019,8 @@ namespace HFM.Forms
             // 
             // webGenerationFtpModeRadioPanel
             // 
-            this.webGenerationFtpModeRadioPanel.Controls.Add(this.radioActive);
-            this.webGenerationFtpModeRadioPanel.Controls.Add(this.radioPassive);
+            this.webGenerationFtpModeRadioPanel.Controls.Add(this.webDeploymentFtpActiveRadioButton);
+            this.webGenerationFtpModeRadioPanel.Controls.Add(this.webDeploymentFtpPassiveRadioButton);
             this.webGenerationFtpModeRadioPanel.Controls.Add(this.lblFtpMode);
             this.webGenerationFtpModeRadioPanel.Location = new System.Drawing.Point(182, 46);
             this.webGenerationFtpModeRadioPanel.Name = "webGenerationFtpModeRadioPanel";
@@ -1030,27 +1030,27 @@ namespace HFM.Forms
             // 
             // radioActive
             // 
-            this.radioActive.AutoSize = true;
-            this.radioActive.Location = new System.Drawing.Point(153, 4);
-            this.radioActive.Name = "radioActive";
-            this.radioActive.Size = new System.Drawing.Size(55, 17);
-            this.radioActive.TabIndex = 2;
-            this.radioActive.Tag = "1";
-            this.radioActive.Text = "Active";
-            this.radioActive.UseVisualStyleBackColor = true;
+            this.webDeploymentFtpActiveRadioButton.AutoSize = true;
+            this.webDeploymentFtpActiveRadioButton.Location = new System.Drawing.Point(153, 4);
+            this.webDeploymentFtpActiveRadioButton.Name = "webDeploymentFtpActiveRadioButton";
+            this.webDeploymentFtpActiveRadioButton.Size = new System.Drawing.Size(55, 17);
+            this.webDeploymentFtpActiveRadioButton.TabIndex = 2;
+            this.webDeploymentFtpActiveRadioButton.Tag = "1";
+            this.webDeploymentFtpActiveRadioButton.Text = "Active";
+            this.webDeploymentFtpActiveRadioButton.UseVisualStyleBackColor = true;
             // 
             // radioPassive
             // 
-            this.radioPassive.AutoSize = true;
-            this.radioPassive.Checked = true;
-            this.radioPassive.Location = new System.Drawing.Point(85, 4);
-            this.radioPassive.Name = "radioPassive";
-            this.radioPassive.Size = new System.Drawing.Size(62, 17);
-            this.radioPassive.TabIndex = 1;
-            this.radioPassive.TabStop = true;
-            this.radioPassive.Tag = "0";
-            this.radioPassive.Text = "Passive";
-            this.radioPassive.UseVisualStyleBackColor = true;
+            this.webDeploymentFtpPassiveRadioButton.AutoSize = true;
+            this.webDeploymentFtpPassiveRadioButton.Checked = true;
+            this.webDeploymentFtpPassiveRadioButton.Location = new System.Drawing.Point(85, 4);
+            this.webDeploymentFtpPassiveRadioButton.Name = "webDeploymentFtpPassiveRadioButton";
+            this.webDeploymentFtpPassiveRadioButton.Size = new System.Drawing.Size(62, 17);
+            this.webDeploymentFtpPassiveRadioButton.TabIndex = 1;
+            this.webDeploymentFtpPassiveRadioButton.TabStop = true;
+            this.webDeploymentFtpPassiveRadioButton.Tag = "0";
+            this.webDeploymentFtpPassiveRadioButton.Text = "Passive";
+            this.webDeploymentFtpPassiveRadioButton.UseVisualStyleBackColor = true;
             // 
             // lblFtpMode
             // 
@@ -1375,14 +1375,14 @@ namespace HFM.Forms
             // 
             // ReportingTab
             // 
-            this.ReportingTab.Controls.Add(this.reportingSelectionsGroupBox);
-            this.ReportingTab.Controls.Add(this.grpEmailSettings);
-            this.ReportingTab.Location = new System.Drawing.Point(4, 22);
-            this.ReportingTab.Name = "ReportingTab";
-            this.ReportingTab.Size = new System.Drawing.Size(501, 303);
-            this.ReportingTab.TabIndex = 5;
-            this.ReportingTab.Text = "Reporting";
-            this.ReportingTab.UseVisualStyleBackColor = true;
+            this.reportingTab.Controls.Add(this.reportingSelectionsGroupBox);
+            this.reportingTab.Controls.Add(this.grpEmailSettings);
+            this.reportingTab.Location = new System.Drawing.Point(4, 22);
+            this.reportingTab.Name = "reportingTab";
+            this.reportingTab.Size = new System.Drawing.Size(501, 303);
+            this.reportingTab.TabIndex = 5;
+            this.reportingTab.Text = "Reporting";
+            this.reportingTab.UseVisualStyleBackColor = true;
             // 
             // reportingSelectionsGroupBox
             // 
@@ -1393,7 +1393,7 @@ namespace HFM.Forms
             this.reportingSelectionsGroupBox.TabIndex = 1;
             this.reportingSelectionsGroupBox.TabStop = false;
             this.reportingSelectionsGroupBox.Text = "Report Selections";
-            this.reportingSelectionsGroupBox.EnabledChanged += new System.EventHandler(this.grpReportSelections_EnabledChanged);
+            this.reportingSelectionsGroupBox.EnabledChanged += new System.EventHandler(this.reportingSelectionsGroupBox_EnabledChanged);
             // 
             // grpEmailSettings
             // 
@@ -1546,7 +1546,7 @@ namespace HFM.Forms
             this.reportingFromAddressTextBox.ReadOnly = true;
             this.reportingFromAddressTextBox.Size = new System.Drawing.Size(377, 20);
             this.reportingFromAddressTextBox.TabIndex = 5;
-            this.reportingFromAddressTextBox.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
+            this.reportingFromAddressTextBox.MouseHover += new System.EventHandler(this.reportingFromAddressTextBox_MouseHover);
             // 
             // reportingEnabledCheckBox
             // 
@@ -1612,25 +1612,25 @@ namespace HFM.Forms
             // 
             // ProxyTab
             // 
-            this.ProxyTab.BackColor = System.Drawing.Color.Transparent;
-            this.ProxyTab.Controls.Add(this.grpWebProxy);
-            this.ProxyTab.Location = new System.Drawing.Point(4, 22);
-            this.ProxyTab.Name = "ProxyTab";
-            this.ProxyTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ProxyTab.Size = new System.Drawing.Size(501, 303);
-            this.ProxyTab.TabIndex = 1;
-            this.ProxyTab.Text = "Proxy";
-            this.ProxyTab.UseVisualStyleBackColor = true;
+            this.webProxyTab.BackColor = System.Drawing.Color.Transparent;
+            this.webProxyTab.Controls.Add(this.grpWebProxy);
+            this.webProxyTab.Location = new System.Drawing.Point(4, 22);
+            this.webProxyTab.Name = "webProxyTab";
+            this.webProxyTab.Padding = new System.Windows.Forms.Padding(3);
+            this.webProxyTab.Size = new System.Drawing.Size(501, 303);
+            this.webProxyTab.TabIndex = 1;
+            this.webProxyTab.Text = "Proxy";
+            this.webProxyTab.UseVisualStyleBackColor = true;
             // 
             // grpWebProxy
             // 
-            this.grpWebProxy.Controls.Add(this.chkUseProxy);
-            this.grpWebProxy.Controls.Add(this.chkUseProxyAuth);
-            this.grpWebProxy.Controls.Add(this.txtProxyPass);
-            this.grpWebProxy.Controls.Add(this.txtProxyUser);
-            this.grpWebProxy.Controls.Add(this.txtProxyPort);
+            this.grpWebProxy.Controls.Add(this.webProxyEnabledCheckBox);
+            this.grpWebProxy.Controls.Add(this.webProxyCredentialsEnabledCheckBox);
+            this.grpWebProxy.Controls.Add(this.webProxyPasswordTextBox);
+            this.grpWebProxy.Controls.Add(this.webProxyUsernameTextBox);
+            this.grpWebProxy.Controls.Add(this.webProxyPortTextBox);
             this.grpWebProxy.Controls.Add(this.lbl3ProxyPass);
-            this.grpWebProxy.Controls.Add(this.txtProxyServer);
+            this.grpWebProxy.Controls.Add(this.webProxyServerTextBox);
             this.grpWebProxy.Controls.Add(this.lbl3ProxyUser);
             this.grpWebProxy.Controls.Add(this.lbl3Port);
             this.grpWebProxy.Controls.Add(this.lbl3Proxy);
@@ -1643,75 +1643,75 @@ namespace HFM.Forms
             // 
             // chkUseProxy
             // 
-            this.chkUseProxy.AutoSize = true;
-            this.chkUseProxy.Location = new System.Drawing.Point(6, 17);
-            this.chkUseProxy.Name = "chkUseProxy";
-            this.chkUseProxy.Size = new System.Drawing.Size(117, 17);
-            this.chkUseProxy.TabIndex = 0;
-            this.chkUseProxy.Text = "Use a Proxy Server";
-            this.chkUseProxy.UseVisualStyleBackColor = true;
+            this.webProxyEnabledCheckBox.AutoSize = true;
+            this.webProxyEnabledCheckBox.Location = new System.Drawing.Point(6, 17);
+            this.webProxyEnabledCheckBox.Name = "webProxyEnabledCheckBox";
+            this.webProxyEnabledCheckBox.Size = new System.Drawing.Size(117, 17);
+            this.webProxyEnabledCheckBox.TabIndex = 0;
+            this.webProxyEnabledCheckBox.Text = "Use a Proxy Server";
+            this.webProxyEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
             // chkUseProxyAuth
             // 
-            this.chkUseProxyAuth.AutoSize = true;
-            this.chkUseProxyAuth.Enabled = false;
-            this.chkUseProxyAuth.Location = new System.Drawing.Point(6, 66);
-            this.chkUseProxyAuth.Name = "chkUseProxyAuth";
-            this.chkUseProxyAuth.Size = new System.Drawing.Size(205, 17);
-            this.chkUseProxyAuth.TabIndex = 5;
-            this.chkUseProxyAuth.Text = "Authenticate to the Web Proxy Server";
-            this.chkUseProxyAuth.UseVisualStyleBackColor = true;
+            this.webProxyCredentialsEnabledCheckBox.AutoSize = true;
+            this.webProxyCredentialsEnabledCheckBox.Enabled = false;
+            this.webProxyCredentialsEnabledCheckBox.Location = new System.Drawing.Point(6, 66);
+            this.webProxyCredentialsEnabledCheckBox.Name = "webProxyCredentialsEnabledCheckBox";
+            this.webProxyCredentialsEnabledCheckBox.Size = new System.Drawing.Size(205, 17);
+            this.webProxyCredentialsEnabledCheckBox.TabIndex = 5;
+            this.webProxyCredentialsEnabledCheckBox.Text = "Authenticate to the Web Proxy Server";
+            this.webProxyCredentialsEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
             // txtProxyPass
             // 
-            this.txtProxyPass.BackColor = System.Drawing.SystemColors.Control;
-            this.txtProxyPass.DoubleBuffered = true;
-            this.txtProxyPass.Enabled = false;
-            this.txtProxyPass.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyPass.ErrorToolTip = this.toolTipPrefs;
-            this.txtProxyPass.ErrorToolTipDuration = 5000;
-            this.txtProxyPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProxyPass.ErrorToolTipText = "";
-            this.txtProxyPass.Location = new System.Drawing.Point(294, 89);
-            this.txtProxyPass.Name = "txtProxyPass";
-            this.txtProxyPass.ReadOnly = true;
-            this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
-            this.txtProxyPass.TabIndex = 9;
-            this.txtProxyPass.UseSystemPasswordChar = true;
+            this.webProxyPasswordTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webProxyPasswordTextBox.DoubleBuffered = true;
+            this.webProxyPasswordTextBox.Enabled = false;
+            this.webProxyPasswordTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webProxyPasswordTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webProxyPasswordTextBox.ErrorToolTipDuration = 5000;
+            this.webProxyPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webProxyPasswordTextBox.ErrorToolTipText = "";
+            this.webProxyPasswordTextBox.Location = new System.Drawing.Point(294, 89);
+            this.webProxyPasswordTextBox.Name = "webProxyPasswordTextBox";
+            this.webProxyPasswordTextBox.ReadOnly = true;
+            this.webProxyPasswordTextBox.Size = new System.Drawing.Size(155, 20);
+            this.webProxyPasswordTextBox.TabIndex = 9;
+            this.webProxyPasswordTextBox.UseSystemPasswordChar = true;
             // 
             // txtProxyUser
             // 
-            this.txtProxyUser.BackColor = System.Drawing.SystemColors.Control;
-            this.txtProxyUser.DoubleBuffered = true;
-            this.txtProxyUser.Enabled = false;
-            this.txtProxyUser.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyUser.ErrorToolTip = this.toolTipPrefs;
-            this.txtProxyUser.ErrorToolTipDuration = 5000;
-            this.txtProxyUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProxyUser.ErrorToolTipText = "";
-            this.txtProxyUser.Location = new System.Drawing.Point(71, 89);
-            this.txtProxyUser.Name = "txtProxyUser";
-            this.txtProxyUser.ReadOnly = true;
-            this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
-            this.txtProxyUser.TabIndex = 7;
+            this.webProxyUsernameTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webProxyUsernameTextBox.DoubleBuffered = true;
+            this.webProxyUsernameTextBox.Enabled = false;
+            this.webProxyUsernameTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webProxyUsernameTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webProxyUsernameTextBox.ErrorToolTipDuration = 5000;
+            this.webProxyUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webProxyUsernameTextBox.ErrorToolTipText = "";
+            this.webProxyUsernameTextBox.Location = new System.Drawing.Point(71, 89);
+            this.webProxyUsernameTextBox.Name = "webProxyUsernameTextBox";
+            this.webProxyUsernameTextBox.ReadOnly = true;
+            this.webProxyUsernameTextBox.Size = new System.Drawing.Size(155, 20);
+            this.webProxyUsernameTextBox.TabIndex = 7;
             // 
             // txtProxyPort
             // 
-            this.txtProxyPort.BackColor = System.Drawing.SystemColors.Control;
-            this.txtProxyPort.DoubleBuffered = true;
-            this.txtProxyPort.Enabled = false;
-            this.txtProxyPort.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyPort.ErrorToolTip = this.toolTipPrefs;
-            this.txtProxyPort.ErrorToolTipDuration = 5000;
-            this.txtProxyPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProxyPort.ErrorToolTipText = "";
-            this.txtProxyPort.Location = new System.Drawing.Point(395, 40);
-            this.txtProxyPort.MaxLength = 5;
-            this.txtProxyPort.Name = "txtProxyPort";
-            this.txtProxyPort.ReadOnly = true;
-            this.txtProxyPort.Size = new System.Drawing.Size(54, 20);
-            this.txtProxyPort.TabIndex = 4;
-            this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
+            this.webProxyPortTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webProxyPortTextBox.DoubleBuffered = true;
+            this.webProxyPortTextBox.Enabled = false;
+            this.webProxyPortTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webProxyPortTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webProxyPortTextBox.ErrorToolTipDuration = 5000;
+            this.webProxyPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webProxyPortTextBox.ErrorToolTipText = "";
+            this.webProxyPortTextBox.Location = new System.Drawing.Point(395, 40);
+            this.webProxyPortTextBox.MaxLength = 5;
+            this.webProxyPortTextBox.Name = "webProxyPortTextBox";
+            this.webProxyPortTextBox.ReadOnly = true;
+            this.webProxyPortTextBox.Size = new System.Drawing.Size(54, 20);
+            this.webProxyPortTextBox.TabIndex = 4;
+            this.webProxyPortTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // lbl3ProxyPass
             // 
@@ -1724,19 +1724,19 @@ namespace HFM.Forms
             // 
             // txtProxyServer
             // 
-            this.txtProxyServer.BackColor = System.Drawing.SystemColors.Control;
-            this.txtProxyServer.DoubleBuffered = true;
-            this.txtProxyServer.Enabled = false;
-            this.txtProxyServer.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProxyServer.ErrorToolTip = this.toolTipPrefs;
-            this.txtProxyServer.ErrorToolTipDuration = 5000;
-            this.txtProxyServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProxyServer.ErrorToolTipText = "";
-            this.txtProxyServer.Location = new System.Drawing.Point(71, 40);
-            this.txtProxyServer.Name = "txtProxyServer";
-            this.txtProxyServer.ReadOnly = true;
-            this.txtProxyServer.Size = new System.Drawing.Size(282, 20);
-            this.txtProxyServer.TabIndex = 2;
+            this.webProxyServerTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.webProxyServerTextBox.DoubleBuffered = true;
+            this.webProxyServerTextBox.Enabled = false;
+            this.webProxyServerTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.webProxyServerTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.webProxyServerTextBox.ErrorToolTipDuration = 5000;
+            this.webProxyServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.webProxyServerTextBox.ErrorToolTipText = "";
+            this.webProxyServerTextBox.Location = new System.Drawing.Point(71, 40);
+            this.webProxyServerTextBox.Name = "webProxyServerTextBox";
+            this.webProxyServerTextBox.ReadOnly = true;
+            this.webProxyServerTextBox.Size = new System.Drawing.Size(282, 20);
+            this.webProxyServerTextBox.TabIndex = 2;
             // 
             // lbl3ProxyUser
             // 
@@ -1816,12 +1816,12 @@ namespace HFM.Forms
             this.optionsDisplayProductionOptionsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDecimalPlacesUpDown)).EndInit();
             this.optionsTab.ResumeLayout(false);
-            this.IdentityGroupBox.ResumeLayout(false);
-            this.IdentityGroupBox.PerformLayout();
+            this.optionsIdentityGroupBox.ResumeLayout(false);
+            this.optionsIdentityGroupBox.PerformLayout();
             this.grpShowStyle.ResumeLayout(false);
             this.grpShowStyle.PerformLayout();
-            this.LoggingGroupBox.ResumeLayout(false);
-            this.LoggingGroupBox.PerformLayout();
+            this.optionsMessageLevelGroupBox.ResumeLayout(false);
+            this.optionsMessageLevelGroupBox.PerformLayout();
             this.ExternalProgramsGroupBox.ResumeLayout(false);
             this.ExternalProgramsGroupBox.PerformLayout();
             this.optionsStartupGroupBox.ResumeLayout(false);
@@ -1836,10 +1836,10 @@ namespace HFM.Forms
             ((System.ComponentModel.ISupportInitialize)(this.webGenerationLimitLogSizeLengthUpDown)).EndInit();
             this.webVisualStylesTab.ResumeLayout(false);
             this.webVisualStylesTab.PerformLayout();
-            this.ReportingTab.ResumeLayout(false);
+            this.reportingTab.ResumeLayout(false);
             this.grpEmailSettings.ResumeLayout(false);
             this.grpEmailSettings.PerformLayout();
-            this.ProxyTab.ResumeLayout(false);
+            this.webProxyTab.ResumeLayout(false);
             this.grpWebProxy.ResumeLayout(false);
             this.grpWebProxy.PerformLayout();
             this.ResumeLayout(false);
@@ -1858,30 +1858,30 @@ namespace HFM.Forms
         private System.Windows.Forms.Button webGenerationBrowsePathButton;
         private System.Windows.Forms.Label webGenerationIntervalLabel;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage ProxyTab;
+        private System.Windows.Forms.TabPage webProxyTab;
         private System.Windows.Forms.TabPage webVisualStylesTab;
         private System.Windows.Forms.TabPage webGenerationTab;
         private HFM.Forms.Controls.DataErrorTextBox webGenerationIntervalTextBox;
         private System.Windows.Forms.CheckBox webGenerationEnabledCheckBox;
         private HFM.Forms.Controls.DataErrorTextBox webGenerationPathTextBox;
         private System.Windows.Forms.GroupBox grpWebProxy;
-        private HFM.Forms.Controls.DataErrorTextBox txtProxyServer;
+        private HFM.Forms.Controls.DataErrorTextBox webProxyServerTextBox;
         private System.Windows.Forms.Label lbl3Proxy;
-        private HFM.Forms.Controls.DataErrorTextBox txtProxyPass;
-        private HFM.Forms.Controls.DataErrorTextBox txtProxyUser;
-        private HFM.Forms.Controls.DataErrorTextBox txtProxyPort;
+        private HFM.Forms.Controls.DataErrorTextBox webProxyPasswordTextBox;
+        private HFM.Forms.Controls.DataErrorTextBox webProxyUsernameTextBox;
+        private HFM.Forms.Controls.DataErrorTextBox webProxyPortTextBox;
         private System.Windows.Forms.Label lbl3ProxyPass;
         private System.Windows.Forms.Label lbl3ProxyUser;
         private System.Windows.Forms.Label lbl3Port;
-        private System.Windows.Forms.CheckBox chkUseProxyAuth;
-        private System.Windows.Forms.CheckBox chkUseProxy;
+        private System.Windows.Forms.CheckBox webProxyCredentialsEnabledCheckBox;
+        private System.Windows.Forms.CheckBox webProxyEnabledCheckBox;
         private System.Windows.Forms.TabPage clientsTab;
         private System.Windows.Forms.RadioButton webGenerationOnScheduleRadioButton;
         private System.Windows.Forms.RadioButton webGenerationAfterClientRetrievalRadioButton;
         private System.Windows.Forms.ToolTip toolTipPrefs;
         private System.Windows.Forms.Label labelWrapper1;
         private System.Windows.Forms.NumericUpDown clientsDecimalPlacesUpDown;
-        private System.Windows.Forms.TabPage ReportingTab;
+        private System.Windows.Forms.TabPage reportingTab;
         private System.Windows.Forms.GroupBox grpEmailSettings;
         private System.Windows.Forms.Label lblSmtpServer;
         private System.Windows.Forms.Label lblToAddress;
@@ -1906,8 +1906,8 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox clientsOfflineLastCheckBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox clientsPPDCalculationComboBox;
-        private System.Windows.Forms.RadioButton radioActive;
-        private System.Windows.Forms.RadioButton radioPassive;
+        private System.Windows.Forms.RadioButton webDeploymentFtpActiveRadioButton;
+        private System.Windows.Forms.RadioButton webDeploymentFtpPassiveRadioButton;
         private System.Windows.Forms.Label lblFtpMode;
         private System.Windows.Forms.Button btnInstanceBrowse;
         private HFM.Forms.Controls.DataErrorTextBox txtInstance;
@@ -1954,23 +1954,23 @@ namespace HFM.Forms
         private System.Windows.Forms.GroupBox grpShowStyle;
         private System.Windows.Forms.ComboBox optionsMinimizeToOptionComboBox;
         private System.Windows.Forms.Label labelWrapper2;
-        private System.Windows.Forms.GroupBox LoggingGroupBox;
+        private System.Windows.Forms.GroupBox optionsMessageLevelGroupBox;
         private System.Windows.Forms.ComboBox optionsMessageLevelComboBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox ConfigurationGroupBox;
         private System.Windows.Forms.CheckBox clientsDefaultConfigFileEnabledCheckBox;
         private System.Windows.Forms.Button clientsBrowseConfigFileButton;
         private Controls.DataErrorTextBox clientsDefaultConfigFileTextBox;
-        private System.Windows.Forms.GroupBox IdentityGroupBox;
+        private System.Windows.Forms.GroupBox optionsIdentityGroupBox;
         private System.Windows.Forms.Label EocUserIDLabel;
         private System.Windows.Forms.Label FahUserIDLabel;
-        private System.Windows.Forms.LinkLabel TestFahTeamIDLinkLabel;
+        private System.Windows.Forms.LinkLabel optionsTestFahTeamIDLinkLabel;
         private Controls.DataErrorTextBox optionsEocUserIDTextBox;
         private Controls.DataErrorTextBox optionsFahTeamIDTextBox;
         private System.Windows.Forms.Label FahTeamIDLabel;
-        private System.Windows.Forms.LinkLabel TestFahUserIDLinkLabel;
+        private System.Windows.Forms.LinkLabel optionsTestFahUserIDLinkLabel;
         private Controls.DataErrorTextBox optionsFahUserIDTextBox;
-        private System.Windows.Forms.LinkLabel TestEocUserIDLinkLabel;
+        private System.Windows.Forms.LinkLabel optionsTestEocUserIDLinkLabel;
         private System.Windows.Forms.CheckBox optionsEocUserStatsEnabledCheckBox;
         private System.Windows.Forms.GroupBox RefreshClientDataGroupBox;
         private Controls.DataErrorTextBox clientsRetrievalIntervalTextBox;
