@@ -400,9 +400,9 @@ namespace HFM.Forms
             this.labelWrapper6.AutoSize = true;
             this.labelWrapper6.Location = new System.Drawing.Point(232, 49);
             this.labelWrapper6.Name = "labelWrapper6";
-            this.labelWrapper6.Size = new System.Drawing.Size(131, 13);
+            this.labelWrapper6.Size = new System.Drawing.Size(128, 13);
             this.labelWrapper6.TabIndex = 13;
-            this.labelWrapper6.Text = "Calculate Credit based on:";
+            this.labelWrapper6.Text = "Calculate Credit based on";
             // 
             // DuplicateProjectCheckBox
             // 
@@ -429,9 +429,9 @@ namespace HFM.Forms
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(237, 23);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 13);
+            this.label2.Size = new System.Drawing.Size(123, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Calculate PPD based on:";
+            this.label2.Text = "Calculate PPD based on";
             // 
             // PpdCalculationComboBox
             // 
@@ -474,9 +474,9 @@ namespace HFM.Forms
             this.labelWrapper1.AutoSize = true;
             this.labelWrapper1.Location = new System.Drawing.Point(297, 74);
             this.labelWrapper1.Name = "labelWrapper1";
-            this.labelWrapper1.Size = new System.Drawing.Size(66, 13);
+            this.labelWrapper1.Size = new System.Drawing.Size(63, 13);
             this.labelWrapper1.TabIndex = 6;
-            this.labelWrapper1.Text = "Calculate to:";
+            this.labelWrapper1.Text = "Calculate to";
             // 
             // OptionsTab
             // 
@@ -527,18 +527,18 @@ namespace HFM.Forms
             this.EocUserIDLabel.AutoSize = true;
             this.EocUserIDLabel.Location = new System.Drawing.Point(247, 22);
             this.EocUserIDLabel.Name = "EocUserIDLabel";
-            this.EocUserIDLabel.Size = new System.Drawing.Size(71, 13);
+            this.EocUserIDLabel.Size = new System.Drawing.Size(68, 13);
             this.EocUserIDLabel.TabIndex = 0;
-            this.EocUserIDLabel.Text = "EOC User ID:";
+            this.EocUserIDLabel.Text = "EOC User ID";
             // 
             // FahUserIDLabel
             // 
             this.FahUserIDLabel.AutoSize = true;
-            this.FahUserIDLabel.Location = new System.Drawing.Point(7, 22);
+            this.FahUserIDLabel.Location = new System.Drawing.Point(12, 22);
             this.FahUserIDLabel.Name = "FahUserIDLabel";
-            this.FahUserIDLabel.Size = new System.Drawing.Size(70, 13);
+            this.FahUserIDLabel.Size = new System.Drawing.Size(67, 13);
             this.FahUserIDLabel.TabIndex = 1;
-            this.FahUserIDLabel.Text = "FAH User ID:";
+            this.FahUserIDLabel.Text = "FAH User ID";
             // 
             // TestFahTeamIDLinkLabel
             // 
@@ -560,7 +560,7 @@ namespace HFM.Forms
             this.EocUserIDTextBox.ErrorToolTipDuration = 5000;
             this.EocUserIDTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.EocUserIDTextBox.ErrorToolTipText = "";
-            this.EocUserIDTextBox.Location = new System.Drawing.Point(325, 19);
+            this.EocUserIDTextBox.Location = new System.Drawing.Point(321, 19);
             this.EocUserIDTextBox.MaxLength = 9;
             this.EocUserIDTextBox.Name = "EocUserIDTextBox";
             this.EocUserIDTextBox.Size = new System.Drawing.Size(120, 20);
@@ -586,9 +586,9 @@ namespace HFM.Forms
             this.FahTeamIDLabel.AutoSize = true;
             this.FahTeamIDLabel.Location = new System.Drawing.Point(7, 48);
             this.FahTeamIDLabel.Name = "FahTeamIDLabel";
-            this.FahTeamIDLabel.Size = new System.Drawing.Size(75, 13);
+            this.FahTeamIDLabel.Size = new System.Drawing.Size(72, 13);
             this.FahTeamIDLabel.TabIndex = 2;
-            this.FahTeamIDLabel.Text = "FAH Team ID:";
+            this.FahTeamIDLabel.Text = "FAH Team ID";
             // 
             // TestFahUserIDLinkLabel
             // 
@@ -618,7 +618,7 @@ namespace HFM.Forms
             // TestEocUserIDLinkLabel
             // 
             this.TestEocUserIDLinkLabel.AutoSize = true;
-            this.TestEocUserIDLinkLabel.Location = new System.Drawing.Point(451, 22);
+            this.TestEocUserIDLinkLabel.Location = new System.Drawing.Point(447, 22);
             this.TestEocUserIDLinkLabel.Name = "TestEocUserIDLinkLabel";
             this.TestEocUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
             this.TestEocUserIDLinkLabel.TabIndex = 6;
@@ -651,9 +651,9 @@ namespace HFM.Forms
             this.labelWrapper2.AutoSize = true;
             this.labelWrapper2.Location = new System.Drawing.Point(9, 24);
             this.labelWrapper2.Name = "labelWrapper2";
-            this.labelWrapper2.Size = new System.Drawing.Size(117, 13);
+            this.labelWrapper2.Size = new System.Drawing.Size(114, 13);
             this.labelWrapper2.TabIndex = 0;
-            this.labelWrapper2.Text = "Show HFM.NET in the:";
+            this.labelWrapper2.Text = "Show HFM.NET in the";
             // 
             // LoggingGroupBox
             // 
@@ -680,9 +680,9 @@ namespace HFM.Forms
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(9, 24);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 13);
+            this.label6.Size = new System.Drawing.Size(74, 13);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Logging Level:";
+            this.label6.Text = "Logging Level";
             // 
             // ExternalProgramsGroupBox
             // 
@@ -712,11 +712,11 @@ namespace HFM.Forms
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 55);
+            this.label4.Location = new System.Drawing.Point(23, 54);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(67, 13);
+            this.label4.Size = new System.Drawing.Size(64, 13);
             this.label4.TabIndex = 3;
-            this.label4.Text = "File Explorer:";
+            this.label4.Text = "File Explorer";
             // 
             // FileExplorerTextBox
             // 
@@ -747,9 +747,9 @@ namespace HFM.Forms
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(8, 24);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(82, 13);
+            this.label3.Size = new System.Drawing.Size(79, 13);
             this.label3.TabIndex = 0;
-            this.label3.Text = "Log File Viewer:";
+            this.label3.Text = "Log File Viewer";
             // 
             // LogFileViewerTextBox
             // 
@@ -858,9 +858,9 @@ namespace HFM.Forms
             this.CopyLabel.AutoSize = true;
             this.CopyLabel.Location = new System.Drawing.Point(7, 163);
             this.CopyLabel.Name = "CopyLabel";
-            this.CopyLabel.Size = new System.Drawing.Size(34, 13);
+            this.CopyLabel.Size = new System.Drawing.Size(31, 13);
             this.CopyLabel.TabIndex = 24;
-            this.CopyLabel.Text = "Copy:";
+            this.CopyLabel.Text = "Copy";
             // 
             // WebSitePortTextBox
             // 
@@ -883,9 +883,9 @@ namespace HFM.Forms
             this.WebSitePortLabel.AutoSize = true;
             this.WebSitePortLabel.Location = new System.Drawing.Point(364, 107);
             this.WebSitePortLabel.Name = "WebSitePortLabel";
-            this.WebSitePortLabel.Size = new System.Drawing.Size(29, 13);
+            this.WebSitePortLabel.Size = new System.Drawing.Size(26, 13);
             this.WebSitePortLabel.TabIndex = 12;
-            this.WebSitePortLabel.Text = "Port:";
+            this.WebSitePortLabel.Text = "Port";
             // 
             // WebSitePasswordTextBox
             // 
@@ -952,9 +952,9 @@ namespace HFM.Forms
             this.UploadTypeLabel.AutoSize = true;
             this.UploadTypeLabel.Location = new System.Drawing.Point(4, 6);
             this.UploadTypeLabel.Name = "UploadTypeLabel";
-            this.UploadTypeLabel.Size = new System.Drawing.Size(71, 13);
+            this.UploadTypeLabel.Size = new System.Drawing.Size(68, 13);
             this.UploadTypeLabel.TabIndex = 0;
-            this.UploadTypeLabel.Text = "Upload Type:";
+            this.UploadTypeLabel.Text = "Upload Type";
             // 
             // WebGenTypeFtpRadioButton
             // 
@@ -985,27 +985,27 @@ namespace HFM.Forms
             this.WebSitePasswordLabel.AutoSize = true;
             this.WebSitePasswordLabel.Location = new System.Drawing.Point(237, 135);
             this.WebSitePasswordLabel.Name = "WebSitePasswordLabel";
-            this.WebSitePasswordLabel.Size = new System.Drawing.Size(56, 13);
+            this.WebSitePasswordLabel.Size = new System.Drawing.Size(53, 13);
             this.WebSitePasswordLabel.TabIndex = 16;
-            this.WebSitePasswordLabel.Text = "Password:";
+            this.WebSitePasswordLabel.Text = "Password";
             // 
             // WebSiteUsernameLabel
             // 
             this.WebSiteUsernameLabel.AutoSize = true;
-            this.WebSiteUsernameLabel.Location = new System.Drawing.Point(7, 135);
+            this.WebSiteUsernameLabel.Location = new System.Drawing.Point(15, 135);
             this.WebSiteUsernameLabel.Name = "WebSiteUsernameLabel";
-            this.WebSiteUsernameLabel.Size = new System.Drawing.Size(58, 13);
+            this.WebSiteUsernameLabel.Size = new System.Drawing.Size(55, 13);
             this.WebSiteUsernameLabel.TabIndex = 14;
-            this.WebSiteUsernameLabel.Text = "Username:";
+            this.WebSiteUsernameLabel.Text = "Username";
             // 
             // WebSiteServerLabel
             // 
             this.WebSiteServerLabel.AutoSize = true;
-            this.WebSiteServerLabel.Location = new System.Drawing.Point(7, 108);
+            this.WebSiteServerLabel.Location = new System.Drawing.Point(32, 107);
             this.WebSiteServerLabel.Name = "WebSiteServerLabel";
-            this.WebSiteServerLabel.Size = new System.Drawing.Size(41, 13);
+            this.WebSiteServerLabel.Size = new System.Drawing.Size(38, 13);
             this.WebSiteServerLabel.TabIndex = 10;
-            this.WebSiteServerLabel.Text = "Server:";
+            this.WebSiteServerLabel.Text = "Server";
             // 
             // FtpModePanel
             // 
@@ -1047,9 +1047,9 @@ namespace HFM.Forms
             this.lblFtpMode.AutoSize = true;
             this.lblFtpMode.Location = new System.Drawing.Point(4, 6);
             this.lblFtpMode.Name = "lblFtpMode";
-            this.lblFtpMode.Size = new System.Drawing.Size(79, 13);
+            this.lblFtpMode.Size = new System.Drawing.Size(76, 13);
             this.lblFtpMode.TabIndex = 0;
-            this.lblFtpMode.Text = "Transfer Mode:";
+            this.lblFtpMode.Text = "Transfer Mode";
             // 
             // udLimitSize
             // 
@@ -1216,9 +1216,9 @@ namespace HFM.Forms
             this.WebSiteTargetPathLabel.AutoSize = true;
             this.WebSiteTargetPathLabel.Location = new System.Drawing.Point(7, 81);
             this.WebSiteTargetPathLabel.Name = "WebSiteTargetPathLabel";
-            this.WebSiteTargetPathLabel.Size = new System.Drawing.Size(66, 13);
+            this.WebSiteTargetPathLabel.Size = new System.Drawing.Size(63, 13);
             this.WebSiteTargetPathLabel.TabIndex = 7;
-            this.WebSiteTargetPathLabel.Text = "Target Path:";
+            this.WebSiteTargetPathLabel.Text = "Target Path";
             // 
             // chkWebSiteGenerator
             // 
@@ -1283,9 +1283,9 @@ namespace HFM.Forms
             this.SlotXsltLabel.AutoSize = true;
             this.SlotXsltLabel.Location = new System.Drawing.Point(68, 226);
             this.SlotXsltLabel.Name = "SlotXsltLabel";
-            this.SlotXsltLabel.Size = new System.Drawing.Size(58, 13);
+            this.SlotXsltLabel.Size = new System.Drawing.Size(55, 13);
             this.SlotXsltLabel.TabIndex = 16;
-            this.SlotXsltLabel.Text = "Slot XSLT:";
+            this.SlotXsltLabel.Text = "Slot XSLT";
             this.SlotXsltLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // btnSummaryBrowse
@@ -1318,9 +1318,9 @@ namespace HFM.Forms
             this.lblSummary.AutoSize = true;
             this.lblSummary.Location = new System.Drawing.Point(43, 200);
             this.lblSummary.Name = "lblSummary";
-            this.lblSummary.Size = new System.Drawing.Size(83, 13);
+            this.lblSummary.Size = new System.Drawing.Size(80, 13);
             this.lblSummary.TabIndex = 10;
-            this.lblSummary.Text = "Summary XSLT:";
+            this.lblSummary.Text = "Summary XSLT";
             this.lblSummary.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // btnOverviewBrowse
@@ -1353,9 +1353,9 @@ namespace HFM.Forms
             this.lblOverview.AutoSize = true;
             this.lblOverview.Location = new System.Drawing.Point(41, 174);
             this.lblOverview.Name = "lblOverview";
-            this.lblOverview.Size = new System.Drawing.Size(85, 13);
+            this.lblOverview.Size = new System.Drawing.Size(82, 13);
             this.lblOverview.TabIndex = 4;
-            this.lblOverview.Text = "Overview XSLT:";
+            this.lblOverview.Text = "Overview XSLT";
             this.lblOverview.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lbl1Preview
@@ -1443,9 +1443,9 @@ namespace HFM.Forms
             this.labelWrapper3.AutoSize = true;
             this.labelWrapper3.Location = new System.Drawing.Point(380, 106);
             this.labelWrapper3.Name = "labelWrapper3";
-            this.labelWrapper3.Size = new System.Drawing.Size(29, 13);
+            this.labelWrapper3.Size = new System.Drawing.Size(26, 13);
             this.labelWrapper3.TabIndex = 8;
-            this.labelWrapper3.Text = "Port:";
+            this.labelWrapper3.Text = "Port";
             // 
             // chkEmailSecure
             // 
@@ -1509,27 +1509,27 @@ namespace HFM.Forms
             this.labelWrapper4.AutoSize = true;
             this.labelWrapper4.Location = new System.Drawing.Point(253, 132);
             this.labelWrapper4.Name = "labelWrapper4";
-            this.labelWrapper4.Size = new System.Drawing.Size(56, 13);
+            this.labelWrapper4.Size = new System.Drawing.Size(53, 13);
             this.labelWrapper4.TabIndex = 12;
-            this.labelWrapper4.Text = "Password:";
+            this.labelWrapper4.Text = "Password";
             // 
             // labelWrapper5
             // 
             this.labelWrapper5.AutoSize = true;
             this.labelWrapper5.Location = new System.Drawing.Point(27, 132);
             this.labelWrapper5.Name = "labelWrapper5";
-            this.labelWrapper5.Size = new System.Drawing.Size(58, 13);
+            this.labelWrapper5.Size = new System.Drawing.Size(55, 13);
             this.labelWrapper5.TabIndex = 10;
-            this.labelWrapper5.Text = "Username:";
+            this.labelWrapper5.Text = "Username";
             // 
             // lblFromEmailAddress
             // 
             this.lblFromEmailAddress.AutoSize = true;
             this.lblFromEmailAddress.Location = new System.Drawing.Point(11, 80);
             this.lblFromEmailAddress.Name = "lblFromEmailAddress";
-            this.lblFromEmailAddress.Size = new System.Drawing.Size(74, 13);
+            this.lblFromEmailAddress.Size = new System.Drawing.Size(71, 13);
             this.lblFromEmailAddress.TabIndex = 4;
-            this.lblFromEmailAddress.Text = "From Address:";
+            this.lblFromEmailAddress.Text = "From Address";
             // 
             // txtFromEmailAddress
             // 
@@ -1564,18 +1564,18 @@ namespace HFM.Forms
             this.lblSmtpServer.AutoSize = true;
             this.lblSmtpServer.Location = new System.Drawing.Point(11, 106);
             this.lblSmtpServer.Name = "lblSmtpServer";
-            this.lblSmtpServer.Size = new System.Drawing.Size(74, 13);
+            this.lblSmtpServer.Size = new System.Drawing.Size(71, 13);
             this.lblSmtpServer.TabIndex = 6;
-            this.lblSmtpServer.Text = "SMTP Server:";
+            this.lblSmtpServer.Text = "SMTP Server";
             // 
             // lblToAddress
             // 
             this.lblToAddress.AutoSize = true;
             this.lblToAddress.Location = new System.Drawing.Point(21, 54);
             this.lblToAddress.Name = "lblToAddress";
-            this.lblToAddress.Size = new System.Drawing.Size(64, 13);
+            this.lblToAddress.Size = new System.Drawing.Size(61, 13);
             this.lblToAddress.TabIndex = 2;
-            this.lblToAddress.Text = "To Address:";
+            this.lblToAddress.Text = "To Address";
             // 
             // txtSmtpServer
             // 
@@ -1656,7 +1656,7 @@ namespace HFM.Forms
             // 
             this.chkUseProxyAuth.AutoSize = true;
             this.chkUseProxyAuth.Enabled = false;
-            this.chkUseProxyAuth.Location = new System.Drawing.Point(25, 66);
+            this.chkUseProxyAuth.Location = new System.Drawing.Point(6, 66);
             this.chkUseProxyAuth.Name = "chkUseProxyAuth";
             this.chkUseProxyAuth.Size = new System.Drawing.Size(205, 17);
             this.chkUseProxyAuth.TabIndex = 5;
@@ -1673,7 +1673,7 @@ namespace HFM.Forms
             this.txtProxyPass.ErrorToolTipDuration = 5000;
             this.txtProxyPass.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtProxyPass.ErrorToolTipText = "";
-            this.txtProxyPass.Location = new System.Drawing.Point(327, 89);
+            this.txtProxyPass.Location = new System.Drawing.Point(294, 89);
             this.txtProxyPass.Name = "txtProxyPass";
             this.txtProxyPass.ReadOnly = true;
             this.txtProxyPass.Size = new System.Drawing.Size(155, 20);
@@ -1690,7 +1690,7 @@ namespace HFM.Forms
             this.txtProxyUser.ErrorToolTipDuration = 5000;
             this.txtProxyUser.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtProxyUser.ErrorToolTipText = "";
-            this.txtProxyUser.Location = new System.Drawing.Point(104, 89);
+            this.txtProxyUser.Location = new System.Drawing.Point(71, 89);
             this.txtProxyUser.Name = "txtProxyUser";
             this.txtProxyUser.ReadOnly = true;
             this.txtProxyUser.Size = new System.Drawing.Size(155, 20);
@@ -1706,22 +1706,22 @@ namespace HFM.Forms
             this.txtProxyPort.ErrorToolTipDuration = 5000;
             this.txtProxyPort.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtProxyPort.ErrorToolTipText = "";
-            this.txtProxyPort.Location = new System.Drawing.Point(389, 40);
+            this.txtProxyPort.Location = new System.Drawing.Point(395, 40);
             this.txtProxyPort.MaxLength = 5;
             this.txtProxyPort.Name = "txtProxyPort";
             this.txtProxyPort.ReadOnly = true;
-            this.txtProxyPort.Size = new System.Drawing.Size(94, 20);
+            this.txtProxyPort.Size = new System.Drawing.Size(54, 20);
             this.txtProxyPort.TabIndex = 4;
             this.txtProxyPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
             // lbl3ProxyPass
             // 
             this.lbl3ProxyPass.AutoSize = true;
-            this.lbl3ProxyPass.Location = new System.Drawing.Point(265, 92);
+            this.lbl3ProxyPass.Location = new System.Drawing.Point(232, 92);
             this.lbl3ProxyPass.Name = "lbl3ProxyPass";
-            this.lbl3ProxyPass.Size = new System.Drawing.Size(56, 13);
+            this.lbl3ProxyPass.Size = new System.Drawing.Size(53, 13);
             this.lbl3ProxyPass.TabIndex = 8;
-            this.lbl3ProxyPass.Text = "Password:";
+            this.lbl3ProxyPass.Text = "Password";
             // 
             // txtProxyServer
             // 
@@ -1733,38 +1733,38 @@ namespace HFM.Forms
             this.txtProxyServer.ErrorToolTipDuration = 5000;
             this.txtProxyServer.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.txtProxyServer.ErrorToolTipText = "";
-            this.txtProxyServer.Location = new System.Drawing.Point(98, 40);
+            this.txtProxyServer.Location = new System.Drawing.Point(71, 40);
             this.txtProxyServer.Name = "txtProxyServer";
             this.txtProxyServer.ReadOnly = true;
-            this.txtProxyServer.Size = new System.Drawing.Size(250, 20);
+            this.txtProxyServer.Size = new System.Drawing.Size(282, 20);
             this.txtProxyServer.TabIndex = 2;
             // 
             // lbl3ProxyUser
             // 
             this.lbl3ProxyUser.AutoSize = true;
-            this.lbl3ProxyUser.Location = new System.Drawing.Point(40, 92);
+            this.lbl3ProxyUser.Location = new System.Drawing.Point(7, 92);
             this.lbl3ProxyUser.Name = "lbl3ProxyUser";
-            this.lbl3ProxyUser.Size = new System.Drawing.Size(58, 13);
+            this.lbl3ProxyUser.Size = new System.Drawing.Size(55, 13);
             this.lbl3ProxyUser.TabIndex = 6;
-            this.lbl3ProxyUser.Text = "Username:";
+            this.lbl3ProxyUser.Text = "Username";
             // 
             // lbl3Port
             // 
             this.lbl3Port.AutoSize = true;
-            this.lbl3Port.Location = new System.Drawing.Point(354, 43);
+            this.lbl3Port.Location = new System.Drawing.Point(360, 43);
             this.lbl3Port.Name = "lbl3Port";
-            this.lbl3Port.Size = new System.Drawing.Size(29, 13);
+            this.lbl3Port.Size = new System.Drawing.Size(26, 13);
             this.lbl3Port.TabIndex = 3;
-            this.lbl3Port.Text = "Port:";
+            this.lbl3Port.Text = "Port";
             // 
             // lbl3Proxy
             // 
             this.lbl3Proxy.AutoSize = true;
-            this.lbl3Proxy.Location = new System.Drawing.Point(22, 43);
+            this.lbl3Proxy.Location = new System.Drawing.Point(24, 43);
             this.lbl3Proxy.Name = "lbl3Proxy";
-            this.lbl3Proxy.Size = new System.Drawing.Size(70, 13);
+            this.lbl3Proxy.Size = new System.Drawing.Size(38, 13);
             this.lbl3Proxy.TabIndex = 1;
-            this.lbl3Proxy.Text = "Proxy Server:";
+            this.lbl3Proxy.Text = "Server";
             // 
             // openConfigDialog
             // 
