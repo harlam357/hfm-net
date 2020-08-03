@@ -29,11 +29,11 @@ namespace HFM.Forms.Models
             EocUserID = Preferences.Get<int>(Preference.EocUserId);
             FahUserID = Preferences.Get<string>(Preference.StanfordId);
             TeamID = Preferences.Get<int>(Preference.TeamId);
-            ShowXmlStats = Preferences.Get<bool>(Preference.EnableUserStats);
+            EocUserStatsEnabled = Preferences.Get<bool>(Preference.EnableUserStats);
             LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
             FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
             MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
-            FormShowStyle = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
+            MinimizeToOption = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
         }
 
         public override void Save()
@@ -43,11 +43,11 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.EocUserId, EocUserID);
             Preferences.Set(Preference.StanfordId, FahUserID);
             Preferences.Set(Preference.TeamId, TeamID);
-            Preferences.Set(Preference.EnableUserStats, ShowXmlStats);
+            Preferences.Set(Preference.EnableUserStats, EocUserStatsEnabled);
             Preferences.Set(Preference.LogFileViewer, LogFileViewer);
             Preferences.Set(Preference.FileExplorer, FileExplorer);
             Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
-            Preferences.Set(Preference.MinimizeTo, FormShowStyle);
+            Preferences.Set(Preference.MinimizeTo, MinimizeToOption);
         }
 
         public void SaveAutoRunConfiguration()
@@ -206,16 +206,16 @@ namespace HFM.Forms.Models
             return TeamID >= 0;
         }
 
-        private bool _showXmlStats;
+        private bool _eocUserStatsEnabled;
 
-        public bool ShowXmlStats
+        public bool EocUserStatsEnabled
         {
-            get { return _showXmlStats; }
+            get { return _eocUserStatsEnabled; }
             set
             {
-                if (ShowXmlStats != value)
+                if (EocUserStatsEnabled != value)
                 {
-                    _showXmlStats = value;
+                    _eocUserStatsEnabled = value;
                     OnPropertyChanged();
                 }
             }
@@ -280,16 +280,16 @@ namespace HFM.Forms.Models
 
         #region Form Docking Style
 
-        private MinimizeToOption _formShowStyle;
+        private MinimizeToOption _minimizeToOption;
 
-        public MinimizeToOption FormShowStyle
+        public MinimizeToOption MinimizeToOption
         {
-            get { return _formShowStyle; }
+            get { return _minimizeToOption; }
             set
             {
-                if (FormShowStyle != value)
+                if (MinimizeToOption != value)
                 {
-                    _formShowStyle = value;
+                    _minimizeToOption = value;
                     OnPropertyChanged();
                 }
             }

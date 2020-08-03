@@ -163,38 +163,38 @@ namespace HFM.Forms
             // Startup
             if (!Core.Application.IsRunningOnMono)
             {
-                chkAutoRun.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoRun));
+                optionsAutoRunCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoRun));
             }
             else
             {
                 // No AutoRun under Mono
-                chkAutoRun.Enabled = false;
+                optionsAutoRunCheckBox.Enabled = false;
             }
 
-            chkRunMinimized.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.RunMinimized));
-            chkCheckForUpdate.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.StartupCheckForUpdate));
+            optionsRunMinimizedCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.RunMinimized));
+            optionsStartupCheckForUpdateCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.StartupCheckForUpdate));
 
             // Identity
-            EocUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.EocUserID));
-            FahUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FahUserID));
-            FahTeamIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.TeamID));
-            EocUserStatsCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.ShowXmlStats));
+            optionsEocUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.EocUserID));
+            optionsFahUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FahUserID));
+            optionsFahTeamIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.TeamID));
+            optionsEocUserStatsEnabledCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.EocUserStatsEnabled));
 
             // External Programs
-            LogFileViewerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.LogFileViewer));
-            FileExplorerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FileExplorer));
+            optionsLogFileViewerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.LogFileViewer));
+            optionsFileExplorerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FileExplorer));
 
             // Debug Message Level
-            cboMessageLevel.DataSource = OptionsModel.DebugList;
-            cboMessageLevel.DisplayMember = "DisplayMember";
-            cboMessageLevel.ValueMember = "ValueMember";
-            cboMessageLevel.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
+            optionsMessageLevelComboBox.DataSource = OptionsModel.DebugList;
+            optionsMessageLevelComboBox.DisplayMember = "DisplayMember";
+            optionsMessageLevelComboBox.ValueMember = "ValueMember";
+            optionsMessageLevelComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.MessageLevel), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // Form Docking Style
-            cboShowStyle.DataSource = OptionsModel.DockingStyleList;
-            cboShowStyle.DisplayMember = "DisplayMember";
-            cboShowStyle.ValueMember = "ValueMember";
-            cboShowStyle.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.FormShowStyle), false, DataSourceUpdateMode.OnPropertyChanged);
+            optionsMinimizeToOptionComboBox.DataSource = OptionsModel.DockingStyleList;
+            optionsMinimizeToOptionComboBox.DisplayMember = "DisplayMember";
+            optionsMinimizeToOptionComboBox.ValueMember = "ValueMember";
+            optionsMinimizeToOptionComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.OptionsModel, nameof(OptionsModel.MinimizeToOption), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void LoadClientsTab()
@@ -459,7 +459,7 @@ namespace HFM.Forms
             }
             else if (_presenter.Model.OptionsModel.HasError)
             {
-                tabControl1.SelectedTab = OptionsTab;
+                tabControl1.SelectedTab = optionsTab;
             }
             else if (_presenter.Model.WebGenerationModel.HasError)
             {

@@ -86,10 +86,10 @@ namespace HFM.Forms
             switch (propertyName)
             {
                 case nameof(OptionsModel.LogFileViewer):
-                    LogFileViewerTextBox.Text = _presenter.Model.OptionsModel.LogFileViewer;
+                    optionsLogFileViewerTextBox.Text = _presenter.Model.OptionsModel.LogFileViewer;
                     break;
                 case nameof(OptionsModel.FileExplorer):
-                    FileExplorerTextBox.Text = _presenter.Model.OptionsModel.FileExplorer;
+                    optionsFileExplorerTextBox.Text = _presenter.Model.OptionsModel.FileExplorer;
                     break;
             }
         }
