@@ -26,6 +26,9 @@ namespace HFM.Forms.Models
             AutoRun = AutoRunConfiguration.IsEnabled();
             RunMinimized = Preferences.Get<bool>(Preference.RunMinimized);
             StartupCheckForUpdate = Preferences.Get<bool>(Preference.StartupCheckForUpdate);
+            EocUserID = Preferences.Get<int>(Preference.EocUserId);
+            FahUserID = Preferences.Get<string>(Preference.StanfordId);
+            TeamID = Preferences.Get<int>(Preference.TeamId);
             LogFileViewer = Preferences.Get<string>(Preference.LogFileViewer);
             FileExplorer = Preferences.Get<string>(Preference.FileExplorer);
             MessageLevel = (LoggerLevel)Preferences.Get<int>(Preference.MessageLevel);
@@ -36,6 +39,9 @@ namespace HFM.Forms.Models
         {
             Preferences.Set(Preference.RunMinimized, RunMinimized);
             Preferences.Set(Preference.StartupCheckForUpdate, StartupCheckForUpdate);
+            Preferences.Set(Preference.EocUserId, EocUserID);
+            Preferences.Set(Preference.StanfordId, FahUserID);
+            Preferences.Set(Preference.TeamId, TeamID);
             Preferences.Set(Preference.LogFileViewer, LogFileViewer);
             Preferences.Set(Preference.FileExplorer, FileExplorer);
             Preferences.Set(Preference.MessageLevel, (int)MessageLevel);
@@ -53,6 +59,12 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
+                    case nameof(EocUserID):
+                        return ValidateEocUserID() ? null : EocUserIDError;
+                    case nameof(FahUserID):
+                        return ValidateFahUserID() ? null : FahUserIDError;
+                    case nameof(TeamID):
+                        return ValidateTeamID() ? null : TeamIDError;
                     default:
                         return null;
                 }
@@ -63,7 +75,12 @@ namespace HFM.Forms.Models
         {
             get
             {
-                var names = new string[0];
+                var names = new[]
+                {
+                    nameof(EocUserID),
+                    nameof(FahUserID),
+                    nameof(TeamID)
+                };
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
             }
@@ -114,6 +131,77 @@ namespace HFM.Forms.Models
                     OnPropertyChanged();
                 }
             }
+        }
+
+        #endregion
+
+        #region Identity
+
+        private int _eocUserID;
+
+        public int EocUserID
+        {
+            get { return _eocUserID; }
+            set
+            {
+                if (EocUserID != value)
+                {
+                    _eocUserID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private const string EocUserIDError = "Provide EOC user ID.";
+
+        private bool ValidateEocUserID()
+        {
+            return EocUserID >= 0;
+        }
+
+        private string _fahUserID;
+
+        public string FahUserID
+        {
+            get { return _fahUserID; }
+            set
+            {
+                if (FahUserID != value)
+                {
+                    string newValue = value == null ? String.Empty : value.Trim();
+                    _fahUserID = newValue;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private const string FahUserIDError = "Provide FAH user ID.";
+
+        private bool ValidateFahUserID()
+        {
+            return FahUserID is null || FahUserID.Length != 0;
+        }
+
+        private int _teamID;
+
+        public int TeamID
+        {
+            get { return _teamID; }
+            set
+            {
+                if (TeamID != value)
+                {
+                    _teamID = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private const string TeamIDError = "Provide FAH team number.";
+
+        private bool ValidateTeamID()
+        {
+            return TeamID >= 0;
         }
 
         #endregion

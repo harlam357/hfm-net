@@ -178,7 +178,7 @@ namespace HFM.Forms
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
             using (var presenter = new MockDialogPreferencesPresenter(model))
             {
-                model.WebSettingsModel.EocUserId = 12345;
+                model.OptionsModel.EocUserID = 12345;
                 // Act
                 var localProcess = new MockLocalProcessService();
                 presenter.TestExtremeOverclockingUserClicked(localProcess);

@@ -184,6 +184,11 @@ namespace HFM.Forms
             chkRunMinimized.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.RunMinimized));
             chkCheckForUpdate.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.StartupCheckForUpdate));
 
+            // Identity
+            EocUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.EocUserID));
+            FahUserIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FahUserID));
+            FahTeamIDTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.TeamID));
+
             // External Programs
             LogFileViewerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.LogFileViewer));
             FileExplorerTextBox.BindText(_presenter.Model.OptionsModel, nameof(OptionsModel.FileExplorer));
@@ -268,11 +273,6 @@ namespace HFM.Forms
 
         private void LoadWebSettingsTab()
         {
-            // Web Statistics
-            txtEOCUserID.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.EocUserId));
-            txtStanfordUserID.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.StanfordId));
-            txtStanfordTeamID.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.TeamId));
-
             // Project Download URL
             txtProjectDownloadUrl.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProjectDownloadUrl));
 
@@ -372,18 +372,18 @@ namespace HFM.Forms
             }
         }
 
-        // Web Tab
-        private void linkEOC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        // Identity
+        private void TestEocUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestExtremeOverclockingUserClicked(LocalProcessService.Default);
         }
 
-        private void linkStanford_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void TestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestFoldingAtHomeUserClicked(LocalProcessService.Default);
         }
 
-        private void linkTeam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void TestFahTeamIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.TestExtremeOverclockingTeamClicked(LocalProcessService.Default);
         }

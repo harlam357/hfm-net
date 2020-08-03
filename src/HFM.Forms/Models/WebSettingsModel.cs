@@ -19,9 +19,6 @@ namespace HFM.Forms.Models
 
         public override void Load()
         {
-            EocUserId = Preferences.Get<int>(Preference.EocUserId);
-            StanfordId = Preferences.Get<string>(Preference.StanfordId);
-            TeamId = Preferences.Get<int>(Preference.TeamId);
             ProjectDownloadUrl = Preferences.Get<string>(Preference.ProjectDownloadUrl);
             ProxyServer = Preferences.Get<string>(Preference.ProxyServer);
             ProxyPort = Preferences.Get<int>(Preference.ProxyPort);
@@ -33,9 +30,6 @@ namespace HFM.Forms.Models
 
         public override void Save()
         {
-            Preferences.Set(Preference.EocUserId, EocUserId);
-            Preferences.Set(Preference.StanfordId, StanfordId);
-            Preferences.Set(Preference.TeamId, TeamId);
             Preferences.Set(Preference.ProjectDownloadUrl, ProjectDownloadUrl);
             Preferences.Set(Preference.ProxyServer, ProxyServer);
             Preferences.Set(Preference.ProxyPort, ProxyPort);
@@ -51,12 +45,6 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(EocUserId):
-                        return ValidateEocUserId() ? null : EocUserIdError;
-                    case nameof(StanfordId):
-                        return ValidateStanfordId() ? null : StanfordIdError;
-                    case nameof(TeamId):
-                        return ValidateTeamId() ? null : TeamIdError;
                     case nameof(ProjectDownloadUrl):
                         return ValidateProjectDownloadUrl() ? null : ProjectDownloadUrlError;
                     case nameof(ProxyServer):
@@ -77,9 +65,6 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(EocUserId),
-                    nameof(StanfordId),
-                    nameof(TeamId),
                     nameof(ProjectDownloadUrl),
                     nameof(ProxyServer),
                     nameof(ProxyUser)
@@ -88,77 +73,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        #region Web Statistics
-
-        private int _eocUserId;
-
-        public int EocUserId
-        {
-            get { return _eocUserId; }
-            set
-            {
-                if (EocUserId != value)
-                {
-                    _eocUserId = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private const string EocUserIdError = "Provide EOC user ID.";
-
-        private bool ValidateEocUserId()
-        {
-            return EocUserId >= 0;
-        }
-
-        private string _stanfordId;
-
-        public string StanfordId
-        {
-            get { return _stanfordId; }
-            set
-            {
-                if (StanfordId != value)
-                {
-                    string newValue = value == null ? String.Empty : value.Trim();
-                    _stanfordId = newValue;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private const string StanfordIdError = "Provide FAH user ID.";
-
-        private bool ValidateStanfordId()
-        {
-            return StanfordId is null || StanfordId.Length != 0;
-        }
-
-        private int _teamId;
-
-        public int TeamId
-        {
-            get { return _teamId; }
-            set
-            {
-                if (TeamId != value)
-                {
-                    _teamId = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private const string TeamIdError = "Provide FAH team number.";
-
-        private bool ValidateTeamId()
-        {
-            return TeamId >= 0;
-        }
-
-        #endregion
 
         #region Project Download URL
 

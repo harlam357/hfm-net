@@ -96,21 +96,21 @@ namespace HFM.Forms
 
         public void TestExtremeOverclockingUserClicked(LocalProcessService localProcess)
         {
-            string url = String.Concat(EocStatsService.UserBaseUrl, Model.WebSettingsModel.EocUserId);
+            string url = String.Concat(EocStatsService.UserBaseUrl, Model.OptionsModel.EocUserID);
             string caption = "EOC User Stats page";
             TestUrl(localProcess, url, caption);
         }
 
         public void TestFoldingAtHomeUserClicked(LocalProcessService localProcess)
         {
-            string url = String.Concat(FahUrl.UserBaseUrl, Model.WebSettingsModel.StanfordId);
+            string url = String.Concat(FahUrl.UserBaseUrl, Model.OptionsModel.FahUserID);
             string caption = "FAH User Stats page";
             TestUrl(localProcess, url, caption);
         }
 
         public void TestExtremeOverclockingTeamClicked(LocalProcessService localProcess)
         {
-            string url = String.Concat(EocStatsService.TeamBaseUrl, Model.WebSettingsModel.TeamId);
+            string url = String.Concat(EocStatsService.TeamBaseUrl, Model.OptionsModel.TeamID);
             string caption = "EOC Team Stats page";
             TestUrl(localProcess, url, caption);
         }

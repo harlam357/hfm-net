@@ -76,6 +76,16 @@ namespace HFM.Forms
             this.WebSiteTargetPathLabel = new System.Windows.Forms.Label();
             this.chkWebSiteGenerator = new System.Windows.Forms.CheckBox();
             this.OptionsTab = new System.Windows.Forms.TabPage();
+            this.IdentityGroupBox = new System.Windows.Forms.GroupBox();
+            this.EocUserIDLabel = new System.Windows.Forms.Label();
+            this.FahUserIDLabel = new System.Windows.Forms.Label();
+            this.TestFahTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.EocUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.FahTeamIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.FahTeamIDLabel = new System.Windows.Forms.Label();
+            this.TestFahUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.FahUserIDTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.TestEocUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.grpShowStyle = new System.Windows.Forms.GroupBox();
             this.cboShowStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapper2 = new System.Windows.Forms.Label();
@@ -133,16 +143,6 @@ namespace HFM.Forms
             this.grpProjectDownload = new System.Windows.Forms.GroupBox();
             this.txtProjectDownloadUrl = new HFM.Forms.Controls.DataErrorTextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.grpWebStats = new System.Windows.Forms.GroupBox();
-            this.EOCUserIDLabel = new System.Windows.Forms.Label();
-            this.FahUserIDLabel = new System.Windows.Forms.Label();
-            this.TestFAHTeamIDLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.txtEOCUserID = new HFM.Forms.Controls.DataErrorTextBox();
-            this.txtStanfordTeamID = new HFM.Forms.Controls.DataErrorTextBox();
-            this.FAHTeamIDLabel = new System.Windows.Forms.Label();
-            this.TestFAHUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.txtStanfordUserID = new HFM.Forms.Controls.DataErrorTextBox();
-            this.TestEOCUserIDLinkLabel = new System.Windows.Forms.LinkLabel();
             this.grpWebProxy = new System.Windows.Forms.GroupBox();
             this.chkUseProxy = new System.Windows.Forms.CheckBox();
             this.chkUseProxyAuth = new System.Windows.Forms.CheckBox();
@@ -178,6 +178,7 @@ namespace HFM.Forms
             this.FtpModePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).BeginInit();
             this.OptionsTab.SuspendLayout();
+            this.IdentityGroupBox.SuspendLayout();
             this.grpShowStyle.SuspendLayout();
             this.LoggingGroupBox.SuspendLayout();
             this.ExternalProgramsGroupBox.SuspendLayout();
@@ -190,7 +191,6 @@ namespace HFM.Forms
             this.grpEmailSettings.SuspendLayout();
             this.tabWeb.SuspendLayout();
             this.grpProjectDownload.SuspendLayout();
-            this.grpWebStats.SuspendLayout();
             this.grpWebProxy.SuspendLayout();
             this.tabVisStyles.SuspendLayout();
             this.SuspendLayout();
@@ -739,6 +739,7 @@ namespace HFM.Forms
             // 
             // OptionsTab
             // 
+            this.OptionsTab.Controls.Add(this.IdentityGroupBox);
             this.OptionsTab.Controls.Add(this.grpShowStyle);
             this.OptionsTab.Controls.Add(this.LoggingGroupBox);
             this.OptionsTab.Controls.Add(this.ExternalProgramsGroupBox);
@@ -751,11 +752,133 @@ namespace HFM.Forms
             this.OptionsTab.Text = "Options";
             this.OptionsTab.UseVisualStyleBackColor = true;
             // 
+            // IdentityGroupBox
+            // 
+            this.IdentityGroupBox.Controls.Add(this.EocUserIDLabel);
+            this.IdentityGroupBox.Controls.Add(this.FahUserIDLabel);
+            this.IdentityGroupBox.Controls.Add(this.TestFahTeamIDLinkLabel);
+            this.IdentityGroupBox.Controls.Add(this.EocUserIDTextBox);
+            this.IdentityGroupBox.Controls.Add(this.FahTeamIDTextBox);
+            this.IdentityGroupBox.Controls.Add(this.FahTeamIDLabel);
+            this.IdentityGroupBox.Controls.Add(this.TestFahUserIDLinkLabel);
+            this.IdentityGroupBox.Controls.Add(this.FahUserIDTextBox);
+            this.IdentityGroupBox.Controls.Add(this.TestEocUserIDLinkLabel);
+            this.IdentityGroupBox.Location = new System.Drawing.Point(6, 65);
+            this.IdentityGroupBox.Name = "IdentityGroupBox";
+            this.IdentityGroupBox.Size = new System.Drawing.Size(489, 77);
+            this.IdentityGroupBox.TabIndex = 8;
+            this.IdentityGroupBox.TabStop = false;
+            this.IdentityGroupBox.Text = "Identity";
+            // 
+            // EocUserIDLabel
+            // 
+            this.EocUserIDLabel.AutoSize = true;
+            this.EocUserIDLabel.Location = new System.Drawing.Point(247, 22);
+            this.EocUserIDLabel.Name = "EocUserIDLabel";
+            this.EocUserIDLabel.Size = new System.Drawing.Size(71, 13);
+            this.EocUserIDLabel.TabIndex = 0;
+            this.EocUserIDLabel.Text = "EOC User ID:";
+            // 
+            // FahUserIDLabel
+            // 
+            this.FahUserIDLabel.AutoSize = true;
+            this.FahUserIDLabel.Location = new System.Drawing.Point(7, 22);
+            this.FahUserIDLabel.Name = "FahUserIDLabel";
+            this.FahUserIDLabel.Size = new System.Drawing.Size(70, 13);
+            this.FahUserIDLabel.TabIndex = 1;
+            this.FahUserIDLabel.Text = "FAH User ID:";
+            // 
+            // TestFahTeamIDLinkLabel
+            // 
+            this.TestFahTeamIDLinkLabel.AutoSize = true;
+            this.TestFahTeamIDLinkLabel.Location = new System.Drawing.Point(211, 48);
+            this.TestFahTeamIDLinkLabel.Name = "TestFahTeamIDLinkLabel";
+            this.TestFahTeamIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.TestFahTeamIDLinkLabel.TabIndex = 8;
+            this.TestFahTeamIDLinkLabel.TabStop = true;
+            this.TestFahTeamIDLinkLabel.Text = "Test";
+            this.TestFahTeamIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahTeamIDLinkLabel_LinkClicked);
+            // 
+            // EocUserIDTextBox
+            // 
+            this.EocUserIDTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.EocUserIDTextBox.DoubleBuffered = true;
+            this.EocUserIDTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.EocUserIDTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.EocUserIDTextBox.ErrorToolTipDuration = 5000;
+            this.EocUserIDTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.EocUserIDTextBox.ErrorToolTipText = "";
+            this.EocUserIDTextBox.Location = new System.Drawing.Point(325, 19);
+            this.EocUserIDTextBox.MaxLength = 9;
+            this.EocUserIDTextBox.Name = "EocUserIDTextBox";
+            this.EocUserIDTextBox.Size = new System.Drawing.Size(120, 20);
+            this.EocUserIDTextBox.TabIndex = 3;
+            // 
+            // FahTeamIDTextBox
+            // 
+            this.FahTeamIDTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.FahTeamIDTextBox.DoubleBuffered = true;
+            this.FahTeamIDTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.FahTeamIDTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.FahTeamIDTextBox.ErrorToolTipDuration = 5000;
+            this.FahTeamIDTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.FahTeamIDTextBox.ErrorToolTipText = "";
+            this.FahTeamIDTextBox.Location = new System.Drawing.Point(85, 45);
+            this.FahTeamIDTextBox.MaxLength = 9;
+            this.FahTeamIDTextBox.Name = "FahTeamIDTextBox";
+            this.FahTeamIDTextBox.Size = new System.Drawing.Size(120, 20);
+            this.FahTeamIDTextBox.TabIndex = 5;
+            // 
+            // FahTeamIDLabel
+            // 
+            this.FahTeamIDLabel.AutoSize = true;
+            this.FahTeamIDLabel.Location = new System.Drawing.Point(7, 48);
+            this.FahTeamIDLabel.Name = "FahTeamIDLabel";
+            this.FahTeamIDLabel.Size = new System.Drawing.Size(75, 13);
+            this.FahTeamIDLabel.TabIndex = 2;
+            this.FahTeamIDLabel.Text = "FAH Team ID:";
+            // 
+            // TestFahUserIDLinkLabel
+            // 
+            this.TestFahUserIDLinkLabel.AutoSize = true;
+            this.TestFahUserIDLinkLabel.Location = new System.Drawing.Point(211, 22);
+            this.TestFahUserIDLinkLabel.Name = "TestFahUserIDLinkLabel";
+            this.TestFahUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.TestFahUserIDLinkLabel.TabIndex = 7;
+            this.TestFahUserIDLinkLabel.TabStop = true;
+            this.TestFahUserIDLinkLabel.Text = "Test";
+            this.TestFahUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahUserIDLinkLabel_LinkClicked);
+            // 
+            // FahUserIDTextBox
+            // 
+            this.FahUserIDTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.FahUserIDTextBox.DoubleBuffered = true;
+            this.FahUserIDTextBox.ErrorBackColor = System.Drawing.Color.Yellow;
+            this.FahUserIDTextBox.ErrorToolTip = this.toolTipPrefs;
+            this.FahUserIDTextBox.ErrorToolTipDuration = 5000;
+            this.FahUserIDTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
+            this.FahUserIDTextBox.ErrorToolTipText = "";
+            this.FahUserIDTextBox.Location = new System.Drawing.Point(85, 19);
+            this.FahUserIDTextBox.Name = "FahUserIDTextBox";
+            this.FahUserIDTextBox.Size = new System.Drawing.Size(120, 20);
+            this.FahUserIDTextBox.TabIndex = 4;
+            // 
+            // TestEocUserIDLinkLabel
+            // 
+            this.TestEocUserIDLinkLabel.AutoSize = true;
+            this.TestEocUserIDLinkLabel.Location = new System.Drawing.Point(451, 22);
+            this.TestEocUserIDLinkLabel.Name = "TestEocUserIDLinkLabel";
+            this.TestEocUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
+            this.TestEocUserIDLinkLabel.TabIndex = 6;
+            this.TestEocUserIDLinkLabel.TabStop = true;
+            this.TestEocUserIDLinkLabel.Text = "Test";
+            this.TestEocUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestEocUserIDLinkLabel_LinkClicked);
+            // 
             // grpShowStyle
             // 
             this.grpShowStyle.Controls.Add(this.cboShowStyle);
             this.grpShowStyle.Controls.Add(this.labelWrapper2);
-            this.grpShowStyle.Location = new System.Drawing.Point(254, 151);
+            this.grpShowStyle.Location = new System.Drawing.Point(254, 234);
             this.grpShowStyle.Name = "grpShowStyle";
             this.grpShowStyle.Size = new System.Drawing.Size(241, 54);
             this.grpShowStyle.TabIndex = 7;
@@ -784,7 +907,7 @@ namespace HFM.Forms
             // 
             this.LoggingGroupBox.Controls.Add(this.cboMessageLevel);
             this.LoggingGroupBox.Controls.Add(this.label6);
-            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 151);
+            this.LoggingGroupBox.Location = new System.Drawing.Point(6, 234);
             this.LoggingGroupBox.Name = "LoggingGroupBox";
             this.LoggingGroupBox.Size = new System.Drawing.Size(241, 54);
             this.LoggingGroupBox.TabIndex = 6;
@@ -817,7 +940,7 @@ namespace HFM.Forms
             this.ExternalProgramsGroupBox.Controls.Add(this.btnBrowseLogViewer);
             this.ExternalProgramsGroupBox.Controls.Add(this.label3);
             this.ExternalProgramsGroupBox.Controls.Add(this.LogFileViewerTextBox);
-            this.ExternalProgramsGroupBox.Location = new System.Drawing.Point(6, 65);
+            this.ExternalProgramsGroupBox.Location = new System.Drawing.Point(6, 148);
             this.ExternalProgramsGroupBox.Name = "ExternalProgramsGroupBox";
             this.ExternalProgramsGroupBox.Size = new System.Drawing.Size(489, 84);
             this.ExternalProgramsGroupBox.TabIndex = 5;
@@ -1365,7 +1488,6 @@ namespace HFM.Forms
             // 
             this.tabWeb.BackColor = System.Drawing.Color.Transparent;
             this.tabWeb.Controls.Add(this.grpProjectDownload);
-            this.tabWeb.Controls.Add(this.grpWebStats);
             this.tabWeb.Controls.Add(this.grpWebProxy);
             this.tabWeb.Location = new System.Drawing.Point(4, 22);
             this.tabWeb.Name = "tabWeb";
@@ -1408,130 +1530,6 @@ namespace HFM.Forms
             this.label5.Size = new System.Drawing.Size(48, 13);
             this.label5.TabIndex = 0;
             this.label5.Text = "Address:";
-            // 
-            // grpWebStats
-            // 
-            this.grpWebStats.Controls.Add(this.EOCUserIDLabel);
-            this.grpWebStats.Controls.Add(this.FahUserIDLabel);
-            this.grpWebStats.Controls.Add(this.TestFAHTeamIDLinkLabel);
-            this.grpWebStats.Controls.Add(this.txtEOCUserID);
-            this.grpWebStats.Controls.Add(this.txtStanfordTeamID);
-            this.grpWebStats.Controls.Add(this.FAHTeamIDLabel);
-            this.grpWebStats.Controls.Add(this.TestFAHUserIDLinkLabel);
-            this.grpWebStats.Controls.Add(this.txtStanfordUserID);
-            this.grpWebStats.Controls.Add(this.TestEOCUserIDLinkLabel);
-            this.grpWebStats.Location = new System.Drawing.Point(6, 9);
-            this.grpWebStats.Name = "grpWebStats";
-            this.grpWebStats.Size = new System.Drawing.Size(489, 102);
-            this.grpWebStats.TabIndex = 0;
-            this.grpWebStats.TabStop = false;
-            this.grpWebStats.Text = "Web Statistics";
-            // 
-            // EOCUserIDLabel
-            // 
-            this.EOCUserIDLabel.AutoSize = true;
-            this.EOCUserIDLabel.Location = new System.Drawing.Point(7, 74);
-            this.EOCUserIDLabel.Name = "EOCUserIDLabel";
-            this.EOCUserIDLabel.Size = new System.Drawing.Size(71, 13);
-            this.EOCUserIDLabel.TabIndex = 0;
-            this.EOCUserIDLabel.Text = "EOC User ID:";
-            // 
-            // FahUserIDLabel
-            // 
-            this.FahUserIDLabel.AutoSize = true;
-            this.FahUserIDLabel.Location = new System.Drawing.Point(7, 22);
-            this.FahUserIDLabel.Name = "FahUserIDLabel";
-            this.FahUserIDLabel.Size = new System.Drawing.Size(70, 13);
-            this.FahUserIDLabel.TabIndex = 1;
-            this.FahUserIDLabel.Text = "FAH User ID:";
-            // 
-            // TestFAHTeamIDLinkLabel
-            // 
-            this.TestFAHTeamIDLinkLabel.AutoSize = true;
-            this.TestFAHTeamIDLinkLabel.Location = new System.Drawing.Point(229, 48);
-            this.TestFAHTeamIDLinkLabel.Name = "TestFAHTeamIDLinkLabel";
-            this.TestFAHTeamIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestFAHTeamIDLinkLabel.TabIndex = 8;
-            this.TestFAHTeamIDLinkLabel.TabStop = true;
-            this.TestFAHTeamIDLinkLabel.Text = "Test";
-            this.TestFAHTeamIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTeam_LinkClicked);
-            // 
-            // txtEOCUserID
-            // 
-            this.txtEOCUserID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtEOCUserID.DoubleBuffered = true;
-            this.txtEOCUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtEOCUserID.ErrorToolTip = this.toolTipPrefs;
-            this.txtEOCUserID.ErrorToolTipDuration = 5000;
-            this.txtEOCUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtEOCUserID.ErrorToolTipText = "";
-            this.txtEOCUserID.Location = new System.Drawing.Point(85, 71);
-            this.txtEOCUserID.MaxLength = 9;
-            this.txtEOCUserID.Name = "txtEOCUserID";
-            this.txtEOCUserID.Size = new System.Drawing.Size(138, 20);
-            this.txtEOCUserID.TabIndex = 3;
-            this.txtEOCUserID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
-            // 
-            // txtStanfordTeamID
-            // 
-            this.txtStanfordTeamID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtStanfordTeamID.DoubleBuffered = true;
-            this.txtStanfordTeamID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordTeamID.ErrorToolTip = this.toolTipPrefs;
-            this.txtStanfordTeamID.ErrorToolTipDuration = 5000;
-            this.txtStanfordTeamID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtStanfordTeamID.ErrorToolTipText = "";
-            this.txtStanfordTeamID.Location = new System.Drawing.Point(85, 45);
-            this.txtStanfordTeamID.MaxLength = 9;
-            this.txtStanfordTeamID.Name = "txtStanfordTeamID";
-            this.txtStanfordTeamID.Size = new System.Drawing.Size(138, 20);
-            this.txtStanfordTeamID.TabIndex = 5;
-            this.txtStanfordTeamID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
-            // 
-            // FAHTeamIDLabel
-            // 
-            this.FAHTeamIDLabel.AutoSize = true;
-            this.FAHTeamIDLabel.Location = new System.Drawing.Point(7, 48);
-            this.FAHTeamIDLabel.Name = "FAHTeamIDLabel";
-            this.FAHTeamIDLabel.Size = new System.Drawing.Size(75, 13);
-            this.FAHTeamIDLabel.TabIndex = 2;
-            this.FAHTeamIDLabel.Text = "FAH Team ID:";
-            // 
-            // TestFAHUserIDLinkLabel
-            // 
-            this.TestFAHUserIDLinkLabel.AutoSize = true;
-            this.TestFAHUserIDLinkLabel.Location = new System.Drawing.Point(229, 22);
-            this.TestFAHUserIDLinkLabel.Name = "TestFAHUserIDLinkLabel";
-            this.TestFAHUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestFAHUserIDLinkLabel.TabIndex = 7;
-            this.TestFAHUserIDLinkLabel.TabStop = true;
-            this.TestFAHUserIDLinkLabel.Text = "Test";
-            this.TestFAHUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStanford_LinkClicked);
-            // 
-            // txtStanfordUserID
-            // 
-            this.txtStanfordUserID.BackColor = System.Drawing.SystemColors.Window;
-            this.txtStanfordUserID.DoubleBuffered = true;
-            this.txtStanfordUserID.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtStanfordUserID.ErrorToolTip = this.toolTipPrefs;
-            this.txtStanfordUserID.ErrorToolTipDuration = 5000;
-            this.txtStanfordUserID.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtStanfordUserID.ErrorToolTipText = "";
-            this.txtStanfordUserID.Location = new System.Drawing.Point(85, 19);
-            this.txtStanfordUserID.Name = "txtStanfordUserID";
-            this.txtStanfordUserID.Size = new System.Drawing.Size(138, 20);
-            this.txtStanfordUserID.TabIndex = 4;
-            // 
-            // TestEOCUserIDLinkLabel
-            // 
-            this.TestEOCUserIDLinkLabel.AutoSize = true;
-            this.TestEOCUserIDLinkLabel.Location = new System.Drawing.Point(229, 74);
-            this.TestEOCUserIDLinkLabel.Name = "TestEOCUserIDLinkLabel";
-            this.TestEOCUserIDLinkLabel.Size = new System.Drawing.Size(28, 13);
-            this.TestEOCUserIDLinkLabel.TabIndex = 6;
-            this.TestEOCUserIDLinkLabel.TabStop = true;
-            this.TestEOCUserIDLinkLabel.Text = "Test";
-            this.TestEOCUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkEOC_LinkClicked);
             // 
             // grpWebProxy
             // 
@@ -1881,6 +1879,8 @@ namespace HFM.Forms
             this.FtpModePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udLimitSize)).EndInit();
             this.OptionsTab.ResumeLayout(false);
+            this.IdentityGroupBox.ResumeLayout(false);
+            this.IdentityGroupBox.PerformLayout();
             this.grpShowStyle.ResumeLayout(false);
             this.grpShowStyle.PerformLayout();
             this.LoggingGroupBox.ResumeLayout(false);
@@ -1901,8 +1901,6 @@ namespace HFM.Forms
             this.tabWeb.ResumeLayout(false);
             this.grpProjectDownload.ResumeLayout(false);
             this.grpProjectDownload.PerformLayout();
-            this.grpWebStats.ResumeLayout(false);
-            this.grpWebStats.PerformLayout();
             this.grpWebProxy.ResumeLayout(false);
             this.grpWebProxy.PerformLayout();
             this.tabVisStyles.ResumeLayout(false);
@@ -1929,22 +1927,12 @@ namespace HFM.Forms
         private System.Windows.Forms.TabPage tabWeb;
         private System.Windows.Forms.TabPage tabVisStyles;
         private System.Windows.Forms.TabPage tabSchdTasks;
-        private HFM.Forms.Controls.DataErrorTextBox txtStanfordUserID;
-        private HFM.Forms.Controls.DataErrorTextBox txtEOCUserID;
-        private System.Windows.Forms.Label FahUserIDLabel;
-        private System.Windows.Forms.Label EOCUserIDLabel;
-        private System.Windows.Forms.LinkLabel TestEOCUserIDLinkLabel;
-        private System.Windows.Forms.LinkLabel TestFAHUserIDLinkLabel;
-        private System.Windows.Forms.LinkLabel TestFAHTeamIDLinkLabel;
-        private HFM.Forms.Controls.DataErrorTextBox txtStanfordTeamID;
-        private System.Windows.Forms.Label FAHTeamIDLabel;
         private HFM.Forms.Controls.DataErrorTextBox txtCollectMinutes;
         private System.Windows.Forms.CheckBox chkScheduled;
         private System.Windows.Forms.CheckBox chkSynchronous;
         private HFM.Forms.Controls.DataErrorTextBox txtWebGenMinutes;
         private System.Windows.Forms.CheckBox chkWebSiteGenerator;
         private HFM.Forms.Controls.DataErrorTextBox WebSiteTargetPathTextBox;
-        private System.Windows.Forms.GroupBox grpWebStats;
         private System.Windows.Forms.GroupBox grpWebProxy;
         private HFM.Forms.Controls.DataErrorTextBox txtProxyServer;
         private System.Windows.Forms.Label lbl3Proxy;
@@ -2051,5 +2039,15 @@ namespace HFM.Forms
         private System.Windows.Forms.Button btnBrowseConfigFile;
         private Controls.DataErrorTextBox txtDefaultConfigFile;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox IdentityGroupBox;
+        private System.Windows.Forms.Label EocUserIDLabel;
+        private System.Windows.Forms.Label FahUserIDLabel;
+        private System.Windows.Forms.LinkLabel TestFahTeamIDLinkLabel;
+        private Controls.DataErrorTextBox EocUserIDTextBox;
+        private Controls.DataErrorTextBox FahTeamIDTextBox;
+        private System.Windows.Forms.Label FahTeamIDLabel;
+        private System.Windows.Forms.LinkLabel TestFahUserIDLinkLabel;
+        private Controls.DataErrorTextBox FahUserIDTextBox;
+        private System.Windows.Forms.LinkLabel TestEocUserIDLinkLabel;
     }
 }
