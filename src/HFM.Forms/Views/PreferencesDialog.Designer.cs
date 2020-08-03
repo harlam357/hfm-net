@@ -213,12 +213,12 @@ namespace HFM.Forms
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabSchdTasks);
-            this.tabControl1.Controls.Add(this.OptionsTab);
             this.tabControl1.Controls.Add(this.ClientsTab);
+            this.tabControl1.Controls.Add(this.OptionsTab);
+            this.tabControl1.Controls.Add(this.tabSchdTasks);
+            this.tabControl1.Controls.Add(this.tabVisStyles);
             this.tabControl1.Controls.Add(this.tabReporting);
             this.tabControl1.Controls.Add(this.tabWeb);
-            this.tabControl1.Controls.Add(this.tabVisStyles);
             this.tabControl1.HotTrack = true;
             this.tabControl1.Location = new System.Drawing.Point(13, 13);
             this.tabControl1.Multiline = true;
@@ -1005,7 +1005,7 @@ namespace HFM.Forms
             this.RefreshClientDataGroupBox.TabStop = false;
             this.RefreshClientDataGroupBox.Text = "Refresh Client Data";
             // 
-            // txtCollectMinutes
+            // ClientRefreshIntervalTextBox
             // 
             this.ClientRefreshIntervalTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.ClientRefreshIntervalTextBox.DoubleBuffered = true;
@@ -1033,7 +1033,7 @@ namespace HFM.Forms
             this.lbl2SchedExplain.TabIndex = 5;
             this.lbl2SchedExplain.Text = "Minutes";
             // 
-            // chkScheduled
+            // ClientRefreshIntervalCheckBox
             // 
             this.ClientRefreshIntervalCheckBox.AutoSize = true;
             this.ClientRefreshIntervalCheckBox.Location = new System.Drawing.Point(10, 22);
@@ -1043,7 +1043,7 @@ namespace HFM.Forms
             this.ClientRefreshIntervalCheckBox.Text = "Every";
             this.ClientRefreshIntervalCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkSynchronous
+            // ClientSynchronousTextBox
             // 
             this.ClientSynchronousTextBox.AutoSize = true;
             this.ClientSynchronousTextBox.Location = new System.Drawing.Point(153, 22);

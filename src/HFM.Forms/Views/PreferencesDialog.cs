@@ -20,12 +20,12 @@ namespace HFM.Forms
         /// </summary>
         private enum TabName
         {
-            //ScheduledTasks = 0,
-            //StartupAndExternal = 1,
-            //Options = 2,
-            //Reporting = 3,
-            //WebSettings = 4,
-            WebVisualStyles = 5
+            //Clients = 0,
+            //Options = 1,
+            //ScheduledTasks = 2,
+            WebVisualStyles = 3
+            //Reporting = 4,
+            //WebSettings = 5,
         }
 
         #region Fields
@@ -67,12 +67,12 @@ namespace HFM.Forms
 
         private void PreferencesDialogLoad(object sender, EventArgs e)
         {
-            LoadScheduledTasksTab();
-            LoadOptionsTab();
             LoadClientsTab();
+            LoadOptionsTab();
+            LoadScheduledTasksTab();
+            LoadVisualStylesTab();
             LoadReportingTab();
             LoadWebSettingsTab();
-            LoadVisualStylesTab();
 
             // Cycle through Tabs to create all controls and Bind data
             for (int i = 0; i < tabControl1.TabPages.Count; i++)
@@ -460,17 +460,21 @@ namespace HFM.Forms
 
         private void SetSelectedTabWithError()
         {
-            if (_presenter.Model.ScheduledTasksModel.HasError)
+            if (_presenter.Model.ClientsModel.HasError)
             {
-                tabControl1.SelectedTab = tabSchdTasks;
+                tabControl1.SelectedTab = ClientsTab;
             }
             else if (_presenter.Model.OptionsModel.HasError)
             {
                 tabControl1.SelectedTab = OptionsTab;
             }
-            else if (_presenter.Model.ClientsModel.HasError)
+            else if (_presenter.Model.ScheduledTasksModel.HasError)
             {
-                tabControl1.SelectedTab = ClientsTab;
+                tabControl1.SelectedTab = tabSchdTasks;
+            }
+            else if (_presenter.Model.WebVisualStylesModel.HasError)
+            {
+                tabControl1.SelectedTab = tabVisStyles;
             }
             else if (_presenter.Model.ReportingModel.HasError)
             {
@@ -479,10 +483,6 @@ namespace HFM.Forms
             else if (_presenter.Model.WebSettingsModel.HasError)
             {
                 tabControl1.SelectedTab = tabWeb;
-            }
-            else if (_presenter.Model.WebVisualStylesModel.HasError)
-            {
-                tabControl1.SelectedTab = tabVisStyles;
             }
         }
 
