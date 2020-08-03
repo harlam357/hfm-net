@@ -35,7 +35,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_HasError()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.ProjectDownloadUrl = "foo";
+            model.WebSettingsModel.UseProxy = true;
             Assert.AreNotEqual(String.Empty, model.Error);
             Assert.IsTrue(model.HasError);
         }
@@ -61,10 +61,10 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void PreferencesModel_ValidateAcceptance_ReturnsTrueWhenModelHasError()
+        public void PreferencesModel_ValidateAcceptance_ReturnsFalseWhenModelHasError()
         {
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.ProjectDownloadUrl = "foo";
+            model.WebSettingsModel.UseProxy = true;
             Assert.IsFalse(model.ValidateAcceptance());
         }
 
@@ -73,12 +73,12 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var preferences = new InMemoryPreferenceSet();
-            preferences.Set(Preference.ProjectDownloadUrl, Proteins.ProjectSummaryUrl.Json);
+            preferences.Set(Preference.UseProxy, true);
             var model = new PreferencesModel(preferences, new InMemoryAutoRunConfiguration());
             // Act
             model.Load();
             // Assert
-            Assert.AreEqual(Proteins.ProjectSummaryUrl.Json, model.WebSettingsModel.ProjectDownloadUrl);
+            Assert.IsTrue(model.WebSettingsModel.UseProxy);
         }
 
         [Test]
@@ -86,11 +86,11 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
-            model.WebSettingsModel.ProjectDownloadUrl = Proteins.ProjectSummaryUrl.Json;
+            model.WebSettingsModel.UseProxy = true;
             // Act
             model.Save();
             // Assert
-            Assert.AreEqual(Proteins.ProjectSummaryUrl.Json, model.Preferences.Get<string>(Preference.ProjectDownloadUrl));
+            Assert.IsTrue(model.Preferences.Get<bool>(Preference.UseProxy));
         }
 
         [Test]

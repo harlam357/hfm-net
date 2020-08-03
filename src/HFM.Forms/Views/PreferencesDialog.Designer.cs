@@ -151,9 +151,6 @@ namespace HFM.Forms
             this.txtSmtpServer = new HFM.Forms.Controls.DataErrorTextBox();
             this.txtToEmailAddress = new HFM.Forms.Controls.DataErrorTextBox();
             this.ProxyTab = new System.Windows.Forms.TabPage();
-            this.grpProjectDownload = new System.Windows.Forms.GroupBox();
-            this.txtProjectDownloadUrl = new HFM.Forms.Controls.DataErrorTextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.grpWebProxy = new System.Windows.Forms.GroupBox();
             this.chkUseProxy = new System.Windows.Forms.CheckBox();
             this.chkUseProxyAuth = new System.Windows.Forms.CheckBox();
@@ -189,7 +186,6 @@ namespace HFM.Forms
             this.ReportingTab.SuspendLayout();
             this.grpEmailSettings.SuspendLayout();
             this.ProxyTab.SuspendLayout();
-            this.grpProjectDownload.SuspendLayout();
             this.grpWebProxy.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1618,7 +1614,6 @@ namespace HFM.Forms
             // ProxyTab
             // 
             this.ProxyTab.BackColor = System.Drawing.Color.Transparent;
-            this.ProxyTab.Controls.Add(this.grpProjectDownload);
             this.ProxyTab.Controls.Add(this.grpWebProxy);
             this.ProxyTab.Location = new System.Drawing.Point(4, 22);
             this.ProxyTab.Name = "ProxyTab";
@@ -1627,40 +1622,6 @@ namespace HFM.Forms
             this.ProxyTab.TabIndex = 1;
             this.ProxyTab.Text = "Proxy";
             this.ProxyTab.UseVisualStyleBackColor = true;
-            // 
-            // grpProjectDownload
-            // 
-            this.grpProjectDownload.Controls.Add(this.txtProjectDownloadUrl);
-            this.grpProjectDownload.Controls.Add(this.label5);
-            this.grpProjectDownload.Location = new System.Drawing.Point(6, 117);
-            this.grpProjectDownload.Name = "grpProjectDownload";
-            this.grpProjectDownload.Size = new System.Drawing.Size(489, 53);
-            this.grpProjectDownload.TabIndex = 1;
-            this.grpProjectDownload.TabStop = false;
-            this.grpProjectDownload.Text = "Project Download URL";
-            // 
-            // txtProjectDownloadUrl
-            // 
-            this.txtProjectDownloadUrl.BackColor = System.Drawing.SystemColors.Window;
-            this.txtProjectDownloadUrl.DoubleBuffered = true;
-            this.txtProjectDownloadUrl.ErrorBackColor = System.Drawing.Color.Yellow;
-            this.txtProjectDownloadUrl.ErrorToolTip = this.toolTipPrefs;
-            this.txtProjectDownloadUrl.ErrorToolTipDuration = 5000;
-            this.txtProjectDownloadUrl.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
-            this.txtProjectDownloadUrl.ErrorToolTipText = "";
-            this.txtProjectDownloadUrl.Location = new System.Drawing.Point(56, 19);
-            this.txtProjectDownloadUrl.Name = "txtProjectDownloadUrl";
-            this.txtProjectDownloadUrl.Size = new System.Drawing.Size(423, 20);
-            this.txtProjectDownloadUrl.TabIndex = 1;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 22);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(48, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Address:";
             // 
             // grpWebProxy
             // 
@@ -1674,7 +1635,7 @@ namespace HFM.Forms
             this.grpWebProxy.Controls.Add(this.lbl3ProxyUser);
             this.grpWebProxy.Controls.Add(this.lbl3Port);
             this.grpWebProxy.Controls.Add(this.lbl3Proxy);
-            this.grpWebProxy.Location = new System.Drawing.Point(6, 176);
+            this.grpWebProxy.Location = new System.Drawing.Point(6, 9);
             this.grpWebProxy.Name = "grpWebProxy";
             this.grpWebProxy.Size = new System.Drawing.Size(489, 117);
             this.grpWebProxy.TabIndex = 2;
@@ -1886,8 +1847,6 @@ namespace HFM.Forms
             this.grpEmailSettings.ResumeLayout(false);
             this.grpEmailSettings.PerformLayout();
             this.ProxyTab.ResumeLayout(false);
-            this.grpProjectDownload.ResumeLayout(false);
-            this.grpProjectDownload.PerformLayout();
             this.grpWebProxy.ResumeLayout(false);
             this.grpWebProxy.PerformLayout();
             this.ResumeLayout(false);
@@ -1925,9 +1884,6 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox chkUseProxy;
         private System.Windows.Forms.TabPage ClientsTab;
         private System.Windows.Forms.OpenFileDialog openConfigDialog;
-        private System.Windows.Forms.GroupBox grpProjectDownload;
-        private HFM.Forms.Controls.DataErrorTextBox txtProjectDownloadUrl;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RadioButton radioSchedule;
         private System.Windows.Forms.RadioButton radioFullRefresh;
         private System.Windows.Forms.ToolTip toolTipPrefs;

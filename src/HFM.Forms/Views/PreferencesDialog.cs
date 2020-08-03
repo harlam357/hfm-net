@@ -271,12 +271,7 @@ namespace HFM.Forms
 
         private void LoadWebSettingsTab()
         {
-            // Project Download URL
-            txtProjectDownloadUrl.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProjectDownloadUrl));
-
             // Web Proxy Settings
-            // Always Add Bindings for CheckBoxes that control input TextBoxes after
-            // the data has been bound to the TextBox
             txtProxyServer.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyServer));
             txtProxyServer.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyServerPortError), false, DataSourceUpdateMode.OnPropertyChanged);
             txtProxyServer.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
@@ -289,8 +284,6 @@ namespace HFM.Forms
             chkUseProxy.BindChecked(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
             chkUseProxyAuth.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.UseProxy));
 
-            // Always Add Bindings for CheckBoxes that control input TextBoxes after
-            // the data has been bound to the TextBox
             txtProxyUser.BindText(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyUser));
             txtProxyUser.DataBindings.Add(ErrorToolTipTextPropertyName, _presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyUserPassError), false, DataSourceUpdateMode.OnPropertyChanged);
             txtProxyUser.BindEnabled(_presenter.Model.WebSettingsModel, nameof(WebSettingsModel.ProxyAuthEnabled));

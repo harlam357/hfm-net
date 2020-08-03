@@ -19,7 +19,6 @@ namespace HFM.Forms.Models
 
         public override void Load()
         {
-            ProjectDownloadUrl = Preferences.Get<string>(Preference.ProjectDownloadUrl);
             ProxyServer = Preferences.Get<string>(Preference.ProxyServer);
             ProxyPort = Preferences.Get<int>(Preference.ProxyPort);
             UseProxy = Preferences.Get<bool>(Preference.UseProxy);
@@ -30,7 +29,6 @@ namespace HFM.Forms.Models
 
         public override void Save()
         {
-            Preferences.Set(Preference.ProjectDownloadUrl, ProjectDownloadUrl);
             Preferences.Set(Preference.ProxyServer, ProxyServer);
             Preferences.Set(Preference.ProxyPort, ProxyPort);
             Preferences.Set(Preference.UseProxy, UseProxy);
@@ -45,8 +43,6 @@ namespace HFM.Forms.Models
             {
                 switch (columnName)
                 {
-                    case nameof(ProjectDownloadUrl):
-                        return ValidateProjectDownloadUrl() ? null : ProjectDownloadUrlError;
                     case nameof(ProxyServer):
                     case nameof(ProxyPort):
                         return ValidateProxyServerPort() ? null : ProxyServerPortError;
@@ -65,7 +61,6 @@ namespace HFM.Forms.Models
             {
                 var names = new[]
                 {
-                    nameof(ProjectDownloadUrl),
                     nameof(ProxyServer),
                     nameof(ProxyUser)
                 };
@@ -73,33 +68,6 @@ namespace HFM.Forms.Models
                 return String.Join(Environment.NewLine, errors);
             }
         }
-
-        #region Project Download URL
-
-        private string _projectDownloadUrl;
-
-        public string ProjectDownloadUrl
-        {
-            get { return _projectDownloadUrl; }
-            set
-            {
-                if (ProjectDownloadUrl != value)
-                {
-                    string newValue = value == null ? String.Empty : value.Trim();
-                    _projectDownloadUrl = newValue;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private const string ProjectDownloadUrlError = "Provide project summary URL.";
-
-        private bool ValidateProjectDownloadUrl()
-        {
-            return ProjectDownloadUrl is null || HttpUrl.Validate(ProjectDownloadUrl);
-        }
-
-        #endregion
 
         #region Web Proxy Settings
 
@@ -198,7 +166,7 @@ namespace HFM.Forms.Models
         }
 
         public string ProxyUserPassError { get; private set; }
-        
+
         private bool ValidateProxyUserPass()
         {
             if (ProxyAuthEnabled == false) return true;
