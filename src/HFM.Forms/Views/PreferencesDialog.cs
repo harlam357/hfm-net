@@ -533,8 +533,7 @@ namespace HFM.Forms
             }
         }
 
-        #region TextBox KeyPress Event Handler (to enforce digits only)
-
+        // TextBox KeyPress Event Handler (to enforce digits only)
         private void TextBoxDigitsOnlyKeyPress(object sender, KeyPressEventArgs e)
         {
             Debug.WriteLine($"Keystroke: {(int)e.KeyChar}");
@@ -551,7 +550,5 @@ namespace HFM.Forms
                 e.Handled = true;
             }
         }
-
-        #endregion
     }
 }
