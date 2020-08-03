@@ -162,7 +162,6 @@ namespace HFM.Forms
             this.lbl3ProxyUser = new System.Windows.Forms.Label();
             this.lbl3Port = new System.Windows.Forms.Label();
             this.lbl3Proxy = new System.Windows.Forms.Label();
-            this.openConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
@@ -224,7 +223,7 @@ namespace HFM.Forms
             this.tabControl1.TabIndex = 5;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
-            // ClientsTab
+            // clientsTab
             // 
             this.clientsTab.Controls.Add(this.RefreshClientDataGroupBox);
             this.clientsTab.Controls.Add(this.ConfigurationGroupBox);
@@ -249,7 +248,7 @@ namespace HFM.Forms
             this.RefreshClientDataGroupBox.TabStop = false;
             this.RefreshClientDataGroupBox.Text = "Refresh Client Data";
             // 
-            // ClientRefreshIntervalTextBox
+            // clientsRetrievalIntervalTextBox
             // 
             this.clientsRetrievalIntervalTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.clientsRetrievalIntervalTextBox.DoubleBuffered = true;
@@ -277,7 +276,7 @@ namespace HFM.Forms
             this.lbl2SchedExplain.TabIndex = 5;
             this.lbl2SchedExplain.Text = "Minutes";
             // 
-            // ClientRefreshIntervalCheckBox
+            // clientsRetrievalEnabledCheckBox
             // 
             this.clientsRetrievalEnabledCheckBox.AutoSize = true;
             this.clientsRetrievalEnabledCheckBox.Location = new System.Drawing.Point(10, 22);
@@ -287,7 +286,7 @@ namespace HFM.Forms
             this.clientsRetrievalEnabledCheckBox.Text = "Every";
             this.clientsRetrievalEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
-            // ClientSynchronousTextBox
+            // clientsRetrievalIsSerialCheckBox
             // 
             this.clientsRetrievalIsSerialCheckBox.AutoSize = true;
             this.clientsRetrievalIsSerialCheckBox.Location = new System.Drawing.Point(153, 22);
@@ -310,7 +309,7 @@ namespace HFM.Forms
             this.ConfigurationGroupBox.TabStop = false;
             this.ConfigurationGroupBox.Text = "Configuration";
             // 
-            // chkDefaultConfig
+            // clientsDefaultConfigFileEnabledCheckBox
             // 
             this.clientsDefaultConfigFileEnabledCheckBox.AutoSize = true;
             this.clientsDefaultConfigFileEnabledCheckBox.Location = new System.Drawing.Point(10, 22);
@@ -320,7 +319,7 @@ namespace HFM.Forms
             this.clientsDefaultConfigFileEnabledCheckBox.Text = "Load Configuration File";
             this.clientsDefaultConfigFileEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
-            // btnBrowseConfigFile
+            // clientsBrowseConfigFileButton
             // 
             this.clientsBrowseConfigFileButton.Enabled = false;
             this.clientsBrowseConfigFileButton.Location = new System.Drawing.Point(456, 47);
@@ -331,7 +330,7 @@ namespace HFM.Forms
             this.clientsBrowseConfigFileButton.UseVisualStyleBackColor = true;
             this.clientsBrowseConfigFileButton.Click += new System.EventHandler(this.btnBrowseConfigFile_Click);
             // 
-            // txtDefaultConfigFile
+            // clientsDefaultConfigFileTextBox
             // 
             this.clientsDefaultConfigFileTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.clientsDefaultConfigFileTextBox.DoubleBuffered = true;
@@ -347,7 +346,7 @@ namespace HFM.Forms
             this.clientsDefaultConfigFileTextBox.Size = new System.Drawing.Size(440, 20);
             this.clientsDefaultConfigFileTextBox.TabIndex = 2;
             // 
-            // chkAutoSave
+            // clientsAutoSaveConfig
             // 
             this.clientsAutoSaveConfig.AutoSize = true;
             this.clientsAutoSaveConfig.Location = new System.Drawing.Point(153, 22);
@@ -357,7 +356,7 @@ namespace HFM.Forms
             this.clientsAutoSaveConfig.Text = "Auto Save when Changed";
             this.clientsAutoSaveConfig.UseVisualStyleBackColor = true;
             // 
-            // grpInteractiveOptions
+            // optionsDisplayProductionOptionsGroupBox
             // 
             this.optionsDisplayProductionOptionsGroupBox.Controls.Add(this.label1);
             this.optionsDisplayProductionOptionsGroupBox.Controls.Add(this.clientsBonusCalculationComboBox);
@@ -386,7 +385,7 @@ namespace HFM.Forms
             this.label1.TabIndex = 15;
             this.label1.Text = "Decimals";
             // 
-            // BonusCalculationComboBox
+            // clientsBonusCalculationComboBox
             // 
             this.clientsBonusCalculationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.clientsBonusCalculationComboBox.FormattingEnabled = true;
@@ -404,7 +403,7 @@ namespace HFM.Forms
             this.labelWrapper6.TabIndex = 13;
             this.labelWrapper6.Text = "Calculate Credit based on";
             // 
-            // DuplicateProjectCheckBox
+            // clientsDuplicateProjectCheckBox
             // 
             this.clientsDuplicateProjectCheckBox.AutoSize = true;
             this.clientsDuplicateProjectCheckBox.Location = new System.Drawing.Point(10, 75);
@@ -414,7 +413,7 @@ namespace HFM.Forms
             this.clientsDuplicateProjectCheckBox.Text = "Duplicate Project (R/C/G) Check";
             this.clientsDuplicateProjectCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkEtaAsDate
+            // clientsDisplayETADateCheckBox
             // 
             this.clientsDisplayETADateCheckBox.AutoSize = true;
             this.clientsDisplayETADateCheckBox.Location = new System.Drawing.Point(10, 101);
@@ -433,7 +432,7 @@ namespace HFM.Forms
             this.label2.TabIndex = 4;
             this.label2.Text = "Calculate PPD based on";
             // 
-            // PpdCalculationComboBox
+            // clientsPPDCalculationComboBox
             // 
             this.clientsPPDCalculationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.clientsPPDCalculationComboBox.FormattingEnabled = true;
@@ -442,7 +441,7 @@ namespace HFM.Forms
             this.clientsPPDCalculationComboBox.Size = new System.Drawing.Size(113, 21);
             this.clientsPPDCalculationComboBox.TabIndex = 5;
             // 
-            // chkOffline
+            // clientsOfflineLastCheckBox
             // 
             this.clientsOfflineLastCheckBox.AutoSize = true;
             this.clientsOfflineLastCheckBox.Location = new System.Drawing.Point(10, 22);
@@ -452,7 +451,7 @@ namespace HFM.Forms
             this.clientsOfflineLastCheckBox.Text = "List Offline Clients Last";
             this.clientsOfflineLastCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkColorLog
+            // clientsColorLogFileCheckBox
             // 
             this.clientsColorLogFileCheckBox.AutoSize = true;
             this.clientsColorLogFileCheckBox.Location = new System.Drawing.Point(10, 49);
@@ -462,7 +461,7 @@ namespace HFM.Forms
             this.clientsColorLogFileCheckBox.Text = "Color the Log Viewer Text";
             this.clientsColorLogFileCheckBox.UseVisualStyleBackColor = true;
             // 
-            // udDecimalPlaces
+            // clientsDecimalPlacesUpDown
             // 
             this.clientsDecimalPlacesUpDown.Location = new System.Drawing.Point(367, 71);
             this.clientsDecimalPlacesUpDown.Name = "clientsDecimalPlacesUpDown";
@@ -478,7 +477,7 @@ namespace HFM.Forms
             this.labelWrapper1.TabIndex = 6;
             this.labelWrapper1.Text = "Calculate to";
             // 
-            // OptionsTab
+            // optionsTab
             // 
             this.optionsTab.Controls.Add(this.IdentityGroupBox);
             this.optionsTab.Controls.Add(this.grpShowStyle);
@@ -512,7 +511,7 @@ namespace HFM.Forms
             this.IdentityGroupBox.TabStop = false;
             this.IdentityGroupBox.Text = "Identity";
             // 
-            // EocUserStatsCheckBox
+            // optionsEocUserStatsEnabledCheckBox
             // 
             this.optionsEocUserStatsEnabledCheckBox.AutoSize = true;
             this.optionsEocUserStatsEnabledCheckBox.Location = new System.Drawing.Point(250, 47);
@@ -551,7 +550,7 @@ namespace HFM.Forms
             this.TestFahTeamIDLinkLabel.Text = "Test";
             this.TestFahTeamIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahTeamIDLinkLabel_LinkClicked);
             // 
-            // EocUserIDTextBox
+            // optionsEocUserIDTextBox
             // 
             this.optionsEocUserIDTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.optionsEocUserIDTextBox.DoubleBuffered = true;
@@ -566,7 +565,7 @@ namespace HFM.Forms
             this.optionsEocUserIDTextBox.Size = new System.Drawing.Size(120, 20);
             this.optionsEocUserIDTextBox.TabIndex = 3;
             // 
-            // FahTeamIDTextBox
+            // optionsFahTeamIDTextBox
             // 
             this.optionsFahTeamIDTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.optionsFahTeamIDTextBox.DoubleBuffered = true;
@@ -601,7 +600,7 @@ namespace HFM.Forms
             this.TestFahUserIDLinkLabel.Text = "Test";
             this.TestFahUserIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.TestFahUserIDLinkLabel_LinkClicked);
             // 
-            // FahUserIDTextBox
+            // optionsFahUserIDTextBox
             // 
             this.optionsFahUserIDTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.optionsFahUserIDTextBox.DoubleBuffered = true;
@@ -637,7 +636,7 @@ namespace HFM.Forms
             this.grpShowStyle.TabStop = false;
             this.grpShowStyle.Text = "Docking Style";
             // 
-            // cboShowStyle
+            // optionsMinimizeToOptionComboBox
             // 
             this.optionsMinimizeToOptionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.optionsMinimizeToOptionComboBox.FormattingEnabled = true;
@@ -666,7 +665,7 @@ namespace HFM.Forms
             this.LoggingGroupBox.TabStop = false;
             this.LoggingGroupBox.Text = "Logging";
             // 
-            // cboMessageLevel
+            // optionsMessageLevelComboBox
             // 
             this.optionsMessageLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.optionsMessageLevelComboBox.FormattingEnabled = true;
@@ -718,7 +717,7 @@ namespace HFM.Forms
             this.label4.TabIndex = 3;
             this.label4.Text = "File Explorer";
             // 
-            // FileExplorerTextBox
+            // optionsFileExplorerTextBox
             // 
             this.optionsFileExplorerTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.optionsFileExplorerTextBox.DoubleBuffered = true;
@@ -751,7 +750,7 @@ namespace HFM.Forms
             this.label3.TabIndex = 0;
             this.label3.Text = "Log File Viewer";
             // 
-            // LogFileViewerTextBox
+            // optionsLogFileViewerTextBox
             // 
             this.optionsLogFileViewerTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.optionsLogFileViewerTextBox.DoubleBuffered = true;
@@ -765,7 +764,7 @@ namespace HFM.Forms
             this.optionsLogFileViewerTextBox.Size = new System.Drawing.Size(354, 20);
             this.optionsLogFileViewerTextBox.TabIndex = 1;
             // 
-            // grpStartup
+            // optionsStartupGroupBox
             // 
             this.optionsStartupGroupBox.Controls.Add(this.optionsStartupCheckForUpdateCheckBox);
             this.optionsStartupGroupBox.Controls.Add(this.optionsAutoRunCheckBox);
@@ -777,7 +776,7 @@ namespace HFM.Forms
             this.optionsStartupGroupBox.TabStop = false;
             this.optionsStartupGroupBox.Text = "Startup";
             // 
-            // chkCheckForUpdate
+            // optionsStartupCheckForUpdateCheckBox
             // 
             this.optionsStartupCheckForUpdateCheckBox.AutoSize = true;
             this.optionsStartupCheckForUpdateCheckBox.Location = new System.Drawing.Point(310, 20);
@@ -787,7 +786,7 @@ namespace HFM.Forms
             this.optionsStartupCheckForUpdateCheckBox.Text = "Check for Updates";
             this.optionsStartupCheckForUpdateCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkAutoRun
+            // optionsAutoRunCheckBox
             // 
             this.optionsAutoRunCheckBox.AutoSize = true;
             this.optionsAutoRunCheckBox.Location = new System.Drawing.Point(10, 20);
@@ -797,7 +796,7 @@ namespace HFM.Forms
             this.optionsAutoRunCheckBox.Text = "Auto Run on Windows Startup";
             this.optionsAutoRunCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkRunMinimized
+            // optionsRunMinimizedCheckBox
             // 
             this.optionsRunMinimizedCheckBox.AutoSize = true;
             this.optionsRunMinimizedCheckBox.Location = new System.Drawing.Point(196, 20);
@@ -807,7 +806,7 @@ namespace HFM.Forms
             this.optionsRunMinimizedCheckBox.Text = "Run Minimized";
             this.optionsRunMinimizedCheckBox.UseVisualStyleBackColor = true;
             // 
-            // WebGenerationTab
+            // webGenerationTab
             // 
             this.webGenerationTab.BackColor = System.Drawing.Color.Transparent;
             this.webGenerationTab.Controls.Add(this.webGenerationGroupBox);
@@ -819,7 +818,7 @@ namespace HFM.Forms
             this.webGenerationTab.Text = "Web Generation";
             this.webGenerationTab.UseVisualStyleBackColor = true;
             // 
-            // WebGenerationGroupBox
+            // webGenerationGroupBox
             // 
             this.webGenerationGroupBox.Controls.Add(this.webGenerationTestConnectionLinkLabel);
             this.webGenerationGroupBox.Controls.Add(this.webGenerationCopyLabel);
@@ -853,7 +852,7 @@ namespace HFM.Forms
             this.webGenerationGroupBox.TabStop = false;
             this.webGenerationGroupBox.Text = "Web Generation";
             // 
-            // TestConnectionLinkLabel
+            // webGenerationTestConnectionLinkLabel
             // 
             this.webGenerationTestConnectionLinkLabel.AutoSize = true;
             this.webGenerationTestConnectionLinkLabel.Location = new System.Drawing.Point(395, 20);
@@ -864,7 +863,7 @@ namespace HFM.Forms
             this.webGenerationTestConnectionLinkLabel.Text = "Test Connection";
             this.webGenerationTestConnectionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.webGenerationTestConnectionLinkLabel_LinkClicked);
             // 
-            // CopyLabel
+            // webGenerationCopyLabel
             // 
             this.webGenerationCopyLabel.AutoSize = true;
             this.webGenerationCopyLabel.Location = new System.Drawing.Point(7, 163);
@@ -873,7 +872,7 @@ namespace HFM.Forms
             this.webGenerationCopyLabel.TabIndex = 24;
             this.webGenerationCopyLabel.Text = "Copy";
             // 
-            // WebSitePortTextBox
+            // webGenerationPortTextBox
             // 
             this.webGenerationPortTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationPortTextBox.DoubleBuffered = true;
@@ -889,7 +888,7 @@ namespace HFM.Forms
             this.webGenerationPortTextBox.Size = new System.Drawing.Size(54, 20);
             this.webGenerationPortTextBox.TabIndex = 13;
             // 
-            // WebSitePortLabel
+            // webGenerationPortLabel
             // 
             this.webGenerationPortLabel.AutoSize = true;
             this.webGenerationPortLabel.Location = new System.Drawing.Point(364, 107);
@@ -898,7 +897,7 @@ namespace HFM.Forms
             this.webGenerationPortLabel.TabIndex = 12;
             this.webGenerationPortLabel.Text = "Port";
             // 
-            // WebSitePasswordTextBox
+            // webGenerationPasswordTextBox
             // 
             this.webGenerationPasswordTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationPasswordTextBox.DoubleBuffered = true;
@@ -915,7 +914,7 @@ namespace HFM.Forms
             this.webGenerationPasswordTextBox.TabIndex = 17;
             this.webGenerationPasswordTextBox.UseSystemPasswordChar = true;
             // 
-            // WebSiteUsernameTextBox
+            // webGenerationUsernameTextBox
             // 
             this.webGenerationUsernameTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationUsernameTextBox.DoubleBuffered = true;
@@ -931,7 +930,7 @@ namespace HFM.Forms
             this.webGenerationUsernameTextBox.Size = new System.Drawing.Size(155, 20);
             this.webGenerationUsernameTextBox.TabIndex = 15;
             // 
-            // WebSiteServerTextBox
+            // webGenerationServerTextBox
             // 
             this.webGenerationServerTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationServerTextBox.DoubleBuffered = true;
@@ -947,7 +946,7 @@ namespace HFM.Forms
             this.webGenerationServerTextBox.Size = new System.Drawing.Size(282, 20);
             this.webGenerationServerTextBox.TabIndex = 11;
             // 
-            // WebGenTypePanel
+            // webDeploymentTypeRadioPanel
             // 
             this.webDeploymentTypeRadioPanel.Controls.Add(this.webDeploymentTypeLabel);
             this.webDeploymentTypeRadioPanel.Controls.Add(this.webDeploymentTypeFtpRadioButton);
@@ -958,7 +957,7 @@ namespace HFM.Forms
             this.webDeploymentTypeRadioPanel.TabIndex = 6;
             this.webDeploymentTypeRadioPanel.ValueMember = null;
             // 
-            // UploadTypeLabel
+            // webDeploymentTypeLabel
             // 
             this.webDeploymentTypeLabel.AutoSize = true;
             this.webDeploymentTypeLabel.Location = new System.Drawing.Point(4, 6);
@@ -967,7 +966,7 @@ namespace HFM.Forms
             this.webDeploymentTypeLabel.TabIndex = 0;
             this.webDeploymentTypeLabel.Text = "Upload Type";
             // 
-            // WebGenTypeFtpRadioButton
+            // webDeploymentTypeFtpRadioButton
             // 
             this.webDeploymentTypeFtpRadioButton.AutoSize = true;
             this.webDeploymentTypeFtpRadioButton.Location = new System.Drawing.Point(131, 4);
@@ -979,7 +978,7 @@ namespace HFM.Forms
             this.webDeploymentTypeFtpRadioButton.Text = "FTP";
             this.webDeploymentTypeFtpRadioButton.UseVisualStyleBackColor = true;
             // 
-            // WebGenTypePathRadioButton
+            // webDeploymentTypePathRadioButton
             // 
             this.webDeploymentTypePathRadioButton.AutoSize = true;
             this.webDeploymentTypePathRadioButton.Location = new System.Drawing.Point(78, 4);
@@ -991,7 +990,7 @@ namespace HFM.Forms
             this.webDeploymentTypePathRadioButton.Text = "Path";
             this.webDeploymentTypePathRadioButton.UseVisualStyleBackColor = true;
             // 
-            // WebSitePasswordLabel
+            // webGenerationPasswordLabel
             // 
             this.webGenerationPasswordLabel.AutoSize = true;
             this.webGenerationPasswordLabel.Location = new System.Drawing.Point(237, 135);
@@ -1000,7 +999,7 @@ namespace HFM.Forms
             this.webGenerationPasswordLabel.TabIndex = 16;
             this.webGenerationPasswordLabel.Text = "Password";
             // 
-            // WebSiteUsernameLabel
+            // webGenerationUsernameLabel
             // 
             this.webGenerationUsernameLabel.AutoSize = true;
             this.webGenerationUsernameLabel.Location = new System.Drawing.Point(15, 135);
@@ -1009,7 +1008,7 @@ namespace HFM.Forms
             this.webGenerationUsernameLabel.TabIndex = 14;
             this.webGenerationUsernameLabel.Text = "Username";
             // 
-            // WebSiteServerLabel
+            // webGenerationServerLabel
             // 
             this.webGenerationServerLabel.AutoSize = true;
             this.webGenerationServerLabel.Location = new System.Drawing.Point(32, 107);
@@ -1018,7 +1017,7 @@ namespace HFM.Forms
             this.webGenerationServerLabel.TabIndex = 10;
             this.webGenerationServerLabel.Text = "Server";
             // 
-            // FtpModePanel
+            // webGenerationFtpModeRadioPanel
             // 
             this.webGenerationFtpModeRadioPanel.Controls.Add(this.radioActive);
             this.webGenerationFtpModeRadioPanel.Controls.Add(this.radioPassive);
@@ -1062,7 +1061,7 @@ namespace HFM.Forms
             this.lblFtpMode.TabIndex = 0;
             this.lblFtpMode.Text = "Transfer Mode";
             // 
-            // udLimitSize
+            // webGenerationLimitLogSizeLengthUpDown
             // 
             this.webGenerationLimitLogSizeLengthUpDown.Enabled = false;
             this.webGenerationLimitLogSizeLengthUpDown.Location = new System.Drawing.Point(356, 161);
@@ -1085,7 +1084,7 @@ namespace HFM.Forms
             0,
             0});
             // 
-            // chkLimitSize
+            // webGenerationLimitLogSizeCheckBox
             // 
             this.webGenerationLimitLogSizeCheckBox.AutoSize = true;
             this.webGenerationLimitLogSizeCheckBox.Enabled = false;
@@ -1096,7 +1095,7 @@ namespace HFM.Forms
             this.webGenerationLimitLogSizeCheckBox.Text = "Limit log file size to (KB):";
             this.webGenerationLimitLogSizeCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkXml
+            // webGenerationCopyXmlCheckBox
             // 
             this.webGenerationCopyXmlCheckBox.AutoSize = true;
             this.webGenerationCopyXmlCheckBox.Enabled = false;
@@ -1107,7 +1106,7 @@ namespace HFM.Forms
             this.webGenerationCopyXmlCheckBox.Text = "XML";
             this.webGenerationCopyXmlCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkHtml
+            // webGenerationCopyHtmlCheckBox
             // 
             this.webGenerationCopyHtmlCheckBox.AutoSize = true;
             this.webGenerationCopyHtmlCheckBox.Enabled = false;
@@ -1118,7 +1117,7 @@ namespace HFM.Forms
             this.webGenerationCopyHtmlCheckBox.Text = "HTML";
             this.webGenerationCopyHtmlCheckBox.UseVisualStyleBackColor = true;
             // 
-            // chkFAHlog
+            // webGenerationCopyLogCheckBox
             // 
             this.webGenerationCopyLogCheckBox.AutoSize = true;
             this.webGenerationCopyLogCheckBox.Enabled = false;
@@ -1129,7 +1128,7 @@ namespace HFM.Forms
             this.webGenerationCopyLogCheckBox.Text = "Log";
             this.webGenerationCopyLogCheckBox.UseVisualStyleBackColor = true;
             // 
-            // radioFullRefresh
+            // webGenerationAfterClientRetrievalRadioButton
             // 
             this.webGenerationAfterClientRetrievalRadioButton.AutoSize = true;
             this.webGenerationAfterClientRetrievalRadioButton.Enabled = false;
@@ -1141,7 +1140,7 @@ namespace HFM.Forms
             this.webGenerationAfterClientRetrievalRadioButton.Text = "After Full Refresh";
             this.webGenerationAfterClientRetrievalRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioSchedule
+            // webGenerationOnScheduleRadioButton
             // 
             this.webGenerationOnScheduleRadioButton.AutoSize = true;
             this.webGenerationOnScheduleRadioButton.Checked = true;
@@ -1154,7 +1153,7 @@ namespace HFM.Forms
             this.webGenerationOnScheduleRadioButton.Text = "Every";
             this.webGenerationOnScheduleRadioButton.UseVisualStyleBackColor = true;
             // 
-            // txtWebGenMinutes
+            // webGenerationIntervalTextBox
             // 
             this.webGenerationIntervalTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationIntervalTextBox.DoubleBuffered = true;
@@ -1174,7 +1173,7 @@ namespace HFM.Forms
             this.webGenerationIntervalTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.webGenerationIntervalTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDigitsOnlyKeyPress);
             // 
-            // lbl2MinutesToGen
+            // webGenerationIntervalLabel
             // 
             this.webGenerationIntervalLabel.AutoSize = true;
             this.webGenerationIntervalLabel.Enabled = false;
@@ -1184,7 +1183,7 @@ namespace HFM.Forms
             this.webGenerationIntervalLabel.TabIndex = 3;
             this.webGenerationIntervalLabel.Text = "Minutes";
             // 
-            // BrowseWebFolderButton
+            // webGenerationBrowsePathButton
             // 
             this.webGenerationBrowsePathButton.Enabled = false;
             this.webGenerationBrowsePathButton.Location = new System.Drawing.Point(456, 76);
@@ -1195,7 +1194,7 @@ namespace HFM.Forms
             this.webGenerationBrowsePathButton.UseVisualStyleBackColor = true;
             this.webGenerationBrowsePathButton.Click += new System.EventHandler(this.webGenerationBrowsePathButton_Click);
             // 
-            // WebSiteTargetPathTextBox
+            // webGenerationPathTextBox
             // 
             this.webGenerationPathTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.webGenerationPathTextBox.DoubleBuffered = true;
@@ -1211,7 +1210,7 @@ namespace HFM.Forms
             this.webGenerationPathTextBox.Size = new System.Drawing.Size(374, 20);
             this.webGenerationPathTextBox.TabIndex = 8;
             // 
-            // WebSiteTargetPathLabel
+            // webGenerationPathLabel
             // 
             this.webGenerationPathLabel.AutoSize = true;
             this.webGenerationPathLabel.Location = new System.Drawing.Point(7, 81);
@@ -1220,7 +1219,7 @@ namespace HFM.Forms
             this.webGenerationPathLabel.TabIndex = 7;
             this.webGenerationPathLabel.Text = "Target Path";
             // 
-            // chkWebSiteGenerator
+            // webGenerationEnabledCheckBox
             // 
             this.webGenerationEnabledCheckBox.AutoSize = true;
             this.webGenerationEnabledCheckBox.Location = new System.Drawing.Point(10, 20);
@@ -1230,7 +1229,7 @@ namespace HFM.Forms
             this.webGenerationEnabledCheckBox.Text = "Create a Web Site";
             this.webGenerationEnabledCheckBox.UseVisualStyleBackColor = true;
             // 
-            // WebVisualStylesTab
+            // webVisualStylesTab
             // 
             this.webVisualStylesTab.BackColor = System.Drawing.Color.Transparent;
             this.webVisualStylesTab.Controls.Add(this.btnInstanceBrowse);
@@ -1385,7 +1384,7 @@ namespace HFM.Forms
             this.ReportingTab.Text = "Reporting";
             this.ReportingTab.UseVisualStyleBackColor = true;
             // 
-            // grpReportSelections
+            // reportingSelectionsGroupBox
             // 
             this.reportingSelectionsGroupBox.Enabled = false;
             this.reportingSelectionsGroupBox.Location = new System.Drawing.Point(6, 179);
@@ -1420,7 +1419,7 @@ namespace HFM.Forms
             this.grpEmailSettings.TabStop = false;
             this.grpEmailSettings.Text = "Email Settings";
             // 
-            // SendTestEmailLinkLabel
+            // reportingSendTestEmailLinkLabel
             // 
             this.reportingSendTestEmailLinkLabel.AutoSize = true;
             this.reportingSendTestEmailLinkLabel.Location = new System.Drawing.Point(384, 21);
@@ -1431,7 +1430,7 @@ namespace HFM.Forms
             this.reportingSendTestEmailLinkLabel.Text = "Send Test Email";
             this.reportingSendTestEmailLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.reportingSendTestEmailLinkLabel_LinkClicked);
             // 
-            // txtSmtpServerPort
+            // reportingPortTextBox
             // 
             this.reportingPortTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingPortTextBox.DoubleBuffered = true;
@@ -1458,7 +1457,7 @@ namespace HFM.Forms
             this.labelWrapper3.TabIndex = 8;
             this.labelWrapper3.Text = "Port";
             // 
-            // chkEmailSecure
+            // reportingIsSecureCheckBox
             // 
             this.reportingIsSecureCheckBox.AutoSize = true;
             this.reportingIsSecureCheckBox.Enabled = false;
@@ -1469,7 +1468,7 @@ namespace HFM.Forms
             this.reportingIsSecureCheckBox.Text = "Use Secure Connection (SSL)";
             this.reportingIsSecureCheckBox.UseVisualStyleBackColor = true;
             // 
-            // txtSmtpPassword
+            // reportingPasswordTextBox
             // 
             this.reportingPasswordTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingPasswordTextBox.DoubleBuffered = true;
@@ -1487,7 +1486,7 @@ namespace HFM.Forms
             this.reportingPasswordTextBox.TabIndex = 13;
             this.reportingPasswordTextBox.UseSystemPasswordChar = true;
             // 
-            // txtSmtpUsername
+            // reportingUsernameTextBox
             // 
             this.reportingUsernameTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingUsernameTextBox.DoubleBuffered = true;
@@ -1531,7 +1530,7 @@ namespace HFM.Forms
             this.lblFromEmailAddress.TabIndex = 4;
             this.lblFromEmailAddress.Text = "From Address";
             // 
-            // txtFromEmailAddress
+            // reportingFromAddressTextBox
             // 
             this.reportingFromAddressTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingFromAddressTextBox.DoubleBuffered = true;
@@ -1549,7 +1548,7 @@ namespace HFM.Forms
             this.reportingFromAddressTextBox.TabIndex = 5;
             this.reportingFromAddressTextBox.MouseHover += new System.EventHandler(this.txtFromEmailAddress_MouseHover);
             // 
-            // chkEnableEmail
+            // reportingEnabledCheckBox
             // 
             this.reportingEnabledCheckBox.AutoSize = true;
             this.reportingEnabledCheckBox.Location = new System.Drawing.Point(10, 20);
@@ -1577,7 +1576,7 @@ namespace HFM.Forms
             this.lblToAddress.TabIndex = 2;
             this.lblToAddress.Text = "To Address";
             // 
-            // txtSmtpServer
+            // reportingServerTextBox
             // 
             this.reportingServerTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingServerTextBox.DoubleBuffered = true;
@@ -1594,7 +1593,7 @@ namespace HFM.Forms
             this.reportingServerTextBox.Size = new System.Drawing.Size(282, 20);
             this.reportingServerTextBox.TabIndex = 7;
             // 
-            // txtToEmailAddress
+            // reportingToAddressTextBox
             // 
             this.reportingToAddressTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.reportingToAddressTextBox.DoubleBuffered = true;
@@ -1766,12 +1765,6 @@ namespace HFM.Forms
             this.lbl3Proxy.TabIndex = 1;
             this.lbl3Proxy.Text = "Server";
             // 
-            // openConfigDialog
-            // 
-            this.openConfigDialog.DefaultExt = "hfm";
-            this.openConfigDialog.Filter = "HFM Configuration Files|*.hfm";
-            this.openConfigDialog.RestoreDirectory = true;
-            // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1883,7 +1876,6 @@ namespace HFM.Forms
         private System.Windows.Forms.CheckBox chkUseProxyAuth;
         private System.Windows.Forms.CheckBox chkUseProxy;
         private System.Windows.Forms.TabPage clientsTab;
-        private System.Windows.Forms.OpenFileDialog openConfigDialog;
         private System.Windows.Forms.RadioButton webGenerationOnScheduleRadioButton;
         private System.Windows.Forms.RadioButton webGenerationAfterClientRetrievalRadioButton;
         private System.Windows.Forms.ToolTip toolTipPrefs;
