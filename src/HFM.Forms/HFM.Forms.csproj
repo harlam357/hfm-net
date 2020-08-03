@@ -116,17 +116,17 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="AboutDialog.cs">
+    <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutDialog.Designer.cs">
+    <Compile Include="Views\AboutDialog.Designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationUpdate.cs" />
-    <Compile Include="BenchmarksForm.cs">
+    <Compile Include="Views\BenchmarksForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BenchmarksForm.Designer.cs">
+    <Compile Include="Views\BenchmarksForm.Designer.cs">
       <DependentUpon>BenchmarksForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientSettingsManager.cs" />
@@ -197,21 +197,21 @@
     <Compile Include="IPresenterFactory.cs" />
     <Compile Include="IViewFactory.cs" />
     <Compile Include="ListItem.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.designer.cs">
+    <Compile Include="Views\MainForm.designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainFormGridHandlers.cs">
+    <Compile Include="Views\MainFormGridHandlers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Models\FahClientSettingsModelProfile.cs" />
     <Compile Include="Models\UserStatsDataModelProfile.cs" />
-    <Compile Include="ProgressDialogAsync.cs">
+    <Compile Include="Views\ProgressDialogAsync.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressDialogAsync.designer.cs">
+    <Compile Include="Views\ProgressDialogAsync.designer.cs">
       <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
     </Compile>
     <Compile Include="ProteinBenchmarkIdentifierExtensions.cs" />
@@ -226,17 +226,17 @@
     <Compile Include="Controls\HistoryGridViewWrapper.Designer.cs">
       <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
     </Compile>
-    <Compile Include="HistoryForm.cs">
+    <Compile Include="Views\HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HistoryForm.Designer.cs">
+    <Compile Include="Views\HistoryForm.Designer.cs">
       <DependentUpon>HistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainPresenter.cs" />
-    <Compile Include="MessagesForm.cs">
+    <Compile Include="Views\MessagesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MessagesForm.Designer.cs">
+    <Compile Include="Views\MessagesForm.Designer.cs">
       <DependentUpon>MessagesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MinimizeToOption.cs" />
@@ -262,22 +262,22 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ProteinCalculatorForm.cs">
+    <Compile Include="Views\ProteinCalculatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProteinCalculatorForm.Designer.cs">
+    <Compile Include="Views\ProteinCalculatorForm.Designer.cs">
       <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProteinLoadResultsDialog.cs">
+    <Compile Include="Views\ProteinLoadResultsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProteinLoadResultsDialog.Designer.cs">
+    <Compile Include="Views\ProteinLoadResultsDialog.Designer.cs">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="QueryDialog.cs">
+    <Compile Include="Views\QueryDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="QueryDialog.Designer.cs">
+    <Compile Include="Views\QueryDialog.Designer.cs">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\RegistryAutoRunConfiguration.cs" />
@@ -285,10 +285,10 @@
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="UpdateChecker.cs" />
-    <Compile Include="UpdateDialog.cs">
+    <Compile Include="Views\UpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateDialog.designer.cs">
+    <Compile Include="Views\UpdateDialog.designer.cs">
       <DependentUpon>UpdateDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateLogic.cs" />
@@ -311,10 +311,10 @@
     <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutDialog.resx">
+    <EmbeddedResource Include="Views\AboutDialog.resx">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BenchmarksForm.resx">
+    <EmbeddedResource Include="Views\BenchmarksForm.resx">
       <DependentUpon>BenchmarksForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\QueueControl.resx">
@@ -326,35 +326,35 @@
     <EmbeddedResource Include="Views\FahClientSettingsDialog.resx">
       <DependentUpon>FahClientSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HistoryForm.resx">
+    <EmbeddedResource Include="Views\HistoryForm.resx">
       <DependentUpon>HistoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MessagesForm.resx">
+    <EmbeddedResource Include="Views\MessagesForm.resx">
       <DependentUpon>MessagesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PreferencesDialog.resx">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressDialogAsync.resx">
+    <EmbeddedResource Include="Views\ProgressDialogAsync.resx">
       <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProteinCalculatorForm.resx">
+    <EmbeddedResource Include="Views\ProteinCalculatorForm.resx">
       <DependentUpon>ProteinCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProteinLoadResultsDialog.resx">
+    <EmbeddedResource Include="Views\ProteinLoadResultsDialog.resx">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="QueryDialog.resx">
+    <EmbeddedResource Include="Views\QueryDialog.resx">
       <DependentUpon>QueryDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpdateDialog.resx">
+    <EmbeddedResource Include="Views\UpdateDialog.resx">
       <DependentUpon>UpdateDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
