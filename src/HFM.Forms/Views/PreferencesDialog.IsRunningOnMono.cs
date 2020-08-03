@@ -11,16 +11,16 @@ namespace HFM.Forms
         {
             if (Core.Application.IsRunningOnMono && Enabled)
             {
-                HandleScheduledTasksPropertyEnabledForMono(e.PropertyName);
-                HandleScheduledTasksPropertyChangedForMono(e.PropertyName);
+                HandleWebGenerationPropertyEnabledForMono(e.PropertyName);
+                HandleWebGenerationPropertyChangedForMono(e.PropertyName);
             }
         }
 
-        private void HandleScheduledTasksPropertyEnabledForMono(string propertyName)
+        private void HandleWebGenerationPropertyEnabledForMono(string propertyName)
         {
             switch (propertyName)
             {
-                case "GenerateWeb":
+                case nameof(WebGenerationModel.GenerateWeb):
                     radioSchedule.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     lbl2MinutesToGen.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     radioFullRefresh.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
@@ -31,10 +31,10 @@ namespace HFM.Forms
                     TestConnectionButton.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     WebGenTypePanel.Enabled = _presenter.Model.WebGenerationModel.GenerateWeb;
                     break;
-                case "GenerateIntervalEnabled":
+                case nameof(WebGenerationModel.GenerateIntervalEnabled):
                     txtWebGenMinutes.Enabled = _presenter.Model.WebGenerationModel.GenerateIntervalEnabled;
                     break;
-                case "FtpModeEnabled":
+                case nameof(WebGenerationModel.FtpModeEnabled):
                     WebSiteServerTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     WebSiteServerLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     WebSitePortTextBox.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
@@ -45,23 +45,23 @@ namespace HFM.Forms
                     WebSitePasswordLabel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     FtpModePanel.Enabled = _presenter.Model.WebGenerationModel.FtpModeEnabled;
                     break;
-                case "BrowseLocalPathEnabled":
+                case nameof(WebGenerationModel.BrowseLocalPathEnabled):
                     BrowseWebFolderButton.Enabled = _presenter.Model.WebGenerationModel.BrowseLocalPathEnabled;
                     break;
-                case "LimitLogSizeEnabled":
+                case nameof(WebGenerationModel.LimitLogSizeEnabled):
                     chkLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeEnabled;
                     break;
-                case "LimitLogSizeLengthEnabled":
+                case nameof(WebGenerationModel.LimitLogSizeLengthEnabled):
                     udLimitSize.Enabled = _presenter.Model.WebGenerationModel.LimitLogSizeLengthEnabled;
                     break;
             }
         }
 
-        private void HandleScheduledTasksPropertyChangedForMono(string propertyName)
+        private void HandleWebGenerationPropertyChangedForMono(string propertyName)
         {
             switch (propertyName)
             {
-                case "WebRoot":
+                case nameof(WebGenerationModel.WebRoot):
                     WebSiteTargetPathTextBox.Text = _presenter.Model.WebGenerationModel.WebRoot;
                     break;
             }
@@ -85,10 +85,10 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "LogFileViewer":
+                case nameof(OptionsModel.LogFileViewer):
                     LogFileViewerTextBox.Text = _presenter.Model.OptionsModel.LogFileViewer;
                     break;
-                case "FileExplorer":
+                case nameof(OptionsModel.FileExplorer):
                     FileExplorerTextBox.Text = _presenter.Model.OptionsModel.FileExplorer;
                     break;
             }
@@ -107,11 +107,11 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "UseDefaultConfigFile":
+                case nameof(ClientsModel.UseDefaultConfigFile):
                     txtDefaultConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
                     btnBrowseConfigFile.Enabled = _presenter.Model.ClientsModel.UseDefaultConfigFile;
                     break;
-                case "SyncOnSchedule":
+                case nameof(ClientsModel.SyncOnSchedule):
                     ClientRefreshIntervalTextBox.Enabled = _presenter.Model.ClientsModel.SyncOnSchedule;
                     break;
             }
@@ -121,7 +121,7 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "DefaultConfigFile":
+                case nameof(ClientsModel.DefaultConfigFile):
                     txtDefaultConfigFile.Text = _presenter.Model.ClientsModel.DefaultConfigFile;
                     break;
             }
@@ -139,7 +139,7 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "ReportingEnabled":
+                case nameof(ReportingModel.ReportingEnabled):
                     chkEmailSecure.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     btnTestEmail.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
                     txtToEmailAddress.Enabled = _presenter.Model.ReportingModel.ReportingEnabled;
@@ -165,12 +165,12 @@ namespace HFM.Forms
         {
             switch (propertyName)
             {
-                case "UseProxy":
+                case nameof(WebProxyModel.UseProxy):
                     txtProxyServer.Enabled = _presenter.Model.WebProxyModel.UseProxy;
                     txtProxyPort.Enabled = _presenter.Model.WebProxyModel.UseProxy;
                     chkUseProxyAuth.Enabled = _presenter.Model.WebProxyModel.UseProxy;
                     break;
-                case "ProxyAuthEnabled":
+                case nameof(WebProxyModel.ProxyAuthEnabled):
                     txtProxyUser.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
                     txtProxyPass.Enabled = _presenter.Model.WebProxyModel.ProxyAuthEnabled;
                     break;
