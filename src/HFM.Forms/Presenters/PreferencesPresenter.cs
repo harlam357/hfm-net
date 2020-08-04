@@ -36,6 +36,11 @@ namespace HFM.Forms
             return Dialog.ShowDialog(owner);
         }
 
+        public void Dispose()
+        {
+            Dialog?.Dispose();
+        }
+
         public void OKClicked()
         {
             if (Model.ValidateAcceptance())
@@ -51,11 +56,6 @@ namespace HFM.Forms
                 }
                 Dialog.Close();
             }
-        }
-
-        public void Dispose()
-        {
-            Dialog?.Dispose();
         }
 
         public void BrowseForWebGenerationPath(FolderDialogPresenter dialog)

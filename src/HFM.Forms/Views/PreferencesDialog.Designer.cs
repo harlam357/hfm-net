@@ -1809,7 +1809,7 @@ namespace HFM.Forms
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
-            this.Load += new System.EventHandler(this.PreferencesDialogLoad);
+            this.Load += new System.EventHandler(this.PreferencesDialog_Load);
             this.tabControl1.ResumeLayout(false);
             this.clientsTab.ResumeLayout(false);
             this.clientsRefreshClientDataGroupBox.ResumeLayout(false);

@@ -28,17 +28,10 @@ namespace HFM.Forms
             //WebProxy = 5,
         }
 
-        #region Fields
-
         private readonly PreferencesPresenter _presenter;
-
         private readonly WebBrowser _cssSampleBrowser;
 
-        #endregion
-
         private const int MaxDecimalPlaces = 5;
-
-        #region Constructor And Binding/Load Methods
 
         public PreferencesDialog(PreferencesPresenter presenter)
         {
@@ -65,7 +58,7 @@ namespace HFM.Forms
             }
         }
 
-        private void PreferencesDialogLoad(object sender, EventArgs e)
+        private void PreferencesDialog_Load(object sender, EventArgs e)
         {
             LoadClientsTab();
             LoadOptionsTab();
@@ -321,8 +314,6 @@ namespace HFM.Forms
                 ShowCssPreview();
             }
         }
-
-        #endregion
 
         // Scheduled Tasks Tab
         private void webGenerationBrowsePathButton_Click(object sender, EventArgs e)
