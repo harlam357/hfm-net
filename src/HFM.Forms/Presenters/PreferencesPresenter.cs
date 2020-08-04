@@ -58,6 +58,12 @@ namespace HFM.Forms
             }
         }
 
+        public void CancelClicked()
+        {
+            Dialog.DialogResult = DialogResult.Cancel;
+            Dialog.Close();
+        }
+
         public void BrowseForWebGenerationPath(FolderDialogPresenter dialog)
         {
             if (!String.IsNullOrWhiteSpace(Model.WebGenerationModel.Path))

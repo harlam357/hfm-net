@@ -472,7 +472,7 @@ namespace HFM.Forms
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-
+            _presenter.CancelClicked();
         }
 
         // Folder Browsing
