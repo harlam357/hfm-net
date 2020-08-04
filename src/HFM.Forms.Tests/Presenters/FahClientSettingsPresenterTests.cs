@@ -20,7 +20,7 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_ShowDialog_DoesNotConnectWhenModelHasError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel()))
+            using (var presenter = new MockDialogFahClientSettingsPresenter(new FahClientSettingsModel()))
             {
                 // Act
                 presenter.ShowDialog(null);
@@ -33,7 +33,7 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_ShowDialog_AttemptsConnectionWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
+            using (var presenter = new MockDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
             {
                 // Act
                 presenter.ShowDialog(null);
@@ -50,7 +50,7 @@ namespace HFM.Forms
             using (var connection = new MockFahClientConnectionWithMessages())
             {
                 var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
-                using (var presenter = new NoDialogFahClientSettingsPresenter(model))
+                using (var presenter = new MockDialogFahClientSettingsPresenter(model))
                 {
                     // Act
                     presenter.ShowDialog(null);
@@ -67,7 +67,7 @@ namespace HFM.Forms
         {
             // Arrange
             var messageBox = new MockMessageBoxPresenter();
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }, messageBox))
+            using (var presenter = new MockDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }, messageBox))
             {
                 // Act
                 presenter.ConnectClicked();
@@ -84,7 +84,7 @@ namespace HFM.Forms
             using (var connection = new MockFahClientConnection())
             {
                 var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
-                using (var presenter = new NoDialogFahClientSettingsPresenter(model, messageBox))
+                using (var presenter = new MockDialogFahClientSettingsPresenter(model, messageBox))
                 {
                     // Act
                     presenter.ConnectClicked();
@@ -105,7 +105,7 @@ namespace HFM.Forms
             using (var connection = new MockFahClientConnectionWithMessages())
             {
                 var model = new MockConnectionFahClientSettingsModel(connection) { Name = "foo", Server = "bar" };
-                using (var presenter = new NoDialogFahClientSettingsPresenter(model))
+                using (var presenter = new MockDialogFahClientSettingsPresenter(model))
                 {
                     // Act
                     presenter.ConnectClicked();
@@ -122,7 +122,7 @@ namespace HFM.Forms
         {
             // Arrange
             var messageBox = new MockMessageBoxPresenter();
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel(), messageBox))
+            using (var presenter = new MockDialogFahClientSettingsPresenter(new FahClientSettingsModel(), messageBox))
             {
                 presenter.ShowDialog(null);
                 Assert.IsTrue(presenter.MockDialog.Shown);
@@ -138,7 +138,7 @@ namespace HFM.Forms
         public void FahClientSettingsPresenter_OKClicked_SetsDialogResultAndClosesDialogWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new NoDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
+            using (var presenter = new MockDialogFahClientSettingsPresenter(new FahClientSettingsModel { Name = "foo", Server = "bar" }))
             {
                 presenter.ShowDialog(null);
                 Assert.IsTrue(presenter.MockDialog.Shown);
@@ -150,13 +150,13 @@ namespace HFM.Forms
             }
         }
 
-        private class NoDialogFahClientSettingsPresenter : FahClientSettingsPresenter
+        private class MockDialogFahClientSettingsPresenter : FahClientSettingsPresenter
         {
-            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model) : base(model, null, null)
+            public MockDialogFahClientSettingsPresenter(FahClientSettingsModel model) : base(model, null, null)
             {
             }
 
-            public NoDialogFahClientSettingsPresenter(FahClientSettingsModel model, MessageBoxPresenter messageBox) : base(model, null, messageBox)
+            public MockDialogFahClientSettingsPresenter(FahClientSettingsModel model, MessageBoxPresenter messageBox) : base(model, null, messageBox)
             {
             }
 
