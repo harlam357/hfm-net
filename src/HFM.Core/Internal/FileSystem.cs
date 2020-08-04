@@ -56,5 +56,17 @@ namespace HFM.Core.Internal
             }
             throw new TimeoutException($"File open timed out after {timeout}ms.");
         }
+
+        internal static void TryFileDelete(string filePath)
+        {
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
+        }
     }
 }
