@@ -96,6 +96,8 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ApplicationUpdateSerializer.cs" />
+    <Compile Include="ApplicationUpdateService.cs" />
     <Compile Include="Client\ClientIdentifier.cs" />
     <Compile Include="Client\FahClientMessages.cs" />
     <Compile Include="Client\NullClient.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Net\SecurityProtocol.cs" />
     <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="ProgressInfo.cs" />
+    <Compile Include="ApplicationUpdate.cs" />
     <Compile Include="Services\LocalProcessService.cs" />
     <Compile Include="Services\SendMailService.cs" />
     <Compile Include="SlotXml\HtmlBuilder.cs" />
