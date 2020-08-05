@@ -279,7 +279,7 @@ namespace HFM.Forms
                 }
                 else
                 {
-                    NativeMethods.SetForegroundWindow(Handle);
+                    Internal.NativeMethods.SetForegroundWindow(Handle);
                 }
             }
         }

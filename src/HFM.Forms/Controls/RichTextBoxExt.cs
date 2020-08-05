@@ -1,4 +1,4 @@
-/*
+﻿/*
  * HFM.NET - RichTextBox Wrapper Class
  * Copyright (C) 2009-2012 Ryan Harlamert (harlam357)
  *
@@ -187,7 +187,7 @@ namespace HFM.Forms.Controls
          }
          else
          {
-            NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_BOTTOM), new IntPtr(0));
+            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
          }
       }
 
@@ -198,7 +198,7 @@ namespace HFM.Forms.Controls
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
 
-         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_TOP), new IntPtr(0));
+         Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_TOP), new IntPtr(0));
       }
 
       public void ScrollLineDown()
@@ -208,7 +208,7 @@ namespace HFM.Forms.Controls
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
 
-         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEDOWN), new IntPtr(0));
+         Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_LINEDOWN), new IntPtr(0));
       }
 
       public void ScrollLineUp()
@@ -218,7 +218,7 @@ namespace HFM.Forms.Controls
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
 
-         NativeMethods.SendMessage(Handle, NativeMethods.WM_VSCROLL, new IntPtr(NativeMethods.SB_LINEUP), new IntPtr(0));
+         Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_LINEUP), new IntPtr(0));
       }
 
       public void ScrollToLine(int lineNumber)
@@ -228,7 +228,7 @@ namespace HFM.Forms.Controls
             throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
          }
 
-         NativeMethods.SendMessage(Handle, NativeMethods.EM_LINESCROLL, new IntPtr(0), new IntPtr(lineNumber));
+         Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.EM_LINESCROLL, new IntPtr(0), new IntPtr(lineNumber));
       }
       
       #endregion

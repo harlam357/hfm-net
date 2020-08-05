@@ -245,7 +245,7 @@
     <Compile Include="Models\MainGridModel.cs" />
     <Compile Include="Models\ProteinCalculatorModel.cs" />
     <Compile Include="Models\UserStatsDataModel.cs" />
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Internal\NativeMethods.cs" />
     <Compile Include="Controls\QueueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
