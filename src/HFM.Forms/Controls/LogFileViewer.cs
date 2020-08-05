@@ -13,14 +13,9 @@ namespace HFM.Forms.Controls
     [ExcludeFromCodeCoverage]
     public partial class LogFileViewer : RichTextBox
     {
-        private IList<LogLine> _logLines;
+        private ICollection<LogLine> _logLines;
 
-        private string _logOwnedByInstanceName = String.Empty;
-
-        public string LogOwnedByInstanceName
-        {
-            get { return _logOwnedByInstanceName; }
-        }
+        public string LogOwnedByInstanceName { get; private set; } = String.Empty;
 
         public LogFileViewer()
         {
@@ -29,26 +24,24 @@ namespace HFM.Forms.Controls
 
         private const int MaxDisplayableLogLines = 500;
 
-        public void SetLogLines(IEnumerable<LogLine> lines, string logOwnedByInstance, bool highlightLines)
+        public void SetLogLines(ICollection<LogLine> lines, string logOwnedByInstance, bool highlightLines)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<IEnumerable<LogLine>, string, bool>(SetLogLines), lines, logOwnedByInstance, highlightLines);
+                Invoke(new Action<ICollection<LogLine>, string, bool>(SetLogLines), lines, logOwnedByInstance, highlightLines);
                 return;
             }
 
-            _logOwnedByInstanceName = logOwnedByInstance;
+            LogOwnedByInstanceName = logOwnedByInstance;
 
-#if !LOGTOOL
             // limit the maximum number of log lines
-            int lineOffset = lines.Count() - MaxDisplayableLogLines;
+            int lineOffset = lines.Count - MaxDisplayableLogLines;
             if (lineOffset > 0)
             {
-                lines = lines.Where((x, i) => i > lineOffset);
+                lines = lines.Where((x, i) => i > lineOffset).ToList();
             }
-#endif
 
-            _logLines = lines.ToList();
+            _logLines = lines;
             HighlightLines(highlightLines);
         }
 
