@@ -41,7 +41,7 @@ namespace HFM.Forms
 
         ILogFileViewer LogFileViewer { get; }
 
-        IDataGridView DataGridView { get; }
+        DataGridView DataGridView { get; }
 
         SplitContainer SplitContainer { get; }
 
@@ -98,7 +98,7 @@ namespace HFM.Forms
 
         public ILogFileViewer LogFileViewer { get { return txtLogFile; } }
 
-        public IDataGridView DataGridView { get { return dataGridView1; } }
+        public DataGridView DataGridView { get { return dataGridView1; } }
 
         public SplitContainer SplitContainer { get { return splitContainer1; } }
 
