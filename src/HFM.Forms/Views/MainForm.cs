@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
@@ -293,6 +294,7 @@ namespace HFM.Forms
             _notifyIcon.DoubleClick += delegate { _presenter.NotifyIconDoubleClick(); };
 
             _presenter.ViewShown();
+            _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_prefs));
         }
 
         private void MainFormResize(object sender, EventArgs e)
@@ -423,7 +425,7 @@ namespace HFM.Forms
 
         private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
         {
-            _presenter.CheckForUpdateClick();
+            _presenter.CheckForUpdateClick(new ApplicationUpdateService(_prefs));
         }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)

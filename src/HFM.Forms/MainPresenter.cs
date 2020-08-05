@@ -11,9 +11,11 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -56,7 +58,6 @@ namespace HFM.Forms
         private readonly IPresenterFactory _presenterFactory;
         private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
-        private readonly IUpdateLogic _updateLogic;
         private readonly IExternalProcessStarter _processStarter;
         private readonly IPreferenceSet _prefs;
         private readonly ExceptionPresenterFactory _exceptionPresenter;
@@ -68,7 +69,7 @@ namespace HFM.Forms
 
         public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                             ClientConfiguration clientConfiguration, IProteinService proteinService, IUpdateLogic updateLogic,
+                             ClientConfiguration clientConfiguration, IProteinService proteinService, 
                              IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenterFactory exceptionPresenter)
         {
             _gridModel = gridModel;
@@ -105,9 +106,6 @@ namespace HFM.Forms
             // Collections
             _clientConfiguration = clientConfiguration;
             _proteinService = proteinService;
-            // Logic Services
-            _updateLogic = updateLogic;
-            _updateLogic.Owner = _view;
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
@@ -266,10 +264,53 @@ namespace HFM.Forms
             }
 
             SetViewShowStyle();
+        }
 
+        public void CheckForUpdateOnStartup(IApplicationUpdateService service)
+        {
             if (_prefs.Get<bool>(Preference.StartupCheckForUpdate))
             {
-                _updateLogic.CheckForUpdate();
+                CheckForUpdateInternal(service);
+            }
+        }
+
+        private void CheckForUpdate(IApplicationUpdateService service)
+        {
+            var result = CheckForUpdateInternal(service);
+            if (result.HasValue && !result.Value)
+            {
+                string text = $"{Core.Application.NameAndVersion} is already up-to-date.";
+                _messageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+            }
+        }
+
+        private readonly object _checkForUpdateLock = new object();
+        private ApplicationUpdateModel _applicationUpdateModel;
+
+        private bool? CheckForUpdateInternal(IApplicationUpdateService service)
+        {
+            if (!Monitor.TryEnter(_checkForUpdateLock))
+            {
+                return null;
+            }
+            try
+            {
+                string url = Properties.Settings.Default.UpdateUrl;
+                var update = service.GetApplicationUpdate(url);
+
+                if (update is null) return false;
+                if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
+
+                _applicationUpdateModel = new ApplicationUpdateModel(update);
+                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _prefs, _messageBox))
+                {
+                    presenter.ShowDialog(_view);
+                }
+                return true;
+            }
+            finally
+            {
+                Monitor.Exit(_checkForUpdateLock);
             }
         }
 
@@ -320,7 +361,7 @@ namespace HFM.Forms
             _prefs.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
             _prefs.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
 
-            CheckForAndFireUpdateProcess();
+            CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
             return false;
         }
@@ -344,21 +385,21 @@ namespace HFM.Forms
             }
         }
 
-        private void CheckForAndFireUpdateProcess()
+        private void CheckForAndFireUpdateProcess(ApplicationUpdateModel update)
         {
-            if (!String.IsNullOrEmpty(_updateLogic.UpdateFilePath))
+            if (update != null && update.SelectedUpdateFileIsReadyToBeExecuted)
             {
-                Logger.Info($"Firing update file '{_updateLogic.UpdateFilePath}'...");
+                string path = update.SelectedUpdateFileLocalFilePath;
+                Logger.Info($"Firing update file '{path}'...");
                 try
                 {
-                    Process.Start(_updateLogic.UpdateFilePath);
+                    Process.Start(path);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex.Message, ex);
                     string message = String.Format(CultureInfo.CurrentCulture,
-                                                   "Update process failed to start with the following error:{0}{0}{1}",
-                                                   Environment.NewLine, ex.Message);
+                        "Update process failed to start with the following error:{0}{0}{1}", Environment.NewLine, ex.Message);
                     _messageBox.ShowError(_view, message, _view.Text);
                 }
             }
@@ -760,12 +801,9 @@ namespace HFM.Forms
             HandleProcessStartResult(_processStarter.ShowHfmGoogleGroup());
         }
 
-        public void CheckForUpdateClick()
+        public void CheckForUpdateClick(IApplicationUpdateService service)
         {
-            // if already in progress, stub out...
-            if (_updateLogic.CheckInProgress) return;
-
-            _updateLogic.CheckForUpdate(true);
+            CheckForUpdate(service);
         }
 
         #endregion

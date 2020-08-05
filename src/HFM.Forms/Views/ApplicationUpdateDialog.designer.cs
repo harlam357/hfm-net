@@ -29,132 +29,133 @@ namespace HFM.Forms
       /// </summary>
       private void InitializeComponent()
       {
-         this.lblFirstLine = new System.Windows.Forms.Label();
-         this.lblYourVersion = new System.Windows.Forms.Label();
-         this.lblCurrentVersion = new System.Windows.Forms.Label();
-         this.lblSelectDownload = new System.Windows.Forms.Label();
-         this.cboUpdateFiles = new System.Windows.Forms.ComboBox();
-         this.btnDownload = new System.Windows.Forms.Button();
-         this.btnCancel = new System.Windows.Forms.Button();
-         this.progressDownload = new System.Windows.Forms.ProgressBar();
-         this.SuspendLayout();
-         // 
-         // lblFirstLine
-         // 
-         this.lblFirstLine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-         this.lblFirstLine.Location = new System.Drawing.Point(12, 13);
-         this.lblFirstLine.Name = "lblFirstLine";
-         this.lblFirstLine.Size = new System.Drawing.Size(267, 31);
-         this.lblFirstLine.TabIndex = 0;
-         this.lblFirstLine.Text = "A new version of {0} is available for download.";
-         // 
-         // lblYourVersion
-         // 
-         this.lblYourVersion.AutoSize = true;
-         this.lblYourVersion.Location = new System.Drawing.Point(12, 54);
-         this.lblYourVersion.Name = "lblYourVersion";
-         this.lblYourVersion.Size = new System.Drawing.Size(72, 13);
-         this.lblYourVersion.TabIndex = 1;
-         this.lblYourVersion.Text = "Your version: ";
-         // 
-         // lblCurrentVersion
-         // 
-         this.lblCurrentVersion.AutoSize = true;
-         this.lblCurrentVersion.Location = new System.Drawing.Point(12, 77);
-         this.lblCurrentVersion.Name = "lblCurrentVersion";
-         this.lblCurrentVersion.Size = new System.Drawing.Size(84, 13);
-         this.lblCurrentVersion.TabIndex = 2;
-         this.lblCurrentVersion.Text = "Current version: ";
-         // 
-         // lblSelectDownload
-         // 
-         this.lblSelectDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-         this.lblSelectDownload.Location = new System.Drawing.Point(10, 113);
-         this.lblSelectDownload.Name = "lblSelectDownload";
-         this.lblSelectDownload.Size = new System.Drawing.Size(267, 18);
-         this.lblSelectDownload.TabIndex = 3;
-         this.lblSelectDownload.Text = "Please select an update to download.";
-         this.lblSelectDownload.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-         // 
-         // cboUpdateFiles
-         // 
-         this.cboUpdateFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-         this.cboUpdateFiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-         this.cboUpdateFiles.FormattingEnabled = true;
-         this.cboUpdateFiles.Location = new System.Drawing.Point(44, 134);
-         this.cboUpdateFiles.Name = "cboUpdateFiles";
-         this.cboUpdateFiles.Size = new System.Drawing.Size(199, 21);
-         this.cboUpdateFiles.TabIndex = 4;
-         // 
-         // btnDownload
-         // 
-         this.btnDownload.Location = new System.Drawing.Point(63, 176);
-         this.btnDownload.Name = "btnDownload";
-         this.btnDownload.Size = new System.Drawing.Size(75, 23);
-         this.btnDownload.TabIndex = 5;
-         this.btnDownload.Text = "Download";
-         this.btnDownload.UseVisualStyleBackColor = true;
-         this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
-         // 
-         // btnCancel
-         // 
-         this.btnCancel.Location = new System.Drawing.Point(149, 176);
-         this.btnCancel.Name = "btnCancel";
-         this.btnCancel.Size = new System.Drawing.Size(75, 23);
-         this.btnCancel.TabIndex = 6;
-         this.btnCancel.Text = "Cancel";
-         this.btnCancel.UseVisualStyleBackColor = true;
-         this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-         // 
-         // progressDownload
-         // 
-         this.progressDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
-         this.progressDownload.Location = new System.Drawing.Point(10, 132);
-         this.progressDownload.Name = "progressDownload";
-         this.progressDownload.Size = new System.Drawing.Size(267, 25);
-         this.progressDownload.Step = 1;
-         this.progressDownload.TabIndex = 7;
-         this.progressDownload.Visible = false;
-         // 
-         // UpdateDialog
-         // 
-         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(287, 211);
-         this.Controls.Add(this.btnCancel);
-         this.Controls.Add(this.btnDownload);
-         this.Controls.Add(this.cboUpdateFiles);
-         this.Controls.Add(this.lblSelectDownload);
-         this.Controls.Add(this.lblCurrentVersion);
-         this.Controls.Add(this.lblYourVersion);
-         this.Controls.Add(this.lblFirstLine);
-         this.Controls.Add(this.progressDownload);
-         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-         this.MaximizeBox = false;
-         this.MinimizeBox = false;
-         this.Name = "ApplicationUpdateDialog";
-         this.ShowIcon = false;
-         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-         this.Text = "Application Update";
-         this.Load += new System.EventHandler(this.UpdateDialog_Load);
-         this.ResumeLayout(false);
-         this.PerformLayout();
+            this.captionLabel = new System.Windows.Forms.Label();
+            this.thisVersionLabel = new System.Windows.Forms.Label();
+            this.newVersionLabel = new System.Windows.Forms.Label();
+            this.downloadProgressLabel = new System.Windows.Forms.Label();
+            this.updateFilesComboBox = new System.Windows.Forms.ComboBox();
+            this.downloadButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
+            this.downloadProgressBar = new System.Windows.Forms.ProgressBar();
+            this.SuspendLayout();
+            // 
+            // lblFirstLine
+            // 
+            this.captionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.captionLabel.Location = new System.Drawing.Point(12, 13);
+            this.captionLabel.Name = "captionLabel";
+            this.captionLabel.Size = new System.Drawing.Size(267, 31);
+            this.captionLabel.TabIndex = 0;
+            this.captionLabel.Text = "A new version of...";
+            // 
+            // lblYourVersion
+            // 
+            this.thisVersionLabel.AutoSize = true;
+            this.thisVersionLabel.Location = new System.Drawing.Point(12, 54);
+            this.thisVersionLabel.Name = "thisVersionLabel";
+            this.thisVersionLabel.Size = new System.Drawing.Size(0, 13);
+            this.thisVersionLabel.TabIndex = 1;
+            this.thisVersionLabel.Text = "This version: ";
+            // 
+            // lblCurrentVersion
+            // 
+            this.newVersionLabel.AutoSize = true;
+            this.newVersionLabel.Location = new System.Drawing.Point(12, 77);
+            this.newVersionLabel.Name = "newVersionLabel";
+            this.newVersionLabel.Size = new System.Drawing.Size(0, 13);
+            this.newVersionLabel.TabIndex = 2;
+            this.newVersionLabel.Text = "New version: ";
+            // 
+            // lblSelectDownload
+            // 
+            this.downloadProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadProgressLabel.Location = new System.Drawing.Point(10, 113);
+            this.downloadProgressLabel.Name = "downloadProgressLabel";
+            this.downloadProgressLabel.Size = new System.Drawing.Size(267, 18);
+            this.downloadProgressLabel.TabIndex = 3;
+            this.downloadProgressLabel.Text = "Please select an update to download.";
+            this.downloadProgressLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // cboUpdateFiles
+            // 
+            this.updateFilesComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.updateFilesComboBox.FormattingEnabled = true;
+            this.updateFilesComboBox.Location = new System.Drawing.Point(44, 134);
+            this.updateFilesComboBox.Name = "updateFilesComboBox";
+            this.updateFilesComboBox.Size = new System.Drawing.Size(199, 21);
+            this.updateFilesComboBox.TabIndex = 4;
+            // 
+            // DownloadButton
+            // 
+            this.downloadButton.Location = new System.Drawing.Point(63, 176);
+            this.downloadButton.Name = "downloadButton";
+            this.downloadButton.Size = new System.Drawing.Size(75, 23);
+            this.downloadButton.TabIndex = 5;
+            this.downloadButton.Text = "Download";
+            this.downloadButton.UseVisualStyleBackColor = true;
+            this.downloadButton.Click += new System.EventHandler(this.downloadButton_Click);
+            // 
+            // btnCancel
+            // 
+            this.cancelButton.Location = new System.Drawing.Point(149, 176);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 6;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // progressDownload
+            // 
+            this.downloadProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadProgressBar.Location = new System.Drawing.Point(10, 132);
+            this.downloadProgressBar.Name = "downloadProgressBar";
+            this.downloadProgressBar.Size = new System.Drawing.Size(267, 25);
+            this.downloadProgressBar.Step = 1;
+            this.downloadProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.downloadProgressBar.TabIndex = 7;
+            this.downloadProgressBar.Visible = false;
+            // 
+            // ApplicationUpdateDialog
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(287, 211);
+            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.downloadButton);
+            this.Controls.Add(this.updateFilesComboBox);
+            this.Controls.Add(this.downloadProgressLabel);
+            this.Controls.Add(this.newVersionLabel);
+            this.Controls.Add(this.thisVersionLabel);
+            this.Controls.Add(this.captionLabel);
+            this.Controls.Add(this.downloadProgressBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "ApplicationUpdateDialog";
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Application Update";
+            this.Load += new System.EventHandler(this.ApplicationUpdateDialog_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
       }
 
       #endregion
 
-      private System.Windows.Forms.Label lblFirstLine;
-      private System.Windows.Forms.Label lblYourVersion;
-      private System.Windows.Forms.Label lblCurrentVersion;
-      private System.Windows.Forms.Label lblSelectDownload;
-      private System.Windows.Forms.ComboBox cboUpdateFiles;
-      private System.Windows.Forms.Button btnDownload;
-      private System.Windows.Forms.Button btnCancel;
-      private System.Windows.Forms.ProgressBar progressDownload;
+      private System.Windows.Forms.Label captionLabel;
+      private System.Windows.Forms.Label thisVersionLabel;
+      private System.Windows.Forms.Label newVersionLabel;
+      private System.Windows.Forms.Label downloadProgressLabel;
+      private System.Windows.Forms.ComboBox updateFilesComboBox;
+      private System.Windows.Forms.Button downloadButton;
+      private System.Windows.Forms.Button cancelButton;
+      private System.Windows.Forms.ProgressBar downloadProgressBar;
    }
 }

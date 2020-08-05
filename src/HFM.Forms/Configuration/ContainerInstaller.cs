@@ -94,11 +94,6 @@ namespace HFM.Forms.Configuration
                 Component.For<IExternalProcessStarter>()
                     .ImplementedBy<ExternalProcessStarter>());
 
-            // IUpdateLogic - Singleton
-            container.Register(
-                Component.For<IUpdateLogic>()
-                    .ImplementedBy<UpdateLogic>());
-
             #endregion
         }
     }

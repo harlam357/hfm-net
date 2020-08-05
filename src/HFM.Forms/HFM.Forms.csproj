@@ -116,13 +116,13 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Models\ApplicationUpdateModel.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\AboutDialog.Designer.cs">
       <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationUpdate.cs" />
     <Compile Include="Views\BenchmarksForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,6 +218,7 @@
     <Compile Include="Views\IWin32Dialog.cs" />
     <Compile Include="Views\PreferencesDialog.IsRunningOnMono.cs">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
     <Compile Include="Controls\HistoryGridViewWrapper.cs">
@@ -284,14 +285,12 @@
     <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
-    <Compile Include="UpdateChecker.cs" />
     <Compile Include="Views\ApplicationUpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\ApplicationUpdateDialog.designer.cs">
       <DependentUpon>ApplicationUpdateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="UpdateLogic.cs" />
     <Compile Include="HistoryPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\ClientsModel.cs" />
