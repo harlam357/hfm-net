@@ -76,7 +76,7 @@ namespace HFM.Forms
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
                 presenter.Model.WebGenerationModel.Path = @"foo\";
-                var dialog = new MockFolderDialogPresenter(window => default);
+                var dialog = new MockFolderDialogPresenter(_ => default);
                 // Act
                 presenter.BrowseForWebGenerationPath(dialog);
                 // Assert
@@ -90,7 +90,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                var dialog = new MockFolderDialogPresenter(window => default);
+                var dialog = new MockFolderDialogPresenter(_ => default);
                 // Act
                 presenter.BrowseForWebGenerationPath(dialog);
                 // Assert
@@ -104,7 +104,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                var dialog = new MockFolderDialogPresenter(window => DialogResult.OK);
+                var dialog = new MockFolderDialogPresenter(_ => DialogResult.OK);
                 dialog.SelectedPath = @"foo\";
                 // Act
                 presenter.BrowseForWebGenerationPath(dialog);
@@ -282,7 +282,7 @@ namespace HFM.Forms
                     string path = artifacts.GetRandomFilePath();
                     File.WriteAllText(path, String.Empty);
                     presenter.Model.ClientsModel.DefaultConfigFile = path;
-                    var dialog = new MockFileDialogPresenter(window => default);
+                    var dialog = new MockFileDialogPresenter(_ => default);
                     // Act
                     presenter.BrowseForConfigurationFile(dialog);
                     // Assert
@@ -301,7 +301,7 @@ namespace HFM.Forms
                 using (var artifacts = new ArtifactFolder())
                 {
                     presenter.Model.ClientsModel.DefaultConfigFile = artifacts.Path;
-                    var dialog = new MockFileDialogPresenter(window => default);
+                    var dialog = new MockFileDialogPresenter(_ => default);
                     // Act
                     presenter.BrowseForConfigurationFile(dialog);
                     // Assert
@@ -317,7 +317,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                var dialog = new MockFileDialogPresenter(window => DialogResult.OK);
+                var dialog = new MockFileDialogPresenter(_ => DialogResult.OK);
                 string path = @"C:\foo\bar.hfmx";
                 dialog.FileName = path;
                 // Act
@@ -338,7 +338,7 @@ namespace HFM.Forms
                     string path = artifacts.GetRandomFilePath();
                     File.WriteAllText(path, String.Empty);
                     presenter.Model.WebVisualStylesModel.OverviewXsltPath = path;
-                    var dialog = new MockFileDialogPresenter(window => default);
+                    var dialog = new MockFileDialogPresenter(_ => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
                     // Assert
@@ -363,7 +363,7 @@ namespace HFM.Forms
                     File.WriteAllText(path, String.Empty);
 
                     presenter.Model.WebVisualStylesModel.OverviewXsltPath = Path.GetFileName(path);
-                    var dialog = new MockFileDialogPresenter(window => default);
+                    var dialog = new MockFileDialogPresenter(_ => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
                     // Assert
@@ -382,7 +382,7 @@ namespace HFM.Forms
                 using (var artifacts = new ArtifactFolder())
                 {
                     presenter.Model.WebVisualStylesModel.OverviewXsltPath = artifacts.Path;
-                    var dialog = new MockFileDialogPresenter(window => default);
+                    var dialog = new MockFileDialogPresenter(_ => default);
                     // Act
                     presenter.BrowseForOverviewTransform(dialog);
                     // Assert
@@ -398,7 +398,7 @@ namespace HFM.Forms
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
             {
-                var dialog = new MockFileDialogPresenter(window => DialogResult.OK);
+                var dialog = new MockFileDialogPresenter(_ => DialogResult.OK);
                 string path = @"C:\foo\overview.xslt";
                 dialog.FileName = path;
                 // Act
@@ -419,7 +419,7 @@ namespace HFM.Forms
                 {
                     string defaultXsltPath = Path.Combine(artifacts.Path, Core.Application.XsltFolderName);
 
-                    var dialog = new MockFileDialogPresenter(window => DialogResult.OK);
+                    var dialog = new MockFileDialogPresenter(_ => DialogResult.OK);
                     string path = Path.Combine(defaultXsltPath, "overview.xslt");
                     dialog.FileName = path;
                     // Act
