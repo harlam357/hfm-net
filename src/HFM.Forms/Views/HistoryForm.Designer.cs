@@ -51,7 +51,7 @@ namespace HFM.Forms
          this.RefreshEntryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
          this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-         this.dataGridView1 = new HFM.Forms.Controls.HistoryGridViewWrapper();
+         this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
          this.ResultsLabel = new System.Windows.Forms.Label();
          this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
          this.ResultsTextBox = new System.Windows.Forms.TextBox();
@@ -546,7 +546,7 @@ namespace HFM.Forms
       private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGrid;
       private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
       private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
-      private HistoryGridViewWrapper dataGridView1;
+      private DataGridViewExt dataGridView1;
       private System.Windows.Forms.Label ResultsLabel;
       private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
       private System.Windows.Forms.TextBox ResultsTextBox;

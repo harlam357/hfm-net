@@ -222,12 +222,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
-    <Compile Include="Controls\HistoryGridViewWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\HistoryGridViewWrapper.Designer.cs">
-      <DependentUpon>HistoryGridViewWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\HistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
