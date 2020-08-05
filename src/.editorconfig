@@ -140,6 +140,8 @@ dotnet_naming_symbols.private_field_naming_symbols.applicable_accessibilities = 
 csharp_style_var_when_type_is_apparent = true:suggestion
 csharp_style_var_elsewhere = false:none
 csharp_style_var_for_built_in_types = false:none
+# IDE0017: Simplify object initialization
+dotnet_style_object_initializer = false:none
 # IDE0058: Expression value is never used
 csharp_style_unused_value_expression_statement_preference = discard_variable:none
 
