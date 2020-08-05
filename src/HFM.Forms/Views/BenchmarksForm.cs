@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +12,7 @@ using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
+using HFM.Forms.Internal;
 using HFM.Preferences;
 using HFM.Proteins;
 

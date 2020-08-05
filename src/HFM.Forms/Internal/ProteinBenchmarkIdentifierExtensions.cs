@@ -4,7 +4,7 @@ using System;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
-namespace HFM.Forms
+namespace HFM.Forms.Internal
 {
     internal static class ProteinBenchmarkIdentifierExtensions
     {

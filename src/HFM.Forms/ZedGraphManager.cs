@@ -10,6 +10,7 @@ using ZedGraph;
 
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
+using HFM.Forms.Internal;
 using HFM.Proteins;
 
 namespace HFM.Forms
