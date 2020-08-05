@@ -116,6 +116,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
@@ -175,7 +176,7 @@
     <Compile Include="Views\ExceptionDialog.Designer.cs">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Internal\ControlBindingExtensions.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Models\PreferencesModel.cs" />
     <Compile Include="Presenters\FileDialogPresenter.cs" />
