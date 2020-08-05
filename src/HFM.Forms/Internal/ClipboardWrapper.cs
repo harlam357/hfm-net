@@ -1,23 +1,4 @@
-/*
- * Clipboard Helper Class
- * Copyright (C) 2002-2010 by AlphaSierraPapa, Christoph Wille
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
-// <file>
+﻿// <file>
 //     <copyright see="prj:///doc/copyright.txt"/>
 //     <license see="prj:///doc/license.txt"/>
 //     <owner name="Daniel Grunwald" email="daniel@danielgrunwald.de"/>
@@ -33,7 +14,7 @@ namespace HFM.Forms.Internal
     /// <summary>
     /// Helper class to access the clipboard without worrying about ExternalExceptions
     /// </summary>
-    public static class ClipboardWrapper
+    internal static class ClipboardWrapper
     {
         public static bool ContainsText
         {
@@ -65,7 +46,7 @@ namespace HFM.Forms.Internal
 
         public static void SetText(string text)
         {
-            DataObject data = new DataObject();
+            var data = new DataObject();
             data.SetData(DataFormats.UnicodeText, true, text);
             SetDataObject(data);
         }
@@ -100,26 +81,26 @@ namespace HFM.Forms.Internal
         }
 
         // Code duplication: TextAreaClipboardHandler.cs also has SafeSetClipboard
-        [ThreadStatic] static int SafeSetClipboardDataVersion;
+        [ThreadStatic] private static int _SafeSetClipboardDataVersion;
 
-        static void SafeSetClipboard(object dataObject)
+        private static void SafeSetClipboard(object dataObject)
         {
             // Work around ExternalException bug. (SD2-426)
-            // Best reproducable inside Virtual PC.
-            int version = unchecked(++SafeSetClipboardDataVersion);
+            // Best reproducible inside Virtual PC.
+            int version = unchecked(++_SafeSetClipboardDataVersion);
             try
             {
                 Clipboard.SetDataObject(dataObject, true);
             }
             catch (ExternalException)
             {
-                Timer timer = new Timer();
+                var timer = new Timer();
                 timer.Interval = 100;
                 timer.Tick += delegate
                 {
                     timer.Stop();
                     timer.Dispose();
-                    if (SafeSetClipboardDataVersion == version)
+                    if (_SafeSetClipboardDataVersion == version)
                     {
                         try
                         {

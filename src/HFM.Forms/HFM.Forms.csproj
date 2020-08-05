@@ -306,7 +306,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ApplicationUpdatePresenter.cs" />
-    <Compile Include="WindowPosition.cs" />
+    <Compile Include="Internal\WindowPosition.cs" />
     <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -165,7 +165,7 @@ namespace HFM.Forms
             if (location.X != 0 && location.Y != 0)
             {
                 _view.SetManualStartPosition();
-                _view.Location = WindowPosition.Normalize(location, size);
+                _view.Location = Internal.WindowPosition.Normalize(location, size);
             }
             // Look for view size
             if (size.Width != 0 && size.Height != 0)
@@ -966,7 +966,7 @@ namespace HFM.Forms
                 // Restore state data
                 var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
                 var size = _prefs.Get<Size>(Preference.MessagesFormSize);
-                location = WindowPosition.Normalize(location, size);
+                location = Internal.WindowPosition.Normalize(location, size);
 
                 if (location.X != 0 && location.Y != 0)
                 {
@@ -1169,7 +1169,7 @@ namespace HFM.Forms
             // Restore state data
             var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
             var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
-            location = WindowPosition.Normalize(location, size);
+            location = Internal.WindowPosition.Normalize(location, size);
 
             if (location.X != 0 && location.Y != 0)
             {
@@ -1177,7 +1177,7 @@ namespace HFM.Forms
             }
             else
             {
-                benchmarksView.Location = WindowPosition.CenterOnPrimaryScreen(size);
+                benchmarksView.Location = Internal.WindowPosition.CenterOnPrimaryScreen(size);
             }
 
             if (size.Width != 0 && size.Height != 0)
