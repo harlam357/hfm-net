@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -9,7 +8,7 @@ using System.Windows.Forms;
 using HFM.Core.Logging;
 using HFM.Forms.Internal;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     public abstract class ExceptionPresenterFactory
     {

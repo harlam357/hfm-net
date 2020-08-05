@@ -9,6 +9,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 using HFM.Core.Logging;
+using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Configuration
 {

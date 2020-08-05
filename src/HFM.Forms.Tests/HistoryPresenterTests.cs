@@ -12,7 +12,8 @@ using Rhino.Mocks;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
-using HFM.Forms.Mocks;
+using HFM.Forms.Presenters;
+using HFM.Forms.Presenters.Mocks;
 using HFM.Preferences;
 
 namespace HFM.Forms
@@ -25,11 +26,11 @@ namespace HFM.Forms
             var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
             repository.Stub(x => x.Connected).Return(true);
             return new HistoryPresenter(MockRepository.GenerateMock<ILogger>(),
-                                        new InMemoryPreferenceSet(), 
-                                        new WorkUnitQueryDataContainer(), 
-                                        MockRepository.GenerateMock<IHistoryView>(), 
-                                        MockRepository.GenerateStub<IViewFactory>(), 
-                                        messageBox ?? new MockMessageBoxPresenter(), 
+                                        new InMemoryPreferenceSet(),
+                                        new WorkUnitQueryDataContainer(),
+                                        MockRepository.GenerateMock<IHistoryView>(),
+                                        MockRepository.GenerateStub<IViewFactory>(),
+                                        messageBox ?? new MockMessageBoxPresenter(),
                                         repository);
         }
 
@@ -130,7 +131,7 @@ namespace HFM.Forms
             Assert.AreEqual(s, presenter.Preferences.Get<Size>(Preference.HistoryFormSize));
             Assert.AreEqual(columns, presenter.Preferences.Get<ICollection<string>>(Preference.HistoryFormColumns));
         }
-        
+
         [Test]
         public void HistoryPresenter_NewQueryClick_AddsNewQuery()
         {

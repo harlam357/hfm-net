@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 using HFM.Forms.Mocks;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     [TestFixture]
     public class ExceptionPresenterTests

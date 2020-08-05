@@ -20,6 +20,7 @@ using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters;
 using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;

@@ -1,7 +1,7 @@
 ﻿
 using System.Windows.Forms;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     public abstract class MessageBoxPresenter
     {

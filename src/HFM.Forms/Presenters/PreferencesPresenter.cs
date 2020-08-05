@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Preferences;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     public class PreferencesPresenter : IDisposable
     {

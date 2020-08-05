@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +8,7 @@ using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters;
 using HFM.Preferences;
 
 namespace HFM.Forms

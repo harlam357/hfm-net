@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,6 +8,7 @@ using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters;
 using HFM.Preferences;
 
 namespace HFM.Forms

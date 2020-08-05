@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace HFM.Forms.Mocks
+namespace HFM.Forms.Presenters.Mocks
 {
     public class MockMessageBoxPresenter : MessageBoxPresenter
     {

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,7 +9,7 @@ using HFM.Core.Net;
 using HFM.Forms.Models;
 using HFM.Preferences;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     public class ApplicationUpdatePresenter : IDisposable
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace HFM.Forms.Mocks
+namespace HFM.Forms.Presenters.Mocks
 {
     public class MockFileDialogPresenter : FileDialogPresenter
     {

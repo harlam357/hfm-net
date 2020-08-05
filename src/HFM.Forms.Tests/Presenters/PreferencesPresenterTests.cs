@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,9 +13,10 @@ using HFM.Core.Services;
 using HFM.Core.SlotXml;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters.Mocks;
 using HFM.Preferences;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     [TestFixture]
     public class PreferencesPresenterTests

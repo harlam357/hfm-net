@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,8 +8,9 @@ using NUnit.Framework;
 using HFM.Client;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters.Mocks;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     [TestFixture]
     public class FahClientSettingsPresenterTests

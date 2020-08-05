@@ -10,8 +10,9 @@ using NUnit.Framework;
 using HFM.Core;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
+using HFM.Forms.Presenters.Mocks;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     [TestFixture]
     public class ApplicationUpdatePresenterTests

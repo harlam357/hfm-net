@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -9,7 +8,7 @@ using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Forms.Models;
 
-namespace HFM.Forms
+namespace HFM.Forms.Presenters
 {
     public class FahClientSettingsPresenter : IDisposable
     {
