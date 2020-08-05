@@ -148,11 +148,11 @@
     <Compile Include="Controls\RadioPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\RichTextBoxExt.cs">
+    <Compile Include="Controls\LogFileViewer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\RichTextBoxExt.Designer.cs">
-      <DependentUpon>RichTextBoxExt.cs</DependentUpon>
+    <Compile Include="Controls\LogFileViewer.Designer.cs">
+      <DependentUpon>LogFileViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataGridViewExt.cs">
       <SubType>Component</SubType>

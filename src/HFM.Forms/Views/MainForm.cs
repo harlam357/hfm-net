@@ -39,7 +39,7 @@ namespace HFM.Forms
 
         string StatusLabelLeftText { get; set; }
 
-        ILogFileViewer LogFileViewer { get; }
+        LogFileViewer LogFileViewer { get; }
 
         DataGridView DataGridView { get; }
 
@@ -96,7 +96,7 @@ namespace HFM.Forms
             set { mnuToolsHistory.Enabled = value; }
         }
 
-        public ILogFileViewer LogFileViewer { get { return txtLogFile; } }
+        public LogFileViewer LogFileViewer { get { return txtLogFile; } }
 
         public DataGridView DataGridView { get { return dataGridView1; } }
 
