@@ -80,7 +80,7 @@ namespace HFM.Forms
         {
             string logFilePath = Path.Combine(_prefs.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
             string errorMessage = String.Format(CultureInfo.CurrentCulture,
-                  "An error occured while attempting to show the HFM.log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
+                  "An error occured while attempting to show the HFM log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                   Environment.NewLine);
             return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), WrapInQuotes(logFilePath), errorMessage);
         }
@@ -92,7 +92,7 @@ namespace HFM.Forms
         public string ShowCachedLogFile(string logFilePath)
         {
             string errorMessage = String.Format(CultureInfo.CurrentCulture,
-                  "An error occured while attempting to show the FAHlog.txt file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
+                  "An error occured while attempting to show the client log file.{0}{0}Please check the current Log File Viewer defined in the Preferences.",
                   Environment.NewLine);
             return RunProcess(_prefs.Get<string>(Preference.LogFileViewer), WrapInQuotes(logFilePath), errorMessage);
         }
@@ -176,7 +176,7 @@ namespace HFM.Forms
         /// </summary>
         public string ShowStanfordUserPage()
         {
-            const string errorMessage = "An error occured while attempting to show the Stanford User Stats page.";
+            const string errorMessage = "An error occured while attempting to show the FAH User Stats page.";
             return RunProcess(StanfordUserUrl.AbsoluteUri, null, errorMessage);
         }
 
