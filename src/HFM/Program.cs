@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
@@ -34,7 +34,7 @@ namespace HFM
                 try
                 {
                     container.AddFacility<TypedFactoryFacility>();
-                    container.Install(new Core.Configuration.ContainerInstaller(), new Forms.Configuration.ContainerInstaller());
+                    container.Install(new Core.ContainerInstaller(), new Forms.ContainerInstaller());
 
                     Forms.Configuration.TypeDescriptionProviderSetup.Execute();
 

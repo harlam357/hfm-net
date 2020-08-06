@@ -160,6 +160,8 @@
     </Compile>
     <Compile Include="Arguments.cs" />
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="Core\ContainerInstaller.cs" />
+    <Compile Include="Forms\ContainerInstaller.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleInstanceHelper.cs" />
@@ -234,6 +236,10 @@
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
       <Name>HFM.Preferences</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
+      <Project>{7500a8ca-521d-4397-892b-27c6917847e1}</Project>
+      <Name>HFM.Proteins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
