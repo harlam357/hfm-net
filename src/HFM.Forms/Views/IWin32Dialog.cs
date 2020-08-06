@@ -1,8 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public interface IWin32Dialog : IWin32Window, IDisposable
     {

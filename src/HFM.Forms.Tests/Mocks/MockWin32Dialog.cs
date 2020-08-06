@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Windows.Forms;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Mocks
 {
