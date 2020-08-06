@@ -9,6 +9,7 @@ using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
+using HFM.Forms.Views;
 using HFM.Preferences;
 
 namespace HFM.Forms

@@ -7,6 +7,7 @@ using HFM.Client.ObjectModel;
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Forms.Models;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {

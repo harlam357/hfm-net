@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using HFM.Core.Logging;
 using HFM.Forms.Internal;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {

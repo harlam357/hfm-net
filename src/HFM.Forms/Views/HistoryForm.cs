@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -13,7 +12,7 @@ using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public interface IHistoryView : IWin32Window
     {

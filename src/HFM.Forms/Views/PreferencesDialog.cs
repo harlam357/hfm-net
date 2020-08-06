@@ -7,12 +7,12 @@ using System.Windows.Forms;
 
 using HFM.Core.Services;
 using HFM.Forms.Controls;
-using HFM.Forms.Models;
 using HFM.Forms.Internal;
+using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public partial class PreferencesDialog : FormWrapper, IWin32Dialog
     {

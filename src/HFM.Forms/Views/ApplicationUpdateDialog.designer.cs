@@ -1,5 +1,5 @@
 ﻿
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
    partial class ApplicationUpdateDialog
    {

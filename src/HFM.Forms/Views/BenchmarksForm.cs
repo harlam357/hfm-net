@@ -1,12 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-
-using ZedGraph;
 
 using HFM.Core.Client;
 using HFM.Core.Logging;
@@ -17,7 +14,9 @@ using HFM.Forms.Presenters;
 using HFM.Preferences;
 using HFM.Proteins;
 
-namespace HFM.Forms
+using ZedGraph;
+
+namespace HFM.Forms.Views
 {
     public interface IBenchmarksView
     {

@@ -8,6 +8,7 @@ using HFM.Core;
 using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Forms.Models;
+using HFM.Forms.Views;
 using HFM.Preferences;
 
 namespace HFM.Forms.Presenters

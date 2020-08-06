@@ -1,4 +1,6 @@
 ﻿
+using HFM.Forms.Views;
+
 namespace HFM.Forms
 {
     public interface IViewFactory

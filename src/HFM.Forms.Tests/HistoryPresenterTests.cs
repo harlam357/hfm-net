@@ -14,6 +14,7 @@ using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Presenters;
 using HFM.Forms.Presenters.Mocks;
+using HFM.Forms.Views;
 using HFM.Preferences;
 
 namespace HFM.Forms

@@ -1,6 +1,4 @@
-﻿using HFM.Forms.Controls;
-
-namespace HFM.Forms
+﻿namespace HFM.Forms.Views
 {
    partial class QueryDialog
    {

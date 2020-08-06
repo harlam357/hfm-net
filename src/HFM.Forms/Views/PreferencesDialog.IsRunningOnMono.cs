@@ -1,9 +1,8 @@
-﻿
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 using HFM.Forms.Models;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public partial class PreferencesDialog
     {

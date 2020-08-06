@@ -1,12 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Forms.Controls;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public partial class MainForm
     {

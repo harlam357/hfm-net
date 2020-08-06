@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-
-using HFM.Forms.Models;
 using HFM.Forms.Internal;
+using HFM.Forms.Models;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public interface IProteinCalculatorView
     {

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
@@ -8,7 +7,7 @@ using System.Windows.Forms;
 
 using HFM.Core;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public delegate void ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
 

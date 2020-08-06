@@ -17,6 +17,7 @@ using HFM.Core.WorkUnits;
 using HFM.Forms;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
+using HFM.Forms.Views;
 using HFM.Preferences;
 
 namespace HFM

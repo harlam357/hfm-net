@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -7,7 +6,7 @@ using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public partial class FahClientSettingsDialog : FormWrapper, IWin32Dialog
     {

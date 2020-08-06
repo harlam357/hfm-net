@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 using HFM.Forms.Presenters;
 
-namespace HFM.Forms
+namespace HFM.Forms.Views
 {
     public partial class ExceptionDialog : Form, IWin32Dialog
     {

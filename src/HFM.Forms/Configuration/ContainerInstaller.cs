@@ -10,6 +10,7 @@ using Castle.Windsor;
 
 using HFM.Core.Logging;
 using HFM.Forms.Presenters;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Configuration
 {
