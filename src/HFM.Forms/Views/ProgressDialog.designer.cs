@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms.Views
 {
-   partial class ProgressDialogAsync
+   partial class ProgressDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -69,7 +69,7 @@
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
          this.MaximizeBox = false;
          this.MinimizeBox = false;
-         this.Name = "ProgressDialogAsync";
+         this.Name = "ProgressDialog";
          this.ShowInTaskbar = false;
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "ProgressDialog";

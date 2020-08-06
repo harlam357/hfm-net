@@ -209,11 +209,11 @@
     </Compile>
     <Compile Include="Models\FahClientSettingsModelProfile.cs" />
     <Compile Include="Models\UserStatsDataModelProfile.cs" />
-    <Compile Include="Views\ProgressDialogAsync.cs">
+    <Compile Include="Views\ProgressDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ProgressDialogAsync.designer.cs">
-      <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
+    <Compile Include="Views\ProgressDialog.designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Internal\ProteinBenchmarkIdentifierExtensions.cs" />
     <Compile Include="Views\IWin32Dialog.cs" />
@@ -332,8 +332,8 @@
     <EmbeddedResource Include="Views\PreferencesDialog.resx">
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ProgressDialogAsync.resx">
-      <DependentUpon>ProgressDialogAsync.cs</DependentUpon>
+    <EmbeddedResource Include="Views\ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

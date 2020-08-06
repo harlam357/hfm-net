@@ -278,7 +278,7 @@ namespace HFM
                 repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
                 if (repository.RequiresUpgrade())
                 {
-                    using (var dialog = new ProgressDialogAsync((progress, token) => repository.Upgrade(progress), false))
+                    using (var dialog = new ProgressDialog((progress, token) => repository.Upgrade(progress), false))
                     {
                         dialog.Icon = Properties.Resources.hfm_48_48;
                         dialog.Text = Core.Application.NameAndVersion;

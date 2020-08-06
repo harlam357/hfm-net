@@ -266,7 +266,7 @@ namespace HFM.Forms
 
             try
             {
-                using (var dialog = new ProgressDialogAsync((progress, token) => proteinDataUpdater.Execute(progress, token, scope, id), true))
+                using (var dialog = new ProgressDialog((progress, token) => proteinDataUpdater.Execute(progress, token, scope, id), true))
                 {
                     dialog.Icon = Properties.Resources.hfm_48_48;
                     dialog.Text = Core.Application.NameAndVersion;

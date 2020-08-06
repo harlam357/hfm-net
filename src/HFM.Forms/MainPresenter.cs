@@ -1116,7 +1116,7 @@ namespace HFM.Forms
             try
             {
                 IEnumerable<ProteinDictionaryChange> result = null;
-                using (var dialog = new ProgressDialogAsync((progress, token) =>
+                using (var dialog = new ProgressDialog((progress, token) =>
                 {
                     result = _proteinService.Refresh(progress);
                 }, false))

@@ -11,7 +11,7 @@ namespace HFM.Forms.Views
 {
     public delegate void ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
 
-    public sealed partial class ProgressDialogAsync : Form
+    public sealed partial class ProgressDialog : Form
     {
         private readonly ProgressFunction _progressFunction;
 
@@ -22,9 +22,9 @@ namespace HFM.Forms.Views
         public Exception Exception { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressDialogAsync"/> class.
+        /// Initializes a new instance of the <see cref="ProgressDialog"/> class.
         /// </summary>
-        public ProgressDialogAsync(ProgressFunction progressFunction, bool supportsCancellation)
+        public ProgressDialog(ProgressFunction progressFunction, bool supportsCancellation)
         {
             SupportsCancellation = supportsCancellation;
             _progressFunction = progressFunction;
