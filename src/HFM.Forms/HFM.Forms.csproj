@@ -123,7 +123,6 @@
       <DependentUpon>BenchmarksForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientSettingsManager.cs" />
-    <Compile Include="Configuration\TypeDescriptionProviderSetup.cs" />
     <Compile Include="Controls\BindableToolStripStatusLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -181,9 +180,6 @@
       <DependentUpon>FahClientSettingsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Presenters\FahClientSettingsPresenter.cs" />
-    <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
-    <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="Internal\ClipboardWrapper.cs" />
     <Compile Include="Internal\FileSystemPath.cs" />
     <Compile Include="IPresenterFactory.cs" />
@@ -464,6 +460,9 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

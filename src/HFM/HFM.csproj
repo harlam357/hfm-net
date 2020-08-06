@@ -162,6 +162,10 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Core\ContainerInstaller.cs" />
     <Compile Include="Forms\ContainerInstaller.cs" />
+    <Compile Include="Forms\TypeDescriptionProviderSetup.cs" />
+    <Compile Include="Hyper\ChainingPropertyDescriptor.cs" />
+    <Compile Include="Hyper\HyperTypeDescriptionProvider.cs" />
+    <Compile Include="Hyper\HyperTypeDescriptor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleInstanceHelper.cs" />

@@ -36,7 +36,7 @@ namespace HFM
                     container.AddFacility<TypedFactoryFacility>();
                     container.Install(new Core.ContainerInstaller(), new Forms.ContainerInstaller());
 
-                    Forms.Configuration.TypeDescriptionProviderSetup.Execute();
+                    Forms.TypeDescriptionProviderSetup.Execute();
 
                     bootStrapper.Execute();
                 }
