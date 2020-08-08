@@ -84,6 +84,9 @@
     <Reference Include="HFM.Log, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
       <HintPath>..\packages\HFM.Log.0.1.0\lib\net45\HFM.Log.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -110,6 +113,8 @@
     </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
+    <Compile Include="Presenters\IDialogPresenter.cs" />
+    <Compile Include="Presenters\WorkUnitQueryPresenter.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,8 +187,6 @@
     <Compile Include="Presenters\FahClientSettingsPresenter.cs" />
     <Compile Include="Internal\ClipboardWrapper.cs" />
     <Compile Include="Internal\FileSystemPath.cs" />
-    <Compile Include="IPresenterFactory.cs" />
-    <Compile Include="IViewFactory.cs" />
     <Compile Include="ListItem.cs" />
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
@@ -257,11 +260,11 @@
     <Compile Include="Views\ProteinLoadResultsDialog.Designer.cs">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\QueryDialog.cs">
+    <Compile Include="Views\WorkUnitQueryDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\QueryDialog.Designer.cs">
-      <DependentUpon>QueryDialog.cs</DependentUpon>
+    <Compile Include="Views\WorkUnitQueryDialog.Designer.cs">
+      <DependentUpon>WorkUnitQueryDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\RegistryAutoRunConfiguration.cs" />
     <Compile Include="Services\ExternalProcessStarter.cs" />
@@ -332,8 +335,8 @@
     <EmbeddedResource Include="Views\ProteinLoadResultsDialog.resx">
       <DependentUpon>ProteinLoadResultsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\QueryDialog.resx">
-      <DependentUpon>QueryDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Views\WorkUnitQueryDialog.resx">
+      <DependentUpon>WorkUnitQueryDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ApplicationUpdateDialog.resx">
       <DependentUpon>ApplicationUpdateDialog.cs</DependentUpon>

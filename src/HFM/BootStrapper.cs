@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -8,8 +7,6 @@ using System.Linq;
 using System.Runtime.Remoting;
 using System.Threading;
 using System.Windows.Forms;
-
-using Castle.Windsor;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
@@ -20,17 +17,19 @@ using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 using HFM.Preferences;
 
+using LightInject;
+
 namespace HFM
 {
     internal class BootStrapper
     {
         public string[] Args { get; }
-        public IWindsorContainer Container { get; }
+        public IServiceFactory Container { get; }
         public Logger Logger { get; private set; }
         public IPreferenceSet Preferences { get; private set; }
         public Form MainForm { get; private set; }
 
-        public BootStrapper(string[] args, IWindsorContainer container)
+        public BootStrapper(string[] args, IServiceFactory container)
         {
             Args = args;
             Container = container;
@@ -90,8 +89,8 @@ namespace HFM
         private Logger InitializeLogging()
         {
             // create messages view (hooks into logging messages)
-            Container.Resolve<IMessagesView>();
-            var logger = (Logger)Container.Resolve<ILogger>();
+            Container.GetInstance<IMessagesView>();
+            var logger = (Logger)Container.GetInstance<ILogger>();
             // write log header
             logger.Info(String.Empty);
             logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.FullVersion));
@@ -141,7 +140,7 @@ namespace HFM
         private IPreferenceSet InitializePreferences(ICollection<Argument> arguments)
         {
             bool reset = arguments.Any(x => x.Type == ArgumentType.ResetPrefs);
-            var preferences = Container.Resolve<IPreferenceSet>();
+            var preferences = Container.GetInstance<IPreferenceSet>();
 
             try
             {
@@ -258,12 +257,12 @@ namespace HFM
 
         private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
-            var mainForm = (MainForm)Container.Resolve<IMainView>();
-            var mainPresenter = Container.Resolve<MainPresenter>();
+            var mainForm = (MainForm)Container.GetInstance<IMainView>();
+            var mainPresenter = Container.GetInstance<MainPresenter>();
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainForm.Initialize(mainPresenter, Container.Resolve<IProteinService>(), Container.Resolve<UserStatsDataModel>(), openFile);
+                mainForm.Initialize(mainPresenter, Container.GetInstance<IProteinService>(), Container.GetInstance<UserStatsDataModel>(), openFile);
             }
             catch (Exception ex)
             {
@@ -271,7 +270,7 @@ namespace HFM
             }
 
             mainForm.WorkUnitHistoryMenuEnabled = false;
-            var repository = (WorkUnitRepository)Container.Resolve<IWorkUnitRepository>();
+            var repository = (WorkUnitRepository)Container.GetInstance<IWorkUnitRepository>();
             try
             {
                 string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
@@ -313,7 +312,7 @@ namespace HFM
                 if (platform != null)
                 {
                     string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, "SQLite", platform, String.Concat(sqliteDll, ".dll")));
-                    var logger = Container.Resolve<ILogger>();
+                    var logger = Container.GetInstance<ILogger>();
                     logger.Info($"SQLite DLL Path: {filePath}");
                     if (File.Exists(filePath))
                     {
@@ -332,13 +331,13 @@ namespace HFM
 
         private void ShowThreadExceptionDialog(ThreadExceptionEventArgs e)
         {
-            var presenter = Container.Resolve<ExceptionPresenterFactory>();
+            var presenter = Container.GetInstance<ExceptionPresenterFactory>();
             presenter.ShowDialog(null, e.Exception, false);
         }
 
         private void ShowUnhandledExceptionDialog(UnhandledExceptionEventArgs e)
         {
-            var presenter = Container.Resolve<ExceptionPresenterFactory>();
+            var presenter = Container.GetInstance<ExceptionPresenterFactory>();
             presenter.ShowDialog(null, (Exception)e.ExceptionObject, e.IsTerminating);
         }
 

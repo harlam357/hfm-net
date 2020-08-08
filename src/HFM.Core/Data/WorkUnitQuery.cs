@@ -25,6 +25,7 @@ namespace HFM.Core.Data
     [DataContract]
     public class WorkUnitQuery : IEquatable<WorkUnitQuery>, IComparable<WorkUnitQuery>, IComparable
     {
+        public const string NewQueryName = "* New Query *";
         private const string SelectAllName = "*** SELECT ALL ***";
 
         public static WorkUnitQuery SelectAll { get; } = new WorkUnitQuery { _ordinal = 0, Name = SelectAllName };

@@ -17,6 +17,7 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
@@ -25,6 +26,8 @@ using HFM.Forms.Views;
 using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms
 {
@@ -49,15 +52,12 @@ namespace HFM.Forms
 
         #region Fields
 
-        private HistoryPresenter _historyPresenter;
-
         private readonly MainGridModel _gridModel;
         private readonly IMainView _view;
         private readonly IMessagesView _messagesView;
-        private readonly IViewFactory _viewFactory;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly MessageBoxPresenter _messageBox;
         private readonly UserStatsDataModel _userStatsDataModel;
-        private readonly IPresenterFactory _presenterFactory;
         private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
         private readonly IExternalProcessStarter _processStarter;
@@ -69,9 +69,9 @@ namespace HFM.Forms
 
         #region Constructor
 
-        public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IViewFactory viewFactory,
-                             MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel, IPresenterFactory presenterFactory,
-                             ClientConfiguration clientConfiguration, IProteinService proteinService, 
+        public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IServiceScopeFactory serviceScopeFactory,
+                             MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
+                             ClientConfiguration clientConfiguration, IProteinService proteinService,
                              IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenterFactory exceptionPresenter)
         {
             _gridModel = gridModel;
@@ -102,9 +102,7 @@ namespace HFM.Forms
             _view = view;
             _messagesView = messagesView;
             _messageBox = messageBox;
-            //
-            _viewFactory = viewFactory;
-            _presenterFactory = presenterFactory;
+            _serviceScopeFactory = serviceScopeFactory;
             // Collections
             _clientConfiguration = clientConfiguration;
             _proteinService = proteinService;
@@ -1164,8 +1162,10 @@ namespace HFM.Forms
                 projectId = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
 
-            var benchmarksView = _viewFactory.GetBenchmarksForm();
-            benchmarksView.Closed += (s, e) => _viewFactory.Release(benchmarksView);
+
+            var scope = _serviceScopeFactory.CreateScope();
+            var benchmarksView = scope.ServiceProvider.GetRequiredService<IBenchmarksView>();
+            benchmarksView.Closed += (s, e) => scope.Dispose();
             benchmarksView.ProjectId = projectId;
 
             // Restore state data
@@ -1190,17 +1190,22 @@ namespace HFM.Forms
             benchmarksView.Show();
         }
 
+        private IServiceScope _historyPresenterScope;
+        private HistoryPresenter _historyPresenter;
+
         public void ToolsHistoryClick()
         {
             try
             {
-                if (_historyPresenter is null)
+                if (_historyPresenterScope is null)
                 {
-                    _historyPresenter = _presenterFactory.GetHistoryPresenter();
+                    _historyPresenterScope = _serviceScopeFactory.CreateScope();
+                    _historyPresenter = _historyPresenterScope.ServiceProvider.GetRequiredService<HistoryPresenter>();
                     _historyPresenter.Initialize();
                     _historyPresenter.PresenterClosed += (sender, args) =>
                     {
-                        _presenterFactory.Release(_historyPresenter);
+                        _historyPresenterScope.Dispose();
+                        _historyPresenterScope = null;
                         _historyPresenter = null;
                     };
                 }
@@ -1212,9 +1217,10 @@ namespace HFM.Forms
             }
             catch (Exception)
             {
-                if (_historyPresenter != null)
+                if (_historyPresenterScope != null)
                 {
-                    _presenterFactory.Release(_historyPresenter);
+                    _historyPresenterScope.Dispose();
+                    _historyPresenterScope = null;
                     _historyPresenter = null;
                 }
                 throw;
@@ -1223,9 +1229,10 @@ namespace HFM.Forms
 
         internal void ToolsPointsCalculatorClick()
         {
-            var calculatorForm = _viewFactory.GetProteinCalculatorForm();
-            calculatorForm.Closed += (s, e) => _viewFactory.Release(calculatorForm);
-            calculatorForm.Show(_view);
+            var scope = _serviceScopeFactory.CreateScope();
+            var calculatorView = scope.ServiceProvider.GetRequiredService<IProteinCalculatorView>();
+            calculatorView.Closed += (s, e) => scope.Dispose();
+            calculatorView.Show(_view);
         }
 
         #endregion

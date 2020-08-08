@@ -12,6 +12,8 @@ using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 using HFM.Preferences;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace HFM.Forms
 {
     public class HistoryPresenter
@@ -20,7 +22,7 @@ namespace HFM.Forms
         public IPreferenceSet Preferences { get; }
         public WorkUnitQueryDataContainer QueryDataContainer { get; }
         public IHistoryView HistoryView { get; }
-        public IViewFactory ViewFactory { get; }
+        public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
         public HistoryPresenterModel Model { get; }
@@ -31,7 +33,7 @@ namespace HFM.Forms
                                 IPreferenceSet preferences,
                                 WorkUnitQueryDataContainer queryDataContainer,
                                 IHistoryView historyView,
-                                IViewFactory viewFactory,
+                                IServiceScopeFactory serviceScopeFactory,
                                 MessageBoxPresenter messageBox,
                                 IWorkUnitRepository workUnitRepository)
         {
@@ -39,7 +41,7 @@ namespace HFM.Forms
             Preferences = preferences;
             QueryDataContainer = queryDataContainer;
             HistoryView = historyView;
-            ViewFactory = viewFactory;
+            ServiceScopeFactory = serviceScopeFactory;
             MessageBox = messageBox;
             WorkUnitRepository = workUnitRepository;
             Model = new HistoryPresenterModel(workUnitRepository);
@@ -133,21 +135,19 @@ namespace HFM.Forms
             Model.CurrentPage = Model.TotalPages;
         }
 
-        public void NewQueryClick()
+        public void NewQueryClick(WorkUnitQueryPresenter presenter)
         {
-            var queryView = ViewFactory.GetQueryDialog();
-            var query = new WorkUnitQuery("* New Query *")
-                .AddParameter(new WorkUnitQueryParameter());
-            queryView.Query = query;
+            presenter.Query.Name = WorkUnitQuery.NewQueryName;
+            presenter.Query.Parameters.Add(new WorkUnitQueryParameter());
 
             bool showDialog = true;
             while (showDialog)
             {
-                if (queryView.ShowDialog(HistoryView) == DialogResult.OK)
+                if (presenter.ShowDialog(HistoryView) == DialogResult.OK)
                 {
                     try
                     {
-                        Model.AddQuery(queryView.Query);
+                        Model.AddQuery(presenter.Query);
                         showDialog = false;
                     }
                     catch (ArgumentException ex)
@@ -160,22 +160,20 @@ namespace HFM.Forms
                     showDialog = false;
                 }
             }
-            ViewFactory.Release(queryView);
         }
 
-        public void EditQueryClick()
+        public void EditQueryClick(WorkUnitQueryPresenter presenter)
         {
-            var queryView = ViewFactory.GetQueryDialog();
-            queryView.Query = Model.SelectedWorkUnitQuery.DeepClone();
+            presenter.Query = Model.SelectedWorkUnitQuery.DeepClone();
 
             bool showDialog = true;
             while (showDialog)
             {
-                if (queryView.ShowDialog(HistoryView) == DialogResult.OK)
+                if (presenter.ShowDialog(HistoryView) == DialogResult.OK)
                 {
                     try
                     {
-                        Model.ReplaceQuery(queryView.Query);
+                        Model.ReplaceQuery(presenter.Query);
                         showDialog = false;
                     }
                     catch (ArgumentException ex)
@@ -188,7 +186,6 @@ namespace HFM.Forms
                     showDialog = false;
                 }
             }
-            ViewFactory.Release(queryView);
         }
 
         public void DeleteQueryClick()

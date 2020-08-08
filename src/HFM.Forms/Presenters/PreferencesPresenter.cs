@@ -13,7 +13,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Presenters
 {
-    public class PreferencesPresenter : IDisposable
+    public class PreferencesPresenter : IDialogPresenter, IDisposable
     {
         public ILogger Logger { get; }
         public PreferencesModel Model { get; }

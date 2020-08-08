@@ -1,21 +1,24 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-using NUnit.Framework;
-using Rhino.Mocks;
-
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
+using HFM.Forms.Mocks;
 using HFM.Forms.Presenters;
 using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
 using HFM.Preferences;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using NUnit.Framework;
+
+using Rhino.Mocks;
 
 namespace HFM.Forms
 {
@@ -30,7 +33,7 @@ namespace HFM.Forms
                                         new InMemoryPreferenceSet(),
                                         new WorkUnitQueryDataContainer(),
                                         MockRepository.GenerateMock<IHistoryView>(),
-                                        MockRepository.GenerateStub<IViewFactory>(),
+                                        MockRepository.GenerateMock<IServiceScopeFactory>(),
                                         messageBox ?? new MockMessageBoxPresenter(),
                                         repository);
         }
@@ -138,14 +141,13 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var queryView = new QueryViewModifiesQueryAndReturnsOk(q =>
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(p =>
             {
-                q.Name = "Test";
-                q.Parameters[0].Value = 6606;
-            });
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+                p.Query.Name = "Test";
+                p.Query.Parameters[0].Value = 6606;
+            }, _ => DialogResult.OK);
             // Act
-            presenter.NewQueryClick();
+            presenter.NewQueryClick(queryPresenter);
             // Assert
             Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
             Assert.AreEqual("Test", presenter.Model.SelectedWorkUnitQuery.Name);
@@ -156,13 +158,11 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var queryView = MockRepository.GenerateMock<IQueryView>();
-            queryView.Expect(x => x.ShowDialog(presenter.HistoryView)).Return(DialogResult.Cancel);
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(_ => DialogResult.Cancel);
             // Act
-            presenter.NewQueryClick();
+            presenter.NewQueryClick(queryPresenter);
             // Assert
-            queryView.VerifyAllExpectations();
+            Assert.AreEqual(1, presenter.Model.QueryBindingSource.Count);
         }
 
         [Test]
@@ -170,10 +170,19 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var queryView = new QueryViewReturnsOkOnce();
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            int invocations = 0;
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(_ =>
+            {
+                switch (invocations++)
+                {
+                    case 0:
+                        return DialogResult.OK;
+                    default:
+                        return DialogResult.Cancel;
+                }
+            });
             // Act
-            presenter.NewQueryClick();
+            presenter.NewQueryClick(queryPresenter);
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
@@ -188,10 +197,12 @@ namespace HFM.Forms
                 .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
             Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
 
-            var queryView = new QueryViewModifiesQueryAndReturnsOk(q => q.Name = "Test2");
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(p =>
+            {
+                p.Query.Name = "Test2";
+            }, _ => DialogResult.OK);
             // Act
-            presenter.EditQueryClick();
+            presenter.EditQueryClick(queryPresenter);
             // Assert
             Assert.AreEqual(2, presenter.Model.QueryBindingSource.Count);
             Assert.AreEqual("Test2", presenter.Model.SelectedWorkUnitQuery.Name);
@@ -202,13 +213,11 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var queryView = MockRepository.GenerateMock<IQueryView>();
-            queryView.Expect(x => x.ShowDialog(presenter.HistoryView)).Return(DialogResult.Cancel);
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(_ => DialogResult.Cancel);
             // Act
-            presenter.EditQueryClick();
+            presenter.EditQueryClick(queryPresenter);
             // Assert
-            queryView.VerifyAllExpectations();
+            Assert.AreEqual(1, presenter.Model.QueryBindingSource.Count);
         }
 
         [Test]
@@ -216,62 +225,22 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var queryView = new QueryViewReturnsOkOnce();
-            presenter.ViewFactory.Stub(x => x.GetQueryDialog()).Return(queryView);
+            int invocations = 0;
+            var queryPresenter = new MockDialogWorkUnitQueryPresenter(_ =>
+            {
+                switch (invocations++)
+                {
+                    case 0:
+                        return DialogResult.OK;
+                    default:
+                        return DialogResult.Cancel;
+                }
+            });
             // Act
-            presenter.EditQueryClick();
+            presenter.EditQueryClick(queryPresenter);
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
-        }
-
-        private class QueryViewModifiesQueryAndReturnsOk : IQueryView
-        {
-            private readonly Action<WorkUnitQuery> _queryAction;
-
-            public QueryViewModifiesQueryAndReturnsOk(Action<WorkUnitQuery> queryAction)
-            {
-                _queryAction = queryAction;
-            }
-
-            public IntPtr Handle { get; }
-
-            public WorkUnitQuery Query { get; set; }
-
-            public bool Visible { get; set; }
-
-            public DialogResult ShowDialog(IWin32Window owner)
-            {
-                _queryAction(Query);
-                return DialogResult.OK;
-            }
-
-            public void Close()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class QueryViewReturnsOkOnce : IQueryView
-        {
-            public IntPtr Handle { get; }
-
-            public WorkUnitQuery Query { get; set; }
-
-            public bool Visible { get; set; }
-
-            private int _count;
-
-            public DialogResult ShowDialog(IWin32Window owner)
-            {
-                if (++_count > 1) return DialogResult.None;
-                return DialogResult.OK;
-            }
-
-            public void Close()
-            {
-                throw new NotImplementedException();
-            }
         }
 
         [Test]
@@ -419,6 +388,31 @@ namespace HFM.Forms
             saveFile.FileName = "test.csv";
             saveFile.FilterIndex = 1;
             return saveFile;
+        }
+
+        private class MockDialogWorkUnitQueryPresenter : WorkUnitQueryPresenter
+        {
+            private readonly Action<WorkUnitQueryPresenter> _presenterAction;
+            private readonly Func<IWin32Window, DialogResult> _dialogResultProvider;
+
+            public MockDialogWorkUnitQueryPresenter(Func<IWin32Window, DialogResult> dialogResultProvider) : base(new WorkUnitQuery())
+            {
+                _dialogResultProvider = dialogResultProvider;
+            }
+
+            public MockDialogWorkUnitQueryPresenter(Action<WorkUnitQueryPresenter> presenterAction, Func<IWin32Window, DialogResult> dialogResultProvider) : base(new WorkUnitQuery())
+            {
+                _presenterAction = presenterAction;
+                _dialogResultProvider = dialogResultProvider;
+            }
+
+            public MockWin32Dialog MockDialog => Dialog as MockWin32Dialog;
+
+            public override DialogResult ShowDialog(IWin32Window owner)
+            {
+                Dialog = new MockWin32Dialog<WorkUnitQueryPresenter>(this, _presenterAction, _dialogResultProvider);
+                return Dialog.ShowDialog(owner);
+            }
         }
     }
 }

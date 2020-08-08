@@ -12,6 +12,8 @@ using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace HFM.Forms.Views
 {
     public interface IHistoryView : IWin32Window
@@ -135,12 +137,18 @@ namespace HFM.Forms.Views
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            _presenter.NewQueryClick();
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                _presenter.NewQueryClick(scope.ServiceProvider.GetRequiredService<WorkUnitQueryPresenter>());
+            }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            _presenter.EditQueryClick();
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                _presenter.EditQueryClick(scope.ServiceProvider.GetRequiredService<WorkUnitQueryPresenter>());
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

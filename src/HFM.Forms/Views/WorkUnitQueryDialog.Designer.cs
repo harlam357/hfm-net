@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms.Views
 {
-   partial class QueryDialog
+   partial class WorkUnitQueryDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -28,7 +28,7 @@
       /// </summary>
       private void InitializeComponent()
       {
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QueryDialog));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkUnitQueryDialog));
          this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
          this.panel1 = new System.Windows.Forms.Panel();
          this.txtName = new System.Windows.Forms.TextBox();
@@ -171,7 +171,7 @@
          this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
          this.MaximizeBox = false;
          this.MinimizeBox = false;
-         this.Name = "QueryDialog";
+         this.Name = "WorkUnitQueryDialog";
          this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
          this.Text = "History Query";
          this.tableLayoutPanel1.ResumeLayout(false);

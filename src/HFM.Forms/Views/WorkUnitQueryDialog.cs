@@ -6,50 +6,34 @@ using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Forms.Controls;
+using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public interface IQueryView : IWin32Window
+    public partial class WorkUnitQueryDialog : Form, IWin32Dialog
     {
-        WorkUnitQuery Query { get; set; }
+        private readonly WorkUnitQueryPresenter _presenter;
 
-        bool Visible { get; set; }
-
-        DialogResult ShowDialog(IWin32Window owner);
-
-        void Close();
-    }
-
-    public partial class QueryDialog : Form, IQueryView
-    {
-        private WorkUnitQuery _workUnitQuery;
-        private BindingList<WorkUnitQueryParameter> _parametersList;
-
-        public QueryDialog()
+        public WorkUnitQueryDialog(WorkUnitQueryPresenter presenter)
         {
+            _presenter = presenter;
+
             InitializeComponent();
             SetupDataGridViewColumns();
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
 
-            Query = new WorkUnitQuery();
+            LoadData();
         }
 
-        #region IQueryView Members
+        private BindingList<WorkUnitQueryParameter> _parametersList;
 
-        public WorkUnitQuery Query
+        private void LoadData()
         {
-            get { return _workUnitQuery; }
-            set
-            {
-                _workUnitQuery = value;
-                _parametersList = new BindingList<WorkUnitQueryParameter>(_workUnitQuery.Parameters);
-                BindNameTextBox(_workUnitQuery);
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = _parametersList;
-            }
+            _parametersList = new BindingList<WorkUnitQueryParameter>(_presenter.Query.Parameters);
+            BindNameTextBox(_presenter.Query);
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = _parametersList;
         }
-
-        #endregion
 
         public void BindNameTextBox(WorkUnitQuery parameters)
         {
@@ -194,7 +178,7 @@ namespace HFM.Forms.Views
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            _workUnitQuery.Parameters.Add(new WorkUnitQueryParameter());
+            _presenter.Query.Parameters.Add(new WorkUnitQueryParameter());
             RefreshDisplay();
         }
 
@@ -203,7 +187,7 @@ namespace HFM.Forms.Views
             Debug.Assert(dataGridView1.SelectedCells.Count == 1);
             foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
             {
-                _workUnitQuery.Parameters.RemoveAt(cell.OwningRow.Index);
+                _presenter.Query.Parameters.RemoveAt(cell.OwningRow.Index);
             }
             RefreshDisplay();
         }
@@ -215,14 +199,12 @@ namespace HFM.Forms.Views
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            Close();
+            _presenter.OKClicked();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
+            _presenter.CancelClicked();
         }
     }
 }

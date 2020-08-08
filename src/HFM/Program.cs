@@ -1,10 +1,14 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
 
-using Castle.Facilities.TypedFactory;
-using Castle.Windsor;
+using LightInject;
+using LightInject.Microsoft.DependencyInjection;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM
 {
@@ -28,13 +32,14 @@ namespace HFM
                 Application.StartupPath,
                 System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));
 
-            using (var container = new WindsorContainer())
+            using (var container = new ServiceContainer())
             {
                 var bootStrapper = new BootStrapper(args, container);
                 try
                 {
-                    container.AddFacility<TypedFactoryFacility>();
-                    container.Install(new Core.ContainerInstaller(), new Forms.ContainerInstaller());
+                    container.RegisterAssembly(Assembly.GetExecutingAssembly());
+                    // wires up IServiceProvider and IServiceScopeFactory
+                    _ = container.CreateServiceProvider(new EmptyServiceCollection());
 
                     Forms.TypeDescriptionProviderSetup.Execute();
 
@@ -63,5 +68,11 @@ namespace HFM
             System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = new System.Globalization.CultureInfo(name);
         }
 #endif
+
+        // shim to pass to CreateServiceProvider, using LightInject syntax for registration not Microsoft
+        private class EmptyServiceCollection : List<ServiceDescriptor>, IServiceCollection
+        {
+
+        }
     }
 }
