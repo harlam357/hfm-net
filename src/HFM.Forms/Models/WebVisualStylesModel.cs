@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,7 +16,7 @@ namespace HFM.Forms.Models
 
         public WebVisualStylesModel(IPreferenceSet preferences)
         {
-            Preferences = preferences;
+            Preferences = preferences ?? new InMemoryPreferenceSet();
         }
 
         public override void Load()

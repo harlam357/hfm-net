@@ -17,8 +17,8 @@ namespace HFM.Forms.Models
 
         public OptionsModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
-            Preferences = preferences;
-            AutoRunConfiguration = autoRunConfiguration;
+            Preferences = preferences ?? new InMemoryPreferenceSet();
+            AutoRunConfiguration = autoRunConfiguration ?? new InMemoryAutoRunConfiguration();
         }
 
         public override void Load()

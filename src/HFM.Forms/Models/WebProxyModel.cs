@@ -14,7 +14,7 @@ namespace HFM.Forms.Models
 
         public WebProxyModel(IPreferenceSet preferences)
         {
-            Preferences = preferences;
+            Preferences = preferences ?? new InMemoryPreferenceSet();
         }
 
         public override void Load()

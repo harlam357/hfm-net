@@ -41,6 +41,7 @@ namespace HFM.Forms
 
             // Transient Models
             serviceRegistry
+                .Register<Models.PreferencesModel>(new PerRequestLifeTime())
                 .Register<Models.ProteinCalculatorModel>(new PerRequestLifeTime())
                 .Register<Models.WorkUnitHistoryModel>(new PerRequestLifeTime())
                 .Register<Core.Data.WorkUnitQuery>(new PerRequestLifeTime());
@@ -48,11 +49,13 @@ namespace HFM.Forms
             // Scope Views
             serviceRegistry
                 .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
-                .Register<WorkUnitHistoryPresenter>(new PerScopeLifetime())
+                .Register<PreferencesPresenter>(new PerScopeLifetime())
                 .Register<IProteinCalculatorView, ProteinCalculatorForm>(new PerScopeLifetime())
+                .Register<WorkUnitHistoryPresenter>(new PerScopeLifetime())
                 .Register<WorkUnitQueryPresenter>(new PerScopeLifetime());
 
-            // IExternalProcessStarter - Singleton
+            // Singleton Services
+            serviceRegistry.Register<IAutoRunConfiguration, RegistryAutoRunConfiguration>(new PerContainerLifetime());
             serviceRegistry.Register<IExternalProcessStarter, ExternalProcessStarter>(new PerContainerLifetime());
         }
     }

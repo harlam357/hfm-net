@@ -279,18 +279,15 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_ExportClick_LogsExceptionAndShowsMessageBoxWhenSerializerThrowsException()
+        public void WorkUnitHistoryPresenter_ExportClick_ShowsMessageBoxWhenSerializerThrowsException()
         {
             // Arrange
             var presenter = CreatePresenter();
             presenter.Model.Repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
-            var logger = presenter.Logger;
-            logger.Expect(x => x.Error("", null)).IgnoreArguments();
             var saveFile = CreateSaveFileDialogView();
             // Act
             presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
-            logger.VerifyAllExpectations();
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }

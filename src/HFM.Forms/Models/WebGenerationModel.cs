@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 
@@ -18,7 +17,7 @@ namespace HFM.Forms.Models
 
         public WebGenerationModel(IPreferenceSet preferences)
         {
-            Preferences = preferences;
+            Preferences = preferences ?? new InMemoryPreferenceSet();
         }
 
         public override void Load()

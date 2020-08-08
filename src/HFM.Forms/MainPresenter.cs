@@ -62,7 +62,6 @@ namespace HFM.Forms
         private readonly IProteinService _proteinService;
         private readonly IExternalProcessStarter _processStarter;
         private readonly IPreferenceSet _prefs;
-        private readonly ExceptionPresenterFactory _exceptionPresenter;
         private readonly ClientSettingsManager _settingsManager;
 
         #endregion
@@ -72,7 +71,7 @@ namespace HFM.Forms
         public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IServiceScopeFactory serviceScopeFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
                              ClientConfiguration clientConfiguration, IProteinService proteinService,
-                             IExternalProcessStarter processStarter, IPreferenceSet prefs, ExceptionPresenterFactory exceptionPresenter)
+                             IExternalProcessStarter processStarter, IPreferenceSet prefs)
         {
             _gridModel = gridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
@@ -109,7 +108,6 @@ namespace HFM.Forms
             _processStarter = processStarter;
             // Data Services
             _prefs = prefs;
-            _exceptionPresenter = exceptionPresenter;
             _settingsManager = new ClientSettingsManager();
 
             _clientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
@@ -772,13 +770,14 @@ namespace HFM.Forms
 
         public void EditPreferencesClick()
         {
-            var model = new PreferencesModel(_prefs, new RegistryAutoRunConfiguration(Logger));
-            model.Load();
-            using (var dialog = new PreferencesPresenter(model, Logger, _messageBox, _exceptionPresenter))
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                dialog.ShowDialog(_view);
-
-                _view.DataGridView.Invalidate();
+                using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
+                {
+                    presenter.ShowDialog(_view);
+                    // TODO: Invalidate View by mutating the Model
+                    _view.DataGridView.Invalidate();
+                }
             }
         }
 

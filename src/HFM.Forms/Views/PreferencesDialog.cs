@@ -36,7 +36,7 @@ namespace HFM.Forms.Views
 
         public PreferencesDialog(PreferencesPresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
 

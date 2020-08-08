@@ -11,13 +11,13 @@ namespace HFM.Forms.Models
     {
         public PreferencesModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
-            Preferences = preferences;
-            ClientsModel = new ClientsModel(preferences);
-            OptionsModel = new OptionsModel(preferences, autoRunConfiguration);
-            WebGenerationModel = new WebGenerationModel(preferences);
-            WebVisualStylesModel = new WebVisualStylesModel(preferences);
-            ReportingModel = new ReportingModel(preferences);
-            WebProxyModel = new WebProxyModel(preferences);
+            Preferences = preferences ?? new InMemoryPreferenceSet();
+            ClientsModel = new ClientsModel(Preferences);
+            OptionsModel = new OptionsModel(Preferences, autoRunConfiguration);
+            WebGenerationModel = new WebGenerationModel(Preferences);
+            WebVisualStylesModel = new WebVisualStylesModel(Preferences);
+            ReportingModel = new ReportingModel(Preferences);
+            WebProxyModel = new WebProxyModel(Preferences);
         }
 
         public IPreferenceSet Preferences { get; }

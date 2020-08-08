@@ -32,6 +32,8 @@ namespace HFM.Forms.Presenters
 
         public virtual DialogResult ShowDialog(IWin32Window owner)
         {
+            Model.Load();
+
             Dialog = new PreferencesDialog(this);
             return Dialog.ShowDialog(owner);
         }

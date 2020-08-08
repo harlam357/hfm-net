@@ -13,7 +13,7 @@ namespace HFM.Forms.Models
         [Test]
         public void PreferencesModel_DefaultPropertyValues()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             Assert.IsNotNull(model.Preferences);
             Assert.IsNotNull(model.ClientsModel);
             Assert.IsNotNull(model.OptionsModel);
@@ -26,7 +26,7 @@ namespace HFM.Forms.Models
         [Test]
         public void PreferencesModel_HasNoError()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             Assert.AreEqual(String.Empty, model.Error);
             Assert.IsFalse(model.HasError);
         }
@@ -34,7 +34,7 @@ namespace HFM.Forms.Models
         [Test]
         public void PreferencesModel_HasError()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             model.WebProxyModel.Enabled = true;
             Assert.AreNotEqual(String.Empty, model.Error);
             Assert.IsTrue(model.HasError);
@@ -44,7 +44,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_ValidateAcceptance_RaisesPropertyChanged()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             string propertyName = null;
             model.PropertyChanged += (s, e) => propertyName = e.PropertyName;
             // Act
@@ -56,14 +56,14 @@ namespace HFM.Forms.Models
         [Test]
         public void PreferencesModel_ValidateAcceptance_ReturnsTrueWhenModelHasNoError()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             Assert.IsTrue(model.ValidateAcceptance());
         }
 
         [Test]
         public void PreferencesModel_ValidateAcceptance_ReturnsFalseWhenModelHasError()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             model.WebProxyModel.Enabled = true;
             Assert.IsFalse(model.ValidateAcceptance());
         }
@@ -85,7 +85,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_Save_ToPreferences()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             model.WebProxyModel.Enabled = true;
             // Act
             model.Save();
@@ -110,12 +110,17 @@ namespace HFM.Forms.Models
         public void PreferencesModel_Save_ToAutoRunConfiguration()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = CreateModel();
             model.OptionsModel.AutoRun = true;
             // Act
             model.Save();
             // Assert
             Assert.IsTrue(model.OptionsModel.AutoRunConfiguration.IsEnabled());
+        }
+
+        private static PreferencesModel CreateModel()
+        {
+            return new PreferencesModel(null, null);
         }
     }
 }

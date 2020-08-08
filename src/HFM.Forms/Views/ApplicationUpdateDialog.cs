@@ -13,7 +13,7 @@ namespace HFM.Forms.Views
 
         public ApplicationUpdateDialog(ApplicationUpdatePresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
             _presenter.Model.PropertyChanged += ModelOnPropertyChanged;
 
             InitializeComponent();
