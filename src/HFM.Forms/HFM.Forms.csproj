@@ -279,7 +279,7 @@
     <Compile Include="Views\ApplicationUpdateDialog.designer.cs">
       <DependentUpon>ApplicationUpdateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="HistoryPresenter.cs" />
+    <Compile Include="Presenters\HistoryPresenter.cs" />
     <Compile Include="Models\HistoryPresenterModel.cs" />
     <Compile Include="Models\ClientsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
