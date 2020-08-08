@@ -116,6 +116,7 @@
     <Compile Include="Presenters\FormPresenter.cs" />
     <Compile Include="Presenters\IDialogPresenter.cs" />
     <Compile Include="Presenters\IFormPresenter.cs" />
+    <Compile Include="Presenters\NullServiceScopeFactory.cs" />
     <Compile Include="Presenters\WorkUnitQueryPresenter.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>

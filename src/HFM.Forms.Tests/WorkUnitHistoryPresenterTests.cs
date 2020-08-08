@@ -25,11 +25,6 @@ namespace HFM.Forms
     [TestFixture]
     public class WorkUnitHistoryPresenterTests
     {
-        private static MockFormWorkUnitHistoryPresenter CreatePresenter(MessageBoxPresenter messageBox = null)
-        {
-            return new MockFormWorkUnitHistoryPresenter(messageBox);
-        }
-
         [Test]
         public void WorkUnitHistoryPresenter_Show_ShowsViewAndBringsToFront()
         {
@@ -332,8 +327,8 @@ namespace HFM.Forms
                         new InMemoryPreferenceSet(),
                         new WorkUnitQueryDataContainer(),
                         MockRepository.GenerateMock<IWorkUnitRepository>()),
-                    MockRepository.GenerateMock<ILogger>(),
-                    MockRepository.GenerateMock<IServiceScopeFactory>(),
+                    null,
+                    null,
                     messageBox ?? new MockMessageBoxPresenter())
             {
 
@@ -345,6 +340,11 @@ namespace HFM.Forms
             {
                 return new MockWin32Form();
             }
+        }
+
+        private static MockFormWorkUnitHistoryPresenter CreatePresenter(MessageBoxPresenter messageBox = null)
+        {
+            return new MockFormWorkUnitHistoryPresenter(messageBox);
         }
 
         private class MockDialogWorkUnitQueryPresenter : WorkUnitQueryPresenter

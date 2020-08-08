@@ -21,15 +21,12 @@ namespace HFM.Forms.Presenters
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public WorkUnitHistoryPresenter(WorkUnitHistoryModel model,
-                                ILogger logger,
-                                IServiceScopeFactory serviceScopeFactory,
-                                MessageBoxPresenter messageBox)
+        public WorkUnitHistoryPresenter(WorkUnitHistoryModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox)
         {
             Model = model;
-            Logger = logger;
-            ServiceScopeFactory = serviceScopeFactory;
-            MessageBox = messageBox;
+            Logger = logger ?? NullLogger.Instance;
+            ServiceScopeFactory = serviceScopeFactory ?? NullServiceScopeFactory.Instance;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
         public override void Show()
