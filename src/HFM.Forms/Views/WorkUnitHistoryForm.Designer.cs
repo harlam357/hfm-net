@@ -2,7 +2,7 @@
 
 namespace HFM.Forms.Views
 {
-   partial class HistoryForm
+   partial class WorkUnitHistoryForm
    {
       /// <summary>
       /// Required designer variable.
@@ -35,7 +35,7 @@ namespace HFM.Forms.Views
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkUnitHistoryForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
@@ -514,7 +514,7 @@ namespace HFM.Forms.Views
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(919, 350);
-            this.Name = "HistoryForm";
+            this.Name = "WorkUnitHistoryForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Work Unit History";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HistoryForm_FormClosing);

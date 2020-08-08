@@ -14,14 +14,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Presenters
 {
-    public class HistoryPresenter : FormPresenter
+    public class WorkUnitHistoryPresenter : FormPresenter
     {
-        public HistoryPresenterModel Model { get; }
+        public WorkUnitHistoryModel Model { get; }
         public ILogger Logger { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public HistoryPresenter(HistoryPresenterModel model,
+        public WorkUnitHistoryPresenter(WorkUnitHistoryModel model,
                                 ILogger logger,
                                 IServiceScopeFactory serviceScopeFactory,
                                 MessageBoxPresenter messageBox)
@@ -56,7 +56,7 @@ namespace HFM.Forms.Presenters
 
         protected override IWin32Form OnCreateForm()
         {
-            return new HistoryForm(this);
+            return new WorkUnitHistoryForm(this);
         }
 
         protected override void OnClosed(object sender, EventArgs e)

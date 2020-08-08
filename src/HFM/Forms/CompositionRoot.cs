@@ -42,13 +42,13 @@ namespace HFM.Forms
             // Transient Models
             serviceRegistry
                 .Register<Models.ProteinCalculatorModel>(new PerRequestLifeTime())
-                .Register<Models.HistoryPresenterModel>(new PerRequestLifeTime())
+                .Register<Models.WorkUnitHistoryModel>(new PerRequestLifeTime())
                 .Register<Core.Data.WorkUnitQuery>(new PerRequestLifeTime());
 
             // Scope Views
             serviceRegistry
                 .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
-                .Register<HistoryPresenter>(new PerScopeLifetime())
+                .Register<WorkUnitHistoryPresenter>(new PerScopeLifetime())
                 .Register<IProteinCalculatorView, ProteinCalculatorForm>(new PerScopeLifetime())
                 .Register<WorkUnitQueryPresenter>(new PerScopeLifetime());
 

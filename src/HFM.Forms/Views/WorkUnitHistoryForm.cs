@@ -17,11 +17,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
-    public partial class HistoryForm : FormWrapper, IWin32Form
+    public partial class WorkUnitHistoryForm : FormWrapper, IWin32Form
     {
-        private readonly HistoryPresenter _presenter;
+        private readonly WorkUnitHistoryPresenter _presenter;
 
-        public HistoryForm(HistoryPresenter presenter)
+        public WorkUnitHistoryForm(WorkUnitHistoryPresenter presenter)
         {
             _presenter = presenter;
 
@@ -45,17 +45,17 @@ namespace HFM.Forms.Views
             DataBindModel(_presenter.Model);
         }
 
-        private void DataBindModel(HistoryPresenterModel model)
+        private void DataBindModel(WorkUnitHistoryModel model)
         {
             DataViewComboBox.DataSource = model.QueryBindingSource;
-            DataViewEditButton.BindEnabled(model, nameof(HistoryPresenterModel.EditAndDeleteButtonsEnabled));
-            DataViewDeleteButton.BindEnabled(model, nameof(HistoryPresenterModel.EditAndDeleteButtonsEnabled));
+            DataViewEditButton.BindEnabled(model, nameof(WorkUnitHistoryModel.EditAndDeleteButtonsEnabled));
+            DataViewDeleteButton.BindEnabled(model, nameof(WorkUnitHistoryModel.EditAndDeleteButtonsEnabled));
 
             rdoPanelProduction.DataSource = model;
             rdoPanelProduction.ValueMember = "BonusCalculation";
-            ResultsTextBox.BindText(model, nameof(HistoryPresenterModel.TotalEntries));
-            PageNumberTextBox.BindText(model, nameof(HistoryPresenterModel.CurrentPage));
-            ResultNumberUpDownControl.DataBindings.Add("Value", model, nameof(HistoryPresenterModel.ShowEntriesValue), false, DataSourceUpdateMode.OnPropertyChanged);
+            ResultsTextBox.BindText(model, nameof(WorkUnitHistoryModel.TotalEntries));
+            PageNumberTextBox.BindText(model, nameof(WorkUnitHistoryModel.CurrentPage));
+            ResultNumberUpDownControl.DataBindings.Add("Value", model, nameof(WorkUnitHistoryModel.ShowEntriesValue), false, DataSourceUpdateMode.OnPropertyChanged);
 
             dataGridView1.DataSource = model.HistoryBindingSource;
 

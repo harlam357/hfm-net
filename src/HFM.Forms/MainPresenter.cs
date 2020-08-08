@@ -1199,7 +1199,7 @@ namespace HFM.Forms
                 if (_historyPresenter is null)
                 {
                     var historyPresenterScope = _serviceScopeFactory.CreateScope();
-                    _historyPresenter = historyPresenterScope.ServiceProvider.GetRequiredService<HistoryPresenter>();
+                    _historyPresenter = historyPresenterScope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
                     _historyPresenter.Closed += (sender, args) =>
                     {
                         historyPresenterScope.Dispose();

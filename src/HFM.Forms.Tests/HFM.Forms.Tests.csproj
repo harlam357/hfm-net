@@ -108,7 +108,7 @@
       <Link>Mocks\MockLocalProcessService.cs</Link>
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
-    <Compile Include="HistoryPresenterTests.cs" />
+    <Compile Include="WorkUnitHistoryPresenterTests.cs" />
     <Compile Include="Mocks\MethodInvocation.cs" />
     <Compile Include="Mocks\MockWin32Form.cs" />
     <Compile Include="Presenters\Mocks\MockFileDialogPresenter.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Models\ApplicationUpdateModelTests.cs" />
     <Compile Include="Models\FahClientSettingsModelProfileTests.cs" />
     <Compile Include="Models\FahClientSettingsModelTests.cs" />
-    <Compile Include="Models\HistoryPresenterModelTests.cs" />
+    <Compile Include="Models\WorkUnitHistoryModelTests.cs" />
     <Compile Include="Models\PreferencesModelTests.cs" />
     <Compile Include="Models\UserStatsDataModelProfileTests.cs" />
     <Compile Include="Presenters\ApplicationUpdatePresenterTests.cs" />

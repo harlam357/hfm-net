@@ -215,11 +215,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
-    <Compile Include="Views\HistoryForm.cs">
+    <Compile Include="Views\WorkUnitHistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HistoryForm.Designer.cs">
-      <DependentUpon>HistoryForm.cs</DependentUpon>
+    <Compile Include="Views\WorkUnitHistoryForm.Designer.cs">
+      <DependentUpon>WorkUnitHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainPresenter.cs" />
     <Compile Include="Views\MessagesForm.cs">
@@ -279,8 +279,8 @@
     <Compile Include="Views\ApplicationUpdateDialog.designer.cs">
       <DependentUpon>ApplicationUpdateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\HistoryPresenter.cs" />
-    <Compile Include="Models\HistoryPresenterModel.cs" />
+    <Compile Include="Presenters\WorkUnitHistoryPresenter.cs" />
+    <Compile Include="Models\WorkUnitHistoryModel.cs" />
     <Compile Include="Models\ClientsModel.cs" />
     <Compile Include="Models\ReportingModel.cs" />
     <Compile Include="Models\WebGenerationModel.cs" />
@@ -316,8 +316,8 @@
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HistoryForm.resx">
-      <DependentUpon>HistoryForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\WorkUnitHistoryForm.resx">
+      <DependentUpon>WorkUnitHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MessagesForm.resx">
       <DependentUpon>MessagesForm.cs</DependentUpon>
