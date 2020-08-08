@@ -109,6 +109,8 @@
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="HistoryPresenterTests.cs" />
+    <Compile Include="Mocks\MethodInvocation.cs" />
+    <Compile Include="Mocks\MockWin32Form.cs" />
     <Compile Include="Presenters\Mocks\MockFileDialogPresenter.cs" />
     <Compile Include="Presenters\Mocks\MockFolderDialogPresenter.cs" />
     <Compile Include="Presenters\Mocks\MockMessageBoxPresenter.cs" />

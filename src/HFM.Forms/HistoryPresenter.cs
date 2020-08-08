@@ -10,85 +10,60 @@ using HFM.Core.Serializers;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
-using HFM.Preferences;
 
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms
 {
-    public class HistoryPresenter
+    public class HistoryPresenter : FormPresenter
     {
+        public HistoryPresenterModel Model { get; }
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
-        public WorkUnitQueryDataContainer QueryDataContainer { get; }
-        public IHistoryView HistoryView { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
-        public IWorkUnitRepository WorkUnitRepository { get; }
-        public HistoryPresenterModel Model { get; }
 
-        public event EventHandler PresenterClosed;
-
-        public HistoryPresenter(ILogger logger,
-                                IPreferenceSet preferences,
-                                WorkUnitQueryDataContainer queryDataContainer,
-                                IHistoryView historyView,
+        public HistoryPresenter(HistoryPresenterModel model,
+                                ILogger logger,
                                 IServiceScopeFactory serviceScopeFactory,
-                                MessageBoxPresenter messageBox,
-                                IWorkUnitRepository workUnitRepository)
+                                MessageBoxPresenter messageBox)
         {
+            Model = model;
             Logger = logger;
-            Preferences = preferences;
-            QueryDataContainer = queryDataContainer;
-            HistoryView = historyView;
             ServiceScopeFactory = serviceScopeFactory;
             MessageBox = messageBox;
-            WorkUnitRepository = workUnitRepository;
-            Model = new HistoryPresenterModel(workUnitRepository);
         }
 
-        public void Initialize()
+        public override void Show()
         {
-            HistoryView.AttachPresenter(this);
-            Model.Load(Preferences, QueryDataContainer);
-            HistoryView.DataBindModel(Model);
-        }
-
-        public void Show()
-        {
-            HistoryView.Show();
-            if (HistoryView.WindowState == FormWindowState.Minimized)
+            if (Form is null)
             {
-                HistoryView.WindowState = FormWindowState.Normal;
+                Model.Load();
+
+                var form = OnCreateForm();
+                form.Closed += OnClosed;
+                Form = form;
+            }
+
+            Form.Show();
+            if (Form.WindowState == FormWindowState.Minimized)
+            {
+                Form.WindowState = FormWindowState.Normal;
             }
             else
             {
-                HistoryView.BringToFront();
+                Form.BringToFront();
             }
         }
 
-        public void Close()
+        protected override IWin32Form OnCreateForm()
         {
-            PresenterClosed?.Invoke(this, EventArgs.Empty);
+            return new HistoryForm(this);
         }
 
-        public void ViewClosing()
+        protected override void OnClosed(object sender, EventArgs e)
         {
-            // Save location and size data
-            // RestoreBounds remembers normal position if minimized or maximized
-            if (HistoryView.WindowState == FormWindowState.Normal)
-            {
-                Model.FormLocation = HistoryView.Location;
-                Model.FormSize = HistoryView.Size;
-            }
-            else
-            {
-                Model.FormLocation = HistoryView.RestoreBounds.Location;
-                Model.FormSize = HistoryView.RestoreBounds.Size;
-            }
-
-            Model.FormColumns = HistoryView.GetColumnSettings();
-            Model.Update(Preferences, QueryDataContainer);
+            Model.Save();
+            base.OnClosed(sender, e);
         }
 
         public void ExportClick(FileDialogPresenter saveFile)
@@ -109,7 +84,7 @@ namespace HFM.Forms
                 catch (Exception ex)
                 {
                     Logger.Error(ex.Message, ex);
-                    MessageBox.ShowError(HistoryView, String.Format(CultureInfo.CurrentCulture,
+                    MessageBox.ShowError(Form, String.Format(CultureInfo.CurrentCulture,
                        "The history data export failed.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
                 }
             }
@@ -143,7 +118,7 @@ namespace HFM.Forms
             bool showDialog = true;
             while (showDialog)
             {
-                if (presenter.ShowDialog(HistoryView) == DialogResult.OK)
+                if (presenter.ShowDialog(Form) == DialogResult.OK)
                 {
                     try
                     {
@@ -152,7 +127,7 @@ namespace HFM.Forms
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
                 else
@@ -169,7 +144,7 @@ namespace HFM.Forms
             bool showDialog = true;
             while (showDialog)
             {
-                if (presenter.ShowDialog(HistoryView) == DialogResult.OK)
+                if (presenter.ShowDialog(Form) == DialogResult.OK)
                 {
                     try
                     {
@@ -178,7 +153,7 @@ namespace HFM.Forms
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
                 else
@@ -190,7 +165,7 @@ namespace HFM.Forms
 
         public void DeleteQueryClick()
         {
-            var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?", Core.Application.NameAndVersion);
+            var result = MessageBox.AskYesNoQuestion(Form, "Are you sure?", Core.Application.NameAndVersion);
             if (result == DialogResult.Yes)
             {
                 try
@@ -199,7 +174,7 @@ namespace HFM.Forms
                 }
                 catch (ArgumentException ex)
                 {
-                    MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                    MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
                 }
             }
         }
@@ -209,11 +184,11 @@ namespace HFM.Forms
             var entry = Model.SelectedWorkUnitRow;
             if (entry == null)
             {
-                MessageBox.ShowInformation(HistoryView, "No work unit selected.", Core.Application.NameAndVersion);
+                MessageBox.ShowInformation(Form, "No work unit selected.", Core.Application.NameAndVersion);
             }
             else
             {
-                var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
+                var result = MessageBox.AskYesNoQuestion(Form, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
                 if (result == DialogResult.Yes)
                 {
                     Model.DeleteHistoryEntry(entry);
@@ -243,7 +218,7 @@ namespace HFM.Forms
 
         private void RefreshProjectData(WorkUnitProteinUpdateScope scope)
         {
-            var result = MessageBox.AskYesNoQuestion(HistoryView, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
+            var result = MessageBox.AskYesNoQuestion(Form, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
             if (result == DialogResult.No)
             {
                 return;
@@ -259,7 +234,7 @@ namespace HFM.Forms
                 id = Model.SelectedWorkUnitRow.ID;
             }
 
-            var proteinDataUpdater = new ProteinDataUpdater(WorkUnitRepository);
+            var proteinDataUpdater = new ProteinDataUpdater(Model.Repository);
 
             try
             {
@@ -267,11 +242,11 @@ namespace HFM.Forms
                 {
                     dialog.Icon = Properties.Resources.hfm_48_48;
                     dialog.Text = Core.Application.NameAndVersion;
-                    dialog.ShowDialog(HistoryView);
+                    dialog.ShowDialog(Form);
                     if (dialog.Exception != null)
                     {
                         Logger.Error(dialog.Exception.Message, dialog.Exception);
-                        MessageBox.ShowError(HistoryView, dialog.Exception.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(Form, dialog.Exception.Message, Core.Application.NameAndVersion);
                     }
                 }
 
@@ -280,7 +255,7 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                MessageBox.ShowError(HistoryView, ex.Message, Core.Application.NameAndVersion);
+                MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
             }
         }
     }

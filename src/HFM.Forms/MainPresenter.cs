@@ -1190,39 +1190,29 @@ namespace HFM.Forms
             benchmarksView.Show();
         }
 
-        private IServiceScope _historyPresenterScope;
-        private HistoryPresenter _historyPresenter;
+        private IFormPresenter _historyPresenter;
 
         public void ToolsHistoryClick()
         {
             try
             {
-                if (_historyPresenterScope is null)
+                if (_historyPresenter is null)
                 {
-                    _historyPresenterScope = _serviceScopeFactory.CreateScope();
-                    _historyPresenter = _historyPresenterScope.ServiceProvider.GetRequiredService<HistoryPresenter>();
-                    _historyPresenter.Initialize();
-                    _historyPresenter.PresenterClosed += (sender, args) =>
+                    var historyPresenterScope = _serviceScopeFactory.CreateScope();
+                    _historyPresenter = historyPresenterScope.ServiceProvider.GetRequiredService<HistoryPresenter>();
+                    _historyPresenter.Closed += (sender, args) =>
                     {
-                        _historyPresenterScope.Dispose();
-                        _historyPresenterScope = null;
+                        historyPresenterScope.Dispose();
                         _historyPresenter = null;
                     };
                 }
 
-                if (_historyPresenter != null)
-                {
-                    _historyPresenter.Show();
-                }
+                _historyPresenter?.Show();
             }
             catch (Exception)
             {
-                if (_historyPresenterScope != null)
-                {
-                    _historyPresenterScope.Dispose();
-                    _historyPresenterScope = null;
-                    _historyPresenter = null;
-                }
+                _historyPresenter?.Dispose();
+                _historyPresenter = null;
                 throw;
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,6 +8,7 @@ using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Mocks;
+using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
@@ -25,17 +25,9 @@ namespace HFM.Forms
     [TestFixture]
     public class HistoryPresenterTests
     {
-        private static HistoryPresenter CreatePresenter(MessageBoxPresenter messageBox = null)
+        private static MockFormWorkUnitHistoryPresenter CreatePresenter(MessageBoxPresenter messageBox = null)
         {
-            var repository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            repository.Stub(x => x.Connected).Return(true);
-            return new HistoryPresenter(MockRepository.GenerateMock<ILogger>(),
-                                        new InMemoryPreferenceSet(),
-                                        new WorkUnitQueryDataContainer(),
-                                        MockRepository.GenerateMock<IHistoryView>(),
-                                        MockRepository.GenerateMock<IServiceScopeFactory>(),
-                                        messageBox ?? new MockMessageBoxPresenter(),
-                                        repository);
+            return new MockFormWorkUnitHistoryPresenter(messageBox);
         }
 
         [Test]
@@ -43,12 +35,11 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.HistoryView.Expect(x => x.Show());
-            presenter.HistoryView.Expect(x => x.BringToFront());
             // Act
             presenter.Show();
             // Assert
-            presenter.HistoryView.VerifyAllExpectations();
+            Assert.IsTrue(presenter.MockForm.Shown);
+            Assert.AreEqual(1, presenter.MockForm.Invocations.Count(x => x.Name == nameof(IWin32Form.BringToFront)));
         }
 
         [Test]
@@ -56,84 +47,27 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.HistoryView.Expect(x => x.Show());
-            presenter.HistoryView.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
-            presenter.HistoryView.Expect(x => x.WindowState = FormWindowState.Normal);
+            presenter.Show();
+            Assert.IsTrue(presenter.MockForm.Shown);
+            Assert.AreEqual(FormWindowState.Normal, presenter.Form.WindowState);
+            presenter.Form.WindowState = FormWindowState.Minimized;
             // Act
             presenter.Show();
             // Assert
-            presenter.HistoryView.VerifyAllExpectations();
+            Assert.AreEqual(FormWindowState.Normal, presenter.Form.WindowState);
         }
 
         [Test]
-        public void HistoryPresenter_Close_RaisesPresenterClosedEvent()
+        public void HistoryPresenter_Close_RaisesClosedEvent()
         {
             var presenter = CreatePresenter();
+            presenter.Show();
             bool presenterClosedFired = false;
-            presenter.PresenterClosed += delegate { presenterClosedFired = true; };
+            presenter.Closed += (s, e) => presenterClosedFired = true;
             // Act
             presenter.Close();
             // Assert
             Assert.AreEqual(true, presenterClosedFired);
-        }
-
-        [Test]
-        public void HistoryPresenter_ViewClosing_SavesFormStateToModel()
-        {
-            // Arrange
-            var presenter = CreatePresenter();
-            var p = new Point(10, 10);
-            var s = new Size(100, 100);
-            var columns = new List<string> { "foo" };
-            presenter.HistoryView.Stub(x => x.Location).Return(p);
-            presenter.HistoryView.Stub(x => x.Size).Return(s);
-            presenter.HistoryView.Stub(x => x.GetColumnSettings()).Return(columns);
-            presenter.HistoryView.Stub(x => x.WindowState).Return(FormWindowState.Normal);
-            // Act
-            presenter.ViewClosing();
-            // Assert
-            Assert.AreEqual(p, presenter.Model.FormLocation);
-            Assert.AreEqual(s, presenter.Model.FormSize);
-            Assert.AreEqual(columns, presenter.Model.FormColumns);
-        }
-
-        [Test]
-        public void HistoryPresenter_ViewClosing_WhileMinimizedSavesFormStateToModel_Test()
-        {
-            // Arrange
-            var presenter = CreatePresenter();
-            var r = new Rectangle(new Point(10, 10), new Size(100, 100));
-            var columns = new List<string> { "foo" };
-            presenter.HistoryView.Expect(x => x.RestoreBounds).Return(r);
-            presenter.HistoryView.Expect(x => x.GetColumnSettings()).Return(columns);
-            presenter.HistoryView.Expect(x => x.WindowState).Return(FormWindowState.Minimized);
-            // Act
-            presenter.ViewClosing();
-            // Assert
-            presenter.HistoryView.VerifyAllExpectations();
-            Assert.AreEqual(r.Location, presenter.Model.FormLocation);
-            Assert.AreEqual(r.Size, presenter.Model.FormSize);
-            Assert.AreEqual(columns, presenter.Model.FormColumns);
-        }
-
-        [Test]
-        public void HistoryPresenter_ViewClosing_SavesFormStateToPreferences()
-        {
-            // Arrange
-            var presenter = CreatePresenter();
-            var p = new Point(10, 10);
-            var s = new Size(100, 100);
-            var columns = new List<string> { "foo" };
-            presenter.HistoryView.Stub(x => x.Location).Return(p);
-            presenter.HistoryView.Stub(x => x.Size).Return(s);
-            presenter.HistoryView.Stub(x => x.GetColumnSettings()).Return(columns);
-            presenter.HistoryView.Stub(x => x.WindowState).Return(FormWindowState.Normal);
-            // Act
-            presenter.ViewClosing();
-            // Assert
-            Assert.AreEqual(p, presenter.Preferences.Get<Point>(Preference.HistoryFormLocation));
-            Assert.AreEqual(s, presenter.Preferences.Get<Size>(Preference.HistoryFormSize));
-            Assert.AreEqual(columns, presenter.Preferences.Get<ICollection<string>>(Preference.HistoryFormColumns));
         }
 
         [Test]
@@ -292,12 +226,12 @@ namespace HFM.Forms
             presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
-            presenter.WorkUnitRepository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
+            presenter.Model.Repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
             Assert.AreEqual(1, messageBox.Invocations.Count);
-            presenter.WorkUnitRepository.VerifyAllExpectations();
+            presenter.Model.Repository.VerifyAllExpectations();
         }
 
         [Test]
@@ -318,7 +252,7 @@ namespace HFM.Forms
             // Arrange
             var presenter = CreatePresenter();
             var workUnitRows = new[] { new WorkUnitRow() };
-            presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(workUnitRows);
+            presenter.Model.Repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(workUnitRows);
             var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
@@ -354,7 +288,7 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.WorkUnitRepository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
+            presenter.Model.Repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
             var logger = presenter.Logger;
             logger.Expect(x => x.Error("", null)).IgnoreArguments();
             var saveFile = CreateSaveFileDialogView();
@@ -390,6 +324,29 @@ namespace HFM.Forms
             return saveFile;
         }
 
+        private class MockFormWorkUnitHistoryPresenter : HistoryPresenter
+        {
+            public MockFormWorkUnitHistoryPresenter(MessageBoxPresenter messageBox)
+                : base(
+                    new HistoryPresenterModel(
+                        new InMemoryPreferenceSet(),
+                        new WorkUnitQueryDataContainer(),
+                        MockRepository.GenerateMock<IWorkUnitRepository>()),
+                    MockRepository.GenerateMock<ILogger>(),
+                    MockRepository.GenerateMock<IServiceScopeFactory>(),
+                    messageBox ?? new MockMessageBoxPresenter())
+            {
+
+            }
+
+            public MockWin32Form MockForm => Form as MockWin32Form;
+
+            protected override IWin32Form OnCreateForm()
+            {
+                return new MockWin32Form();
+            }
+        }
+
         private class MockDialogWorkUnitQueryPresenter : WorkUnitQueryPresenter
         {
             private readonly Action<WorkUnitQueryPresenter> _presenterAction;
@@ -405,8 +362,6 @@ namespace HFM.Forms
                 _presenterAction = presenterAction;
                 _dialogResultProvider = dialogResultProvider;
             }
-
-            public MockWin32Dialog MockDialog => Dialog as MockWin32Dialog;
 
             public override DialogResult ShowDialog(IWin32Window owner)
             {

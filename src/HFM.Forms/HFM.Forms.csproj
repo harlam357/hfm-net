@@ -113,7 +113,9 @@
     </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
+    <Compile Include="Presenters\FormPresenter.cs" />
     <Compile Include="Presenters\IDialogPresenter.cs" />
+    <Compile Include="Presenters\IFormPresenter.cs" />
     <Compile Include="Presenters\WorkUnitQueryPresenter.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
@@ -188,6 +190,7 @@
     <Compile Include="Internal\ClipboardWrapper.cs" />
     <Compile Include="Internal\FileSystemPath.cs" />
     <Compile Include="ListItem.cs" />
+    <Compile Include="Views\IWin32Form.cs" />
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

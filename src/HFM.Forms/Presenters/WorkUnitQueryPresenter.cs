@@ -1,12 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
-    public class WorkUnitQueryPresenter : IDialogPresenter, IDisposable
+    public class WorkUnitQueryPresenter : IDialogPresenter
     {
         public WorkUnitQuery Query { get; set; }
 

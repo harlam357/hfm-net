@@ -12,7 +12,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Presenters
 {
-    public class ApplicationUpdatePresenter : IDialogPresenter, IDisposable
+    public class ApplicationUpdatePresenter : IDialogPresenter
     {
         public ApplicationUpdateModel Model { get; }
         public ILogger Logger { get; }

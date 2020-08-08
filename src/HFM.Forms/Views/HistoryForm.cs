@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using HFM.Core.Client;
 using HFM.Core.Data;
 using HFM.Forms.Controls;
+using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
@@ -16,41 +17,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
-    public interface IHistoryView : IWin32Window
+    public partial class HistoryForm : FormWrapper, IWin32Form
     {
-        void AttachPresenter(HistoryPresenter presenter);
+        private readonly HistoryPresenter _presenter;
 
-        void DataBindModel(HistoryPresenterModel model);
-
-        ICollection<string> GetColumnSettings();
-
-        #region System.Windows.Forms.Form Exposure
-
-        void Show();
-
-        void Close();
-
-        void BringToFront();
-
-        FormWindowState WindowState { get; set; }
-
-        Point Location { get; set; }
-
-        Size Size { get; set; }
-
-        Rectangle RestoreBounds { get; }
-
-        bool Visible { get; set; }
-
-        #endregion
-    }
-
-    public partial class HistoryForm : FormWrapper, IHistoryView
-    {
-        private HistoryPresenter _presenter;
-
-        public HistoryForm(IPreferenceSet prefs)
+        public HistoryForm(HistoryPresenter presenter)
         {
+            _presenter = presenter;
+
             InitializeComponent();
 
             // split container does not scale when
@@ -63,33 +37,38 @@ namespace HFM.Forms.Views
                 splitContainerWrapper1.SplitterDistance = (int)distance;
             }
 
-            SetupDataGridView(prefs);
+            SetupDataGridView(_presenter.Model.Preferences);
         }
 
-        #region IHistoryView Members
-
-        public void AttachPresenter(HistoryPresenter presenter)
+        private void HistoryForm_Load(object sender, EventArgs e)
         {
-            _presenter = presenter;
+            DataBindModel(_presenter.Model);
         }
 
-        public void DataBindModel(HistoryPresenterModel model)
+        private void DataBindModel(HistoryPresenterModel model)
         {
             DataViewComboBox.DataSource = model.QueryBindingSource;
-            DataViewEditButton.DataBindings.Add("Enabled", model, "EditAndDeleteButtonsEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
-            DataViewDeleteButton.DataBindings.Add("Enabled", model, "EditAndDeleteButtonsEnabled", false, DataSourceUpdateMode.OnPropertyChanged);
+            DataViewEditButton.BindEnabled(model, nameof(HistoryPresenterModel.EditAndDeleteButtonsEnabled));
+            DataViewDeleteButton.BindEnabled(model, nameof(HistoryPresenterModel.EditAndDeleteButtonsEnabled));
 
             rdoPanelProduction.DataSource = model;
             rdoPanelProduction.ValueMember = "BonusCalculation";
-            ResultsTextBox.DataBindings.Add("Text", model, "TotalEntries", false, DataSourceUpdateMode.OnPropertyChanged);
-            PageNumberTextBox.DataBindings.Add("Text", model, "CurrentPage", false, DataSourceUpdateMode.OnValidation); //OnPropertyChanged);
-            ResultNumberUpDownControl.DataBindings.Add("Value", model, "ShowEntriesValue", false, DataSourceUpdateMode.OnPropertyChanged);
+            ResultsTextBox.BindText(model, nameof(HistoryPresenterModel.TotalEntries));
+            PageNumberTextBox.BindText(model, nameof(HistoryPresenterModel.CurrentPage));
+            ResultNumberUpDownControl.DataBindings.Add("Value", model, nameof(HistoryPresenterModel.ShowEntriesValue), false, DataSourceUpdateMode.OnPropertyChanged);
 
             dataGridView1.DataSource = model.HistoryBindingSource;
 
             Location = model.FormLocation;
+            LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
             Size = model.FormSize;
+            SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
             RestoreColumnSettings(model.FormColumns);
+        }
+
+        private void HistoryForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _presenter.Model.FormColumns = GetColumnSettings();
         }
 
         /// <summary>
@@ -132,8 +111,6 @@ namespace HFM.Forms.Views
                 dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
             }
         }
-
-        #endregion
 
         private void btnNew_Click(object sender, EventArgs e)
         {
@@ -218,23 +195,13 @@ namespace HFM.Forms.Views
             _presenter.RefreshDataByIdClick();
         }
 
-        private void frmHistory_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            _presenter.ViewClosing();
-        }
-
-        private void frmHistory_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _presenter.Close();
-        }
-
-        private void SetupDataGridView(IPreferenceSet prefs)
+        private void SetupDataGridView(IPreferenceSet preferences)
         {
             // Add Column Selector
             new DataGridViewColumnSelector(dataGridView1);
 
             string[] names = WorkUnitQueryParameter.GetColumnNames();
-            string numberFormat = NumberFormat.Get(prefs.Get<int>(Preference.DecimalPlaces));
+            string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
             dataGridView1.AutoGenerateColumns = false;
             // ReSharper disable PossibleNullReferenceException

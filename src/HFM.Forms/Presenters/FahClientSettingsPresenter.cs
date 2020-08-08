@@ -11,7 +11,7 @@ using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
-    public class FahClientSettingsPresenter : IDialogPresenter, IDisposable
+    public class FahClientSettingsPresenter : IDialogPresenter
     {
         public ILogger Logger { get; }
         public FahClientSettingsModel Model { get; }

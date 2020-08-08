@@ -16,6 +16,8 @@ namespace HFM.Forms.Models
 {
     public sealed class HistoryPresenterModel : INotifyPropertyChanged
     {
+        public IPreferenceSet Preferences { get; }
+        public WorkUnitQueryDataContainer QueryContainer { get; }
         public IWorkUnitRepository Repository { get; }
         public BindingSource QueryBindingSource { get; }
         public BindingSource HistoryBindingSource { get; }
@@ -24,11 +26,11 @@ namespace HFM.Forms.Models
         private readonly WorkUnitHistoryRowSortableBindingList _workUnitHistoryList;
         private PetaPoco.Page<WorkUnitRow> _page;
 
-        public HistoryPresenterModel(IWorkUnitRepository repository)
+        public HistoryPresenterModel(IPreferenceSet preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
         {
+            Preferences = preferences;
+            QueryContainer = queryContainer;
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-
-            Debug.Assert(Repository.Connected);
 
             _queryList = new List<WorkUnitQuery> { WorkUnitQuery.SelectAll };
             QueryBindingSource = new BindingSource();
@@ -53,37 +55,37 @@ namespace HFM.Forms.Models
             _page = new PetaPoco.Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
 
-        public void Load(IPreferenceSet prefs, WorkUnitQueryDataContainer queryContainer)
+        public void Load()
         {
-            _bonusCalculation = prefs.Get<BonusCalculation>(Preference.HistoryBonusCalculation);
-            _showEntriesValue = prefs.Get<int>(Preference.ShowEntriesValue);
-            FormLocation = prefs.Get<Point>(Preference.HistoryFormLocation);
-            FormSize = prefs.Get<Size>(Preference.HistoryFormSize);
-            SortColumnName = prefs.Get<string>(Preference.HistorySortColumnName);
-            SortOrder = prefs.Get<ListSortDirection>(Preference.HistorySortOrder);
-            FormColumns = prefs.Get<ICollection<string>>(Preference.HistoryFormColumns);
+            _bonusCalculation = Preferences.Get<BonusCalculation>(Preference.HistoryBonusCalculation);
+            _showEntriesValue = Preferences.Get<int>(Preference.ShowEntriesValue);
+            FormLocation = Preferences.Get<Point>(Preference.HistoryFormLocation);
+            FormSize = Preferences.Get<Size>(Preference.HistoryFormSize);
+            SortColumnName = Preferences.Get<string>(Preference.HistorySortColumnName);
+            SortOrder = Preferences.Get<ListSortDirection>(Preference.HistorySortOrder);
+            FormColumns = Preferences.Get<ICollection<string>>(Preference.HistoryFormColumns);
 
             _queryList.Clear();
             _queryList.Add(WorkUnitQuery.SelectAll);
-            _queryList.AddRange(queryContainer.Data.Where(q => q != WorkUnitQuery.SelectAll));
+            _queryList.AddRange(QueryContainer.Data.Where(q => q != WorkUnitQuery.SelectAll));
             _queryList.Sort();
             ResetBindings(true);
         }
 
-        public void Update(IPreferenceSet prefs, WorkUnitQueryDataContainer queryContainer)
+        public void Save()
         {
-            prefs.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
-            prefs.Set(Preference.ShowEntriesValue, _showEntriesValue);
-            prefs.Set(Preference.HistoryFormLocation, FormLocation);
-            prefs.Set(Preference.HistoryFormSize, FormSize);
-            prefs.Set(Preference.HistorySortColumnName, SortColumnName);
-            prefs.Set(Preference.HistorySortOrder, SortOrder);
-            prefs.Set(Preference.HistoryFormColumns, FormColumns);
-            prefs.Save();
+            Preferences.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
+            Preferences.Set(Preference.ShowEntriesValue, _showEntriesValue);
+            Preferences.Set(Preference.HistoryFormLocation, FormLocation);
+            Preferences.Set(Preference.HistoryFormSize, FormSize);
+            Preferences.Set(Preference.HistorySortColumnName, SortColumnName);
+            Preferences.Set(Preference.HistorySortOrder, SortOrder);
+            Preferences.Set(Preference.HistoryFormColumns, FormColumns);
+            Preferences.Save();
 
-            queryContainer.Data.Clear();
-            queryContainer.Data.AddRange(_queryList.Where(q => q != WorkUnitQuery.SelectAll));
-            queryContainer.Write();
+            QueryContainer.Data.Clear();
+            QueryContainer.Data.AddRange(_queryList.Where(q => q != WorkUnitQuery.SelectAll));
+            QueryContainer.Write();
         }
 
         public void AddQuery(WorkUnitQuery query)
