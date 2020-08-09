@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Presenters
 {
-    public class WorkUnitHistoryPresenter : FormPresenter
+    public class WorkUnitHistoryPresenter : FormPresenter<WorkUnitHistoryModel>
     {
         public WorkUnitHistoryModel Model { get; }
         public ILogger Logger { get; }
@@ -22,6 +22,7 @@ namespace HFM.Forms.Presenters
         public MessageBoxPresenter MessageBox { get; }
 
         public WorkUnitHistoryPresenter(WorkUnitHistoryModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox)
+            : base(model)
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;
@@ -35,9 +36,8 @@ namespace HFM.Forms.Presenters
             {
                 Model.Load();
 
-                var form = OnCreateForm();
-                form.Closed += OnClosed;
-                Form = form;
+                Form = OnCreateForm();
+                Form.Closed += OnClosed;
             }
 
             Form.Show();
@@ -54,12 +54,6 @@ namespace HFM.Forms.Presenters
         protected override IWin32Form OnCreateForm()
         {
             return new WorkUnitHistoryForm(this);
-        }
-
-        protected override void OnClosed(object sender, EventArgs e)
-        {
-            Model.Save();
-            base.OnClosed(sender, e);
         }
 
         public void ExportClick(FileDialogPresenter saveFile)

@@ -14,7 +14,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public sealed class WorkUnitHistoryModel : INotifyPropertyChanged
+    public sealed class WorkUnitHistoryModel : ViewModelBase
     {
         public IPreferenceSet Preferences { get; }
         public WorkUnitQueryDataContainer QueryContainer { get; }
@@ -55,7 +55,7 @@ namespace HFM.Forms.Models
             _page = new PetaPoco.Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
 
-        public void Load()
+        public override void Load()
         {
             _bonusCalculation = Preferences.Get<BonusCalculation>(Preference.HistoryBonusCalculation);
             _showEntriesValue = Preferences.Get<int>(Preference.ShowEntriesValue);
@@ -72,7 +72,7 @@ namespace HFM.Forms.Models
             ResetBindings(true);
         }
 
-        public void Save()
+        public override void Save()
         {
             Preferences.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
             Preferences.Set(Preference.ShowEntriesValue, _showEntriesValue);
@@ -303,7 +303,7 @@ namespace HFM.Forms.Models
                 if (_showEntriesValue != value)
                 {
                     _showEntriesValue = value;
-                    OnPropertyChanged("ShowEntriesValue");
+                    OnPropertyChanged();
                     _currentPage = 1;
                     ResetBindings(true);
                 }
@@ -353,12 +353,5 @@ namespace HFM.Forms.Models
         public ICollection<string> FormColumns { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
