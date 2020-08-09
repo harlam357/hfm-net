@@ -28,36 +28,38 @@
       /// </summary>
       private void InitializeComponent()
       {
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
-         this.txtMessages = new System.Windows.Forms.TextBox();
-         this.SuspendLayout();
-         // 
-         // txtMessages
-         // 
-         this.txtMessages.BackColor = System.Drawing.SystemColors.Window;
-         this.txtMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-         this.txtMessages.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-         this.txtMessages.Location = new System.Drawing.Point(0, 0);
-         this.txtMessages.Multiline = true;
-         this.txtMessages.Name = "txtMessages";
-         this.txtMessages.ReadOnly = true;
-         this.txtMessages.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-         this.txtMessages.Size = new System.Drawing.Size(701, 455);
-         this.txtMessages.TabIndex = 0;
-         this.txtMessages.WordWrap = false;
-         this.txtMessages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMessages_KeyDown);
-         // 
-         // MessagesForm
-         // 
-         this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(701, 455);
-         this.Controls.Add(this.txtMessages);
-         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-         this.Name = "MessagesForm";
-         this.Text = "Messages";
-         this.ResumeLayout(false);
-         this.PerformLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
+            this.txtMessages = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // txtMessages
+            // 
+            this.txtMessages.BackColor = System.Drawing.SystemColors.Window;
+            this.txtMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtMessages.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMessages.Location = new System.Drawing.Point(0, 0);
+            this.txtMessages.Multiline = true;
+            this.txtMessages.Name = "txtMessages";
+            this.txtMessages.ReadOnly = true;
+            this.txtMessages.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtMessages.Size = new System.Drawing.Size(701, 455);
+            this.txtMessages.TabIndex = 0;
+            this.txtMessages.WordWrap = false;
+            this.txtMessages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMessages_KeyDown);
+            // 
+            // MessagesForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(701, 455);
+            this.Controls.Add(this.txtMessages);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "MessagesForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Messages";
+            this.Shown += new System.EventHandler(this.MessagesForm_Shown);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
       }
 

@@ -113,9 +113,11 @@
     </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
+    <Compile Include="Models\MessagesModel.cs" />
     <Compile Include="Presenters\FormPresenter.cs" />
     <Compile Include="Presenters\IDialogPresenter.cs" />
     <Compile Include="Presenters\IFormPresenter.cs" />
+    <Compile Include="Presenters\MessagesPresenter.cs" />
     <Compile Include="Presenters\NullServiceScopeFactory.cs" />
     <Compile Include="Presenters\WorkUnitQueryPresenter.cs" />
     <Compile Include="Views\AboutDialog.cs">

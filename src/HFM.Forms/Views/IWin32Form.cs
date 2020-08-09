@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HFM.Forms.Views
@@ -12,6 +13,12 @@ namespace HFM.Forms.Views
         FormWindowState WindowState { get; set; }
 
         void BringToFront();
+
+        Point Location { get; set; }
+
+        Size Size { get; set; }
+
+        Size MinimumSize { get; }
 
         event EventHandler Closed;
     }

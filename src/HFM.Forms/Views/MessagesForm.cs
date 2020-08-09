@@ -1,86 +1,65 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
-using HFM.Core.Logging;
 using HFM.Forms.Controls;
-using HFM.Preferences;
+using HFM.Forms.Internal;
+using HFM.Forms.Models;
+using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public interface IMessagesView
+    public partial class MessagesForm : FormWrapper, IWin32Form
     {
-        void ScrollToEnd();
+        private readonly MessagesPresenter _presenter;
 
-        void SetManualStartPosition();
-
-        void SetLocation(int x, int y);
-
-        void SetSize(int width, int height);
-
-        void Show();
-
-        void Close();
-
-        bool Visible { get; set; }
-    }
-
-    public partial class MessagesForm : FormWrapper, IMessagesView
-    {
-        private const int MaxLines = 512;
-
-        private readonly IPreferenceSet _prefs;
-        private readonly ILoggerEvents _loggerEvents;
-        private readonly List<string> _lines = new List<string>(MaxLines);
-
-        public MessagesForm(IPreferenceSet prefs, ILoggerEvents loggerEvents)
+        public MessagesForm(MessagesPresenter presenter)
         {
-            _prefs = prefs;
-            _loggerEvents = loggerEvents;
-            _loggerEvents.Logged += (s, e) => AddMessage(e.Messages);
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
+
+            LoadData(_presenter.Model);
         }
 
-        private void AddMessage(ICollection<string> messages)
+        private void LoadData(MessagesModel model)
         {
-            if ((_lines.Count + messages.Count) > MaxLines)
-            {
-                _lines.RemoveRange(0, MaxLines / 4);
-            }
-            _lines.AddRange(messages);
+            var (location, size) = WindowPosition.Normalize(this, model.FormLocation, model.FormSize);
 
-            UpdateMessages(_lines.ToArray());
+            Location = location;
+            LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
+            Size = size;
+            SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+
+            UpdateMessages(model.Messages.ToArray());
+            _presenter.Model.Messages.ListChanged += OnMessagesListChanged;
         }
 
-        public void ScrollToEnd()
+        private void OnMessagesListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (e.ListChangedType == ListChangedType.Reset)
+            {
+                UpdateMessages(_presenter.Model.Messages.ToArray());
+            }
+        }
+
+        private void MessagesForm_Shown(object sender, EventArgs e)
+        {
+            ScrollToEnd();
+        }
+
+        private void ScrollToEnd()
         {
             txtMessages.SelectionStart = txtMessages.Text.Length;
             txtMessages.ScrollToCaret();
         }
 
-        public void SetManualStartPosition()
-        {
-            StartPosition = FormStartPosition.Manual;
-        }
-
-        public void SetLocation(int x, int y)
-        {
-            Location = new Point(x, y);
-        }
-
-        public void SetSize(int width, int height)
-        {
-            Size = new Size(width, height);
-        }
-
-        private delegate void UpdateMessagesDelegate(string[] lines);
-
         private void UpdateMessages(string[] lines)
         {
             if (InvokeRequired)
             {
-                txtMessages.BeginInvoke(new UpdateMessagesDelegate(UpdateMessages), new object[] { lines });
+                txtMessages.BeginInvoke(new Action<string[]>(UpdateMessages), new object[] { lines });
                 return;
             }
 
@@ -90,26 +69,11 @@ namespace HFM.Forms.Views
 
         private void txtMessages_KeyDown(object sender, KeyEventArgs e)
         {
+            // Close on F7
             if (e.KeyCode == Keys.F7)
             {
-                // Close on F7 - Issue 74
                 Close();
             }
-        }
-
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            // Save state data
-            if (WindowState == FormWindowState.Normal)
-            {
-                _prefs.Set(Preference.MessagesFormLocation, Location);
-                _prefs.Set(Preference.MessagesFormSize, Size);
-                _prefs.Save();
-            }
-
-            Hide();
-            e.Cancel = true;
-            base.OnClosing(e);
         }
     }
 }

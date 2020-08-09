@@ -88,8 +88,8 @@ namespace HFM
 
         private Logger InitializeLogging()
         {
-            // create messages view (hooks into logging messages)
-            Container.GetInstance<IMessagesView>();
+            // create messages model (hooks into logging messages)
+            _ = Container.GetInstance<MessagesModel>();
             var logger = (Logger)Container.GetInstance<ILogger>();
             // write log header
             logger.Info(String.Empty);

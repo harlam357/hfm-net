@@ -108,6 +108,8 @@
       <Link>Mocks\MockLocalProcessService.cs</Link>
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
+    <Compile Include="Models\MessagesModelTests.cs" />
+    <Compile Include="Presenters\MessagesPresenterTests.cs" />
     <Compile Include="WorkUnitHistoryPresenterTests.cs" />
     <Compile Include="Mocks\MethodInvocation.cs" />
     <Compile Include="Mocks\MockWin32Form.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Forms.Views;
@@ -27,6 +28,12 @@ namespace HFM.Forms.Mocks
         {
             Invocations.Add(new MethodInvocation(nameof(BringToFront)));
         }
+
+        public Point Location { get; set; }
+
+        public Size Size { get; set; }
+
+        public Size MinimumSize { get; set; }
 
         public event EventHandler Closed;
 

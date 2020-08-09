@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core.Data;
-using HFM.Core.Logging;
 using HFM.Core.Serializers;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
@@ -13,8 +12,6 @@ using HFM.Forms.Presenters;
 using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
 using HFM.Preferences;
-
-using Microsoft.Extensions.DependencyInjection;
 
 using NUnit.Framework;
 

@@ -13,23 +13,15 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Views
 {
-    public interface IMainView : IWin32Window, ISynchronizeInvoke
+    public interface IMainView : IWin32Form, ISynchronizeInvoke
     {
         #region System.Windows.Forms.Form Properties
-
-        FormWindowState WindowState { get; set; }
 
         bool ShowInTaskbar { get; set; }
 
         string Text { get; set; }
 
         bool Visible { get; set; }
-
-        Point Location { get; set; }
-
-        Size Size { get; set; }
-
-        Size MinimumSize { get; }
 
         Rectangle RestoreBounds { get; }
 
@@ -56,8 +48,6 @@ namespace HFM.Forms.Views
         #region Methods
 
         void SetGridDataSource(object dataSource);
-
-        void SetManualStartPosition();
 
         void SetNotifyIconVisible(bool visible);
 

@@ -1,6 +1,8 @@
-﻿
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Internal
 {
@@ -18,12 +20,28 @@ namespace HFM.Forms.Internal
                : CenterOnPrimaryScreen(width, height);
         }
 
+        internal static (Point Location, Size Size) Normalize(IWin32Form form, Point restoreLocation, Size restoreSize)
+        {
+            var size = restoreSize == Size.Empty ? form.Size : EnsureMinimumSize(form.MinimumSize, restoreSize);
+            var location = restoreLocation;
+            if (restoreLocation == Point.Empty)
+            {
+                location = CenterOnPrimaryScreen(size);
+            }
+            return (location, size);
+        }
+
+        private static Size EnsureMinimumSize(Size minimumSize, Size restoreSize)
+        {
+            return new Size(Math.Max(minimumSize.Width, restoreSize.Width), Math.Max(minimumSize.Height, restoreSize.Height));
+        }
+
         internal static Point CenterOnPrimaryScreen(Size size)
         {
             return CenterOnPrimaryScreen(size.Width, size.Height);
         }
 
-        internal static Point CenterOnPrimaryScreen(int width, int height)
+        private static Point CenterOnPrimaryScreen(int width, int height)
         {
             int x = (Screen.PrimaryScreen.Bounds.Size.Width - width) / 2;
             int y = (Screen.PrimaryScreen.Bounds.Size.Height - height) / 2;

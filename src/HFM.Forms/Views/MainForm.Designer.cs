@@ -93,8 +93,8 @@ namespace HFM.Forms.Views
             this.mnuToolsPointsCalculator = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWebSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuWebRefreshUserStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -441,7 +441,7 @@ namespace HFM.Forms.Views
             // mnuEditPreferences
             // 
             this.mnuEditPreferences.Name = "mnuEditPreferences";
-            this.mnuEditPreferences.Size = new System.Drawing.Size(180, 22);
+            this.mnuEditPreferences.Size = new System.Drawing.Size(135, 22);
             this.mnuEditPreferences.Text = "&Preferences";
             this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
             // 
@@ -681,14 +681,6 @@ namespace HFM.Forms.Views
             this.mnuWeb.Size = new System.Drawing.Size(43, 20);
             this.mnuWeb.Text = "&Web";
             // 
-            // mnuWebEOCUser
-            // 
-            this.mnuWebEOCUser.Name = "mnuWebEOCUser";
-            this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.mnuWebEOCUser.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebEOCUser.Text = "&EOC User Stats Page";
-            this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
-            // 
             // mnuWebStanfordUser
             // 
             this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
@@ -696,6 +688,14 @@ namespace HFM.Forms.Views
             this.mnuWebStanfordUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebStanfordUser.Text = "&FAH User Stats Page";
             this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
+            // 
+            // mnuWebEOCUser
+            // 
+            this.mnuWebEOCUser.Name = "mnuWebEOCUser";
+            this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.mnuWebEOCUser.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebEOCUser.Text = "&EOC User Stats Page";
+            this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
             // 
             // mnuWebEOCTeam
             // 
@@ -1042,7 +1042,7 @@ namespace HFM.Forms.Views
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(150, 150);
             this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "HFM.NET";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);

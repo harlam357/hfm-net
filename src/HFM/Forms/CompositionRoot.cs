@@ -23,9 +23,12 @@ namespace HFM.Forms
                 .Register<Models.MainGridModel>(new PerContainerLifetime())
                 .Register<Models.UserStatsDataModel>(new PerContainerLifetime());
 
+            // Singleton Models
+            serviceRegistry
+                .Register<Models.MessagesModel>(new PerContainerLifetime());
+
             // Singleton Views
             serviceRegistry
-                .Register<IMessagesView, MessagesForm>(new PerContainerLifetime())
                 .RegisterInstance(MessageBoxPresenter.Default)
                 .Register<ExceptionPresenterFactory>(factory =>
                 {
@@ -50,6 +53,7 @@ namespace HFM.Forms
             serviceRegistry
                 .Register<AboutDialog>(new PerScopeLifetime())
                 .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
+                .Register<MessagesPresenter>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())
                 .Register<ProteinCalculatorForm>(new PerScopeLifetime())
                 .Register<WorkUnitHistoryPresenter>(new PerScopeLifetime())

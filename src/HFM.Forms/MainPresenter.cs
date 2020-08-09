@@ -19,6 +19,7 @@ using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
+using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
@@ -53,7 +54,6 @@ namespace HFM.Forms
 
         private readonly MainGridModel _gridModel;
         private readonly IMainView _view;
-        private readonly IMessagesView _messagesView;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly MessageBoxPresenter _messageBox;
         private readonly UserStatsDataModel _userStatsDataModel;
@@ -67,7 +67,7 @@ namespace HFM.Forms
 
         #region Constructor
 
-        public MainPresenter(MainGridModel gridModel, IMainView view, IMessagesView messagesView, IServiceScopeFactory serviceScopeFactory,
+        public MainPresenter(MainGridModel gridModel, IMainView view, IServiceScopeFactory serviceScopeFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
                              ClientConfiguration clientConfiguration, IProteinService proteinService,
                              IExternalProcessStarter processStarter, IPreferenceSet prefs)
@@ -98,7 +98,6 @@ namespace HFM.Forms
 
             // Views
             _view = view;
-            _messagesView = messagesView;
             _messageBox = messageBox;
             _serviceScopeFactory = serviceScopeFactory;
             // Collections
@@ -146,31 +145,14 @@ namespace HFM.Forms
 
         private void RestoreViewPreferences()
         {
-            // Would like to do this here in lieu of in frmMain_Shown() event.
-            // There is some drawing error that if Minimized here, the first time the
-            // Form is restored from the system tray, the DataGridView is drawn with
-            // a big black box on the right hand side. Like it didn't get initialized
-            // properly when the Form was created.
-            //if (_prefs.Get<bool>(Preference.RunMinimized))
-            //{
-            //   WindowState = FormWindowState.Minimized;
-            //}
+            var restoreLocation = _prefs.Get<Point>(Preference.FormLocation);
+            var restoreSize = _prefs.Get<Size>(Preference.FormSize);
+            var (location, size) = WindowPosition.Normalize(_view, restoreLocation, restoreSize);
+            _view.Location = location;
 
-            // Look for start position
-            var location = _prefs.Get<Point>(Preference.FormLocation);
-            var size = _prefs.Get<Size>(Preference.FormSize);
-            if (location.X != 0 && location.Y != 0)
-            {
-                _view.SetManualStartPosition();
-                _view.Location = Internal.WindowPosition.Normalize(location, size);
-            }
             // Look for view size
             if (size.Width != 0 && size.Height != 0)
             {
-                // make sure values coming from the prefs are at least the minimums - Issue 234
-                if (size.Width < _view.MinimumSize.Width) size.Width = _view.MinimumSize.Width;
-                if (size.Height < _view.MinimumSize.Height) size.Height = _view.MinimumSize.Height;
-
                 if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
                 {
                     size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
@@ -953,32 +935,30 @@ namespace HFM.Forms
 
         #region View Menu Handling Methods
 
+        private MessagesPresenter _messagesPresenter;
+
         public void ViewMessagesClick()
         {
-            if (_messagesView.Visible)
+            try
             {
-                _messagesView.Close();
+                if (_messagesPresenter is null)
+                {
+                    var scope = _serviceScopeFactory.CreateScope();
+                    _messagesPresenter = scope.ServiceProvider.GetRequiredService<MessagesPresenter>();
+                    _messagesPresenter.Closed += (sender, args) =>
+                    {
+                        scope.Dispose();
+                        _messagesPresenter = null;
+                    };
+                }
+
+                _messagesPresenter?.Show();
             }
-            else
+            catch (Exception)
             {
-                // Restore state data
-                var location = _prefs.Get<Point>(Preference.MessagesFormLocation);
-                var size = _prefs.Get<Size>(Preference.MessagesFormSize);
-                location = Internal.WindowPosition.Normalize(location, size);
-
-                if (location.X != 0 && location.Y != 0)
-                {
-                    _messagesView.SetManualStartPosition();
-                    _messagesView.SetLocation(location.X, location.Y);
-                }
-
-                if (size.Width != 0 && size.Height != 0)
-                {
-                    _messagesView.SetSize(size.Width, size.Height);
-                }
-
-                _messagesView.Show();
-                _messagesView.ScrollToEnd();
+                _messagesPresenter?.Dispose();
+                _messagesPresenter = null;
+                throw;
             }
         }
 
@@ -1169,7 +1149,7 @@ namespace HFM.Forms
             // Restore state data
             var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
             var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
-            location = Internal.WindowPosition.Normalize(location, size);
+            location = WindowPosition.Normalize(location, size);
 
             if (location.X != 0 && location.Y != 0)
             {
@@ -1177,7 +1157,7 @@ namespace HFM.Forms
             }
             else
             {
-                benchmarksView.Location = Internal.WindowPosition.CenterOnPrimaryScreen(size);
+                benchmarksView.Location = WindowPosition.CenterOnPrimaryScreen(size);
             }
 
             if (size.Width != 0 && size.Height != 0)
@@ -1196,11 +1176,11 @@ namespace HFM.Forms
             {
                 if (_historyPresenter is null)
                 {
-                    var historyPresenterScope = _serviceScopeFactory.CreateScope();
-                    _historyPresenter = historyPresenterScope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
+                    var scope = _serviceScopeFactory.CreateScope();
+                    _historyPresenter = scope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
                     _historyPresenter.Closed += (sender, args) =>
                     {
-                        historyPresenterScope.Dispose();
+                        scope.Dispose();
                         _historyPresenter = null;
                     };
                 }
