@@ -8,27 +8,25 @@ namespace HFM.Forms.Internal
 {
     internal static class WindowPosition
     {
-        internal static Point Normalize(Point position, Size size)
-        {
-            return Normalize(position.X, position.Y, size.Width, size.Height);
-        }
-
-        internal static Point Normalize(int x, int y, int width, int height)
-        {
-            return SystemInformation.VirtualScreen.IntersectsWith(new Rectangle(x, y, width, height))
-               ? new Point(x, y)
-               : CenterOnPrimaryScreen(width, height);
-        }
-
         internal static (Point Location, Size Size) Normalize(IWin32Form form, Point restoreLocation, Size restoreSize)
         {
             var size = restoreSize == Size.Empty ? form.Size : EnsureMinimumSize(form.MinimumSize, restoreSize);
             var location = restoreLocation;
-            if (restoreLocation == Point.Empty)
+            if (restoreLocation == Point.Empty || !SystemInformation.VirtualScreen.IntersectsWith(new Rectangle(location, size)))
             {
                 location = CenterOnPrimaryScreen(size);
             }
             return (location, size);
+        }
+
+        private static Point CenterOnPrimaryScreen(Size restoreSize)
+        {
+            var primaryScreenSize = Screen.PrimaryScreen.Bounds.Size;
+            var size = EnsureMaximumSize(primaryScreenSize, restoreSize);
+
+            int x = (primaryScreenSize.Width - size.Width) / 2;
+            int y = (primaryScreenSize.Height - size.Height) / 2;
+            return new Point(x, y);
         }
 
         private static Size EnsureMinimumSize(Size minimumSize, Size restoreSize)
@@ -36,16 +34,9 @@ namespace HFM.Forms.Internal
             return new Size(Math.Max(minimumSize.Width, restoreSize.Width), Math.Max(minimumSize.Height, restoreSize.Height));
         }
 
-        internal static Point CenterOnPrimaryScreen(Size size)
+        private static Size EnsureMaximumSize(Size maximumSize, Size restoreSize)
         {
-            return CenterOnPrimaryScreen(size.Width, size.Height);
-        }
-
-        private static Point CenterOnPrimaryScreen(int width, int height)
-        {
-            int x = (Screen.PrimaryScreen.Bounds.Size.Width - width) / 2;
-            int y = (Screen.PrimaryScreen.Bounds.Size.Height - height) / 2;
-            return new Point(x, y);
+            return new Size(Math.Min(maximumSize.Width, restoreSize.Width), Math.Min(maximumSize.Height, restoreSize.Height));
         }
     }
 }

@@ -731,8 +731,7 @@ namespace HFM.Forms.Views
             this.Name = "BenchmarksForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Benchmarks Viewer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBenchmarks_FormClosing);
-            this.Shown += new System.EventHandler(this.frmBenchmarks_Shown);
+            this.Load += new System.EventHandler(this.BenchmarksForm_Load);
             this.grpProjectInfo.ResumeLayout(false);
             this.grpProjectInfo.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

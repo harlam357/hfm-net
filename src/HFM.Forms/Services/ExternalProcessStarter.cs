@@ -30,12 +30,6 @@ namespace HFM.Forms
         string ShowFileExplorer(string path);
 
         /// <summary>
-        /// Show the given URL in the default web browser
-        /// </summary>
-        /// <param name="url">Website URL</param>
-        string ShowWebBrowser(string url);
-
-        /// <summary>
         /// Show the HFM Google Code page
         /// </summary>
         string ShowHfmGitHub();
@@ -107,17 +101,6 @@ namespace HFM.Forms
                   "An error occured while attempting to show '{0}'.{1}{1}Please check the current File Explorer defined in the Preferences.",
                   path, Environment.NewLine);
             return RunProcess(_prefs.Get<string>(Preference.FileExplorer), WrapInQuotes(path), errorMessage);
-        }
-
-        /// <summary>
-        /// Show the given URL in the default web browser
-        /// </summary>
-        /// <param name="url">Website URL</param>
-        public string ShowWebBrowser(string url)
-        {
-            string errorMessage = String.Format(CultureInfo.CurrentCulture,
-                  "An error occured while attempting to show '{0}'.", url);
-            return RunProcess(url, null, errorMessage);
         }
 
         /// <summary>

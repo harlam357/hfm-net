@@ -44,6 +44,7 @@ namespace HFM.Forms
 
             // Transient Models
             serviceRegistry
+                .Register<Models.BenchmarksModel>(new PerRequestLifeTime())
                 .Register<Models.PreferencesModel>(new PerRequestLifeTime())
                 .Register<Models.ProteinCalculatorModel>(new PerRequestLifeTime())
                 .Register<Models.WorkUnitHistoryModel>(new PerRequestLifeTime())
@@ -52,7 +53,7 @@ namespace HFM.Forms
             // Scope Views
             serviceRegistry
                 .Register<AboutDialog>(new PerScopeLifetime())
-                .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
+                .Register<BenchmarksPresenter>(new PerScopeLifetime())
                 .Register<MessagesPresenter>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())
                 .Register<ProteinCalculatorForm>(new PerScopeLifetime())

@@ -57,10 +57,7 @@ namespace HFM.Forms.Presenters
         public override void Show()
         {
             ModelBase.Load();
-
-            Form = OnCreateForm();
-            Form.Closed += OnClosed;
-            Form.Show();
+            base.Show();
         }
 
         protected override void OnClosed(object sender, EventArgs e)

@@ -1132,40 +1132,19 @@ namespace HFM.Forms
 
         public void ToolsBenchmarksClick()
         {
-            int projectId = 0;
+            int projectID = 0;
 
             // Check for SelectedSlot, and if found... load its ProjectID.
             if (_gridModel.SelectedSlot != null)
             {
-                projectId = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
+                projectID = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
-
 
             var scope = _serviceScopeFactory.CreateScope();
-            var benchmarksView = scope.ServiceProvider.GetRequiredService<IBenchmarksView>();
-            benchmarksView.Closed += (s, e) => scope.Dispose();
-            benchmarksView.ProjectId = projectId;
-
-            // Restore state data
-            var location = _prefs.Get<Point>(Preference.BenchmarksFormLocation);
-            var size = _prefs.Get<Size>(Preference.BenchmarksFormSize);
-            location = WindowPosition.Normalize(location, size);
-
-            if (location.X != 0 && location.Y != 0)
-            {
-                benchmarksView.Location = location;
-            }
-            else
-            {
-                benchmarksView.Location = WindowPosition.CenterOnPrimaryScreen(size);
-            }
-
-            if (size.Width != 0 && size.Height != 0)
-            {
-                benchmarksView.Size = size;
-            }
-
-            benchmarksView.Show();
+            var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
+            presenter.Closed += (s, e) => scope.Dispose();
+            presenter.Model.ProjectID = projectID;
+            presenter.Show();
         }
 
         private IFormPresenter _historyPresenter;
