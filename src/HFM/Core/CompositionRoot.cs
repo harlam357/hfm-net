@@ -62,6 +62,9 @@ namespace HFM.Core
 
             // IProjectSummaryService - Singleton
             serviceRegistry.Register<Services.IProjectSummaryService, Services.ProjectSummaryService>(new PerContainerLifetime());
+
+            // LocalProcessService - Singleton
+            serviceRegistry.RegisterInstance(Services.LocalProcessService.Default);
         }
     }
 }

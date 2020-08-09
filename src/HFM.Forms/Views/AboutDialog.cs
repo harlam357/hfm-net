@@ -1,18 +1,28 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
+using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Forms.Controls;
+using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
     public partial class AboutDialog : FormWrapper
     {
-        public AboutDialog()
+        public ILogger Logger { get; }
+        public MessageBoxPresenter MessageBox { get; }
+        public LocalProcessService LocalProcess { get; }
+
+        public AboutDialog(ILogger logger, MessageBoxPresenter messageBox, LocalProcessService localProcess)
         {
+            Logger = logger ?? NullLogger.Instance;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            LocalProcess = localProcess ?? NullLocalProcessService.Instance;
+
             InitializeComponent();
 
             SetVersionLabelText();
@@ -56,12 +66,12 @@ namespace HFM.Forms.Views
         {
             try
             {
-                Process.Start(Core.Application.ProjectSiteUrl);
+                LocalProcess.Start(Core.Application.ProjectSiteUrl);
             }
             catch (Exception)
             {
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
-                   Properties.Resources.ProcessStartError, "HFM.NET GitHub Project"));
+                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET GitHub Project");
+                MessageBox.ShowError(this, text, Core.Application.NameAndVersion);
             }
         }
 
@@ -69,12 +79,12 @@ namespace HFM.Forms.Views
         {
             try
             {
-                Process.Start(Core.Application.SupportForumUrl);
+                LocalProcess.Start(Core.Application.SupportForumUrl);
             }
             catch (Exception)
             {
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
-                   Properties.Resources.ProcessStartError, "HFM.NET Google Group"));
+                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group");
+                MessageBox.ShowError(this, text, Core.Application.NameAndVersion);
             }
         }
 

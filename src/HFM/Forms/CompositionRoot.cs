@@ -48,6 +48,7 @@ namespace HFM.Forms
 
             // Scope Views
             serviceRegistry
+                .Register<AboutDialog>(new PerScopeLifetime())
                 .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())
                 .Register<ProteinCalculatorForm>(new PerScopeLifetime())

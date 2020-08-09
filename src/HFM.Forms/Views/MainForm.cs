@@ -430,8 +430,7 @@ namespace HFM.Forms.Views
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            var about = new AboutDialog();
-            about.ShowDialog(this);
+            _presenter.AboutClicked();
         }
 
         #endregion

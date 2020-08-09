@@ -1301,6 +1301,17 @@ namespace HFM.Forms
 
         #endregion
 
+        public void AboutClicked()
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
+                {
+                    dialog.ShowDialog(_view);
+                }
+            }
+        }
+
         #region Other Handling Methods
 
         private void ApplyColorLogFileSetting()
