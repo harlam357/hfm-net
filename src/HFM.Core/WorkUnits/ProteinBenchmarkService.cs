@@ -245,4 +245,59 @@ namespace HFM.Core.WorkUnits
             return false;
         }
     }
+
+    public class NullProteinBenchmarkService : IProteinBenchmarkService
+    {
+        public static NullProteinBenchmarkService Instance { get; } = new NullProteinBenchmarkService();
+
+        public ICollection<ClientIdentifier> GetClientIdentifiers()
+        {
+            return new List<ClientIdentifier>();
+        }
+
+        public ICollection<SlotIdentifier> GetSlotIdentifiers()
+        {
+            return new List<SlotIdentifier>();
+        }
+
+        public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
+        {
+            return new List<int>();
+        }
+
+        public ProteinBenchmark Update(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier, IEnumerable<TimeSpan> frameTimes)
+        {
+            return null;
+        }
+
+        public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
+        {
+            return null;
+        }
+
+        public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+        {
+            return new List<ProteinBenchmark>();
+        }
+
+        public void RemoveAll(SlotIdentifier slotIdentifier)
+        {
+
+        }
+
+        public void RemoveAll(SlotIdentifier slotIdentifier, int projectID)
+        {
+
+        }
+
+        public void UpdateMinimumFrameTime(SlotIdentifier slotIdentifier, int projectID)
+        {
+
+        }
+
+        public void UpdateClientIdentifier(ClientIdentifier clientIdentifier)
+        {
+
+        }
+    }
 }
