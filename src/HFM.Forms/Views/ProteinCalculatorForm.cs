@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Views
 {
-    public interface IProteinCalculatorView
-    {
-        event EventHandler Closed;
-
-        void Show(IWin32Window owner);
-    }
-
-    public partial class ProteinCalculatorForm : Form, IProteinCalculatorView
+    public partial class ProteinCalculatorForm : Form, IWin32Form
     {
         private readonly ProteinCalculatorModel _model;
 

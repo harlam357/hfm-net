@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,15 +11,15 @@ using HFM.Proteins;
 
 namespace HFM.Forms.Models
 {
-    public sealed class ProteinCalculatorModel : INotifyPropertyChanged
+    public class ProteinCalculatorModel : INotifyPropertyChanged
     {
         private readonly IPreferenceSet _preferences;
         private readonly IProteinService _proteinService;
 
         public ProteinCalculatorModel(IPreferenceSet preferences, IProteinService proteinService)
         {
-            _preferences = preferences;
-            _proteinService = proteinService;
+            _preferences = preferences ?? new InMemoryPreferenceSet();
+            _proteinService = proteinService ?? NullProteinService.Instance;
         }
 
         public void Calculate()
@@ -56,21 +55,18 @@ namespace HFM.Forms.Models
             CoreName = protein.Core;
             SlotType = SlotTypeConvert.FromCoreName(protein.Core).ToString();
             NumberOfAtoms = protein.NumberOfAtoms;
-            CompletionTime = Math.Round((TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays), decimalPlaces);
+            CompletionTime = Math.Round(TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays, decimalPlaces);
             PreferredDeadline = protein.PreferredDays;
             FinalDeadline = protein.MaximumDays;
             KFactor = protein.KFactor;
-            BonusMultiplier = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier), decimalPlaces);
+            BonusMultiplier = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier, decimalPlaces);
             BaseCredit = noBonusValues.Credit;
-            TotalCredit = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit), decimalPlaces);
+            TotalCredit = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit, decimalPlaces);
             BasePpd = noBonusValues.PPD;
-            TotalPpd = Math.Round((TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD), decimalPlaces);
+            TotalPpd = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD, decimalPlaces);
         }
 
-        public ICollection<int> Projects
-        {
-            get { return _proteinService.GetProjects().OrderBy(x => x).ToList(); }
-        }
+        public ICollection<int> Projects => _proteinService.GetProjects().OrderBy(x => x).ToList();
 
         private int _selectedProject;
 

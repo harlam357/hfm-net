@@ -10,9 +10,8 @@ namespace HFM.Forms.Presenters
 
         public virtual void Show()
         {
-            var form = OnCreateForm();
-            form.Closed += OnClosed;
-            Form = form;
+            Form = OnCreateForm();
+            Form.Closed += OnClosed;
             Form.Show();
         }
 

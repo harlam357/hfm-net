@@ -1,14 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
-
-using NUnit.Framework;
-using Rhino.Mocks;
 
 using HFM.Core.Data;
 using HFM.Core.Services;
 using HFM.Proteins;
+
+using NUnit.Framework;
+
+using Rhino.Mocks;
 
 namespace HFM.Core.WorkUnits
 {
@@ -33,7 +33,7 @@ namespace HFM.Core.WorkUnits
         public void ProteinService_Get_UnavailableProtein()
         {
             // Arrange
-            var service = new ProteinService();
+            var service = new ProteinService(new ProteinDataContainer(), null, null);
             // Act
             var p = service.Get(2482);
             // Assert
@@ -45,7 +45,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = MockRepository.GenerateStub<IProjectSummaryService>();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // Act
             service.GetOrRefresh(2482);
             // Assert
@@ -57,7 +57,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // Act
             var p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
@@ -73,7 +73,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // Act
             var p = service.GetOrRefresh(2482);
             Assert.IsNull(p);
@@ -90,7 +90,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceMockRepeatOnce();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // set to over the elapsed time (1 hour)
             service.LastRefresh = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(61));
             // Act
@@ -105,7 +105,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // Set project not found to exercise removal code
             service.LastProjectRefresh.Add(6940, DateTime.MinValue);
             // Act
@@ -137,7 +137,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             service.LastProjectRefresh.Add(6940, DateTime.MinValue);
             // Act
             service.Refresh(null);
@@ -150,7 +150,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             service.LastProjectRefresh.Add(2968, DateTime.MinValue);
             service.LastRefresh = DateTime.MinValue;
             // Act
@@ -165,7 +165,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             Assert.AreEqual(0, service.GetProjects().Count());
             // Act
             service.Refresh(null);
@@ -178,7 +178,7 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var summaryService = CreateProjectSummaryServiceStub();
-            var service = new ProteinService(new ProteinDataContainer(), summaryService, new Logging.DebugLogger());
+            var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
             // Act
             var changes = service.Refresh(null);
             // Assert

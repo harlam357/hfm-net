@@ -50,7 +50,7 @@ namespace HFM.Forms
             serviceRegistry
                 .Register<IBenchmarksView, BenchmarksForm>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())
-                .Register<IProteinCalculatorView, ProteinCalculatorForm>(new PerScopeLifetime())
+                .Register<ProteinCalculatorForm>(new PerScopeLifetime())
                 .Register<WorkUnitHistoryPresenter>(new PerScopeLifetime())
                 .Register<WorkUnitQueryPresenter>(new PerScopeLifetime());
 

@@ -17,7 +17,6 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
-using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
@@ -1219,9 +1218,9 @@ namespace HFM.Forms
         internal void ToolsPointsCalculatorClick()
         {
             var scope = _serviceScopeFactory.CreateScope();
-            var calculatorView = scope.ServiceProvider.GetRequiredService<IProteinCalculatorView>();
-            calculatorView.Closed += (s, e) => scope.Dispose();
-            calculatorView.Show(_view);
+            IWin32Form calculatorForm = scope.ServiceProvider.GetRequiredService<ProteinCalculatorForm>();
+            calculatorForm.Closed += (s, e) => scope.Dispose();
+            calculatorForm.Show();
         }
 
         #endregion

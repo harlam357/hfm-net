@@ -48,12 +48,6 @@ namespace HFM.Core.WorkUnits
         private readonly ILogger _logger;
         private ProteinDictionary _dictionary;
 
-        internal ProteinService()
-           : this(new ProteinDataContainer(), null, null)
-        {
-
-        }
-
         public ProteinService(ProteinDataContainer dataContainer, IProjectSummaryService projectSummaryService, ILogger logger)
         {
             _dataContainer = dataContainer;
@@ -194,6 +188,31 @@ namespace HFM.Core.WorkUnits
             }
 
             return false;
+        }
+    }
+
+    public class NullProteinService : IProteinService
+    {
+        public static NullProteinService Instance { get; } = new NullProteinService();
+
+        public Protein Get(int projectID)
+        {
+            return null;
+        }
+
+        public Protein GetOrRefresh(int projectID)
+        {
+            return null;
+        }
+
+        public IReadOnlyCollection<int> GetProjects()
+        {
+            return new List<int>(0);
+        }
+
+        public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
+        {
+            return new List<ProteinDictionaryChange>(0);
         }
     }
 }
