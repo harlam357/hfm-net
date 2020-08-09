@@ -135,8 +135,9 @@ Function Deploy-Build
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
         "ZedGraph.dll",
-        "Castle.Core.dll",
-        "Castle.Windsor.dll",
+        "LightInject.dll",
+        "LightInject.Microsoft.DependencyInjection.dll",
+        "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "protobuf-net.dll",
         "System.Linq.Dynamic.dll",
         "AutoMapper.dll",
@@ -154,7 +155,7 @@ Function Deploy-Build
     # Documentation & Licenses
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\src\packages\Castle.Windsor.3.3.0\ASL - Apache Software Foundation License.txt' -Destination "$ArtifactsBin\Documentation\License\Windsor License.txt" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path '..\doc\LightInject License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protobuf-net Licence.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protoc-license.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\AutoMapper License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose

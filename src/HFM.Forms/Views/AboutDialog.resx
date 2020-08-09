@@ -132,7 +132,7 @@ HFM.NET was derived from the FAHLogStats.NET code base - http://code.google.com/
 
 Third-Party Libraries
 
-Castle Windsor - https://github.com/castleproject/Windsor
+LightInject - https://www.lightinject.net
 protobuf-net - https://github.com/mgravell/protobuf-net
 AutoMapper - https://github.com/AutoMapper/AutoMapper
 System.Data.SQLite - https://system.data.sqlite.org
