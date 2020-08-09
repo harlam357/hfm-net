@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Views;
 using HFM.Preferences;
@@ -11,10 +14,12 @@ namespace HFM.Forms.Models
     public class BenchmarksModel : ViewModelBase
     {
         public IPreferenceSet Preferences { get; }
+        public IProteinBenchmarkService BenchmarkService { get; }
 
-        public BenchmarksModel(IPreferenceSet preferences)
+        public BenchmarksModel(IPreferenceSet preferences, IProteinBenchmarkService benchmarkService)
         {
             Preferences = preferences ?? new InMemoryPreferenceSet();
+            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
         }
 
         public int ProjectID { get; set; }
@@ -25,7 +30,10 @@ namespace HFM.Forms.Models
             FormSize = Preferences.Get<Size>(Preference.BenchmarksFormSize);
             GraphLayoutType = Preferences.Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
             ClientsPerGraph = Preferences.Get<int>(Preference.BenchmarksClientsPerGraph);
-            GraphColors = Preferences.Get<List<Color>>(Preference.GraphColors);
+            GraphColors.Clear();
+            GraphColors.AddRange(Preferences.Get<List<Color>>(Preference.GraphColors) ?? new List<Color>());
+
+            RefreshSlotIdentifiers();
         }
 
         public override void Save()
@@ -48,9 +56,13 @@ namespace HFM.Forms.Models
 
         public GraphLayoutType GraphLayoutType { get; set; }
 
-        public List<Color> GraphColors { get; private set; }
+        public List<Color> GraphColors { get; } = new List<Color>();
 
         public int ClientsPerGraph { get; set; }
+
+        public BindingList<ListItem> SlotIdentifiers { get; } = new BindingList<ListItem>();
+
+        #region Protein
 
         private Protein _protein;
 
@@ -99,5 +111,43 @@ namespace HFM.Forms.Models
         public string Contact => Protein?.Contact;
 
         public string ServerIP => Protein?.ServerIP;
+
+        #endregion
+
+        private SlotIdentifier _selectedSlotIdentifier;
+
+        public SlotIdentifier SelectedSlotIdentifier
+        {
+            get => _selectedSlotIdentifier;
+            set
+            {
+                if (_selectedSlotIdentifier != value)
+                {
+                    _selectedSlotIdentifier = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedSlotDeleteEnabled));
+                }
+            }
+        }
+
+        public bool SelectedSlotDeleteEnabled => SelectedSlotIdentifier != SlotIdentifier.AllSlots;
+
+        public void RefreshSlotIdentifiers()
+        {
+            SlotIdentifiers.RaiseListChangedEvents = false;
+
+            SlotIdentifiers.Clear();
+            var slots = Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
+                .Concat(BenchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name))
+                .Select(x => new ListItem { DisplayMember = x.ToString(), ValueMember = x })
+                .ToList();
+            foreach (var slot in slots)
+            {
+                SlotIdentifiers.Add(slot);
+            }
+
+            SlotIdentifiers.RaiseListChangedEvents = true;
+            SlotIdentifiers.ResetBindings();
+        }
     }
 }
