@@ -100,6 +100,7 @@
     <Compile Include="Hash.cs" />
     <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILoggerEvents.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Models\PetaPoco.cs" />
