@@ -37,8 +37,8 @@ namespace HFM.Forms.Models
             {
                 UpdateFiles = new List<ApplicationUpdateFile>
                 {
-                    new ApplicationUpdateFile(),
-                    new ApplicationUpdateFile()
+                    new ApplicationUpdateFile { Description = "Foo" },
+                    new ApplicationUpdateFile { Description = "Bar" }
                 }
             };
             var model = new ApplicationUpdateModel(update);

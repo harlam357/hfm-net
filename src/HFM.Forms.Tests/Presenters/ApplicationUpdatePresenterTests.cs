@@ -109,7 +109,7 @@ namespace HFM.Forms.Presenters
             // Arrange
             using (var artifacts = new ArtifactFolder())
             {
-                var updateFile = new ApplicationUpdateFile { Name = "Foo.zip", HttpAddress = @"C:\DoesNotExist\Foo.zip" };
+                var updateFile = new ApplicationUpdateFile { Description = "Foo", Name = "Foo.zip", HttpAddress = @"C:\DoesNotExist\Foo.zip" };
                 var update = new ApplicationUpdate
                 {
                     UpdateFiles = new List<ApplicationUpdateFile> { updateFile }
@@ -137,7 +137,7 @@ namespace HFM.Forms.Presenters
             File.WriteAllText(sourceFile, "FoobarFizzbizz");
 
             string sourceFileName = Path.GetFileName(sourceFile);
-            var updateFile = new ApplicationUpdateFile { Name = sourceFileName, HttpAddress = sourceFile, Size = (int)new FileInfo(sourceFile).Length, UpdateType = (int)updateType };
+            var updateFile = new ApplicationUpdateFile { Description = "Foo", Name = sourceFileName, HttpAddress = sourceFile, Size = (int)new FileInfo(sourceFile).Length, UpdateType = (int)updateType };
             var update = new ApplicationUpdate
             {
                 UpdateFiles = new List<ApplicationUpdateFile> { updateFile }

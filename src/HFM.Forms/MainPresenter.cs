@@ -1143,7 +1143,7 @@ namespace HFM.Forms
             var scope = _serviceScopeFactory.CreateScope();
             var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
             presenter.Closed += (s, e) => scope.Dispose();
-            presenter.Model.ProjectID = projectID;
+            presenter.Model.DefaultProjectID = projectID;
             presenter.Show();
         }
 

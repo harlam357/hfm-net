@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using HFM.Core.Client;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
@@ -30,8 +30,6 @@ namespace HFM.Forms.Views
 
         private readonly BenchmarksPresenter _presenter;
         private readonly ZedGraphManager _zedGraphManager;
-
-        private SlotIdentifier _currentSlotIdentifier;
 
         public BenchmarksForm(BenchmarksPresenter presenter)
         {
@@ -58,6 +56,13 @@ namespace HFM.Forms.Views
             Size = size;
             SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
 
+            cboClients.BindSelectedValue(model, nameof(BenchmarksModel.SelectedSlotIdentifier));
+            cboClients.DataSource = model.SlotIdentifiers;
+            cboClients.DisplayMember = nameof(ListItem.DisplayMember);
+            cboClients.ValueMember = nameof(ListItem.ValueMember);
+
+            picDeleteClient.BindVisible(model, nameof(BenchmarksModel.SelectedSlotDeleteEnabled));
+
             ProjectIDTextBox.BindText(model, nameof(BenchmarksModel.WorkUnitName));
             CreditTextBox.BindText(model, nameof(BenchmarksModel.Credit));
             KFactorTextBox.BindText(model, nameof(BenchmarksModel.KFactor));
@@ -71,97 +76,106 @@ namespace HFM.Forms.Views
             ContactTextBox.BindText(model, nameof(BenchmarksModel.Contact));
             WorkServerTextBox.BindText(model, nameof(BenchmarksModel.ServerIP));
 
-            UpdateClientsComboBinding();
-            UpdateProjectListBoxBinding(model.ProjectID);
+            listBox1.DataSource = model.SlotProjects;
+            listBox1.DisplayMember = nameof(ListItem.DisplayMember);
+            listBox1.ValueMember = nameof(ListItem.ValueMember);
+            listBox1.DataBindings.Add(nameof(ListBox.SelectedValue), model, nameof(BenchmarksModel.SelectedSlotProject), true, DataSourceUpdateMode.OnPropertyChanged);
+
+            // load any existing benchmark text
+            txtBenchmarks.Lines = _presenter.Model.BenchmarkText.ToArray();
+            model.PropertyChanged += (s, e) => ModelPropertyChanged(e);
+
             lstColors.DataSource = model.GraphColors;
             pnlClientLayout.DataSource = model;
             pnlClientLayout.ValueMember = nameof(BenchmarksModel.GraphLayoutType);
 
             // Issue 154 - make sure focus is on the projects list box
-            listBox1.Select();
+            //listBox1.Select();
+        }
+
+        private void ModelPropertyChanged(PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(BenchmarksModel.BenchmarkText):
+                    txtBenchmarks.Lines = _presenter.Model.BenchmarkText.ToArray();
+                    break;
+            }
         }
 
         #region Event Handlers
 
-        private void cboClients_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _currentSlotIdentifier = (SlotIdentifier)cboClients.SelectedValue;
-            picDeleteClient.Visible = _currentSlotIdentifier != SlotIdentifier.AllSlots;
-
-            UpdateProjectListBoxBinding();
-        }
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedItem = listBox1.SelectedItem;
-            if (selectedItem is null) return;
+            //var selectedItem = listBox1.SelectedItem;
+            //if (selectedItem is null) return;
 
-            txtBenchmarks.Text = String.Empty;
-            int projectID = (int)selectedItem;
-            Protein protein = _presenter.ProteinService.Get(projectID);
+            //txtBenchmarks.Text = String.Empty;
+            //int projectID = (int)selectedItem;
+            //Protein protein = _presenter.ProteinService.Get(projectID);
 
-            var projectInfoLines = new List<string>();
-            PopulateProteinInformation(projectID, protein, projectInfoLines);
+            //var projectInfoLines = new List<string>();
+            //PopulateProteinInformation(projectID, protein, projectInfoLines);
 
-            var list = _presenter.BenchmarkService.GetBenchmarks(_currentSlotIdentifier, projectID)
-                .OrderBy(x => x.SlotIdentifier.Name).ThenBy(x => x.Threads)
-                .ToList();
+            //var list = _presenter.Model.BenchmarkService.GetBenchmarks(_presenter.Model.SelectedSlotIdentifier.Value, projectID)
+            //    .OrderBy(x => x.SlotIdentifier.Name).ThenBy(x => x.Threads)
+            //    .ToList();
 
-            var benchmarkInfoLines = new List<string>(projectInfoLines);
-            foreach (ProteinBenchmark benchmark in list)
-            {
-                WorkUnitModel workUnitModel = null;
-                SlotStatus status = SlotStatus.Unknown;
+            //var benchmarkInfoLines = new List<string>(projectInfoLines);
+            //foreach (ProteinBenchmark benchmark in list)
+            //{
+            //    WorkUnitModel workUnitModel = null;
+            //    SlotStatus status = SlotStatus.Unknown;
 
-                var slotModel = _presenter.ClientConfiguration.Slots.FirstOrDefault(x =>
-                    x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
-                    x.WorkUnitModel.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
+            //    var slotModel = _presenter.ClientConfiguration.Slots.FirstOrDefault(x =>
+            //        x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
+            //        x.WorkUnitModel.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
 
-                if (slotModel != null && slotModel.Status.IsRunning())
-                {
-                    workUnitModel = slotModel.WorkUnitModel;
-                    status = slotModel.Status;
-                }
-                string numberFormat = NumberFormat.Get(_presenter.Model.DecimalPlaces);
-                PopulateBenchmarkInformation(protein, benchmark, workUnitModel, status, numberFormat, benchmarkInfoLines);
-            }
+            //    if (slotModel != null && slotModel.Status.IsRunning())
+            //    {
+            //        workUnitModel = slotModel.WorkUnitModel;
+            //        status = slotModel.Status;
+            //    }
+            //    string numberFormat = NumberFormat.Get(_presenter.Model.DecimalPlaces);
+            //    PopulateBenchmarkInformation(protein, benchmark, workUnitModel, status, numberFormat, benchmarkInfoLines);
+            //}
 
-            UpdateBenchmarkText(benchmarkInfoLines);
+            //UpdateBenchmarkText(benchmarkInfoLines);
 
-            tabControl1.SuspendLayout();
+            //tabControl1.SuspendLayout();
 
-            int clientsPerGraph = _presenter.Model.ClientsPerGraph;
-            SetupGraphTabs(list.Count, clientsPerGraph);
+            //int clientsPerGraph = _presenter.Model.ClientsPerGraph;
+            //SetupGraphTabs(list.Count, clientsPerGraph);
 
-            int tabIndex = 1;
-            if (_presenter.Model.GraphLayoutType == GraphLayoutType.ClientsPerGraph)
-            {
-                int lastDisplayed = 0;
-                for (int i = 1; i < list.Count; i++)
-                {
-                    if (i % clientsPerGraph == 0)
-                    {
-                        var benchmarks = new ProteinBenchmark[clientsPerGraph];
-                        list.CopyTo(lastDisplayed, benchmarks, 0, clientsPerGraph);
-                        DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
-                        tabIndex++;
-                        lastDisplayed = i;
-                    }
-                }
+            //int tabIndex = 1;
+            //if (_presenter.Model.GraphLayoutType == GraphLayoutType.ClientsPerGraph)
+            //{
+            //    int lastDisplayed = 0;
+            //    for (int i = 1; i < list.Count; i++)
+            //    {
+            //        if (i % clientsPerGraph == 0)
+            //        {
+            //            var benchmarks = new ProteinBenchmark[clientsPerGraph];
+            //            list.CopyTo(lastDisplayed, benchmarks, 0, clientsPerGraph);
+            //            DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
+            //            tabIndex++;
+            //            lastDisplayed = i;
+            //        }
+            //    }
 
-                if (lastDisplayed < list.Count)
-                {
-                    var benchmarks = new ProteinBenchmark[list.Count - lastDisplayed];
-                    list.CopyTo(lastDisplayed, benchmarks, 0, list.Count - lastDisplayed);
-                    DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
-                }
-            }
-            else
-            {
-                DrawGraphs(tabIndex, projectInfoLines, list, protein);
-            }
+            //    if (lastDisplayed < list.Count)
+            //    {
+            //        var benchmarks = new ProteinBenchmark[list.Count - lastDisplayed];
+            //        list.CopyTo(lastDisplayed, benchmarks, 0, list.Count - lastDisplayed);
+            //        DrawGraphs(tabIndex, projectInfoLines, benchmarks, protein);
+            //    }
+            //}
+            //else
+            //{
+            //    DrawGraphs(tabIndex, projectInfoLines, list, protein);
+            //}
 
-            tabControl1.ResumeLayout(true);
+            //tabControl1.ResumeLayout(true);
         }
 
         private void SetupGraphTabs(int numberOfBenchmarks, int clientsPerGraph)
@@ -222,60 +236,10 @@ namespace HFM.Forms.Views
             return (ZedGraphControl)tabControl1.TabPages["tabGraphPPD" + index].Controls["zgPpd" + index];
         }
 
-        private void PopulateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, WorkUnitModel workUnitModel, SlotStatus status, string numberFormat, ICollection<string> lines)
-        {
-            if (protein == null)
-            {
-                return;
-            }
-
-            var calculateBonus = _presenter.Model.BonusCalculation;
-            var calculateBonusEnabled = IsEnabled(calculateBonus);
-
-            lines.Add(String.Empty);
-            lines.Add($" Name: {benchmark.SlotIdentifier.Name}");
-            lines.Add($" Path: {benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString()}");
-            if (benchmark.BenchmarkIdentifier.HasProcessor)
-            {
-                var slotType = SlotTypeConvert.FromCoreName(protein.Core);
-                lines.Add($" Proc: {benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType)}");
-            }
-            lines.Add($" Number of Frames Observed: {benchmark.FrameTimes.Count}");
-            lines.Add(String.Empty);
-            lines.Add(String.Format(" Min. Time / Frame : {0} - {1} PPD",
-               benchmark.MinimumFrameTime, GetPPD(benchmark.MinimumFrameTime, protein, calculateBonusEnabled).ToString(numberFormat)));
-            lines.Add(String.Format(" Avg. Time / Frame : {0} - {1} PPD",
-               benchmark.AverageFrameTime, GetPPD(benchmark.AverageFrameTime, protein, calculateBonusEnabled).ToString(numberFormat)));
-
-            if (workUnitModel != null)
-            {
-                lines.Add(String.Format(" Cur. Time / Frame : {0} - {1} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.LastFrame), workUnitModel.GetPPD(status, PPDCalculation.LastFrame, calculateBonus).ToString(numberFormat)));
-                lines.Add(String.Format(" R3F. Time / Frame : {0} - {1} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.LastThreeFrames), workUnitModel.GetPPD(status, PPDCalculation.LastThreeFrames, calculateBonus).ToString(numberFormat)));
-                lines.Add(String.Format(" All  Time / Frame : {0} - {1} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.AllFrames), workUnitModel.GetPPD(status, PPDCalculation.AllFrames, calculateBonus).ToString(numberFormat)));
-                lines.Add(String.Format(" Eff. Time / Frame : {0} - {1} PPD",
-                   workUnitModel.GetFrameTime(PPDCalculation.EffectiveRate), workUnitModel.GetPPD(status, PPDCalculation.EffectiveRate, calculateBonus).ToString(numberFormat)));
-            }
-
-            lines.Add(String.Empty);
-        }
-
         private static bool IsEnabled(BonusCalculation type)
         {
             return type.Equals(BonusCalculation.DownloadTime) ||
                    type.Equals(BonusCalculation.FrameTime);
-        }
-
-        private static double GetPPD(TimeSpan frameTime, Protein protein, bool calculateUnitTimeByFrameTime)
-        {
-            if (calculateUnitTimeByFrameTime)
-            {
-                var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
-                return protein.GetBonusPPD(frameTime, unitTime);
-            }
-            return protein.GetPPD(frameTime);
         }
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
@@ -300,28 +264,17 @@ namespace HFM.Forms.Views
         {
             if (_presenter.MessageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
                     "Are you sure you want to refresh {0} - Project {1} minimum frame time?",
-                    _currentSlotIdentifier, listBox1.SelectedItem),
+                    _presenter.Model.SelectedSlotIdentifier, listBox1.SelectedItem),
                 Text) == DialogResult.Yes)
             {
-                _presenter.BenchmarkService.UpdateMinimumFrameTime(_currentSlotIdentifier, (int)listBox1.SelectedItem);
+                _presenter.Model.BenchmarkService.UpdateMinimumFrameTime(_presenter.Model.SelectedSlotIdentifier.Value, (int)listBox1.SelectedItem);
                 listBox1_SelectedIndexChanged(sender, e);
             }
         }
 
         private void mnuContextDeleteProject_Click(object sender, EventArgs e)
         {
-            if (_presenter.MessageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
-                    "Are you sure you want to delete {0} - Project {1}?",
-                    _currentSlotIdentifier, listBox1.SelectedItem),
-                Text) == DialogResult.Yes)
-            {
-                _presenter.BenchmarkService.RemoveAll(_currentSlotIdentifier, (int)listBox1.SelectedItem);
-                UpdateProjectListBoxBinding();
-                if (_presenter.BenchmarkService.GetSlotIdentifiers().Contains(_currentSlotIdentifier) == false)
-                {
-                    UpdateClientsComboBinding();
-                }
-            }
+            _presenter.DeleteProjectClicked();
         }
 
         private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -331,13 +284,7 @@ namespace HFM.Forms.Views
 
         private void picDeleteClient_Click(object sender, EventArgs e)
         {
-            if (_presenter.MessageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
-                    "Are you sure you want to delete {0}?", _currentSlotIdentifier), Text) == DialogResult.Yes)
-            {
-                int currentIndex = cboClients.SelectedIndex;
-                _presenter.BenchmarkService.RemoveAll(_currentSlotIdentifier);
-                UpdateClientsComboBinding(currentIndex);
-            }
+            _presenter.DeleteSlotClicked();
         }
 
         private void lstColors_SelectedIndexChanged(object sender, EventArgs e)
@@ -481,87 +428,10 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        #region Update Routines
-
-        private void UpdateBenchmarkText(IEnumerable<string> benchmarkLines)
-        {
-            txtBenchmarks.Lines = benchmarkLines.ToArray();
-        }
-
-        private void PopulateProteinInformation(int projectID, Protein protein, ICollection<string> lines)
-        {
-            _presenter.Model.Protein = protein;
-            if (protein != null)
-            {
-                lines.Add(String.Format(" Project ID: {0}", protein.ProjectNumber));
-                lines.Add(String.Format(" Core: {0}", protein.Core));
-                lines.Add(String.Format(" Credit: {0}", protein.Credit));
-                lines.Add(String.Format(" Frames: {0}", protein.Frames));
-                lines.Add(String.Empty);
-            }
-            else
-            {
-                lines.Add(String.Format(" Project ID: {0} Not Found", projectID));
-            }
-        }
-
-        #region Binding
-
-        private void UpdateClientsComboBinding()
-        {
-            UpdateClientsComboBinding(-1);
-        }
-
-        private void UpdateClientsComboBinding(int index)
-        {
-            var slotIdentifiers = Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
-                .Concat(_presenter.BenchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name))
-                .Select(x => new ListItem { DisplayMember = x.ToString(), ValueMember = x })
-                .ToList();
-
-            cboClients.DataBindings.Clear();
-            cboClients.DisplayMember = nameof(ListItem.DisplayMember);
-            cboClients.ValueMember = nameof(ListItem.ValueMember);
-            cboClients.DataSource = slotIdentifiers;
-
-            if (index > -1 && cboClients.Items.Count > 0)
-            {
-                if (index < cboClients.Items.Count)
-                {
-                    cboClients.SelectedIndex = index;
-                }
-                else if (index == cboClients.Items.Count)
-                {
-                    cboClients.SelectedIndex = index - 1;
-                }
-            }
-        }
-
-        private void UpdateProjectListBoxBinding()
-        {
-            UpdateProjectListBoxBinding(-1);
-        }
-
-        private void UpdateProjectListBoxBinding(int initialProjectID)
-        {
-            listBox1.DataBindings.Clear();
-            listBox1.DataSource = _presenter.BenchmarkService.GetBenchmarkProjects(_currentSlotIdentifier);
-
-            int index = listBox1.Items.IndexOf(initialProjectID);
-            if (index > -1)
-            {
-                listBox1.SelectedIndex = index;
-            }
-        }
-
         private void UpdateGraphColorsBinding()
         {
             var cm = (CurrencyManager)lstColors.BindingContext[lstColors.DataSource];
             cm.Refresh();
         }
-
-        #endregion
-
-        #endregion
     }
 }

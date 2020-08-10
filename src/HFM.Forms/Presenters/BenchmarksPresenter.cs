@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows.Forms;
 
-using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.Services;
-using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Forms.Views;
 
@@ -15,24 +14,39 @@ namespace HFM.Forms.Presenters
         public BenchmarksModel Model { get; }
         public ILogger Logger { get; }
         public MessageBoxPresenter MessageBox { get; }
-        public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
-        public ClientConfiguration ClientConfiguration { get; }
 
-        public BenchmarksPresenter(BenchmarksModel model, ILogger logger, MessageBoxPresenter messageBox,
-            IProteinService proteinService, IProteinBenchmarkService benchmarkService, ClientConfiguration clientConfiguration) : base(model)
+        public BenchmarksPresenter(BenchmarksModel model, ILogger logger, MessageBoxPresenter messageBox) : base(model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
-            ProteinService = proteinService ?? NullProteinService.Instance;
-            BenchmarkService = benchmarkService;
-            ClientConfiguration = clientConfiguration;
         }
 
         protected override IWin32Form OnCreateForm()
         {
             return new BenchmarksForm(this);
+        }
+
+        public void DeleteSlotClicked()
+        {
+            string text = String.Format(CultureInfo.CurrentCulture,
+                "Are you sure you want to delete {0}?", Model.SelectedSlotIdentifier.Value);
+
+            if (MessageBox.AskYesNoQuestion(Form, text, Core.Application.NameAndVersion) == DialogResult.Yes)
+            {
+                Model.RemoveSlot(Model.SelectedSlotIdentifier.Value);
+            }
+        }
+
+        public void DeleteProjectClicked()
+        {
+            string text = String.Format(CultureInfo.CurrentCulture,
+                "Are you sure you want to delete {0} - Project {1}?", Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
+
+            if (MessageBox.AskYesNoQuestion(Form, text, Core.Application.NameAndVersion) == DialogResult.Yes)
+            {
+                Model.RemoveProject(Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
+            }
         }
 
         public void DescriptionLinkClicked(LocalProcessService localProcess)
@@ -44,7 +58,7 @@ namespace HFM.Forms.Presenters
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, Core.Application.NameAndVersion);
+                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "description");
                 MessageBox.ShowError(text, Core.Application.NameAndVersion);
             }
         }

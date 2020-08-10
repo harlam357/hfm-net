@@ -395,7 +395,6 @@ namespace HFM.Forms.Views
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(65, 395);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
             this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
             // 
@@ -695,7 +694,6 @@ namespace HFM.Forms.Views
             this.cboClients.Name = "cboClients";
             this.cboClients.Size = new System.Drawing.Size(518, 21);
             this.cboClients.TabIndex = 0;
-            this.cboClients.SelectedIndexChanged += new System.EventHandler(this.cboClients_SelectedIndexChanged);
             // 
             // listBox1ContextMenuStrip
             // 
