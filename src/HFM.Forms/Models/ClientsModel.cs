@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -96,7 +95,7 @@ namespace HFM.Forms.Models
 
         public string DefaultConfigFile
         {
-            get { return _defaultConfigFile; }
+            get => _defaultConfigFile;
             set
             {
                 if (DefaultConfigFile != value)
@@ -117,7 +116,7 @@ namespace HFM.Forms.Models
 
         public bool DefaultConfigFileEnabled
         {
-            get { return _defaultConfigFileEnabled; }
+            get => _defaultConfigFileEnabled;
             set
             {
                 if (DefaultConfigFileEnabled != value)
@@ -136,7 +135,7 @@ namespace HFM.Forms.Models
 
         public int RetrievalInterval
         {
-            get { return _retrievalInterval; }
+            get => _retrievalInterval;
             set
             {
                 if (RetrievalInterval != value)
@@ -158,7 +157,7 @@ namespace HFM.Forms.Models
 
         public bool RetrievalEnabled
         {
-            get { return _retrievalEnabled; }
+            get => _retrievalEnabled;
             set
             {
                 if (RetrievalEnabled != value)
@@ -173,7 +172,7 @@ namespace HFM.Forms.Models
 
         public bool RetrievalIsSerial
         {
-            get { return _retrievalIsSerial; }
+            get => _retrievalIsSerial;
             set
             {
                 if (RetrievalIsSerial != value)
@@ -192,7 +191,7 @@ namespace HFM.Forms.Models
 
         public bool OfflineLast
         {
-            get { return _offlineLast; }
+            get => _offlineLast;
             set
             {
                 if (OfflineLast != value)
@@ -207,7 +206,7 @@ namespace HFM.Forms.Models
 
         public bool ColorLogFile
         {
-            get { return _colorLogFile; }
+            get => _colorLogFile;
             set
             {
                 if (ColorLogFile != value)
@@ -222,7 +221,7 @@ namespace HFM.Forms.Models
 
         public bool AutoSaveConfig
         {
-            get { return _autoSaveConfig; }
+            get => _autoSaveConfig;
             set
             {
                 if (AutoSaveConfig != value)
@@ -237,7 +236,7 @@ namespace HFM.Forms.Models
 
         public PPDCalculation PPDCalculation
         {
-            get { return _ppdCalculation; }
+            get => _ppdCalculation;
             set
             {
                 if (PPDCalculation != value)
@@ -252,7 +251,7 @@ namespace HFM.Forms.Models
 
         public int DecimalPlaces
         {
-            get { return _decimalPlaces; }
+            get => _decimalPlaces;
             set
             {
                 if (DecimalPlaces != value)
@@ -267,7 +266,7 @@ namespace HFM.Forms.Models
 
         public BonusCalculation BonusCalculation
         {
-            get { return _bonusCalculation; }
+            get => _bonusCalculation;
             set
             {
                 if (BonusCalculation != value)
@@ -282,7 +281,7 @@ namespace HFM.Forms.Models
 
         public bool DisplayETADate
         {
-            get { return _displayETADate; }
+            get => _displayETADate;
             set
             {
                 if (DisplayETADate != value)
@@ -297,7 +296,7 @@ namespace HFM.Forms.Models
 
         public bool DuplicateProjectCheck
         {
-            get { return _duplicateProjectCheck; }
+            get => _duplicateProjectCheck;
             set
             {
                 if (DuplicateProjectCheck != value)
@@ -310,19 +309,19 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        public static ReadOnlyCollection<ListItem> PpdCalculationList { get; } = new List<ListItem>
+        public static IReadOnlyCollection<ListItem> PpdCalculationList { get; } = new List<ListItem>
         {
-            new ListItem { DisplayMember = "Last Frame", ValueMember = PPDCalculation.LastFrame },
-            new ListItem { DisplayMember = "Last Three Frames", ValueMember = PPDCalculation.LastThreeFrames },
-            new ListItem { DisplayMember = "All Frames", ValueMember = PPDCalculation.AllFrames },
-            new ListItem { DisplayMember = "Effective Rate", ValueMember = PPDCalculation.EffectiveRate }
+            new ListItem("Last Frame", PPDCalculation.LastFrame),
+            new ListItem("Last Three Frames", PPDCalculation.LastThreeFrames),
+            new ListItem("All Frames", PPDCalculation.AllFrames),
+            new ListItem("Effective Rate", PPDCalculation.EffectiveRate)
         }.AsReadOnly();
 
-        public static ReadOnlyCollection<ListItem> BonusCalculationList { get; } = new List<ListItem>
+        public static IReadOnlyCollection<ListItem> BonusCalculationList { get; } = new List<ListItem>
         {
-            new ListItem { DisplayMember = "Download Time", ValueMember = BonusCalculation.DownloadTime },
-            new ListItem { DisplayMember = "Frame Time", ValueMember = BonusCalculation.FrameTime },
-            new ListItem { DisplayMember = "None", ValueMember = BonusCalculation.None },
+            new ListItem("Download Time", BonusCalculation.DownloadTime),
+            new ListItem("Frame Time", BonusCalculation.FrameTime),
+            new ListItem("None", BonusCalculation.None)
         }.AsReadOnly();
     }
 }

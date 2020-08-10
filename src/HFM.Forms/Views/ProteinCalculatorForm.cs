@@ -21,9 +21,9 @@ namespace HFM.Forms.Views
 
         private void DataBind()
         {
-            ProjectComboBox.DisplayMember = "DisplayMember";
-            ProjectComboBox.ValueMember = "ValueMember";
-            ProjectComboBox.DataSource = _model.Projects.Select(x => new ListItem { DisplayMember = x.ToString(), ValueMember = x }).ToList();
+            ProjectComboBox.DisplayMember = nameof(ListItem.DisplayMember);
+            ProjectComboBox.ValueMember = nameof(ListItem.ValueMember);
+            ProjectComboBox.DataSource = _model.Projects.Select(x => new ListItem(x)).ToList();
             ProjectComboBox.DataBindings.Add("SelectedValue", _model, "SelectedProject", false, DataSourceUpdateMode.OnPropertyChanged);
 
             TimePerFrameMinuteTextBox.BindText(_model, "TpfMinutes");

@@ -20,7 +20,7 @@ namespace HFM.Forms.Models
         private static ICollection<ListItem> BuildUpdateFilesList(ApplicationUpdate update)
         {
             var list = update?.UpdateFiles?
-                .Select(x => new ListItem { DisplayMember = x.Description, ValueMember = x })
+                .Select(x => new ListItem(x.Description, x))
                 .ToList();
             return list ?? new List<ListItem>();
         }

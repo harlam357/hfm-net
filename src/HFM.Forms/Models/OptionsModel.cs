@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -109,7 +107,7 @@ namespace HFM.Forms.Models
 
         public bool RunMinimized
         {
-            get { return _runMinimized; }
+            get => _runMinimized;
             set
             {
                 if (RunMinimized != value)
@@ -124,7 +122,7 @@ namespace HFM.Forms.Models
 
         public bool StartupCheckForUpdate
         {
-            get { return _startupCheckForUpdate; }
+            get => _startupCheckForUpdate;
             set
             {
                 if (StartupCheckForUpdate != value)
@@ -143,7 +141,7 @@ namespace HFM.Forms.Models
 
         public int EocUserID
         {
-            get { return _eocUserID; }
+            get => _eocUserID;
             set
             {
                 if (EocUserID != value)
@@ -165,7 +163,7 @@ namespace HFM.Forms.Models
 
         public string FahUserID
         {
-            get { return _fahUserID; }
+            get => _fahUserID;
             set
             {
                 if (FahUserID != value)
@@ -188,7 +186,7 @@ namespace HFM.Forms.Models
 
         public int TeamID
         {
-            get { return _teamID; }
+            get => _teamID;
             set
             {
                 if (TeamID != value)
@@ -210,7 +208,7 @@ namespace HFM.Forms.Models
 
         public bool EocUserStatsEnabled
         {
-            get { return _eocUserStatsEnabled; }
+            get => _eocUserStatsEnabled;
             set
             {
                 if (EocUserStatsEnabled != value)
@@ -229,7 +227,7 @@ namespace HFM.Forms.Models
 
         public string LogFileViewer
         {
-            get { return _logFileViewer; }
+            get => _logFileViewer;
             set
             {
                 if (LogFileViewer != value)
@@ -245,7 +243,7 @@ namespace HFM.Forms.Models
 
         public string FileExplorer
         {
-            get { return _fileExplorer; }
+            get => _fileExplorer;
             set
             {
                 if (FileExplorer != value)
@@ -265,7 +263,7 @@ namespace HFM.Forms.Models
 
         public LoggerLevel MessageLevel
         {
-            get { return _messageLevel; }
+            get => _messageLevel;
             set
             {
                 if (MessageLevel != value)
@@ -284,7 +282,7 @@ namespace HFM.Forms.Models
 
         public MinimizeToOption MinimizeToOption
         {
-            get { return _minimizeToOption; }
+            get => _minimizeToOption;
             set
             {
                 if (MinimizeToOption != value)
@@ -297,17 +295,17 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        public static ReadOnlyCollection<ListItem> DebugList { get; } = new List<ListItem>
+        public static IReadOnlyCollection<ListItem> DebugList { get; } = new List<ListItem>
         {
-            new ListItem { DisplayMember = LoggerLevel.Info.ToString(), ValueMember = LoggerLevel.Info },
-            new ListItem { DisplayMember = LoggerLevel.Debug.ToString(), ValueMember = LoggerLevel.Debug }
+            new ListItem(LoggerLevel.Info.ToString(), LoggerLevel.Info),
+            new ListItem(LoggerLevel.Debug.ToString(), LoggerLevel.Debug)
         }.AsReadOnly();
 
-        public static ReadOnlyCollection<ListItem> DockingStyleList { get; } = new List<ListItem>
+        public static IReadOnlyCollection<ListItem> DockingStyleList { get; } = new List<ListItem>
         {
-            new ListItem { DisplayMember = "System Tray", ValueMember = MinimizeToOption.SystemTray },
-            new ListItem { DisplayMember = "Task Bar", ValueMember = MinimizeToOption.TaskBar },
-            new ListItem { DisplayMember = "Both", ValueMember = MinimizeToOption.Both }
+            new ListItem("System Tray", MinimizeToOption.SystemTray),
+            new ListItem("Task Bar", MinimizeToOption.TaskBar),
+            new ListItem("Both", MinimizeToOption.Both)
         }.AsReadOnly();
     }
 }

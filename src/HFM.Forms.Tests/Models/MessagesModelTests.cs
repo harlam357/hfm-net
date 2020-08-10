@@ -26,7 +26,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void MessagesModel_RaisesOneListChangedEvent()
+        public void MessagesModel_LoggerEventsLoggedRaisesOneListChangedEvent()
         {
             // Arrange
             var loggerEvents = new MockLoggerEvents();

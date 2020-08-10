@@ -85,11 +85,14 @@ namespace HFM.Forms.Controls
 
         private static ICollection<ListItem> CreateEntryNameCollection(SlotWorkUnitDictionary slotWorkUnit)
         {
-            return slotWorkUnit.Select(kvp => new ListItem
+            return slotWorkUnit
+                .Select(kvp => new ListItem(FormatDisplay(kvp), kvp.Key))
+                .ToList();
+
+            string FormatDisplay(KeyValuePair<int, SlotWorkUnitInfo> kvp)
             {
-                DisplayMember = String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", kvp.Key, kvp.Value.ToShortProjectString()),
-                ValueMember = kvp.Key
-            }).ToList();
+                return String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", kvp.Key, kvp.Value.ToShortProjectString());
+            }
         }
 
         private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)

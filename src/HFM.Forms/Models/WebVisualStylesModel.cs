@@ -71,7 +71,7 @@ namespace HFM.Forms.Models
                 if (di.Exists)
                 {
                     list.AddRange(di.EnumerateFiles(CssPattern)
-                        .Select(fi => new ListItem { DisplayMember = Path.GetFileNameWithoutExtension(fi.Name), ValueMember = fi.Name }));
+                        .Select(fi => new ListItem(Path.GetFileNameWithoutExtension(fi.Name), fi.Name)));
                 }
                 return list.AsReadOnly();
             }
@@ -81,7 +81,7 @@ namespace HFM.Forms.Models
 
         public string CssFile
         {
-            get { return _cssFile; }
+            get => _cssFile;
             set
             {
                 if (CssFile != value)
@@ -97,7 +97,7 @@ namespace HFM.Forms.Models
 
         public string OverviewXsltPath
         {
-            get { return _overviewXsltPath; }
+            get => _overviewXsltPath;
             set
             {
                 if (OverviewXsltPath != value)
@@ -113,7 +113,7 @@ namespace HFM.Forms.Models
 
         public string SummaryXsltPath
         {
-            get { return _summaryXsltPath; }
+            get => _summaryXsltPath;
             set
             {
                 if (SummaryXsltPath != value)
@@ -129,7 +129,7 @@ namespace HFM.Forms.Models
 
         public string SlotXsltPath
         {
-            get { return _slotXsltPath; }
+            get => _slotXsltPath;
             set
             {
                 if (SlotXsltPath != value)
