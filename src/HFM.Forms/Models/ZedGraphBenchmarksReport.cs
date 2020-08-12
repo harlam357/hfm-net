@@ -15,14 +15,11 @@ namespace HFM.Forms.Models
 {
     public abstract class ZedGraphBenchmarksReport : BenchmarksReport
     {
-        public IPreferenceSet Preferences { get; }
         public IProteinService ProteinService { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
 
-        protected ZedGraphBenchmarksReport(string key, IPreferenceSet preferences,
-            IProteinService proteinService, IProteinBenchmarkService benchmarkService) : base(key)
+        protected ZedGraphBenchmarksReport(string key, IProteinService proteinService, IProteinBenchmarkService benchmarkService) : base(key)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
             ProteinService = proteinService ?? NullProteinService.Instance;
             BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
         }
@@ -44,10 +41,7 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
-                .OrderBy(x => x.SlotIdentifier.Name)
-                .ThenBy(x => x.Threads)
-                .ToList();
+            var benchmarks = SortBenchmarks(BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber));
 
             var zg = new ZedGraphControl();
             try
@@ -64,7 +58,7 @@ namespace HFM.Forms.Models
 
                 // Create the bars for each benchmark
                 int i = 0;
-                var graphColors = Preferences.Get<List<Color>>(Preference.GraphColors);
+                var graphColors = source.Colors;
                 foreach (ProteinBenchmark benchmark in benchmarks)
                 {
                     var yPoints = GetYPoints(benchmark);
@@ -77,7 +71,7 @@ namespace HFM.Forms.Models
                 // Set the Titles
                 pane.Title.Text = "HFM.NET - Slot Benchmarks";
                 pane.XAxis.Title.Text = String.Join("   ", EnumerateProjectInformation(protein));
-                pane.YAxis.Title.Text = Key; // "Frame Time (Seconds)";
+                pane.YAxis.Title.Text = Key;
 
                 // Draw the X tics between the labels instead of at the labels
                 pane.XAxis.MajorTic.IsBetweenLabels = true;
@@ -102,6 +96,11 @@ namespace HFM.Forms.Models
             Result = zg;
         }
 
+        protected virtual IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks)
+        {
+            return benchmarks;
+        }
+
         protected abstract double[] GetYPoints(ProteinBenchmark benchmark);
 
         private static string GetProcessorAndThreads(ProteinBenchmark benchmark, Protein protein)
@@ -117,7 +116,7 @@ namespace HFM.Forms.Models
             return processorAndThreads;
         }
 
-        private static void CreateBar(int index, GraphPane pane, string name, double[] yPoints, IList<Color> graphColors)
+        private static void CreateBar(int index, GraphPane pane, string name, double[] yPoints, IReadOnlyList<Color> graphColors)
         {
             int colorIndex = index % graphColors.Count;
             Color barColor = graphColors[colorIndex];
@@ -132,10 +131,15 @@ namespace HFM.Forms.Models
     {
         public const string KeyName = "Frame Time (Seconds)";
 
-        public FrameTimeZedGraphBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
-            : base(KeyName, preferences, proteinService, benchmarkService)
+        public FrameTimeZedGraphBenchmarksReport(IProteinService proteinService, IProteinBenchmarkService benchmarkService)
+            : base(KeyName, proteinService, benchmarkService)
         {
 
+        }
+
+        protected override IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks)
+        {
+            return benchmarks.OrderBy(x => x.MinimumFrameTime + x.AverageFrameTime);
         }
 
         protected override double[] GetYPoints(ProteinBenchmark benchmark)

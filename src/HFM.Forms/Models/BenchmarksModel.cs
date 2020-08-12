@@ -68,6 +68,8 @@ namespace HFM.Forms.Models
 
         public GraphLayoutType GraphLayoutType { get; set; }
 
+        IReadOnlyList<Color> IBenchmarksReportSource.Colors => GraphColors;
+
         public List<Color> GraphColors { get; } = new List<Color>();
 
         public int ClientsPerGraph { get; set; }

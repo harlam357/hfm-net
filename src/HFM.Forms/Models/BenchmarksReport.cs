@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 
@@ -15,6 +16,8 @@ namespace HFM.Forms.Models
         SlotIdentifier? SlotIdentifier { get; }
 
         int? ProjectID { get; }
+
+        IReadOnlyList<Color> Colors { get; }
     }
 
     public abstract class BenchmarksReport
