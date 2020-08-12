@@ -116,6 +116,8 @@
     <Compile Include="Models\BenchmarksModel.cs" />
     <Compile Include="Models\BenchmarksReport.cs" />
     <Compile Include="Models\MessagesModel.cs" />
+    <Compile Include="Models\TextBenchmarksReport.cs" />
+    <Compile Include="Models\ZedGraphBenchmarksReport.cs" />
     <Compile Include="Presenters\BenchmarksPresenter.cs" />
     <Compile Include="Presenters\FormPresenter.cs" />
     <Compile Include="Presenters\IDialogPresenter.cs" />
