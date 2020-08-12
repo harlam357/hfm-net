@@ -45,7 +45,10 @@ namespace HFM.Forms
             // Transient Models
             serviceRegistry
                 .Register<Models.BenchmarksModel>(new PerRequestLifeTime())
-                .Register<Models.BenchmarksReport, Models.TextBenchmarksReport>(new PerRequestLifeTime())
+                .Register<Models.BenchmarksReport, Models.TextBenchmarksReport>(
+                    Models.TextBenchmarksReport.KeyName, new PerRequestLifeTime())
+                .Register<Models.BenchmarksReport, Models.FrameTimeZedGraphBenchmarksReport>(
+                    Models.FrameTimeZedGraphBenchmarksReport.KeyName, new PerRequestLifeTime())
                 .Register<Models.PreferencesModel>(new PerRequestLifeTime())
                 .Register<Models.ProteinCalculatorModel>(new PerRequestLifeTime())
                 .Register<Models.WorkUnitHistoryModel>(new PerRequestLifeTime())

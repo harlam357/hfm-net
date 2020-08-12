@@ -74,7 +74,6 @@ namespace HFM.Forms.Views
             this.btnMoveColorUp = new System.Windows.Forms.Button();
             this.btnDeleteColor = new System.Windows.Forms.Button();
             this.tabGraphFrameTime1 = new System.Windows.Forms.TabPage();
-            this.zgFrameTime1 = new ZedGraph.ZedGraphControl();
             this.tabGraphPPD1 = new System.Windows.Forms.TabPage();
             this.zgPpd1 = new ZedGraph.ZedGraphControl();
             this.btnExit = new System.Windows.Forms.Button();
@@ -99,7 +98,6 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).BeginInit();
             this.grpColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
-            this.tabGraphFrameTime1.SuspendLayout();
             this.tabGraphPPD1.SuspendLayout();
             this.grpClients.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
@@ -597,7 +595,6 @@ namespace HFM.Forms.Views
             // 
             // tabGraphFrameTime1
             // 
-            this.tabGraphFrameTime1.Controls.Add(this.zgFrameTime1);
             this.tabGraphFrameTime1.Location = new System.Drawing.Point(4, 22);
             this.tabGraphFrameTime1.Name = "tabGraphFrameTime1";
             this.tabGraphFrameTime1.Padding = new System.Windows.Forms.Padding(3);
@@ -605,21 +602,6 @@ namespace HFM.Forms.Views
             this.tabGraphFrameTime1.TabIndex = 2;
             this.tabGraphFrameTime1.Text = "Graph - Frame Time (1)";
             this.tabGraphFrameTime1.UseVisualStyleBackColor = true;
-            // 
-            // zgFrameTime1
-            // 
-            this.zgFrameTime1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zgFrameTime1.Location = new System.Drawing.Point(3, 3);
-            this.zgFrameTime1.Name = "zgFrameTime1";
-            this.zgFrameTime1.ScrollGrace = 0D;
-            this.zgFrameTime1.ScrollMaxX = 0D;
-            this.zgFrameTime1.ScrollMaxY = 0D;
-            this.zgFrameTime1.ScrollMaxY2 = 0D;
-            this.zgFrameTime1.ScrollMinX = 0D;
-            this.zgFrameTime1.ScrollMinY = 0D;
-            this.zgFrameTime1.ScrollMinY2 = 0D;
-            this.zgFrameTime1.Size = new System.Drawing.Size(473, 363);
-            this.zgFrameTime1.TabIndex = 0;
             // 
             // tabGraphPPD1
             // 
@@ -747,7 +729,6 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).EndInit();
             this.grpColors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
-            this.tabGraphFrameTime1.ResumeLayout(false);
             this.tabGraphPPD1.ResumeLayout(false);
             this.grpClients.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
@@ -796,7 +777,6 @@ namespace HFM.Forms.Views
       private System.Windows.Forms.TabPage tabGraphPPD1;
       private ZedGraph.ZedGraphControl zgPpd1;
       private System.Windows.Forms.TabPage tabGraphFrameTime1;
-      private ZedGraph.ZedGraphControl zgFrameTime1;
       private System.Windows.Forms.TabPage tabGraphConfig;
       private System.Windows.Forms.Button btnMoveColorDown;
       private System.Windows.Forms.Button btnMoveColorUp;

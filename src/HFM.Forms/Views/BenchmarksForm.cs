@@ -81,8 +81,9 @@ namespace HFM.Forms.Views
             listBox1.ValueMember = nameof(ListItem.ValueMember);
             listBox1.DataBindings.Add(nameof(ListBox.SelectedValue), model, nameof(BenchmarksModel.SelectedSlotProject), true, DataSourceUpdateMode.OnPropertyChanged);
 
-            // load any existing benchmark text
-            txtBenchmarks.Lines = _presenter.Model.BenchmarkText.ToArray();
+            // load any existing reports
+            LoadBenchmarkText();
+            LoadFrameTimeGraphControl();
             model.PropertyChanged += (s, e) => ModelPropertyChanged(e);
 
             lstColors.DataSource = model.GraphColors;
@@ -98,9 +99,35 @@ namespace HFM.Forms.Views
             switch (e.PropertyName)
             {
                 case nameof(BenchmarksModel.BenchmarkText):
-                    txtBenchmarks.Lines = _presenter.Model.BenchmarkText.ToArray();
+                    LoadBenchmarkText();
+                    break;
+                case nameof(BenchmarksModel.FrameTimeGraphControl):
+                    LoadFrameTimeGraphControl();
                     break;
             }
+        }
+
+        private void LoadBenchmarkText()
+        {
+            txtBenchmarks.Lines = _presenter.Model.BenchmarkText?.ToArray() ?? Array.Empty<string>();
+        }
+
+        private void LoadFrameTimeGraphControl()
+        {
+            foreach (Control c in tabGraphFrameTime1.Controls)
+            {
+                c.Dispose();
+            }
+
+            tabGraphFrameTime1.Controls.Clear();
+            var control = _presenter.Model.FrameTimeGraphControl;
+            if (control != null)
+            {
+                control.Dock = DockStyle.Fill;
+                tabGraphFrameTime1.Controls.Add(control);
+            }
+
+            return;
         }
 
         #region Event Handlers

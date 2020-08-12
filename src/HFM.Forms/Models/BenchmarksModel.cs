@@ -250,6 +250,9 @@ namespace HFM.Forms.Models
                     case TextBenchmarksReport.KeyName:
                         BenchmarkText = (IReadOnlyCollection<string>)report.Result;
                         break;
+                    case FrameTimeZedGraphBenchmarksReport.KeyName:
+                        FrameTimeGraphControl = (Control)report.Result;
+                        break;
                 }
             }
         }
@@ -264,6 +267,21 @@ namespace HFM.Forms.Models
                 if (_benchmarkText != value)
                 {
                     _benchmarkText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private Control _frameTimeGraphControl;
+
+        public Control FrameTimeGraphControl
+        {
+            get => _frameTimeGraphControl;
+            set
+            {
+                if (_frameTimeGraphControl != value)
+                {
+                    _frameTimeGraphControl = value;
                     OnPropertyChanged();
                 }
             }
