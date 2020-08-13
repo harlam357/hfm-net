@@ -84,6 +84,7 @@ namespace HFM.Forms.Views
             // load any existing reports
             LoadBenchmarkText();
             LoadFrameTimeGraphControl();
+            LoadProductionGraphControl();
             model.PropertyChanged += (s, e) => ModelPropertyChanged(e);
 
             lstColors.DataSource = model.GraphColors;
@@ -103,6 +104,9 @@ namespace HFM.Forms.Views
                     break;
                 case nameof(BenchmarksModel.FrameTimeGraphControl):
                     LoadFrameTimeGraphControl();
+                    break;
+                case nameof(BenchmarksModel.ProductionGraphControl):
+                    LoadProductionGraphControl();
                     break;
             }
         }
@@ -126,8 +130,22 @@ namespace HFM.Forms.Views
                 control.Dock = DockStyle.Fill;
                 tabGraphFrameTime1.Controls.Add(control);
             }
+        }
 
-            return;
+        private void LoadProductionGraphControl()
+        {
+            foreach (Control c in tabGraphPPD1.Controls)
+            {
+                c.Dispose();
+            }
+
+            tabGraphPPD1.Controls.Clear();
+            var control = _presenter.Model.ProductionGraphControl;
+            if (control != null)
+            {
+                control.Dock = DockStyle.Fill;
+                tabGraphPPD1.Controls.Add(control);
+            }
         }
 
         #region Event Handlers

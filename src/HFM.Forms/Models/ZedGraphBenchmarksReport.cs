@@ -58,10 +58,15 @@ namespace HFM.Forms.Models
 
                 // Create the bars for each benchmark
                 int i = 0;
+                double yMaximum = 0.0;
                 var graphColors = source.Colors;
                 foreach (ProteinBenchmark benchmark in benchmarks)
                 {
-                    var yPoints = GetYPoints(benchmark);
+                    var yPoints = GetYPoints(protein, benchmark);
+                    foreach (var y in yPoints)
+                    {
+                        yMaximum = Math.Max(yMaximum, y);
+                    }
 
                     string processorAndThreads = GetProcessorAndThreads(benchmark, protein);
                     CreateBar(i, pane, benchmark.SlotIdentifier.Name + processorAndThreads, yPoints, graphColors);
@@ -79,6 +84,8 @@ namespace HFM.Forms.Models
                 pane.XAxis.Scale.TextLabels = new[] { "Min. Frame Time", "Avg. Frame Time" };
                 // Set the XAxis to Text type
                 pane.XAxis.Type = AxisType.Text;
+
+                ConfigureYAxis(pane.YAxis, yMaximum);
 
                 // Fill the Axis and Pane backgrounds
                 pane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
@@ -101,7 +108,12 @@ namespace HFM.Forms.Models
             return benchmarks;
         }
 
-        protected abstract double[] GetYPoints(ProteinBenchmark benchmark);
+        protected abstract double[] GetYPoints(Protein protein, ProteinBenchmark benchmark);
+
+        protected virtual void ConfigureYAxis(YAxis yAxis, double yMaximum)
+        {
+
+        }
 
         private static string GetProcessorAndThreads(ProteinBenchmark benchmark, Protein protein)
         {
@@ -142,13 +154,95 @@ namespace HFM.Forms.Models
             return benchmarks.OrderBy(x => x.MinimumFrameTime + x.AverageFrameTime);
         }
 
-        protected override double[] GetYPoints(ProteinBenchmark benchmark)
+        protected override double[] GetYPoints(Protein protein, ProteinBenchmark benchmark)
         {
             return new[]
             {
                 benchmark.MinimumFrameTime.TotalSeconds,
                 benchmark.AverageFrameTime.TotalSeconds
             };
+        }
+    }
+
+    public class ProductionZedGraphBenchmarksReport : ZedGraphBenchmarksReport
+    {
+        public const string KeyName = "PPD";
+
+        public IPreferenceSet Preferences { get; }
+
+        private int DecimalPlaces { get; }
+        private bool CalculateBonus { get; }
+
+        public ProductionZedGraphBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
+            : base(KeyName, proteinService, benchmarkService)
+        {
+            Preferences = preferences ?? new InMemoryPreferenceSet();
+            DecimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
+            CalculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation) != BonusCalculation.None;
+        }
+
+        protected override IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks)
+        {
+            return benchmarks.OrderBy(x => x.MinimumFrameTime + x.AverageFrameTime);
+        }
+
+        protected override double[] GetYPoints(Protein protein, ProteinBenchmark benchmark)
+        {
+            double minimumFrameTimePPD = GetPPD(benchmark.MinimumFrameTime, protein, CalculateBonus);
+            double averageFrameTimePPD = GetPPD(benchmark.AverageFrameTime, protein, CalculateBonus);
+
+            return new[]
+            {
+                Math.Round(minimumFrameTimePPD, DecimalPlaces),
+                Math.Round(averageFrameTimePPD, DecimalPlaces)
+            };
+        }
+
+        private static double GetPPD(TimeSpan frameTime, Protein protein, bool calculateBonus)
+        {
+            if (calculateBonus)
+            {
+                var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+                return protein.GetBonusPPD(frameTime, unitTime);
+            }
+            return protein.GetPPD(frameTime);
+        }
+
+        protected override void ConfigureYAxis(YAxis yAxis, double yMaximum)
+        {
+            // Don't show YAxis.Scale as 10^3         
+            yAxis.Scale.MagAuto = false;
+            // Set the YAxis Steps
+            SetYAxisScale(yAxis, yMaximum);
+        }
+
+        private static void SetYAxisScale(YAxis yAxis, double maxValue)
+        {
+            double roundTo = GetRoundTo(maxValue);
+            double majorStep = RoundUpToNext(maxValue, roundTo) / 10.0;
+
+            yAxis.Scale.MajorStep = majorStep;
+            yAxis.Scale.MinorStep = majorStep / 2;
+        }
+
+        // for a value like    26,273.1, this function will return 1,000.0
+        // for a value like 1,119,789.5, this function will return 100,000.0
+        private static double GetRoundTo(double value)
+        {
+            double roundTo = 10.0;
+            while (value / roundTo > 100.0)
+            {
+                roundTo *= 10.0;
+            }
+            return roundTo;
+        }
+
+        private static double RoundUpToNext(double value, double roundTo)
+        {
+            // drop all digits less significant than roundTo
+            value = (int)(value / roundTo) * roundTo;
+            // apply the roundTo increment
+            return value + roundTo;
         }
     }
 }

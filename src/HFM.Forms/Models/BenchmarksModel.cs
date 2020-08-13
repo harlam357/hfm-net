@@ -255,6 +255,9 @@ namespace HFM.Forms.Models
                     case FrameTimeZedGraphBenchmarksReport.KeyName:
                         FrameTimeGraphControl = (Control)report.Result;
                         break;
+                    case ProductionZedGraphBenchmarksReport.KeyName:
+                        ProductionGraphControl = (Control)report.Result;
+                        break;
                 }
             }
         }
@@ -284,6 +287,21 @@ namespace HFM.Forms.Models
                 if (_frameTimeGraphControl != value)
                 {
                     _frameTimeGraphControl = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private Control _productionGraphControl;
+
+        public Control ProductionGraphControl
+        {
+            get => _productionGraphControl;
+            set
+            {
+                if (_productionGraphControl != value)
+                {
+                    _productionGraphControl = value;
                     OnPropertyChanged();
                 }
             }
