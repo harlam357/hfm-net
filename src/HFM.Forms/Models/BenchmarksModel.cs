@@ -229,7 +229,7 @@ namespace HFM.Forms.Models
         }
 
         // Reports
-        private void RunReports()
+        public void RunReports()
         {
             foreach (var report in Reports)
             {

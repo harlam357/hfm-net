@@ -130,11 +130,6 @@ namespace HFM.Forms.Views
 
         #region Event Handlers
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -155,14 +150,7 @@ namespace HFM.Forms.Views
 
         private void mnuContextRefreshMinimum_Click(object sender, EventArgs e)
         {
-            if (_presenter.MessageBox.AskYesNoQuestion(this, String.Format(CultureInfo.CurrentCulture,
-                    "Are you sure you want to refresh {0} - Project {1} minimum frame time?",
-                    _presenter.Model.SelectedSlotIdentifier, listBox1.SelectedItem),
-                Text) == DialogResult.Yes)
-            {
-                _presenter.Model.BenchmarkService.UpdateMinimumFrameTime(_presenter.Model.SelectedSlotIdentifier.Value, (int)listBox1.SelectedItem);
-                listBox1_SelectedIndexChanged(sender, e);
-            }
+            _presenter.RefreshMinimumFrameTimeClicked();
         }
 
         private void mnuContextDeleteProject_Click(object sender, EventArgs e)
@@ -225,20 +213,22 @@ namespace HFM.Forms.Views
 
         private void btnAddColor_Click(object sender, EventArgs e)
         {
-            var dlg = new ColorDialog();
-            if (dlg.ShowDialog(this).Equals(DialogResult.OK))
+            using (var dlg = new ColorDialog())
             {
-                Color addColor = FindNearestKnown(dlg.Color);
-                if (_presenter.Model.GraphColors.Contains(addColor))
+                if (dlg.ShowDialog(this).Equals(DialogResult.OK))
                 {
-                    _presenter.MessageBox.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
-                       "{0} is already a graph color.", addColor.Name), Text);
-                    return;
-                }
+                    Color addColor = FindNearestKnown(dlg.Color);
+                    if (_presenter.Model.GraphColors.Contains(addColor))
+                    {
+                        _presenter.MessageBox.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
+                            "{0} is already a graph color.", addColor.Name), Text);
+                        return;
+                    }
 
-                _presenter.Model.GraphColors.Add(addColor);
-                UpdateGraphColorsBinding();
-                lstColors.SelectedIndex = _presenter.Model.GraphColors.Count - 1;
+                    _presenter.Model.GraphColors.Add(addColor);
+                    UpdateGraphColorsBinding();
+                    lstColors.SelectedIndex = _presenter.Model.GraphColors.Count - 1;
+                }
             }
         }
 
@@ -248,7 +238,7 @@ namespace HFM.Forms.Views
 
             foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
             {
-                Color known = Color.FromName(colorName);
+                var known = Color.FromName(colorName);
                 int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
 
                 if (best.Name == null || dist < best.Distance)
