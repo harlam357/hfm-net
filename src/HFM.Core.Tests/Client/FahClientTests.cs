@@ -38,7 +38,7 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             var currentWorkUnit = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
             var slotIdentifier = currentWorkUnit.SlotModel.SlotIdentifier;
-            
+
             var workUnitCopy = workUnit.Copy();
             workUnitCopy.FramesObserved = 4;
             var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
@@ -88,7 +88,7 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Foo", Server = "Bar", Port = ClientSettings.DefaultPort };
             var workUnitModel = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
             var newWorkUnitModel = new WorkUnitModel(workUnitModel.SlotModel, workUnit.Copy());
-            
+
             // Act
             fahClient.UpdateBenchmarkFrameTimes(workUnitModel, newWorkUnitModel);
 
@@ -113,10 +113,10 @@ namespace HFM.Core.Client
             Assert.AreEqual(2, slots.Count);
             Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
             Assert.AreEqual(4, slots[0].SlotThreads);
-            Assert.AreEqual(null, slots[0].GPUIndex);
+            Assert.AreEqual(null, slots[0].SlotProcessor);
             Assert.AreEqual(SlotType.GPU, slots[1].SlotType);
             Assert.AreEqual(null, slots[1].SlotThreads);
-            Assert.AreEqual(0, slots[1].GPUIndex);
+            Assert.AreEqual("GeForce GTX 285", slots[1].SlotProcessor);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, slots.Count);
             Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
             Assert.AreEqual(4, slots[0].SlotThreads);
-            Assert.AreEqual(null, slots[0].GPUIndex);
+            Assert.AreEqual(null, slots[0].SlotProcessor);
         }
 
         private static FahClient CreateClient(ClientSettings settings)
