@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -136,8 +136,6 @@ namespace HFM.Core.Client
                 return sb.ToString();
             }
         }
-
-        public int? GPUIndex { get; set; }
 
         public string SlotProcessor { get; set; }
 
