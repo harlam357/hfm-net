@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -24,8 +24,6 @@ namespace HFM.Preferences
         BenchmarksFormLocation,
         BenchmarksFormSize,
         GraphColors,
-        BenchmarksGraphLayoutType,
-        BenchmarksClientsPerGraph,
         MessagesFormLocation,
         MessagesFormSize,
         ClientRetrievalTaskType,

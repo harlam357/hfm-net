@@ -303,7 +303,6 @@
     </Compile>
     <Compile Include="Presenters\ApplicationUpdatePresenter.cs" />
     <Compile Include="Internal\WindowPosition.cs" />
-    <Compile Include="ZedGraphManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\AboutDialog.resx">

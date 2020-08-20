@@ -7,7 +7,6 @@ using HFM.Core.Client;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
-using HFM.Forms.Views;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -26,16 +25,12 @@ namespace HFM.Forms.Models
             var preferences = model.Preferences;
             preferences.Set(Preference.BenchmarksFormLocation, new Point(10, 20));
             preferences.Set(Preference.BenchmarksFormSize, new Size(30, 40));
-            preferences.Set(Preference.BenchmarksGraphLayoutType, GraphLayoutType.ClientsPerGraph);
-            preferences.Set(Preference.BenchmarksClientsPerGraph, 3);
             preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
             // Act
             model.Load();
             // Assert
             Assert.AreEqual(new Point(10, 20), model.FormLocation);
             Assert.AreEqual(new Size(30, 40), model.FormSize);
-            Assert.AreEqual(GraphLayoutType.ClientsPerGraph, model.GraphLayoutType);
-            Assert.AreEqual(3, model.ClientsPerGraph);
             CollectionAssert.AreEqual(new List<Color> { Color.AliceBlue }, model.GraphColors);
         }
 
@@ -91,16 +86,12 @@ namespace HFM.Forms.Models
             var preferences = model.Preferences;
             model.FormLocation = new Point(50, 60);
             model.FormSize = new Size(70, 80);
-            model.GraphLayoutType = GraphLayoutType.ClientsPerGraph;
-            model.ClientsPerGraph = 4;
             model.GraphColors.AddRange(new[] { Color.SaddleBrown });
             // Act
             model.Save();
             // Assert
             Assert.AreEqual(new Point(50, 60), preferences.Get<Point>(Preference.BenchmarksFormLocation));
             Assert.AreEqual(new Size(70, 80), preferences.Get<Size>(Preference.BenchmarksFormSize));
-            Assert.AreEqual(GraphLayoutType.ClientsPerGraph, preferences.Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType));
-            Assert.AreEqual(4, preferences.Get<int>(Preference.BenchmarksClientsPerGraph));
             CollectionAssert.AreEqual(new List<Color> { Color.SaddleBrown }, preferences.Get<List<Color>>(Preference.GraphColors));
         }
 

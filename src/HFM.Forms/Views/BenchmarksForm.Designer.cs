@@ -61,11 +61,6 @@ namespace HFM.Forms.Views
             this.tabTextBenchmark = new System.Windows.Forms.TabPage();
             this.txtBenchmarks = new System.Windows.Forms.TextBox();
             this.tabGraphConfig = new System.Windows.Forms.TabPage();
-            this.grpClientLayout = new System.Windows.Forms.GroupBox();
-            this.pnlClientLayout = new HFM.Forms.Controls.RadioPanel();
-            this.udClientsPerGraph = new System.Windows.Forms.NumericUpDown();
-            this.rdoClientsPerGraph = new System.Windows.Forms.RadioButton();
-            this.rdoSingleGraph = new System.Windows.Forms.RadioButton();
             this.grpColors = new System.Windows.Forms.GroupBox();
             this.lstColors = new System.Windows.Forms.ListBox();
             this.picColorPreview = new System.Windows.Forms.PictureBox();
@@ -75,7 +70,6 @@ namespace HFM.Forms.Views
             this.btnDeleteColor = new System.Windows.Forms.Button();
             this.tabGraphFrameTime1 = new System.Windows.Forms.TabPage();
             this.tabGraphPPD1 = new System.Windows.Forms.TabPage();
-            this.zgPpd1 = new ZedGraph.ZedGraphControl();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpClients = new System.Windows.Forms.GroupBox();
             this.picDeleteClient = new System.Windows.Forms.PictureBox();
@@ -93,12 +87,8 @@ namespace HFM.Forms.Views
             this.tabControl1.SuspendLayout();
             this.tabTextBenchmark.SuspendLayout();
             this.tabGraphConfig.SuspendLayout();
-            this.grpClientLayout.SuspendLayout();
-            this.pnlClientLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).BeginInit();
             this.grpColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
-            this.tabGraphPPD1.SuspendLayout();
             this.grpClients.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
             this.listBox1ContextMenuStrip.SuspendLayout();
@@ -435,7 +425,6 @@ namespace HFM.Forms.Views
             // 
             // tabGraphConfig
             // 
-            this.tabGraphConfig.Controls.Add(this.grpClientLayout);
             this.tabGraphConfig.Controls.Add(this.grpColors);
             this.tabGraphConfig.Location = new System.Drawing.Point(4, 22);
             this.tabGraphConfig.Name = "tabGraphConfig";
@@ -443,76 +432,6 @@ namespace HFM.Forms.Views
             this.tabGraphConfig.TabIndex = 3;
             this.tabGraphConfig.Text = "Graph Config";
             this.tabGraphConfig.UseVisualStyleBackColor = true;
-            // 
-            // grpClientLayout
-            // 
-            this.grpClientLayout.Controls.Add(this.pnlClientLayout);
-            this.grpClientLayout.Location = new System.Drawing.Point(259, 6);
-            this.grpClientLayout.Name = "grpClientLayout";
-            this.grpClientLayout.Size = new System.Drawing.Size(215, 355);
-            this.grpClientLayout.TabIndex = 7;
-            this.grpClientLayout.TabStop = false;
-            this.grpClientLayout.Text = "Client Layout";
-            // 
-            // pnlClientLayout
-            // 
-            this.pnlClientLayout.Controls.Add(this.udClientsPerGraph);
-            this.pnlClientLayout.Controls.Add(this.rdoClientsPerGraph);
-            this.pnlClientLayout.Controls.Add(this.rdoSingleGraph);
-            this.pnlClientLayout.Location = new System.Drawing.Point(6, 19);
-            this.pnlClientLayout.Name = "pnlClientLayout";
-            this.pnlClientLayout.Size = new System.Drawing.Size(203, 91);
-            this.pnlClientLayout.TabIndex = 0;
-            this.pnlClientLayout.ValueMember = null;
-            // 
-            // udClientsPerGraph
-            // 
-            this.udClientsPerGraph.Location = new System.Drawing.Point(11, 62);
-            this.udClientsPerGraph.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.udClientsPerGraph.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.udClientsPerGraph.Name = "udClientsPerGraph";
-            this.udClientsPerGraph.Size = new System.Drawing.Size(50, 20);
-            this.udClientsPerGraph.TabIndex = 2;
-            this.udClientsPerGraph.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.udClientsPerGraph.ValueChanged += new System.EventHandler(this.udClientsPerGraph_ValueChanged);
-            // 
-            // rdoClientsPerGraph
-            // 
-            this.rdoClientsPerGraph.AutoSize = true;
-            this.rdoClientsPerGraph.Location = new System.Drawing.Point(11, 36);
-            this.rdoClientsPerGraph.Name = "rdoClientsPerGraph";
-            this.rdoClientsPerGraph.Size = new System.Drawing.Size(158, 17);
-            this.rdoClientsPerGraph.TabIndex = 1;
-            this.rdoClientsPerGraph.TabStop = true;
-            this.rdoClientsPerGraph.Tag = "1";
-            this.rdoClientsPerGraph.Text = "Number of Clients per Graph";
-            this.rdoClientsPerGraph.UseVisualStyleBackColor = true;
-            this.rdoClientsPerGraph.CheckedChanged += new System.EventHandler(this.rdoClientsPerGraph_CheckedChanged);
-            // 
-            // rdoSingleGraph
-            // 
-            this.rdoSingleGraph.AutoSize = true;
-            this.rdoSingleGraph.Location = new System.Drawing.Point(11, 8);
-            this.rdoSingleGraph.Name = "rdoSingleGraph";
-            this.rdoSingleGraph.Size = new System.Drawing.Size(86, 17);
-            this.rdoSingleGraph.TabIndex = 0;
-            this.rdoSingleGraph.TabStop = true;
-            this.rdoSingleGraph.Tag = "0";
-            this.rdoSingleGraph.Text = "Single Graph";
-            this.rdoSingleGraph.UseVisualStyleBackColor = true;
-            this.rdoSingleGraph.CheckedChanged += new System.EventHandler(this.rdoSingleGraph_CheckedChanged);
             // 
             // grpColors
             // 
@@ -600,34 +519,18 @@ namespace HFM.Forms.Views
             this.tabGraphFrameTime1.Padding = new System.Windows.Forms.Padding(3);
             this.tabGraphFrameTime1.Size = new System.Drawing.Size(479, 369);
             this.tabGraphFrameTime1.TabIndex = 2;
-            this.tabGraphFrameTime1.Text = "Graph - Frame Time (1)";
+            this.tabGraphFrameTime1.Text = "Graph - Frame Time";
             this.tabGraphFrameTime1.UseVisualStyleBackColor = true;
             // 
             // tabGraphPPD1
             // 
-            this.tabGraphPPD1.Controls.Add(this.zgPpd1);
             this.tabGraphPPD1.Location = new System.Drawing.Point(4, 22);
             this.tabGraphPPD1.Name = "tabGraphPPD1";
             this.tabGraphPPD1.Padding = new System.Windows.Forms.Padding(3);
             this.tabGraphPPD1.Size = new System.Drawing.Size(479, 369);
             this.tabGraphPPD1.TabIndex = 1;
-            this.tabGraphPPD1.Text = "Graph - PPD (1)";
+            this.tabGraphPPD1.Text = "Graph - PPD";
             this.tabGraphPPD1.UseVisualStyleBackColor = true;
-            // 
-            // zgPpd1
-            // 
-            this.zgPpd1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zgPpd1.Location = new System.Drawing.Point(3, 3);
-            this.zgPpd1.Name = "zgPpd1";
-            this.zgPpd1.ScrollGrace = 0D;
-            this.zgPpd1.ScrollMaxX = 0D;
-            this.zgPpd1.ScrollMaxY = 0D;
-            this.zgPpd1.ScrollMaxY2 = 0D;
-            this.zgPpd1.ScrollMinX = 0D;
-            this.zgPpd1.ScrollMinY = 0D;
-            this.zgPpd1.ScrollMinY2 = 0D;
-            this.zgPpd1.Size = new System.Drawing.Size(473, 363);
-            this.zgPpd1.TabIndex = 0;
             // 
             // btnExit
             // 
@@ -723,13 +626,8 @@ namespace HFM.Forms.Views
             this.tabTextBenchmark.ResumeLayout(false);
             this.tabTextBenchmark.PerformLayout();
             this.tabGraphConfig.ResumeLayout(false);
-            this.grpClientLayout.ResumeLayout(false);
-            this.pnlClientLayout.ResumeLayout(false);
-            this.pnlClientLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.udClientsPerGraph)).EndInit();
             this.grpColors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
-            this.tabGraphPPD1.ResumeLayout(false);
             this.grpClients.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
             this.listBox1ContextMenuStrip.ResumeLayout(false);
@@ -775,7 +673,6 @@ namespace HFM.Forms.Views
       private System.Windows.Forms.TabControl tabControl1;
       private System.Windows.Forms.TabPage tabTextBenchmark;
       private System.Windows.Forms.TabPage tabGraphPPD1;
-      private ZedGraph.ZedGraphControl zgPpd1;
       private System.Windows.Forms.TabPage tabGraphFrameTime1;
       private System.Windows.Forms.TabPage tabGraphConfig;
       private System.Windows.Forms.Button btnMoveColorDown;
@@ -787,11 +684,6 @@ namespace HFM.Forms.Views
       private System.Windows.Forms.TextBox KFactorTextBox;
       private System.Windows.Forms.Label KFactorLabel;
       private System.Windows.Forms.GroupBox grpColors;
-      private System.Windows.Forms.GroupBox grpClientLayout;
-      private HFM.Forms.Controls.RadioPanel pnlClientLayout;
-      private System.Windows.Forms.RadioButton rdoClientsPerGraph;
-      private System.Windows.Forms.RadioButton rdoSingleGraph;
-      private System.Windows.Forms.NumericUpDown udClientsPerGraph;
 
 
    }

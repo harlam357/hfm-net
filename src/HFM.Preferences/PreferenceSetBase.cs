@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -125,8 +125,6 @@ namespace HFM.Preferences
             prefs.Add(Preference.BenchmarksFormLocation, p => p.BenchmarksWindow.Location);
             prefs.Add(Preference.BenchmarksFormSize, p => p.BenchmarksWindow.Size);
             prefs.Add(Preference.GraphColors, p => p.BenchmarksGraphing.GraphColors);
-            prefs.Add(Preference.BenchmarksGraphLayoutType, p => p.BenchmarksGraphing.GraphLayout);
-            prefs.Add(Preference.BenchmarksClientsPerGraph, p => p.BenchmarksGraphing.ClientsPerGraph);
 
             prefs.Add(Preference.MessagesFormLocation, p => p.MessagesWindow.Location);
             prefs.Add(Preference.MessagesFormSize, p => p.MessagesWindow.Size);

@@ -215,7 +215,7 @@ namespace HFM.Preferences.Data
     [DataContract(Namespace = "")]
     public class Reporting
     {
-        
+
     }
 
     [DataContract(Namespace = "")]
@@ -315,27 +315,19 @@ namespace HFM.Preferences.Data
     {
         public BenchmarksGraphing()
         {
-            //GraphLayout = null;
-            ClientsPerGraph = 5;
             GraphColors = new List<Color>
-         {
-            Color.Red,
-            Color.Green,
-            Color.Blue,
-            Color.Chocolate,
-            Color.Teal,
-            Color.MidnightBlue,
-            Color.Maroon,
-            Color.DarkOliveGreen,
-            Color.Indigo
-         };
+            {
+                Color.Red,
+                Color.Green,
+                Color.Blue,
+                Color.Chocolate,
+                Color.Teal,
+                Color.MidnightBlue,
+                Color.Maroon,
+                Color.DarkOliveGreen,
+                Color.Indigo
+            };
         }
-
-        [DataMember]
-        public string GraphLayout { get; set; }
-
-        [DataMember]
-        public int ClientsPerGraph { get; set; }
 
         [DataMember]
         public List<Color> GraphColors { get; set; }

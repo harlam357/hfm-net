@@ -7,7 +7,6 @@ using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
-using HFM.Forms.Views;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -38,8 +37,6 @@ namespace HFM.Forms.Models
         {
             FormLocation = Preferences.Get<Point>(Preference.BenchmarksFormLocation);
             FormSize = Preferences.Get<Size>(Preference.BenchmarksFormSize);
-            GraphLayoutType = Preferences.Get<GraphLayoutType>(Preference.BenchmarksGraphLayoutType);
-            ClientsPerGraph = Preferences.Get<int>(Preference.BenchmarksClientsPerGraph);
             GraphColors.Clear();
             GraphColors.AddRange(Preferences.Get<List<Color>>(Preference.GraphColors) ?? new List<Color>());
 
@@ -52,27 +49,17 @@ namespace HFM.Forms.Models
         {
             Preferences.Set(Preference.BenchmarksFormLocation, FormLocation);
             Preferences.Set(Preference.BenchmarksFormSize, FormSize);
-            Preferences.Set(Preference.BenchmarksGraphLayoutType, GraphLayoutType);
-            Preferences.Set(Preference.BenchmarksClientsPerGraph, ClientsPerGraph);
             Preferences.Set(Preference.GraphColors, GraphColors);
             Preferences.Save();
         }
-
-        public int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
-
-        public BonusCalculation BonusCalculation => Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
 
         public Point FormLocation { get; set; }
 
         public Size FormSize { get; set; }
 
-        public GraphLayoutType GraphLayoutType { get; set; }
-
         IReadOnlyList<Color> IBenchmarksReportSource.Colors => GraphColors;
 
         public List<Color> GraphColors { get; } = new List<Color>();
-
-        public int ClientsPerGraph { get; set; }
 
         public BindingSource SlotIdentifiers { get; }
 
