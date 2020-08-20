@@ -119,7 +119,7 @@ namespace HFM.Core.Client
         internal static string GetCPUString(Info info, SlotModel slotModel)
         {
             return slotModel.SlotType == SlotType.GPU
-                ? slotModel.GPUIndex.HasValue ? info.System.GPUInfos[slotModel.GPUIndex.Value].FriendlyName : String.Empty 
+                ? slotModel.SlotProcessor
                 : info.System.CPU;
         }
 
