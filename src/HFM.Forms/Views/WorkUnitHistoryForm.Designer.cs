@@ -2,34 +2,34 @@
 
 namespace HFM.Forms.Views
 {
-   partial class WorkUnitHistoryForm
-   {
-      /// <summary>
-      /// Required designer variable.
-      /// </summary>
-      private System.ComponentModel.IContainer components = null;
+    partial class WorkUnitHistoryForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-      /// <summary>
-      /// Clean up any resources being used.
-      /// </summary>
-      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-      protected override void Dispose(bool disposing)
-      {
-         if (disposing && (components != null))
-         {
-            components.Dispose();
-         }
-         base.Dispose(disposing);
-      }
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-      #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-      /// <summary>
-      /// Required method for Designer support - do not modify
-      /// the contents of this method with the code editor.
-      /// </summary>
-      private void InitializeComponent()
-      {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -49,7 +49,9 @@ namespace HFM.Forms.Views
             this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RefreshEntryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.dataGridDeleteWorkUnitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridMenuItemDeleteWorkUnit = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridMenuItemSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.dataGridMenuItemCopyPRCG = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
             this.ResultsLabel = new System.Windows.Forms.Label();
             this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
@@ -192,16 +194,30 @@ namespace HFM.Forms.Views
             // dataGridMenuStrip
             // 
             this.dataGridMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.dataGridDeleteWorkUnitMenuItem});
+            this.dataGridMenuItemDeleteWorkUnit,
+            this.dataGridMenuItemSep1,
+            this.dataGridMenuItemCopyPRCG});
             this.dataGridMenuStrip.Name = "dataGridMenuStrip";
-            this.dataGridMenuStrip.Size = new System.Drawing.Size(164, 26);
+            this.dataGridMenuStrip.Size = new System.Drawing.Size(205, 54);
             // 
-            // dataGridDeleteWorkUnitMenuItem
+            // dataGridMenuItemDeleteWorkUnit
             // 
-            this.dataGridDeleteWorkUnitMenuItem.Name = "dataGridDeleteWorkUnitMenuItem";
-            this.dataGridDeleteWorkUnitMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.dataGridDeleteWorkUnitMenuItem.Text = "Delete Work Unit";
-            this.dataGridDeleteWorkUnitMenuItem.Click += new System.EventHandler(this.dataGridDeleteWorkUnitMenuItem_Click);
+            this.dataGridMenuItemDeleteWorkUnit.Name = "dataGridMenuItemDeleteWorkUnit";
+            this.dataGridMenuItemDeleteWorkUnit.Size = new System.Drawing.Size(204, 22);
+            this.dataGridMenuItemDeleteWorkUnit.Text = "Delete Work Unit";
+            this.dataGridMenuItemDeleteWorkUnit.Click += new System.EventHandler(this.DeleteWorkUnit_Click);
+            // 
+            // dataGridMenuItemSep1
+            // 
+            this.dataGridMenuItemSep1.Name = "dataGridMenuItemSep1";
+            this.dataGridMenuItemSep1.Size = new System.Drawing.Size(201, 6);
+            // 
+            // dataGridMenuItemCopyPRCG
+            // 
+            this.dataGridMenuItemCopyPRCG.Name = "dataGridMenuItemCopyPRCG";
+            this.dataGridMenuItemCopyPRCG.Size = new System.Drawing.Size(204, 22);
+            this.dataGridMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
+            this.dataGridMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
             // 
             // dataGridView1
             // 
@@ -534,47 +550,49 @@ namespace HFM.Forms.Views
             this.ResumeLayout(false);
             this.PerformLayout();
 
-      }
+        }
 
-      #endregion
+        #endregion
 
-      private System.Windows.Forms.MenuStrip menuStrip1;
-      private System.Windows.Forms.ToolStripMenuItem mnuFile;
-      private System.Windows.Forms.ToolStripMenuItem mnuView;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGrid;
-      private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
-      private System.Windows.Forms.ToolStripMenuItem dataGridDeleteWorkUnitMenuItem;
-      private DataGridViewExt dataGridView1;
-      private System.Windows.Forms.Label ResultsLabel;
-      private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
-      private System.Windows.Forms.TextBox ResultsTextBox;
-      private System.Windows.Forms.Label PpdCalculationLabel;
-      private HFM.Forms.Controls.RadioPanel rdoPanelProduction;
-      private System.Windows.Forms.RadioButton PpdCalculationStandardRadioButton;
-      private System.Windows.Forms.RadioButton PpdCalculationBonusFrameTimeRadioButton;
-      private System.Windows.Forms.RadioButton PpdCalculationBonusDownloadTimeRadioButton;
-      private System.Windows.Forms.GroupBox DataViewGroupBox;
-      private System.Windows.Forms.Button DataViewNewButton;
-      private System.Windows.Forms.ComboBox DataViewComboBox;
-      private System.Windows.Forms.Button DataViewDeleteButton;
-      private System.Windows.Forms.Button DataViewEditButton;
-      private System.Windows.Forms.GroupBox ResultsGroupBox;
-      private System.Windows.Forms.SplitContainer splitContainerWrapper1;
-      private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
-      private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem RefreshProjectDataMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem RefreshAllMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem RefreshUnknownMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem RefreshProjectMenuItem;
-      private System.Windows.Forms.ToolStripMenuItem RefreshEntryMenuItem;
-      private System.Windows.Forms.Label PageSizeLabel;
-      private System.Windows.Forms.Label PageNumberLabel;
-      private System.Windows.Forms.TextBox PageNumberTextBox;
-      private System.Windows.Forms.Button NextPageButton;
-      private System.Windows.Forms.Button PreviousPageButton;
-      private System.Windows.Forms.Button FirstPageButton;
-      private System.Windows.Forms.Button LastPageButton;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileExport;
-   }
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuView;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGrid;
+        private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem dataGridMenuItemDeleteWorkUnit;
+        private DataGridViewExt dataGridView1;
+        private System.Windows.Forms.Label ResultsLabel;
+        private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
+        private System.Windows.Forms.TextBox ResultsTextBox;
+        private System.Windows.Forms.Label PpdCalculationLabel;
+        private HFM.Forms.Controls.RadioPanel rdoPanelProduction;
+        private System.Windows.Forms.RadioButton PpdCalculationStandardRadioButton;
+        private System.Windows.Forms.RadioButton PpdCalculationBonusFrameTimeRadioButton;
+        private System.Windows.Forms.RadioButton PpdCalculationBonusDownloadTimeRadioButton;
+        private System.Windows.Forms.GroupBox DataViewGroupBox;
+        private System.Windows.Forms.Button DataViewNewButton;
+        private System.Windows.Forms.ComboBox DataViewComboBox;
+        private System.Windows.Forms.Button DataViewDeleteButton;
+        private System.Windows.Forms.Button DataViewEditButton;
+        private System.Windows.Forms.GroupBox ResultsGroupBox;
+        private System.Windows.Forms.SplitContainer splitContainerWrapper1;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
+        private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshProjectDataMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshAllMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshUnknownMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshProjectMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshEntryMenuItem;
+        private System.Windows.Forms.Label PageSizeLabel;
+        private System.Windows.Forms.Label PageNumberLabel;
+        private System.Windows.Forms.TextBox PageNumberTextBox;
+        private System.Windows.Forms.Button NextPageButton;
+        private System.Windows.Forms.Button PreviousPageButton;
+        private System.Windows.Forms.Button FirstPageButton;
+        private System.Windows.Forms.Button LastPageButton;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExport;
+        private System.Windows.Forms.ToolStripSeparator dataGridMenuItemSep1;
+        private System.Windows.Forms.ToolStripMenuItem dataGridMenuItemCopyPRCG;
+    }
 }

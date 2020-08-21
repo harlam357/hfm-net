@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Serializers;
+using HFM.Core.WorkUnits;
+using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Views;
 
@@ -184,6 +186,16 @@ namespace HFM.Forms.Presenters
                     Model.DeleteHistoryEntry(entry);
                 }
             }
+        }
+
+        public void CopyPRCGToClipboardClicked()
+        {
+            if (Model.SelectedWorkUnitRow == null) return;
+
+            string projectString = Model.SelectedWorkUnitRow.ToProjectString();
+
+            // TODO: Replace ClipboardWrapper.SetText() with abstraction
+            ClipboardWrapper.SetText(projectString);
         }
 
         public void RefreshAllProjectDataClick()

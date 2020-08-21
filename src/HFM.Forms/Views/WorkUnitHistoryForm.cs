@@ -287,9 +287,14 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void dataGridDeleteWorkUnitMenuItem_Click(object sender, EventArgs e)
+        private void DeleteWorkUnit_Click(object sender, EventArgs e)
         {
             _presenter.DeleteWorkUnitClick();
+        }
+
+        private void CopyPRCGToClipboard_Click(object sender, EventArgs e)
+        {
+            _presenter.CopyPRCGToClipboardClicked();
         }
     }
 }

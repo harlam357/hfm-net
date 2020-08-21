@@ -37,7 +37,7 @@ namespace HFM.Core.Data
 
     [PetaPoco.TableName("WuHistory")]
     [PetaPoco.PrimaryKey("ID")]
-    public class WorkUnitRow
+    public class WorkUnitRow : IProjectInfo
     {
         public long ID { get; set; }
 
