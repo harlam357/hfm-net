@@ -278,10 +278,6 @@ namespace HFM.Forms.Views
                     {
                         dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected = true;
                     }
-                }
-
-                if (hti.Type == DataGridViewHitTestType.RowHeader)
-                {
                     dataGridMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
                 }
             }
