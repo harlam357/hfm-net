@@ -30,7 +30,6 @@ namespace HFM.Forms.Views
       private void InitializeComponent()
       {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BenchmarksForm));
             this.grpProjectInfo = new System.Windows.Forms.GroupBox();
             this.KFactorTextBox = new System.Windows.Forms.TextBox();
             this.KFactorLabel = new System.Windows.Forms.Label();
@@ -609,7 +608,6 @@ namespace HFM.Forms.Views
             this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(556, 595);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(564, 300);
             this.Name = "BenchmarksForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -34,7 +34,6 @@ namespace HFM.Forms.Views
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabelLeft = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserTeamRank = new HFM.Forms.Controls.BindableToolStripStatusLabel();
@@ -1039,7 +1038,6 @@ namespace HFM.Forms.Views
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.AppMenu);
             this.Controls.Add(this.statusStrip);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(150, 150);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

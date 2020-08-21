@@ -29,7 +29,6 @@
       private void InitializeComponent()
       {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FahClientSettingsDialog));
             this.DummyTextBox = new System.Windows.Forms.TextBox();
             this.DialogCancelButton = new System.Windows.Forms.Button();
             this.DialogOkButton = new System.Windows.Forms.Button();
@@ -229,7 +228,7 @@
             this.ClientNameTextBox.Size = new System.Drawing.Size(251, 20);
             this.ClientNameTextBox.TabIndex = 1;
             // 
-            // FahClientSetupDialog
+            // FahClientSettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -239,7 +238,6 @@
             this.Controls.Add(this.DialogCancelButton);
             this.Controls.Add(this.DialogOkButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FahClientSettingsDialog";

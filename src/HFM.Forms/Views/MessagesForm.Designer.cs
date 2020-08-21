@@ -28,7 +28,6 @@
       /// </summary>
       private void InitializeComponent()
       {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessagesForm));
             this.txtMessages = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -53,7 +52,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 455);
             this.Controls.Add(this.txtMessages);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MessagesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Messages";

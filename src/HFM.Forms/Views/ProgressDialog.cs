@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using HFM.Core;
+using HFM.Forms.Controls;
 
 namespace HFM.Forms.Views
 {
     public delegate void ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
 
-    public sealed partial class ProgressDialog : Form
+    public sealed partial class ProgressDialog : FormWrapper
     {
         private readonly ProgressFunction _progressFunction;
 

@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
 
 namespace HFM.Forms.Views
 {
-    public partial class ProteinCalculatorForm : Form, IWin32Form
+    public partial class ProteinCalculatorForm : FormWrapper, IWin32Form
     {
         private readonly ProteinCalculatorModel _model;
 

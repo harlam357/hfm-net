@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 
+using HFM.Forms.Controls;
 using HFM.Proteins;
 
 namespace HFM.Forms.Views
 {
-    public partial class ProteinLoadResultsDialog : Form
+    public partial class ProteinLoadResultsDialog : FormWrapper
     {
         public ProteinLoadResultsDialog()
         {

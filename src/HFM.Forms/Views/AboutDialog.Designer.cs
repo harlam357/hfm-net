@@ -30,7 +30,6 @@ namespace HFM.Forms.Views
       private void InitializeComponent()
       {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
-            this.lblProduct = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -41,23 +40,11 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblProduct
-            // 
-            this.lblProduct.BackColor = System.Drawing.Color.Gainsboro;
-            this.lblProduct.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblProduct.Font = new System.Drawing.Font("Times New Roman", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProduct.Location = new System.Drawing.Point(298, 11);
-            this.lblProduct.Name = "lblProduct";
-            this.lblProduct.Size = new System.Drawing.Size(269, 42);
-            this.lblProduct.TabIndex = 0;
-            this.lblProduct.Text = "HFM.NET";
-            this.lblProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // lblVersion
             // 
-            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.Color.White;
-            this.lblVersion.Location = new System.Drawing.Point(298, 59);
+            this.lblVersion.Location = new System.Drawing.Point(298, 16);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(269, 28);
             this.lblVersion.TabIndex = 1;
@@ -107,7 +94,7 @@ namespace HFM.Forms.Views
             this.lnkHfmGoogleCode.AutoSize = true;
             this.lnkHfmGoogleCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkHfmGoogleCode.LinkColor = System.Drawing.Color.Goldenrod;
-            this.lnkHfmGoogleCode.Location = new System.Drawing.Point(313, 121);
+            this.lnkHfmGoogleCode.Location = new System.Drawing.Point(313, 90);
             this.lnkHfmGoogleCode.Name = "lnkHfmGoogleCode";
             this.lnkHfmGoogleCode.Size = new System.Drawing.Size(0, 16);
             this.lnkHfmGoogleCode.TabIndex = 2;
@@ -119,7 +106,7 @@ namespace HFM.Forms.Views
             this.lnkHfmGoogleGroup.AutoSize = true;
             this.lnkHfmGoogleGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkHfmGoogleGroup.LinkColor = System.Drawing.Color.Goldenrod;
-            this.lnkHfmGoogleGroup.Location = new System.Drawing.Point(313, 148);
+            this.lnkHfmGoogleGroup.Location = new System.Drawing.Point(313, 117);
             this.lnkHfmGoogleGroup.Name = "lnkHfmGoogleGroup";
             this.lnkHfmGoogleGroup.Size = new System.Drawing.Size(0, 16);
             this.lnkHfmGoogleGroup.TabIndex = 3;
@@ -130,7 +117,7 @@ namespace HFM.Forms.Views
             // 
             this.lblDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDate.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblDate.Location = new System.Drawing.Point(298, 89);
+            this.lblDate.Location = new System.Drawing.Point(298, 49);
             this.lblDate.Name = "lblDate";
             this.lblDate.Size = new System.Drawing.Size(269, 28);
             this.lblDate.TabIndex = 6;
@@ -148,12 +135,10 @@ namespace HFM.Forms.Views
             this.Controls.Add(this.lnkHfmGoogleGroup);
             this.Controls.Add(this.lnkHfmGoogleCode);
             this.Controls.Add(this.textBoxWrapper1);
-            this.Controls.Add(this.lblProduct);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AboutDialog";
@@ -167,8 +152,6 @@ namespace HFM.Forms.Views
       }
 
       #endregion
-
-      private System.Windows.Forms.Label lblProduct;
       private System.Windows.Forms.Label lblVersion;
       private System.Windows.Forms.PictureBox pictureBox1;
       private System.Windows.Forms.Button btnClose;

@@ -35,7 +35,6 @@ namespace HFM.Forms.Views
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkUnitHistoryForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
@@ -505,14 +504,13 @@ namespace HFM.Forms.Views
             this.splitContainerWrapper1.SplitterDistance = 90;
             this.splitContainerWrapper1.TabIndex = 8;
             // 
-            // HistoryForm
+            // WorkUnitHistoryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(903, 316);
             this.Controls.Add(this.splitContainerWrapper1);
             this.Controls.Add(this.menuStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(919, 350);
             this.Name = "WorkUnitHistoryForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
