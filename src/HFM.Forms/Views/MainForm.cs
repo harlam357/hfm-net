@@ -476,6 +476,11 @@ namespace HFM.Forms.Views
             _presenter.ClientsFinishSlotClick();
         }
 
+        private void CopyPRCGToClipboard_Click(object sender, EventArgs e)
+        {
+            _presenter.CopyPRCGToClipboardClicked();
+        }
+
         #endregion
 
         #region View Menu Click Handlers

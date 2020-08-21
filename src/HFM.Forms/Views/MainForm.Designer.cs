@@ -2,38 +2,38 @@
 
 namespace HFM.Forms.Views
 {
-   partial class MainForm
-   {
-      /// <summary>
-      /// Required designer variable.
-      /// </summary>
-      private System.ComponentModel.IContainer components = null;
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-      /// <summary>
-      /// Clean up any resources being used.
-      /// </summary>
-      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-      protected override void Dispose(bool disposing)
-      {
-         if (disposing && (components != null))
-         {
-            components.Dispose();
-         }
-         base.Dispose(disposing);
-      }
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-      #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-      /// <summary>
-      /// Required method for Designer support - do not modify
-      /// the contents of this method with the code editor.
-      /// </summary>
-      private void InitializeComponent()
-      {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabelLeft = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserTeamRank = new HFM.Forms.Controls.BindableToolStripStatusLabel();
@@ -109,12 +109,12 @@ namespace HFM.Forms.Views
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gridContextMenuItemRefreshSelectedSlot = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridContextMenuSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.gridContextMenuItemEditClient = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuItemDeleteClient = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridContextMenuSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.gridContextMenuItemViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridContextMenuSep3 = new System.Windows.Forms.ToolStripSeparator();
             this.gridContextMenuItemFoldSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuItemPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuItemFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,6 +131,8 @@ namespace HFM.Forms.Views
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipNotify = new System.Windows.Forms.ToolTip(this.components);
+            this.gridContextMenuSep4 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridContextMenuItemCopyPRCG = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.notifyMenu.SuspendLayout();
             this.AppMenu.SuspendLayout();
@@ -169,8 +171,8 @@ namespace HFM.Forms.Views
             // 
             // statusLabelLeft
             // 
-            this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelLeft.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -181,8 +183,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserTeamRank
             // 
-            this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserTeamRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserTeamRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -192,8 +194,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserProjectRank
             // 
-            this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserProjectRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserProjectRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -203,8 +205,8 @@ namespace HFM.Forms.Views
             // 
             // statusUser24hr
             // 
-            this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUser24hr.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUser24hr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -214,8 +216,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserToday
             // 
-            this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserToday.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserToday.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -225,8 +227,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserWeek
             // 
-            this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserWeek.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserWeek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -236,8 +238,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserTotal
             // 
-            this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserTotal.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserTotal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -247,8 +249,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserWUs
             // 
-            this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserWUs.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserWUs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -259,8 +261,8 @@ namespace HFM.Forms.Views
             // statusLabelMiddle
             // 
             this.statusLabelMiddle.AutoSize = false;
-            this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelMiddle.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelMiddle.Name = "statusLabelMiddle";
@@ -268,8 +270,8 @@ namespace HFM.Forms.Views
             // 
             // statusLabelHosts
             // 
-            this.statusLabelHosts.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusLabelHosts.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelHosts.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelHosts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -280,8 +282,8 @@ namespace HFM.Forms.Views
             // 
             // statusLabelPPW
             // 
-            this.statusLabelPPW.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusLabelPPW.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelPPW.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelPPW.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -293,8 +295,8 @@ namespace HFM.Forms.Views
             // statusLabelRight
             // 
             this.statusLabelRight.AutoSize = false;
-            this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelRight.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelRight.Name = "statusLabelRight";
@@ -410,7 +412,7 @@ namespace HFM.Forms.Views
             // 
             this.mnuFileSaveas.Image = global::HFM.Forms.Properties.Resources.SaveAs;
             this.mnuFileSaveas.Name = "mnuFileSaveas";
-            this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveas.Size = new System.Drawing.Size(263, 22);
             this.mnuFileSaveas.Text = "Save Configuration &As";
@@ -793,79 +795,81 @@ namespace HFM.Forms.Views
             // 
             this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gridContextMenuItemRefreshSelectedSlot,
-            this.mnuContextClientsSep1,
+            this.gridContextMenuSep1,
             this.gridContextMenuItemEditClient,
             this.gridContextMenuItemDeleteClient,
-            this.mnuContextClientsSep2,
+            this.gridContextMenuSep2,
             this.gridContextMenuItemViewCachedLog,
-            this.mnuContextClientsSep3,
+            this.gridContextMenuSep3,
             this.gridContextMenuItemFoldSlot,
             this.gridContextMenuItemPauseSlot,
-            this.gridContextMenuItemFinishSlot});
+            this.gridContextMenuItemFinishSlot,
+            this.gridContextMenuSep4,
+            this.gridContextMenuItemCopyPRCG});
             this.gridContextMenuStrip.Name = "contextMenuStrip1";
-            this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 176);
+            this.gridContextMenuStrip.Size = new System.Drawing.Size(205, 226);
             // 
             // gridContextMenuItemRefreshSelectedSlot
             // 
             this.gridContextMenuItemRefreshSelectedSlot.Name = "gridContextMenuItemRefreshSelectedSlot";
-            this.gridContextMenuItemRefreshSelectedSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemRefreshSelectedSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemRefreshSelectedSlot.Text = "Refresh Selected";
             this.gridContextMenuItemRefreshSelectedSlot.Click += new System.EventHandler(this.RefreshSelectedSlot_Click);
             // 
-            // mnuContextClientsSep1
+            // gridContextMenuSep1
             // 
-            this.mnuContextClientsSep1.Name = "mnuContextClientsSep1";
-            this.mnuContextClientsSep1.Size = new System.Drawing.Size(183, 6);
+            this.gridContextMenuSep1.Name = "gridContextMenuSep1";
+            this.gridContextMenuSep1.Size = new System.Drawing.Size(201, 6);
             // 
             // gridContextMenuItemEditClient
             // 
             this.gridContextMenuItemEditClient.Name = "gridContextMenuItemEditClient";
-            this.gridContextMenuItemEditClient.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemEditClient.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemEditClient.Text = "Edit Client";
             this.gridContextMenuItemEditClient.Click += new System.EventHandler(this.EditClient_Click);
             // 
             // gridContextMenuItemDeleteClient
             // 
             this.gridContextMenuItemDeleteClient.Name = "gridContextMenuItemDeleteClient";
-            this.gridContextMenuItemDeleteClient.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemDeleteClient.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemDeleteClient.Text = "Delete Client";
             this.gridContextMenuItemDeleteClient.Click += new System.EventHandler(this.DeleteClient_Click);
             // 
-            // mnuContextClientsSep2
+            // gridContextMenuSep2
             // 
-            this.mnuContextClientsSep2.Name = "mnuContextClientsSep2";
-            this.mnuContextClientsSep2.Size = new System.Drawing.Size(183, 6);
+            this.gridContextMenuSep2.Name = "gridContextMenuSep2";
+            this.gridContextMenuSep2.Size = new System.Drawing.Size(201, 6);
             // 
             // gridContextMenuItemViewCachedLog
             // 
             this.gridContextMenuItemViewCachedLog.Name = "gridContextMenuItemViewCachedLog";
-            this.gridContextMenuItemViewCachedLog.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemViewCachedLog.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemViewCachedLog.Text = "View Cached Log File";
             this.gridContextMenuItemViewCachedLog.Click += new System.EventHandler(this.ViewCachedLog_Click);
             // 
-            // mnuContextClientsSep3
+            // gridContextMenuSep3
             // 
-            this.mnuContextClientsSep3.Name = "mnuContextClientsSep3";
-            this.mnuContextClientsSep3.Size = new System.Drawing.Size(183, 6);
+            this.gridContextMenuSep3.Name = "gridContextMenuSep3";
+            this.gridContextMenuSep3.Size = new System.Drawing.Size(201, 6);
             // 
             // gridContextMenuItemFoldSlot
             // 
             this.gridContextMenuItemFoldSlot.Name = "gridContextMenuItemFoldSlot";
-            this.gridContextMenuItemFoldSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemFoldSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemFoldSlot.Text = "Fold Slot";
             this.gridContextMenuItemFoldSlot.Click += new System.EventHandler(this.FoldSlot_Click);
             // 
             // gridContextMenuItemPauseSlot
             // 
             this.gridContextMenuItemPauseSlot.Name = "gridContextMenuItemPauseSlot";
-            this.gridContextMenuItemPauseSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemPauseSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemPauseSlot.Text = "Pause Slot";
             this.gridContextMenuItemPauseSlot.Click += new System.EventHandler(this.PauseSlot_Click);
             // 
             // gridContextMenuItemFinishSlot
             // 
             this.gridContextMenuItemFinishSlot.Name = "gridContextMenuItemFinishSlot";
-            this.gridContextMenuItemFinishSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemFinishSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemFinishSlot.Text = "Finish Slot";
             this.gridContextMenuItemFinishSlot.Click += new System.EventHandler(this.FinishSlot_Click);
             // 
@@ -896,27 +900,27 @@ namespace HFM.Forms.Views
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.MultiSelect = false;
@@ -956,8 +960,8 @@ namespace HFM.Forms.Views
             // 
             // queueControl
             // 
-            this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.queueControl.BackColor = System.Drawing.SystemColors.Window;
             this.queueControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -969,7 +973,7 @@ namespace HFM.Forms.Views
             // 
             // btnQueue
             // 
-            this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.btnQueue.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnQueue.Location = new System.Drawing.Point(2, 0);
@@ -1030,6 +1034,18 @@ namespace HFM.Forms.Views
             this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
             this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
             // 
+            // gridContextMenuSep4
+            // 
+            this.gridContextMenuSep4.Name = "gridContextMenuSep4";
+            this.gridContextMenuSep4.Size = new System.Drawing.Size(201, 6);
+            // 
+            // gridContextMenuItemCopyPRCG
+            // 
+            this.gridContextMenuItemCopyPRCG.Name = "gridContextMenuItemCopyPRCG";
+            this.gridContextMenuItemCopyPRCG.Size = new System.Drawing.Size(204, 22);
+            this.gridContextMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
+            this.gridContextMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1063,106 +1079,108 @@ namespace HFM.Forms.Views
             this.ResumeLayout(false);
             this.PerformLayout();
 
-      }
+        }
 
-      #endregion
+        #endregion
 
-      private System.Windows.Forms.StatusStrip statusStrip;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelLeft;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelHosts;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelPPW;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelRight;
-      private System.Windows.Forms.ContextMenuStrip notifyMenu;
-      private System.Windows.Forms.ToolStripMenuItem mnuNotifyRst;
-      private System.Windows.Forms.ToolStripMenuItem mnuNotifyMin;
-      private System.Windows.Forms.ToolStripMenuItem mnuNotifyMax;
-      private System.Windows.Forms.ToolStripSeparator mnuNotifySep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuNotifyQuit;
-      private System.Windows.Forms.MenuStrip AppMenu;
-      private System.Windows.Forms.ToolStripMenuItem mnuFile;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileSaveas;
-      private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
-      private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-      private System.Windows.Forms.ToolStripMenuItem mnuEditPreferences;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-      private System.Windows.Forms.ToolStripSeparator mnuHelpSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
-      private System.Windows.Forms.ToolStripMenuItem mnuClients;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsAddClient;
-      private System.Windows.Forms.ToolStripSeparator mnuClientsSep1;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsEditClient;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsDeleteClient;
-      private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshSelectedSlot;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshAllSlots;
-      private LogFileViewer txtLogFile;
-      private System.Windows.Forms.ToolStripMenuItem mnuView;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
-      private System.Windows.Forms.ToolStripMenuItem mnuTools;
-      private System.Windows.Forms.ToolStripSeparator mnuClientsSep4;
-      private System.Windows.Forms.ToolStripMenuItem appMenuClientsViewCachedLog;
-      private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
-      private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
-      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep1;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemRefreshSelectedSlot;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemEditClient;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemDeleteClient;
-      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep2;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemViewCachedLog;
-      private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
-      private System.Windows.Forms.SplitContainer splitContainer1;
-      private DataGridViewExt dataGridView1;
-      private System.Windows.Forms.ToolStripMenuItem mnuWeb;
-      private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
-      private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;
-      private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
-      private System.Windows.Forms.ToolStripSeparator mnuWebSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
-      private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
-      private System.Windows.Forms.ToolTip toolTipGrid;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUser24hr;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserToday;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserWeek;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserTotal;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserWUs;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelMiddle;
-      private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
-      private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
-      private System.Windows.Forms.SplitContainer splitContainer2;
-      private System.Windows.Forms.Button btnQueue;
-      private QueueControl queueControl;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelpCheckForUpdate;
-      private System.Windows.Forms.ToolStripSeparator mnuHelpSep3;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmLogFile;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewMessages;
-      private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmDataFiles;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGridColumns;
-      private System.Windows.Forms.ToolStripSeparator mnuViewSep2;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleVersionInformation;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserTeamRank;
-      private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserProjectRank;
-      private System.Windows.Forms.ContextMenuStrip statsContextMenuStrip;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextShowUserStats;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextShowTeamStats;
-      private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextForceRefreshEocStats;
-      private System.Windows.Forms.ToolStripMenuItem mnuToolsHistory;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewCycleCalculationStyle;
-      private System.Windows.Forms.ToolStripSeparator mnuViewSep3;
-      private System.Windows.Forms.ToolStripMenuItem mnuViewToggleBonusCalculation;
-      private System.Windows.Forms.ToolTip toolTipNotify;
-      private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
-      private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
-      private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep3;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFoldSlot;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemPauseSlot;
-      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFinishSlot;
-   }
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelLeft;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelHosts;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelPPW;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelRight;
+        private System.Windows.Forms.ContextMenuStrip notifyMenu;
+        private System.Windows.Forms.ToolStripMenuItem mnuNotifyRst;
+        private System.Windows.Forms.ToolStripMenuItem mnuNotifyMin;
+        private System.Windows.Forms.ToolStripMenuItem mnuNotifyMax;
+        private System.Windows.Forms.ToolStripSeparator mnuNotifySep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuNotifyQuit;
+        private System.Windows.Forms.MenuStrip AppMenu;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileNew;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileSaveas;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileQuit;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuEditPreferences;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripSeparator mnuHelpSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuClients;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsAddClient;
+        private System.Windows.Forms.ToolStripSeparator mnuClientsSep1;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsEditClient;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsDeleteClient;
+        private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshSelectedSlot;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshAllSlots;
+        private LogFileViewer txtLogFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuView;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
+        private System.Windows.Forms.ToolStripMenuItem mnuTools;
+        private System.Windows.Forms.ToolStripSeparator mnuClientsSep4;
+        private System.Windows.Forms.ToolStripMenuItem appMenuClientsViewCachedLog;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
+        private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
+        private System.Windows.Forms.ToolStripSeparator gridContextMenuSep1;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemRefreshSelectedSlot;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemEditClient;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemDeleteClient;
+        private System.Windows.Forms.ToolStripSeparator gridContextMenuSep2;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemViewCachedLog;
+        private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private DataGridViewExt dataGridView1;
+        private System.Windows.Forms.ToolStripMenuItem mnuWeb;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
+        private System.Windows.Forms.ToolStripSeparator mnuWebSep1;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
+        private System.Windows.Forms.ToolTip toolTipGrid;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUser24hr;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserToday;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserWeek;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserTotal;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserWUs;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelMiddle;
+        private System.Windows.Forms.ToolStripSeparator mnuWebSep2;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Button btnQueue;
+        private QueueControl queueControl;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpCheckForUpdate;
+        private System.Windows.Forms.ToolStripSeparator mnuHelpSep3;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmLogFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewMessages;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmDataFiles;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGridColumns;
+        private System.Windows.Forms.ToolStripSeparator mnuViewSep2;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewToggleVersionInformation;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserTeamRank;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel statusUserProjectRank;
+        private System.Windows.Forms.ContextMenuStrip statsContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem mnuContextShowUserStats;
+        private System.Windows.Forms.ToolStripMenuItem mnuContextShowTeamStats;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuContextForceRefreshEocStats;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsHistory;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewCycleCalculationStyle;
+        private System.Windows.Forms.ToolStripSeparator mnuViewSep3;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewToggleBonusCalculation;
+        private System.Windows.Forms.ToolTip toolTipNotify;
+        private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
+        private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
+        private System.Windows.Forms.ToolStripSeparator gridContextMenuSep3;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFoldSlot;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemPauseSlot;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFinishSlot;
+        private System.Windows.Forms.ToolStripSeparator gridContextMenuSep4;
+        private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemCopyPRCG;
+    }
 }

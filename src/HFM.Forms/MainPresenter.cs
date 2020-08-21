@@ -905,7 +905,7 @@ namespace HFM.Forms
         {
             if (_gridModel.SelectedSlot == null) return;
 
-            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Fold(_gridModel.SelectedSlot.SlotID);
             }
@@ -915,7 +915,7 @@ namespace HFM.Forms
         {
             if (_gridModel.SelectedSlot == null) return;
 
-            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Pause(_gridModel.SelectedSlot.SlotID);
             }
@@ -925,10 +925,20 @@ namespace HFM.Forms
         {
             if (_gridModel.SelectedSlot == null) return;
 
-            for (var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) as IFahClient; client != null; client = null)
+            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Finish(_gridModel.SelectedSlot.SlotID);
             }
+        }
+
+        public void CopyPRCGToClipboardClicked()
+        {
+            if (_gridModel.SelectedSlot == null) return;
+
+            string projectString = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
+
+            // TODO: Replace ClipboardWrapper.SetText() with abstraction
+            ClipboardWrapper.SetText(projectString);
         }
 
         #endregion

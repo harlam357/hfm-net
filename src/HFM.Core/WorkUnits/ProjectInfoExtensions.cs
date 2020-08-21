@@ -59,7 +59,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Returns a string that represents the Project (R/C/G) information.
         /// </summary>
-        internal static string ToProjectString(this IProjectInfo projectInfo)
+        public static string ToProjectString(this IProjectInfo projectInfo)
         {
             if (projectInfo == null)
             {
