@@ -427,32 +427,32 @@ namespace HFM.Forms.Views
 
         #region Clients Menu Click Handlers
 
-        private void mnuClientsAdd_Click(object sender, EventArgs e)
+        private void AddClient_Click(object sender, EventArgs e)
         {
             _presenter.ClientsAddClick();
         }
 
-        private void mnuClientsEdit_Click(object sender, EventArgs e)
+        private void EditClient_Click(object sender, EventArgs e)
         {
             _presenter.ClientsEditClick();
         }
 
-        private void mnuClientsDelete_Click(object sender, EventArgs e)
+        private void DeleteClient_Click(object sender, EventArgs e)
         {
             _presenter.ClientsDeleteClick();
         }
 
-        private void mnuClientsRefreshSelected_Click(object sender, EventArgs e)
+        private void RefreshSelectedSlot_Click(object sender, EventArgs e)
         {
             _presenter.ClientsRefreshSelectedClick();
         }
 
-        private void mnuClientsRefreshAll_Click(object sender, EventArgs e)
+        private void RefreshAllSlots_Click(object sender, EventArgs e)
         {
             _presenter.ClientsRefreshAllClick();
         }
 
-        private void mnuClientsViewCachedLog_Click(object sender, EventArgs e)
+        private void ViewCachedLog_Click(object sender, EventArgs e)
         {
             _presenter.ClientsViewCachedLogClick();
         }
@@ -461,17 +461,17 @@ namespace HFM.Forms.Views
 
         #region Grid Context Menu Handlers
 
-        private void mnuContextClientsFoldSlot_Click(object sender, EventArgs e)
+        private void FoldSlot_Click(object sender, EventArgs e)
         {
             _presenter.ClientsFoldSlotClick();
         }
 
-        private void mnuContextClientsPauseSlot_Click(object sender, EventArgs e)
+        private void PauseSlot_Click(object sender, EventArgs e)
         {
             _presenter.ClientsPauseSlotClick();
         }
 
-        private void mnuContextClientsFinishSlot_Click(object sender, EventArgs e)
+        private void FinishSlot_Click(object sender, EventArgs e)
         {
             _presenter.ClientsFinishSlotClick();
         }

@@ -31,9 +31,9 @@ namespace HFM.Forms.Views
       private void InitializeComponent()
       {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabelLeft = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserTeamRank = new HFM.Forms.Controls.BindableToolStripStatusLabel();
@@ -64,15 +64,15 @@ namespace HFM.Forms.Views
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEditPreferences = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClients = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuClientsAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsAddClient = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsEditClient = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsDeleteClient = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClientsSep4 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuClientsRefreshAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsRefreshSelectedSlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.appMenuClientsRefreshAllSlots = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewAutoSizeGridColumns = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -108,16 +108,16 @@ namespace HFM.Forms.Views
             this.mnuHelpSep3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuContextClientsRefreshSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemRefreshSelectedSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContextClientsSep1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuContextClientsEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemEditClient = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemDeleteClient = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContextClientsSep2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuContextClientsViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemViewCachedLog = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContextClientsSep3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuContextClientsFoldSlot = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextClientsFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemFoldSlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuItemFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
@@ -447,77 +447,77 @@ namespace HFM.Forms.Views
             // mnuClients
             // 
             this.mnuClients.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuClientsAdd,
+            this.appMenuClientsAddClient,
             this.mnuClientsSep1,
-            this.mnuClientsEdit,
-            this.mnuClientsDelete,
+            this.appMenuClientsEditClient,
+            this.appMenuClientsDeleteClient,
             this.mnuClientsSep2,
-            this.mnuClientsViewCachedLog,
+            this.appMenuClientsViewCachedLog,
             this.mnuClientsSep4,
-            this.mnuClientsRefreshSelected,
-            this.mnuClientsRefreshAll});
+            this.appMenuClientsRefreshSelectedSlot,
+            this.appMenuClientsRefreshAllSlots});
             this.mnuClients.Name = "mnuClients";
             this.mnuClients.Size = new System.Drawing.Size(55, 20);
             this.mnuClients.Text = "&Clients";
             // 
-            // mnuClientsAdd
+            // appMenuClientsAddClient
             // 
-            this.mnuClientsAdd.Name = "mnuClientsAdd";
-            this.mnuClientsAdd.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsAdd.Text = "&Add Client";
-            this.mnuClientsAdd.Click += new System.EventHandler(this.mnuClientsAdd_Click);
+            this.appMenuClientsAddClient.Name = "appMenuClientsAddClient";
+            this.appMenuClientsAddClient.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsAddClient.Text = "&Add Client";
+            this.appMenuClientsAddClient.Click += new System.EventHandler(this.AddClient_Click);
             // 
             // mnuClientsSep1
             // 
             this.mnuClientsSep1.Name = "mnuClientsSep1";
             this.mnuClientsSep1.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuClientsEdit
+            // appMenuClientsEditClient
             // 
-            this.mnuClientsEdit.Name = "mnuClientsEdit";
-            this.mnuClientsEdit.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsEdit.Text = "&Edit Client";
-            this.mnuClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
+            this.appMenuClientsEditClient.Name = "appMenuClientsEditClient";
+            this.appMenuClientsEditClient.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsEditClient.Text = "&Edit Client";
+            this.appMenuClientsEditClient.Click += new System.EventHandler(this.EditClient_Click);
             // 
-            // mnuClientsDelete
+            // appMenuClientsDeleteClient
             // 
-            this.mnuClientsDelete.Name = "mnuClientsDelete";
-            this.mnuClientsDelete.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsDelete.Text = "&Delete Client";
-            this.mnuClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
+            this.appMenuClientsDeleteClient.Name = "appMenuClientsDeleteClient";
+            this.appMenuClientsDeleteClient.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsDeleteClient.Text = "&Delete Client";
+            this.appMenuClientsDeleteClient.Click += new System.EventHandler(this.DeleteClient_Click);
             // 
             // mnuClientsSep2
             // 
             this.mnuClientsSep2.Name = "mnuClientsSep2";
             this.mnuClientsSep2.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuClientsViewCachedLog
+            // appMenuClientsViewCachedLog
             // 
-            this.mnuClientsViewCachedLog.Name = "mnuClientsViewCachedLog";
-            this.mnuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsViewCachedLog.Text = "View Cached &Log File";
-            this.mnuClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
+            this.appMenuClientsViewCachedLog.Name = "appMenuClientsViewCachedLog";
+            this.appMenuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsViewCachedLog.Text = "View Cached &Log File";
+            this.appMenuClientsViewCachedLog.Click += new System.EventHandler(this.ViewCachedLog_Click);
             // 
             // mnuClientsSep4
             // 
             this.mnuClientsSep4.Name = "mnuClientsSep4";
             this.mnuClientsSep4.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuClientsRefreshSelected
+            // appMenuClientsRefreshSelectedSlot
             // 
-            this.mnuClientsRefreshSelected.Name = "mnuClientsRefreshSelected";
-            this.mnuClientsRefreshSelected.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.mnuClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsRefreshSelected.Text = "Refresh &Selected";
-            this.mnuClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
+            this.appMenuClientsRefreshSelectedSlot.Name = "appMenuClientsRefreshSelectedSlot";
+            this.appMenuClientsRefreshSelectedSlot.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.appMenuClientsRefreshSelectedSlot.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsRefreshSelectedSlot.Text = "Refresh &Selected";
+            this.appMenuClientsRefreshSelectedSlot.Click += new System.EventHandler(this.RefreshSelectedSlot_Click);
             // 
-            // mnuClientsRefreshAll
+            // appMenuClientsRefreshAllSlots
             // 
-            this.mnuClientsRefreshAll.Name = "mnuClientsRefreshAll";
-            this.mnuClientsRefreshAll.ShortcutKeys = System.Windows.Forms.Keys.F6;
-            this.mnuClientsRefreshAll.Size = new System.Drawing.Size(186, 22);
-            this.mnuClientsRefreshAll.Text = "&Refresh All";
-            this.mnuClientsRefreshAll.Click += new System.EventHandler(this.mnuClientsRefreshAll_Click);
+            this.appMenuClientsRefreshAllSlots.Name = "appMenuClientsRefreshAllSlots";
+            this.appMenuClientsRefreshAllSlots.ShortcutKeys = System.Windows.Forms.Keys.F6;
+            this.appMenuClientsRefreshAllSlots.Size = new System.Drawing.Size(186, 22);
+            this.appMenuClientsRefreshAllSlots.Text = "&Refresh All";
+            this.appMenuClientsRefreshAllSlots.Click += new System.EventHandler(this.RefreshAllSlots_Click);
             // 
             // mnuView
             // 
@@ -792,82 +792,82 @@ namespace HFM.Forms.Views
             // gridContextMenuStrip
             // 
             this.gridContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuContextClientsRefreshSelected,
+            this.gridContextMenuItemRefreshSelectedSlot,
             this.mnuContextClientsSep1,
-            this.mnuContextClientsEdit,
-            this.mnuContextClientsDelete,
+            this.gridContextMenuItemEditClient,
+            this.gridContextMenuItemDeleteClient,
             this.mnuContextClientsSep2,
-            this.mnuContextClientsViewCachedLog,
+            this.gridContextMenuItemViewCachedLog,
             this.mnuContextClientsSep3,
-            this.mnuContextClientsFoldSlot,
-            this.mnuContextClientsPauseSlot,
-            this.mnuContextClientsFinishSlot});
+            this.gridContextMenuItemFoldSlot,
+            this.gridContextMenuItemPauseSlot,
+            this.gridContextMenuItemFinishSlot});
             this.gridContextMenuStrip.Name = "contextMenuStrip1";
             this.gridContextMenuStrip.Size = new System.Drawing.Size(187, 176);
             // 
-            // mnuContextClientsRefreshSelected
+            // gridContextMenuItemRefreshSelectedSlot
             // 
-            this.mnuContextClientsRefreshSelected.Name = "mnuContextClientsRefreshSelected";
-            this.mnuContextClientsRefreshSelected.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsRefreshSelected.Text = "Refresh Selected";
-            this.mnuContextClientsRefreshSelected.Click += new System.EventHandler(this.mnuClientsRefreshSelected_Click);
+            this.gridContextMenuItemRefreshSelectedSlot.Name = "gridContextMenuItemRefreshSelectedSlot";
+            this.gridContextMenuItemRefreshSelectedSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemRefreshSelectedSlot.Text = "Refresh Selected";
+            this.gridContextMenuItemRefreshSelectedSlot.Click += new System.EventHandler(this.RefreshSelectedSlot_Click);
             // 
             // mnuContextClientsSep1
             // 
             this.mnuContextClientsSep1.Name = "mnuContextClientsSep1";
             this.mnuContextClientsSep1.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuContextClientsEdit
+            // gridContextMenuItemEditClient
             // 
-            this.mnuContextClientsEdit.Name = "mnuContextClientsEdit";
-            this.mnuContextClientsEdit.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsEdit.Text = "Edit Client";
-            this.mnuContextClientsEdit.Click += new System.EventHandler(this.mnuClientsEdit_Click);
+            this.gridContextMenuItemEditClient.Name = "gridContextMenuItemEditClient";
+            this.gridContextMenuItemEditClient.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemEditClient.Text = "Edit Client";
+            this.gridContextMenuItemEditClient.Click += new System.EventHandler(this.EditClient_Click);
             // 
-            // mnuContextClientsDelete
+            // gridContextMenuItemDeleteClient
             // 
-            this.mnuContextClientsDelete.Name = "mnuContextClientsDelete";
-            this.mnuContextClientsDelete.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsDelete.Text = "Delete Client";
-            this.mnuContextClientsDelete.Click += new System.EventHandler(this.mnuClientsDelete_Click);
+            this.gridContextMenuItemDeleteClient.Name = "gridContextMenuItemDeleteClient";
+            this.gridContextMenuItemDeleteClient.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemDeleteClient.Text = "Delete Client";
+            this.gridContextMenuItemDeleteClient.Click += new System.EventHandler(this.DeleteClient_Click);
             // 
             // mnuContextClientsSep2
             // 
             this.mnuContextClientsSep2.Name = "mnuContextClientsSep2";
             this.mnuContextClientsSep2.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuContextClientsViewCachedLog
+            // gridContextMenuItemViewCachedLog
             // 
-            this.mnuContextClientsViewCachedLog.Name = "mnuContextClientsViewCachedLog";
-            this.mnuContextClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsViewCachedLog.Text = "View Cached Log File";
-            this.mnuContextClientsViewCachedLog.Click += new System.EventHandler(this.mnuClientsViewCachedLog_Click);
+            this.gridContextMenuItemViewCachedLog.Name = "gridContextMenuItemViewCachedLog";
+            this.gridContextMenuItemViewCachedLog.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemViewCachedLog.Text = "View Cached Log File";
+            this.gridContextMenuItemViewCachedLog.Click += new System.EventHandler(this.ViewCachedLog_Click);
             // 
             // mnuContextClientsSep3
             // 
             this.mnuContextClientsSep3.Name = "mnuContextClientsSep3";
             this.mnuContextClientsSep3.Size = new System.Drawing.Size(183, 6);
             // 
-            // mnuContextClientsFoldSlot
+            // gridContextMenuItemFoldSlot
             // 
-            this.mnuContextClientsFoldSlot.Name = "mnuContextClientsFoldSlot";
-            this.mnuContextClientsFoldSlot.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsFoldSlot.Text = "Fold Slot";
-            this.mnuContextClientsFoldSlot.Click += new System.EventHandler(this.mnuContextClientsFoldSlot_Click);
+            this.gridContextMenuItemFoldSlot.Name = "gridContextMenuItemFoldSlot";
+            this.gridContextMenuItemFoldSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemFoldSlot.Text = "Fold Slot";
+            this.gridContextMenuItemFoldSlot.Click += new System.EventHandler(this.FoldSlot_Click);
             // 
-            // mnuContextClientsPauseSlot
+            // gridContextMenuItemPauseSlot
             // 
-            this.mnuContextClientsPauseSlot.Name = "mnuContextClientsPauseSlot";
-            this.mnuContextClientsPauseSlot.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsPauseSlot.Text = "Pause Slot";
-            this.mnuContextClientsPauseSlot.Click += new System.EventHandler(this.mnuContextClientsPauseSlot_Click);
+            this.gridContextMenuItemPauseSlot.Name = "gridContextMenuItemPauseSlot";
+            this.gridContextMenuItemPauseSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemPauseSlot.Text = "Pause Slot";
+            this.gridContextMenuItemPauseSlot.Click += new System.EventHandler(this.PauseSlot_Click);
             // 
-            // mnuContextClientsFinishSlot
+            // gridContextMenuItemFinishSlot
             // 
-            this.mnuContextClientsFinishSlot.Name = "mnuContextClientsFinishSlot";
-            this.mnuContextClientsFinishSlot.Size = new System.Drawing.Size(186, 22);
-            this.mnuContextClientsFinishSlot.Text = "Finish Slot";
-            this.mnuContextClientsFinishSlot.Click += new System.EventHandler(this.mnuContextClientsFinishSlot_Click);
+            this.gridContextMenuItemFinishSlot.Name = "gridContextMenuItemFinishSlot";
+            this.gridContextMenuItemFinishSlot.Size = new System.Drawing.Size(186, 22);
+            this.gridContextMenuItemFinishSlot.Text = "Finish Slot";
+            this.gridContextMenuItemFinishSlot.Click += new System.EventHandler(this.FinishSlot_Click);
             // 
             // splitContainer1
             // 
@@ -896,27 +896,27 @@ namespace HFM.Forms.Views
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.MultiSelect = false;
@@ -1092,27 +1092,27 @@ namespace HFM.Forms.Views
       private System.Windows.Forms.ToolStripSeparator mnuHelpSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
       private System.Windows.Forms.ToolStripMenuItem mnuClients;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsAdd;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsAddClient;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsEdit;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsDelete;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsEditClient;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsDeleteClient;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshSelected;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsRefreshAll;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshSelectedSlot;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshAllSlots;
       private LogFileViewer txtLogFile;
       private System.Windows.Forms.ToolStripMenuItem mnuView;
       private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
       private System.Windows.Forms.ToolStripMenuItem mnuTools;
       private System.Windows.Forms.ToolStripSeparator mnuClientsSep4;
-      private System.Windows.Forms.ToolStripMenuItem mnuClientsViewCachedLog;
+      private System.Windows.Forms.ToolStripMenuItem appMenuClientsViewCachedLog;
       private System.Windows.Forms.ToolStripMenuItem mnuToolsDownloadProjects;
       private System.Windows.Forms.ContextMenuStrip gridContextMenuStrip;
       private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep1;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsRefreshSelected;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsEdit;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsDelete;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemRefreshSelectedSlot;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemEditClient;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemDeleteClient;
       private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep2;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsViewCachedLog;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemViewCachedLog;
       private System.Windows.Forms.ToolStripSeparator mnuViewSep1;
       private System.Windows.Forms.ToolStripMenuItem mnuViewToggleDateTime;
       private System.Windows.Forms.SplitContainer splitContainer1;
@@ -1161,8 +1161,8 @@ namespace HFM.Forms.Views
       private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
       private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
       private System.Windows.Forms.ToolStripSeparator mnuContextClientsSep3;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsFoldSlot;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsPauseSlot;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextClientsFinishSlot;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFoldSlot;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemPauseSlot;
+      private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFinishSlot;
    }
 }
