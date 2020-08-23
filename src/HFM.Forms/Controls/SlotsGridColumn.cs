@@ -27,7 +27,7 @@ namespace HFM.Forms.Controls
                 new SlotsGridDefaultColumn("Core", "Core", nameof(SlotModel.Core)),
                 new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)),
                 new SlotsGridProjectColumn(),
-                new SlotsGridCreditColumn(), 
+                new SlotsGridCreditColumn(),
                 new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(SlotModel.Completed)),
                 new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(SlotModel.Failed)),
                 new SlotsGridUsernameColumn(),
@@ -218,13 +218,13 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridDefaultColumn : SlotsGridColumn
     {
-        public SlotsGridDefaultColumn(string columnName, string headerText, string dataPropertyName) 
+        public SlotsGridDefaultColumn(string columnName, string headerText, string dataPropertyName)
             : base(columnName, headerText, null, dataPropertyName)
         {
 
         }
 
-        public SlotsGridDefaultColumn(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName) 
+        public SlotsGridDefaultColumn(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName)
             : base(columnName, headerText, mouseOverHeaderText, dataPropertyName)
         {
 
@@ -233,7 +233,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridInt32Column : SlotsGridColumn
     {
-        public SlotsGridInt32Column(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName) 
+        public SlotsGridInt32Column(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName)
             : base(columnName, headerText, mouseOverHeaderText, dataPropertyName)
         {
 
@@ -339,8 +339,8 @@ namespace HFM.Forms.Controls
                 return String.Format(format, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
             }
 
-            return timeSpan.Hours > 0 
-                ? base.OnGetCellText(value, slotModel) 
+            return timeSpan.Hours > 0
+                ? base.OnGetCellText(value, slotModel)
                 : timeSpan.ToString(@"mm\:ss");
         }
     }
