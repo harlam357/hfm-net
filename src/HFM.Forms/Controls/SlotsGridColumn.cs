@@ -19,12 +19,12 @@ namespace HFM.Forms.Controls
             {
                 new SlotsGridStatusColumn(),
                 new SlotsGridProgressColumn(),
-                new SlotsGridDefaultColumn("Name", "Name", nameof(SlotModel.Name)),
-                new SlotsGridDefaultColumn("SlotType", "Slot Type", nameof(SlotModel.SlotTypeString)),
+                new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(SlotModel.Name)),
+                new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(SlotModel.SlotTypeString)),
                 new SlotsGridTPFColumn(),
                 new SlotsGridPPDColumn(),
                 new SlotsGridETAColumn(),
-                new SlotsGridDefaultColumn("Core", "Core", nameof(SlotModel.Core)),
+                new SlotsGridDefaultColumn("Core", "Core", "Engine used to process the work unit", nameof(SlotModel.Core)),
                 new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)),
                 new SlotsGridProjectColumn(),
                 new SlotsGridCreditColumn(),
@@ -248,7 +248,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridStatusColumn : SlotsGridColumn
     {
-        public SlotsGridStatusColumn() : base("Status", "Status", null, nameof(SlotModel.Status))
+        public SlotsGridStatusColumn() : base("Status", "Status", "Status of the client or slot", nameof(SlotModel.Status))
         {
 
         }
@@ -291,7 +291,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridProgressColumn : SlotsGridColumn
     {
-        public SlotsGridProgressColumn() : base("Progress", "Progress", null, nameof(SlotModel.Progress))
+        public SlotsGridProgressColumn() : base("Progress", "Progress", "Work unit progress", nameof(SlotModel.Progress))
         {
 
         }
@@ -417,7 +417,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridProjectColumn : SlotsGridColumn
     {
-        public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", null, nameof(SlotModel.ProjectRunCloneGen))
+        public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", "Work unit identifier", nameof(SlotModel.ProjectRunCloneGen))
         {
 
         }
