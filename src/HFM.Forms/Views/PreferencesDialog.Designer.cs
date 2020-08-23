@@ -312,7 +312,7 @@ namespace HFM.Forms.Views
             // clientsDefaultConfigFileEnabledCheckBox
             // 
             this.clientsDefaultConfigFileEnabledCheckBox.AutoSize = true;
-            this.clientsDefaultConfigFileEnabledCheckBox.Location = new System.Drawing.Point(10, 22);
+            this.clientsDefaultConfigFileEnabledCheckBox.Location = new System.Drawing.Point(10, 20);
             this.clientsDefaultConfigFileEnabledCheckBox.Name = "clientsDefaultConfigFileEnabledCheckBox";
             this.clientsDefaultConfigFileEnabledCheckBox.Size = new System.Drawing.Size(134, 17);
             this.clientsDefaultConfigFileEnabledCheckBox.TabIndex = 0;
@@ -322,7 +322,7 @@ namespace HFM.Forms.Views
             // clientsBrowseConfigFileButton
             // 
             this.clientsBrowseConfigFileButton.Enabled = false;
-            this.clientsBrowseConfigFileButton.Location = new System.Drawing.Point(456, 47);
+            this.clientsBrowseConfigFileButton.Location = new System.Drawing.Point(456, 45);
             this.clientsBrowseConfigFileButton.Name = "clientsBrowseConfigFileButton";
             this.clientsBrowseConfigFileButton.Size = new System.Drawing.Size(24, 23);
             this.clientsBrowseConfigFileButton.TabIndex = 3;
@@ -340,7 +340,7 @@ namespace HFM.Forms.Views
             this.clientsDefaultConfigFileTextBox.ErrorToolTipDuration = 5000;
             this.clientsDefaultConfigFileTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.clientsDefaultConfigFileTextBox.ErrorToolTipText = "";
-            this.clientsDefaultConfigFileTextBox.Location = new System.Drawing.Point(10, 49);
+            this.clientsDefaultConfigFileTextBox.Location = new System.Drawing.Point(10, 47);
             this.clientsDefaultConfigFileTextBox.Name = "clientsDefaultConfigFileTextBox";
             this.clientsDefaultConfigFileTextBox.ReadOnly = true;
             this.clientsDefaultConfigFileTextBox.Size = new System.Drawing.Size(440, 20);
@@ -349,7 +349,7 @@ namespace HFM.Forms.Views
             // clientsAutoSaveConfig
             // 
             this.clientsAutoSaveConfig.AutoSize = true;
-            this.clientsAutoSaveConfig.Location = new System.Drawing.Point(153, 22);
+            this.clientsAutoSaveConfig.Location = new System.Drawing.Point(153, 20);
             this.clientsAutoSaveConfig.Name = "clientsAutoSaveConfig";
             this.clientsAutoSaveConfig.Size = new System.Drawing.Size(151, 17);
             this.clientsAutoSaveConfig.TabIndex = 2;
@@ -847,7 +847,7 @@ namespace HFM.Forms.Views
             this.webGenerationGroupBox.Controls.Add(this.webGenerationPathTextBox);
             this.webGenerationGroupBox.Controls.Add(this.webGenerationPathLabel);
             this.webGenerationGroupBox.Controls.Add(this.webGenerationEnabledCheckBox);
-            this.webGenerationGroupBox.Location = new System.Drawing.Point(6, 6);
+            this.webGenerationGroupBox.Location = new System.Drawing.Point(6, 9);
             this.webGenerationGroupBox.Name = "webGenerationGroupBox";
             this.webGenerationGroupBox.Size = new System.Drawing.Size(489, 191);
             this.webGenerationGroupBox.TabIndex = 0;
@@ -1647,7 +1647,7 @@ namespace HFM.Forms.Views
             // webProxyEnabledCheckBox
             // 
             this.webProxyEnabledCheckBox.AutoSize = true;
-            this.webProxyEnabledCheckBox.Location = new System.Drawing.Point(6, 17);
+            this.webProxyEnabledCheckBox.Location = new System.Drawing.Point(10, 20);
             this.webProxyEnabledCheckBox.Name = "webProxyEnabledCheckBox";
             this.webProxyEnabledCheckBox.Size = new System.Drawing.Size(117, 17);
             this.webProxyEnabledCheckBox.TabIndex = 0;
@@ -1658,7 +1658,7 @@ namespace HFM.Forms.Views
             // 
             this.webProxyCredentialsEnabledCheckBox.AutoSize = true;
             this.webProxyCredentialsEnabledCheckBox.Enabled = false;
-            this.webProxyCredentialsEnabledCheckBox.Location = new System.Drawing.Point(6, 66);
+            this.webProxyCredentialsEnabledCheckBox.Location = new System.Drawing.Point(10, 69);
             this.webProxyCredentialsEnabledCheckBox.Name = "webProxyCredentialsEnabledCheckBox";
             this.webProxyCredentialsEnabledCheckBox.Size = new System.Drawing.Size(205, 17);
             this.webProxyCredentialsEnabledCheckBox.TabIndex = 5;
@@ -1675,7 +1675,7 @@ namespace HFM.Forms.Views
             this.webProxyPasswordTextBox.ErrorToolTipDuration = 5000;
             this.webProxyPasswordTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.webProxyPasswordTextBox.ErrorToolTipText = "";
-            this.webProxyPasswordTextBox.Location = new System.Drawing.Point(294, 89);
+            this.webProxyPasswordTextBox.Location = new System.Drawing.Point(298, 92);
             this.webProxyPasswordTextBox.Name = "webProxyPasswordTextBox";
             this.webProxyPasswordTextBox.ReadOnly = true;
             this.webProxyPasswordTextBox.Size = new System.Drawing.Size(155, 20);
@@ -1692,7 +1692,7 @@ namespace HFM.Forms.Views
             this.webProxyUsernameTextBox.ErrorToolTipDuration = 5000;
             this.webProxyUsernameTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.webProxyUsernameTextBox.ErrorToolTipText = "";
-            this.webProxyUsernameTextBox.Location = new System.Drawing.Point(71, 89);
+            this.webProxyUsernameTextBox.Location = new System.Drawing.Point(75, 92);
             this.webProxyUsernameTextBox.Name = "webProxyUsernameTextBox";
             this.webProxyUsernameTextBox.ReadOnly = true;
             this.webProxyUsernameTextBox.Size = new System.Drawing.Size(155, 20);
@@ -1708,7 +1708,7 @@ namespace HFM.Forms.Views
             this.webProxyPortTextBox.ErrorToolTipDuration = 5000;
             this.webProxyPortTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.webProxyPortTextBox.ErrorToolTipText = "";
-            this.webProxyPortTextBox.Location = new System.Drawing.Point(395, 40);
+            this.webProxyPortTextBox.Location = new System.Drawing.Point(399, 43);
             this.webProxyPortTextBox.MaxLength = 5;
             this.webProxyPortTextBox.Name = "webProxyPortTextBox";
             this.webProxyPortTextBox.ReadOnly = true;
@@ -1719,7 +1719,7 @@ namespace HFM.Forms.Views
             // lbl3ProxyPass
             // 
             this.lbl3ProxyPass.AutoSize = true;
-            this.lbl3ProxyPass.Location = new System.Drawing.Point(232, 92);
+            this.lbl3ProxyPass.Location = new System.Drawing.Point(236, 95);
             this.lbl3ProxyPass.Name = "lbl3ProxyPass";
             this.lbl3ProxyPass.Size = new System.Drawing.Size(53, 13);
             this.lbl3ProxyPass.TabIndex = 8;
@@ -1735,7 +1735,7 @@ namespace HFM.Forms.Views
             this.webProxyServerTextBox.ErrorToolTipDuration = 5000;
             this.webProxyServerTextBox.ErrorToolTipPoint = new System.Drawing.Point(10, -20);
             this.webProxyServerTextBox.ErrorToolTipText = "";
-            this.webProxyServerTextBox.Location = new System.Drawing.Point(71, 40);
+            this.webProxyServerTextBox.Location = new System.Drawing.Point(75, 43);
             this.webProxyServerTextBox.Name = "webProxyServerTextBox";
             this.webProxyServerTextBox.ReadOnly = true;
             this.webProxyServerTextBox.Size = new System.Drawing.Size(282, 20);
@@ -1744,7 +1744,7 @@ namespace HFM.Forms.Views
             // lbl3ProxyUser
             // 
             this.lbl3ProxyUser.AutoSize = true;
-            this.lbl3ProxyUser.Location = new System.Drawing.Point(7, 92);
+            this.lbl3ProxyUser.Location = new System.Drawing.Point(11, 95);
             this.lbl3ProxyUser.Name = "lbl3ProxyUser";
             this.lbl3ProxyUser.Size = new System.Drawing.Size(55, 13);
             this.lbl3ProxyUser.TabIndex = 6;
@@ -1753,7 +1753,7 @@ namespace HFM.Forms.Views
             // lbl3Port
             // 
             this.lbl3Port.AutoSize = true;
-            this.lbl3Port.Location = new System.Drawing.Point(360, 43);
+            this.lbl3Port.Location = new System.Drawing.Point(364, 46);
             this.lbl3Port.Name = "lbl3Port";
             this.lbl3Port.Size = new System.Drawing.Size(26, 13);
             this.lbl3Port.TabIndex = 3;
@@ -1762,7 +1762,7 @@ namespace HFM.Forms.Views
             // lbl3Proxy
             // 
             this.lbl3Proxy.AutoSize = true;
-            this.lbl3Proxy.Location = new System.Drawing.Point(24, 43);
+            this.lbl3Proxy.Location = new System.Drawing.Point(28, 46);
             this.lbl3Proxy.Name = "lbl3Proxy";
             this.lbl3Proxy.Size = new System.Drawing.Size(38, 13);
             this.lbl3Proxy.TabIndex = 1;
