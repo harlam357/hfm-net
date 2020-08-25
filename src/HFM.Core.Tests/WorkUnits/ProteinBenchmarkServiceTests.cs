@@ -266,7 +266,7 @@ namespace HFM.Core.WorkUnits
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, 0);
             var frameTimes = new[] { 1.0, 1.2, 1.1 }.Select(TimeSpan.FromMinutes);
-            
+
             // Act
             var benchmark = benchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
 
@@ -295,7 +295,7 @@ namespace HFM.Core.WorkUnits
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, Threads);
             var frameTimes = new[] { 1.0, 1.2, 1.1 }.Select(TimeSpan.FromMinutes);
-            
+
             // Act
             var benchmark = benchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
 
@@ -326,7 +326,7 @@ namespace HFM.Core.WorkUnits
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, Threads);
             var frameTimes = new[] { 1.0, 1.2, 1.1 }.Select(TimeSpan.FromMinutes);
-            
+
             // Act
             var benchmark = benchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
 
@@ -469,7 +469,7 @@ namespace HFM.Core.WorkUnits
             var benchmarkService = new ProteinBenchmarkService(container);
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, 0);
-            
+
             // Act
             var benchmark = benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier);
 
@@ -493,7 +493,7 @@ namespace HFM.Core.WorkUnits
             var benchmarkService = new ProteinBenchmarkService(container);
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, Threads);
-            
+
             // Act
             var benchmark = benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier);
 
@@ -519,7 +519,7 @@ namespace HFM.Core.WorkUnits
             var benchmarkService = new ProteinBenchmarkService(container);
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(projectID, Processor, Threads);
-            
+
             // Act
             var benchmark = benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier);
 
@@ -557,6 +557,36 @@ namespace HFM.Core.WorkUnits
                 var benchmarks = benchmarkService.GetBenchmarks(SlotIdentifier.AllSlots, 9039);
                 // Assert
                 Assert.AreEqual(4, benchmarks.Count);
+            }
+        }
+
+        [Test]
+        public void ProteinBenchmarkService_GetBenchmarks_ForSpecificSlotAndProjects()
+        {
+            // Arrange
+            using (var artifacts = new ArtifactFolder())
+            {
+                var container = CreateTestDataContainer(artifacts.GetRandomFilePath());
+                var benchmarkService = new ProteinBenchmarkService(container);
+                // Act
+                var benchmarks = benchmarkService.GetBenchmarks(benchmarkService.GetSlotIdentifiers().First(), new[] { 9039, 9032 });
+                // Assert
+                Assert.AreEqual(2, benchmarks.Count);
+            }
+        }
+
+        [Test]
+        public void ProteinBenchmarkService_GetBenchmarks_ForAllSlotsAndSpecificProjects()
+        {
+            // Arrange
+            using (var artifacts = new ArtifactFolder())
+            {
+                var container = CreateTestDataContainer(artifacts.GetRandomFilePath());
+                var benchmarkService = new ProteinBenchmarkService(container);
+                // Act
+                var benchmarks = benchmarkService.GetBenchmarks(SlotIdentifier.AllSlots, new[] { 9039, 9032 });
+                // Assert
+                Assert.AreEqual(8, benchmarks.Count);
             }
         }
 

@@ -23,6 +23,8 @@ namespace HFM.Core.WorkUnits
 
         ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
+        ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
+
         void RemoveAll(SlotIdentifier slotIdentifier);
 
         void RemoveAll(SlotIdentifier slotIdentifier, int projectID);
@@ -147,6 +149,19 @@ namespace HFM.Core.WorkUnits
             }
         }
 
+        public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+        {
+            _cacheLock.EnterReadLock();
+            try
+            {
+                return DataContainer.Data.FindAll(b => BenchmarkMatchesSlotIdentifierAndProject(b, slotIdentifier, projects));
+            }
+            finally
+            {
+                _cacheLock.ExitReadLock();
+            }
+        }
+
         public void RemoveAll(SlotIdentifier slotIdentifier)
         {
             if (slotIdentifier == SlotIdentifier.AllSlots) throw new ArgumentException("Cannot remove all client slots.");
@@ -180,6 +195,11 @@ namespace HFM.Core.WorkUnits
         private static bool BenchmarkMatchesSlotIdentifierAndProject(ProteinBenchmark b, SlotIdentifier slotIdentifier, int projectID)
         {
             return b.ProjectID.Equals(projectID) && BenchmarkMatchesSlotIdentifier(b, slotIdentifier);
+        }
+
+        private static bool BenchmarkMatchesSlotIdentifierAndProject(ProteinBenchmark b, SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+        {
+            return projects.Contains(b.ProjectID) && BenchmarkMatchesSlotIdentifier(b, slotIdentifier);
         }
 
         private static bool BenchmarkMatchesSlotIdentifier(ProteinBenchmark b, SlotIdentifier slotIdentifier)
@@ -276,6 +296,11 @@ namespace HFM.Core.WorkUnits
         }
 
         public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+        {
+            return new List<ProteinBenchmark>();
+        }
+
+        public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
         {
             return new List<ProteinBenchmark>();
         }
