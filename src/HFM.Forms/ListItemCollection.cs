@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -92,6 +93,29 @@ namespace HFM.Forms
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         protected virtual void OnCollectionChanged(object sender) => CollectionChanged?.Invoke(sender, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    }
+
+    public class BindingSourceListItemCollection : ListItemCollection
+    {
+        private readonly BindingSource _bindingSource;
+
+        public BindingSourceListItemCollection(BindingSource bindingSource)
+        {
+            _bindingSource = bindingSource;
+            _bindingSource.ListChanged += OnBindingSourceListChanged;
+        }
+
+        protected virtual void OnBindingSourceListChanged(object sender, ListChangedEventArgs e)
+        {
+            // simulates how a ListBox reacts to BindingSource.ListChanged events
+            int position = _bindingSource.Position;
+            if (0 <= position && position < _bindingSource.Count)
+            {
+                Items.Clear();
+                Items.Add(_bindingSource.Cast<ListItem>().ElementAt(position));
+            }
+            OnCollectionChanged(this);
+        }
     }
 
     /// <summary>

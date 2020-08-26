@@ -32,7 +32,7 @@ namespace HFM.Forms.Models
             SlotIdentifiers.DataSource = new BindingList<ListItem> { RaiseListChangedEvents = false };
             SlotProjects = new BindingSource();
             SlotProjects.DataSource = new BindingList<ListItem> { RaiseListChangedEvents = false };
-            SelectedSlotProjectListItems = new ListItemCollection();
+            SelectedSlotProjectListItems = new BindingSourceListItemCollection(SlotProjects);
         }
 
         public override void Load()
@@ -147,7 +147,10 @@ namespace HFM.Forms.Models
                     OnPropertyChanged(nameof(SelectedSlotDeleteEnabled));
 
                     RefreshSlotProjects();
-                    SetFirstSlotProject();
+                    if (_selectedSlotIdentifier is null || SelectedSlotProject is null)
+                    {
+                        SetFirstSlotProject();
+                    }
                 }
             }
         }
@@ -270,6 +273,8 @@ namespace HFM.Forms.Models
         // Reports
         public void RunReports()
         {
+            System.Diagnostics.Debug.WriteLine(nameof(RunReports));
+
             foreach (var report in Reports)
             {
                 report.Generate(this);
