@@ -81,21 +81,13 @@ namespace HFM.Forms.Models
                     if (points.Count > 0)
                     {
                         Color color = GetNextColor(i++, colors);
-                        var lineItem = pane.AddCurve(label, points, color, SymbolType.Circle);
-                        lineItem.Symbol.Fill = new Fill(color);
-                        lineItem.IsOverrideOrdinal = true;
+                        AddSlotCurve(pane, label, points, color);
                     }
                 }
 
                 var averagePPD = ppd.Average();
-                var averagePoints = new PointPairList();
-                foreach (var x in projectToXAxisOrdinal.Values)
-                {
-                    averagePoints.Add(x, averagePPD);
-                }
-                var averageLineItem = pane.AddCurve("Average PPD", averagePoints, Color.Black, SymbolType.Circle);
-                averageLineItem.Symbol.Fill = new Fill(Color.Black);
-                averageLineItem.IsOverrideOrdinal = true;
+                var averagePoints = BuildAveragePoints(averagePPD, projectToXAxisOrdinal);
+                AddAverageCurve(pane, averagePoints);
 
                 ConfigureXAxis(pane.XAxis, projectToXAxisOrdinal);
                 ConfigureYAxis(pane.YAxis, ppd.Max());
@@ -119,6 +111,30 @@ namespace HFM.Forms.Models
                 projectToXAxisOrdinal.Add(projectID, ordinal++);
             }
             return projectToXAxisOrdinal;
+        }
+
+        private static void AddSlotCurve(GraphPane pane, string label, PointPairList points, Color color)
+        {
+            var lineItem = pane.AddCurve(label, points, color, SymbolType.Circle);
+            lineItem.Symbol.Fill = new Fill(color);
+            lineItem.IsOverrideOrdinal = true;
+        }
+
+        private static PointPairList BuildAveragePoints(double averagePPD, Dictionary<int, double> projectToXAxisOrdinal)
+        {
+            var points = new PointPairList();
+            foreach (var x in projectToXAxisOrdinal.Values)
+            {
+                points.Add(x, averagePPD);
+            }
+            return points;
+        }
+
+        private static void AddAverageCurve(GraphPane pane, PointPairList points)
+        {
+            var averageLineItem = pane.AddCurve("Average PPD", points, Color.Black, SymbolType.Circle);
+            averageLineItem.Symbol.Fill = new Fill(Color.Black);
+            averageLineItem.IsOverrideOrdinal = true;
         }
 
         private static void ConfigureXAxis(XAxis xAxis, Dictionary<int, double> projectToXAxisOrdinal)

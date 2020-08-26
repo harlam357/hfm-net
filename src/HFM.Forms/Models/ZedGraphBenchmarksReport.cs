@@ -130,7 +130,7 @@ namespace HFM.Forms.Models
 
                     string label = GetSlotNameAndProcessor(benchmark, protein);
                     var color = GetNextColor(i++, colors);
-                    CreateBarItem(pane, label, yPoints, color);
+                    AddBar(pane, label, yPoints, color);
                 }
 
                 ConfigureXAxis(pane.XAxis, protein);
@@ -179,7 +179,7 @@ namespace HFM.Forms.Models
             yAxis.Title.Text = Key;
         }
 
-        private static void CreateBarItem(GraphPane pane, string label, double[] yPoints, Color color)
+        private static void AddBar(GraphPane pane, string label, double[] yPoints, Color color)
         {
             var barItem = pane.AddBar(label, null, yPoints, color);
             barItem.Bar.Fill = new Fill(color, Color.White, color);
