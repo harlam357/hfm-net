@@ -52,42 +52,30 @@ namespace HFM.Forms.Models
             {
                 GraphPane pane = zg.GraphPane;
 
-                bool calculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation) != BonusCalculation.None;
-
                 int i = 0;
                 var ppd = new List<double>();
                 foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.Processor, x.Threads)))
                 {
-                    string label = null;
-                    var points = new PointPairList();
-                    foreach (var benchmark in group.OrderBy(x => x.ProjectID))
-                    {
-                        var protein = ProteinService.Get(benchmark.ProjectID);
-                        if (protein is null)
-                        {
-                            continue;
-                        }
-
-                        if (label is null)
-                        {
-                            label = GetSlotNameAndProcessor(benchmark, protein);
-                        }
-
-                        double y = GetPPD(protein, benchmark.AverageFrameTime, calculateBonus);
-                        ppd.Add(y);
-                        points.Add(projectToXAxisOrdinal[benchmark.ProjectID], y);
-                    }
+                    PointPairList points;
+                    string label;
+                    (points, label) = BuildSlotPoints(group.OrderBy(x => x.ProjectID), projectToXAxisOrdinal);
 
                     if (points.Count > 0)
                     {
+                        // collection PPD values from all points
+                        ppd.AddRange(points.Select(p => p.Y));
+
                         Color color = GetNextColor(i++, colors);
                         AddSlotCurve(pane, label, points, color);
                     }
                 }
 
-                var averagePPD = ppd.Average();
-                var averagePoints = BuildAveragePoints(averagePPD, projectToXAxisOrdinal);
-                AddAverageCurve(pane, averagePoints);
+                if (ppd.Count > 0)
+                {
+                    var averagePPD = ppd.Average();
+                    var averagePoints = BuildAveragePoints(averagePPD, projectToXAxisOrdinal);
+                    AddAverageCurve(pane, averagePoints);
+                }
 
                 ConfigureXAxis(pane.XAxis, projectToXAxisOrdinal);
                 ConfigureYAxis(pane.YAxis, ppd.Max());
@@ -111,6 +99,33 @@ namespace HFM.Forms.Models
                 projectToXAxisOrdinal.Add(projectID, ordinal++);
             }
             return projectToXAxisOrdinal;
+        }
+
+        private (PointPairList Points, string Label) BuildSlotPoints(IEnumerable<ProteinBenchmark> benchmarks, Dictionary<int, double> projectToXAxisOrdinal)
+        {
+            bool calculateBonus = Preferences.Get<BonusCalculation>(Preference.BonusCalculation) != BonusCalculation.None;
+
+            var points = new PointPairList();
+            string label = null;
+
+            foreach (var b in benchmarks)
+            {
+                var protein = ProteinService.Get(b.ProjectID);
+                if (protein is null)
+                {
+                    continue;
+                }
+
+                if (label is null)
+                {
+                    label = GetSlotNameAndProcessor(b, protein);
+                }
+
+                double y = GetPPD(protein, b.AverageFrameTime, calculateBonus);
+                points.Add(projectToXAxisOrdinal[b.ProjectID], y);
+            }
+
+            return (points, label);
         }
 
         private static void AddSlotCurve(GraphPane pane, string label, PointPairList points, Color color)
