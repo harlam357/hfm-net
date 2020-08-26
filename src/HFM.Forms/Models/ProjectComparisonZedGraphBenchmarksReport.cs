@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -37,6 +36,12 @@ namespace HFM.Forms.Models
                 .OrderBy(x => x.SlotIdentifier.Name)
                 .ThenBy(x => x.Threads)
                 .ToList();
+
+            if (benchmarks.Count == 0)
+            {
+                Result = null;
+                return;
+            }
 
             double ordinal = 1.0;
             var projectToXAxisOrdinal = new Dictionary<int, double>();
