@@ -29,49 +29,47 @@ namespace HFM.Forms.Models
             ClientConfiguration = clientConfiguration;
         }
 
-        public int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
-
-        public BonusCalculation BonusCalculation => Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
-
         public override void Generate(IBenchmarksReportSource source)
         {
             var benchmarkText = new List<string>();
 
             var slotIdentifier = source.SlotIdentifier;
-            var projectID = source.ProjectID;
-            if (slotIdentifier is null || projectID is null)
+            var projects = source.Projects;
+            if (slotIdentifier is null || projects.Count == 0)
             {
                 Result = benchmarkText;
                 return;
             }
 
-            var protein = ProteinService.Get(projectID.Value);
-            if (protein is null)
-            {
-                benchmarkText.Add(String.Format(CultureInfo.InvariantCulture, " Project ID: {0} Not Found", projectID));
-                Result = benchmarkText;
-                return;
-            }
-
-            var benchmarks = BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
-                .OrderBy(x => x.SlotIdentifier.Name)
-                .ThenBy(x => x.Threads)
-                .ToList();
-
-            string numberFormat = NumberFormat.Get(DecimalPlaces);
-            var bonusCalculation = BonusCalculation;
+            string numberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
+            var bonusCalculation = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             bool calculateBonus = bonusCalculation != BonusCalculation.None;
 
-            benchmarkText
-                .AddRange(EnumerateProjectInformation(protein)
-                    .Concat(Enumerable.Repeat(String.Empty, 2)));
-
-            foreach (var b in benchmarks)
+            foreach (var projectID in projects)
             {
+                var protein = ProteinService.Get(projectID);
+                if (protein is null)
+                {
+                    benchmarkText.Add(String.Format(CultureInfo.InvariantCulture, " Project ID: {0} Not Found", projectID));
+                    benchmarkText.AddRange(Enumerable.Repeat(String.Empty, 2));
+                    continue;
+                }
+
+                var benchmarks = BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
+                    .OrderBy(x => x.SlotIdentifier.Name)
+                    .ThenBy(x => x.Threads);
+
                 benchmarkText
-                    .AddRange(EnumerateBenchmarkInformation(protein, b, numberFormat, calculateBonus)
-                        .Concat(EnumerateSlotInformation(FindRunningSlot(b), numberFormat, bonusCalculation))
+                    .AddRange(EnumerateProjectInformation(protein)
                         .Concat(Enumerable.Repeat(String.Empty, 2)));
+
+                foreach (var b in benchmarks)
+                {
+                    benchmarkText
+                        .AddRange(EnumerateBenchmarkInformation(protein, b, numberFormat, calculateBonus)
+                            .Concat(EnumerateSlotInformation(FindRunningSlot(b), numberFormat, bonusCalculation))
+                            .Concat(Enumerable.Repeat(String.Empty, 2)));
+                }
             }
 
             Result = benchmarkText;
@@ -114,16 +112,6 @@ namespace HFM.Forms.Models
                 workUnit.GetFrameTime(PPDCalculation.AllFrames), workUnit.GetPPD(status, PPDCalculation.AllFrames, bonusCalculation).ToString(numberFormat));
             yield return String.Format(CultureInfo.InvariantCulture, " Eff. Time / Frame : {0} - {1} PPD",
                 workUnit.GetFrameTime(PPDCalculation.EffectiveRate), workUnit.GetPPD(status, PPDCalculation.EffectiveRate, bonusCalculation).ToString(numberFormat));
-        }
-
-        private static double GetPPD(Protein protein, TimeSpan frameTime, bool calculateBonus)
-        {
-            if (calculateBonus)
-            {
-                var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
-                return protein.GetBonusPPD(frameTime, unitTime);
-            }
-            return protein.GetPPD(frameTime);
         }
 
         private SlotModel FindRunningSlot(ProteinBenchmark benchmark)

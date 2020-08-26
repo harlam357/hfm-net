@@ -112,10 +112,12 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
+    <Compile Include="ListItemCollection.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
     <Compile Include="Models\BenchmarksModel.cs" />
     <Compile Include="Models\BenchmarksReport.cs" />
     <Compile Include="Models\MessagesModel.cs" />
+    <Compile Include="Models\ProjectComparisonZedGraphBenchmarksReport.cs" />
     <Compile Include="Models\TextBenchmarksReport.cs" />
     <Compile Include="Models\ZedGraphBenchmarksReport.cs" />
     <Compile Include="Presenters\BenchmarksPresenter.cs" />

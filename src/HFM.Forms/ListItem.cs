@@ -7,6 +7,10 @@ namespace HFM.Forms
     [DebuggerDisplay("{DisplayMember}, {ValueMember}")]
     public readonly struct ListItem : IEquatable<ListItem>
     {
+        public static ListItem Empty { get; } = new ListItem();
+
+        public bool IsEmpty => Equals(Empty);
+
         /// <summary>
         /// Initializes a new <see cref="ListItem"/> using the <paramref name="value"/> as <see cref="ValueMember"/> and <paramref name="value"/>.ToString() as <see cref="DisplayMember"/>.
         /// </summary>
@@ -29,15 +33,14 @@ namespace HFM.Forms
 
         public object ValueMember { get; }
 
-        public bool Equals(ListItem other)
-        {
-            return DisplayMember == other.DisplayMember && Equals(ValueMember, other.ValueMember);
-        }
+        /// <summary>
+        /// Returns <see cref="ValueMember"/> as <typeparamref name="T"/>.
+        /// </summary>
+        public T GetValue<T>() => (T)ValueMember;
 
-        public override bool Equals(object obj)
-        {
-            return obj is ListItem other && Equals(other);
-        }
+        public bool Equals(ListItem other) => DisplayMember == other.DisplayMember && Equals(ValueMember, other.ValueMember);
+
+        public override bool Equals(object obj) => obj is ListItem other && Equals(other);
 
         public override int GetHashCode()
         {
@@ -47,15 +50,9 @@ namespace HFM.Forms
             }
         }
 
-        public static bool operator ==(ListItem left, ListItem right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(ListItem left, ListItem right) => left.Equals(right);
 
-        public static bool operator !=(ListItem left, ListItem right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(ListItem left, ListItem right) => !left.Equals(right);
     }
 
     [DebuggerDisplay("{Value}")]
@@ -77,24 +74,12 @@ namespace HFM.Forms
             return EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || (obj is ValueItem<T> other && Equals(other));
-        }
+        public override bool Equals(object obj) => ReferenceEquals(this, obj) || (obj is ValueItem<T> other && Equals(other));
 
-        public override int GetHashCode()
-        {
-            return EqualityComparer<T>.Default.GetHashCode(Value);
-        }
+        public override int GetHashCode() => EqualityComparer<T>.Default.GetHashCode(Value);
 
-        public static bool operator ==(ValueItem<T> left, ValueItem<T> right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(ValueItem<T> left, ValueItem<T> right) => Equals(left, right);
 
-        public static bool operator !=(ValueItem<T> left, ValueItem<T> right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(ValueItem<T> left, ValueItem<T> right) => !Equals(left, right);
     }
 }

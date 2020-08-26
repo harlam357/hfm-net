@@ -61,70 +61,67 @@ namespace HFM.Forms.Views
             ContactTextBox.BindText(model, nameof(BenchmarksModel.Contact));
             WorkServerTextBox.BindText(model, nameof(BenchmarksModel.ServerIP));
 
+            model.PropertyChanged += (s, e) => ModelPropertyChanged((BenchmarksModel)s, e);
+            model.SelectedSlotProjectListItems = new ListBoxSelectedListItemCollection(listBox1);
             listBox1.DataSource = model.SlotProjects;
             listBox1.DisplayMember = nameof(ListItem.DisplayMember);
             listBox1.ValueMember = nameof(ListItem.ValueMember);
-            listBox1.DataBindings.Add(nameof(ListBox.SelectedValue), model, nameof(BenchmarksModel.SelectedSlotProject), true, DataSourceUpdateMode.OnPropertyChanged);
-
-            // load any existing reports
-            LoadBenchmarkText();
-            LoadFrameTimeGraphControl();
-            LoadProductionGraphControl();
-            model.PropertyChanged += (s, e) => ModelPropertyChanged(e);
+            model.SetDefaultSlotProject();
 
             lstColors.DataSource = model.GraphColors;
         }
 
-        private void ModelPropertyChanged(PropertyChangedEventArgs e)
+        private void ModelPropertyChanged(BenchmarksModel model, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(BenchmarksModel.BenchmarkText):
-                    LoadBenchmarkText();
+                    LoadBenchmarkText(model);
                     break;
                 case nameof(BenchmarksModel.FrameTimeGraphControl):
-                    LoadFrameTimeGraphControl();
+                    LoadFrameTimeGraphControl(model);
                     break;
                 case nameof(BenchmarksModel.ProductionGraphControl):
-                    LoadProductionGraphControl();
+                    LoadProductionGraphControl(model);
+                    break;
+                case nameof(BenchmarksModel.ProjectComparisonGraphControl):
+                    LoadProjectComparisonGraphControl(model);
                     break;
             }
         }
 
-        private void LoadBenchmarkText()
+        private void LoadBenchmarkText(BenchmarksModel model)
         {
-            txtBenchmarks.Lines = _presenter.Model.BenchmarkText?.ToArray() ?? Array.Empty<string>();
+            txtBenchmarks.Lines = model.BenchmarkText?.ToArray() ?? Array.Empty<string>();
         }
 
-        private void LoadFrameTimeGraphControl()
+        private void LoadFrameTimeGraphControl(BenchmarksModel model)
         {
-            foreach (Control c in tabGraphFrameTime1.Controls)
+            LoadGraphControl(frameTimeGraphTab, model.FrameTimeGraphControl);
+        }
+
+        private void LoadProductionGraphControl(BenchmarksModel model)
+        {
+            LoadGraphControl(productionGraphTab, model.ProductionGraphControl);
+        }
+
+        private void LoadProjectComparisonGraphControl(BenchmarksModel model)
+        {
+            LoadGraphControl(projectComparisonGraphTab, model.ProjectComparisonGraphControl);
+        }
+
+        private static void LoadGraphControl(TabPage tab, Control graphControl)
+        {
+            foreach (Control c in tab.Controls)
             {
                 c.Dispose();
             }
 
-            tabGraphFrameTime1.Controls.Clear();
-            var control = _presenter.Model.FrameTimeGraphControl;
-            if (control != null)
+            tab.Controls.Clear();
+            if (graphControl != null)
             {
-                control.Dock = DockStyle.Fill;
-                tabGraphFrameTime1.Controls.Add(control);
-            }
-        }
-
-        private void LoadProductionGraphControl()
-        {
-            foreach (Control c in tabGraphPPD1.Controls)
-            {
-                c.Dispose();
-            }
-
-            tabGraphPPD1.Controls.Clear();
-            var control = _presenter.Model.ProductionGraphControl;
-            if (control != null)
-            {
-                control.Dock = DockStyle.Fill;
-                tabGraphPPD1.Controls.Add(control);
+                graphControl.Dock = DockStyle.Fill;
+                tab.Controls.Add(graphControl);
             }
         }
 
@@ -134,7 +131,9 @@ namespace HFM.Forms.Views
         {
             if (e.Button == MouseButtons.Right)
             {
-                listBox1.SelectedIndex = listBox1.IndexFromPoint(e.X, e.Y);
+                int index = listBox1.IndexFromPoint(e.X, e.Y);
+                listBox1.SelectedItems.Clear();
+                listBox1.SelectedIndex = index;
             }
         }
 

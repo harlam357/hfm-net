@@ -1,34 +1,34 @@
 ﻿
 namespace HFM.Forms.Views
 {
-   partial class BenchmarksForm
-   {
-      /// <summary>
-      /// Required designer variable.
-      /// </summary>
-      private System.ComponentModel.IContainer components = null;
+    partial class BenchmarksForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-      /// <summary>
-      /// Clean up any resources being used.
-      /// </summary>
-      /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-      protected override void Dispose(bool disposing)
-      {
-         if (disposing && (components != null))
-         {
-            components.Dispose();
-         }
-         base.Dispose(disposing);
-      }
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-      #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-      /// <summary>
-      /// Required method for Designer support - do not modify
-      /// the contents of this method with the code editor.
-      /// </summary>
-      private void InitializeComponent()
-      {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             this.grpProjectInfo = new System.Windows.Forms.GroupBox();
             this.KFactorTextBox = new System.Windows.Forms.TextBox();
@@ -57,9 +57,9 @@ namespace HFM.Forms.Views
             this.splitContainerBench = new System.Windows.Forms.SplitContainer();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabTextBenchmark = new System.Windows.Forms.TabPage();
+            this.benchmarkTextTab = new System.Windows.Forms.TabPage();
             this.txtBenchmarks = new System.Windows.Forms.TextBox();
-            this.tabGraphConfig = new System.Windows.Forms.TabPage();
+            this.graphConfigTab = new System.Windows.Forms.TabPage();
             this.grpColors = new System.Windows.Forms.GroupBox();
             this.lstColors = new System.Windows.Forms.ListBox();
             this.picColorPreview = new System.Windows.Forms.PictureBox();
@@ -67,8 +67,9 @@ namespace HFM.Forms.Views
             this.btnAddColor = new System.Windows.Forms.Button();
             this.btnMoveColorUp = new System.Windows.Forms.Button();
             this.btnDeleteColor = new System.Windows.Forms.Button();
-            this.tabGraphFrameTime1 = new System.Windows.Forms.TabPage();
-            this.tabGraphPPD1 = new System.Windows.Forms.TabPage();
+            this.frameTimeGraphTab = new System.Windows.Forms.TabPage();
+            this.productionGraphTab = new System.Windows.Forms.TabPage();
+            this.projectComparisonGraphTab = new System.Windows.Forms.TabPage();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpClients = new System.Windows.Forms.GroupBox();
             this.picDeleteClient = new System.Windows.Forms.PictureBox();
@@ -84,8 +85,8 @@ namespace HFM.Forms.Views
             this.splitContainerBench.Panel2.SuspendLayout();
             this.splitContainerBench.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabTextBenchmark.SuspendLayout();
-            this.tabGraphConfig.SuspendLayout();
+            this.benchmarkTextTab.SuspendLayout();
+            this.graphConfigTab.SuspendLayout();
             this.grpColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
             this.grpClients.SuspendLayout();
@@ -380,6 +381,7 @@ namespace HFM.Forms.Views
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBox1.Size = new System.Drawing.Size(65, 395);
             this.listBox1.TabIndex = 0;
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -387,10 +389,11 @@ namespace HFM.Forms.Views
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabTextBenchmark);
-            this.tabControl1.Controls.Add(this.tabGraphConfig);
-            this.tabControl1.Controls.Add(this.tabGraphFrameTime1);
-            this.tabControl1.Controls.Add(this.tabGraphPPD1);
+            this.tabControl1.Controls.Add(this.benchmarkTextTab);
+            this.tabControl1.Controls.Add(this.graphConfigTab);
+            this.tabControl1.Controls.Add(this.frameTimeGraphTab);
+            this.tabControl1.Controls.Add(this.productionGraphTab);
+            this.tabControl1.Controls.Add(this.projectComparisonGraphTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -398,16 +401,16 @@ namespace HFM.Forms.Views
             this.tabControl1.Size = new System.Drawing.Size(487, 395);
             this.tabControl1.TabIndex = 0;
             // 
-            // tabTextBenchmark
+            // benchmarkTextTab
             // 
-            this.tabTextBenchmark.Controls.Add(this.txtBenchmarks);
-            this.tabTextBenchmark.Location = new System.Drawing.Point(4, 22);
-            this.tabTextBenchmark.Name = "tabTextBenchmark";
-            this.tabTextBenchmark.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTextBenchmark.Size = new System.Drawing.Size(479, 369);
-            this.tabTextBenchmark.TabIndex = 0;
-            this.tabTextBenchmark.Text = "Text";
-            this.tabTextBenchmark.UseVisualStyleBackColor = true;
+            this.benchmarkTextTab.Controls.Add(this.txtBenchmarks);
+            this.benchmarkTextTab.Location = new System.Drawing.Point(4, 22);
+            this.benchmarkTextTab.Name = "benchmarkTextTab";
+            this.benchmarkTextTab.Padding = new System.Windows.Forms.Padding(3);
+            this.benchmarkTextTab.Size = new System.Drawing.Size(479, 369);
+            this.benchmarkTextTab.TabIndex = 0;
+            this.benchmarkTextTab.Text = "Text";
+            this.benchmarkTextTab.UseVisualStyleBackColor = true;
             // 
             // txtBenchmarks
             // 
@@ -422,15 +425,15 @@ namespace HFM.Forms.Views
             this.txtBenchmarks.Size = new System.Drawing.Size(473, 363);
             this.txtBenchmarks.TabIndex = 0;
             // 
-            // tabGraphConfig
+            // graphConfigTab
             // 
-            this.tabGraphConfig.Controls.Add(this.grpColors);
-            this.tabGraphConfig.Location = new System.Drawing.Point(4, 22);
-            this.tabGraphConfig.Name = "tabGraphConfig";
-            this.tabGraphConfig.Size = new System.Drawing.Size(479, 369);
-            this.tabGraphConfig.TabIndex = 3;
-            this.tabGraphConfig.Text = "Graph Config";
-            this.tabGraphConfig.UseVisualStyleBackColor = true;
+            this.graphConfigTab.Controls.Add(this.grpColors);
+            this.graphConfigTab.Location = new System.Drawing.Point(4, 22);
+            this.graphConfigTab.Name = "graphConfigTab";
+            this.graphConfigTab.Size = new System.Drawing.Size(479, 369);
+            this.graphConfigTab.TabIndex = 3;
+            this.graphConfigTab.Text = "Graph Config";
+            this.graphConfigTab.UseVisualStyleBackColor = true;
             // 
             // grpColors
             // 
@@ -511,25 +514,34 @@ namespace HFM.Forms.Views
             this.btnDeleteColor.UseVisualStyleBackColor = true;
             this.btnDeleteColor.Click += new System.EventHandler(this.btnDeleteColor_Click);
             // 
-            // tabGraphFrameTime1
+            // frameTimeGraphTab
             // 
-            this.tabGraphFrameTime1.Location = new System.Drawing.Point(4, 22);
-            this.tabGraphFrameTime1.Name = "tabGraphFrameTime1";
-            this.tabGraphFrameTime1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGraphFrameTime1.Size = new System.Drawing.Size(479, 369);
-            this.tabGraphFrameTime1.TabIndex = 2;
-            this.tabGraphFrameTime1.Text = "Graph - Frame Time";
-            this.tabGraphFrameTime1.UseVisualStyleBackColor = true;
+            this.frameTimeGraphTab.Location = new System.Drawing.Point(4, 22);
+            this.frameTimeGraphTab.Name = "frameTimeGraphTab";
+            this.frameTimeGraphTab.Padding = new System.Windows.Forms.Padding(3);
+            this.frameTimeGraphTab.Size = new System.Drawing.Size(479, 369);
+            this.frameTimeGraphTab.TabIndex = 2;
+            this.frameTimeGraphTab.Text = "Frame Time Graph";
+            this.frameTimeGraphTab.UseVisualStyleBackColor = true;
             // 
-            // tabGraphPPD1
+            // productionGraphTab
             // 
-            this.tabGraphPPD1.Location = new System.Drawing.Point(4, 22);
-            this.tabGraphPPD1.Name = "tabGraphPPD1";
-            this.tabGraphPPD1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGraphPPD1.Size = new System.Drawing.Size(479, 369);
-            this.tabGraphPPD1.TabIndex = 1;
-            this.tabGraphPPD1.Text = "Graph - PPD";
-            this.tabGraphPPD1.UseVisualStyleBackColor = true;
+            this.productionGraphTab.Location = new System.Drawing.Point(4, 22);
+            this.productionGraphTab.Name = "productionGraphTab";
+            this.productionGraphTab.Padding = new System.Windows.Forms.Padding(3);
+            this.productionGraphTab.Size = new System.Drawing.Size(479, 369);
+            this.productionGraphTab.TabIndex = 1;
+            this.productionGraphTab.Text = "PPD Graph";
+            this.productionGraphTab.UseVisualStyleBackColor = true;
+            // 
+            // projectComparisonGraphTab
+            // 
+            this.projectComparisonGraphTab.Location = new System.Drawing.Point(4, 22);
+            this.projectComparisonGraphTab.Name = "projectComparisonGraphTab";
+            this.projectComparisonGraphTab.Size = new System.Drawing.Size(479, 369);
+            this.projectComparisonGraphTab.TabIndex = 4;
+            this.projectComparisonGraphTab.Text = "Comparison Graph";
+            this.projectComparisonGraphTab.UseVisualStyleBackColor = true;
             // 
             // btnExit
             // 
@@ -621,9 +633,9 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerBench)).EndInit();
             this.splitContainerBench.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabTextBenchmark.ResumeLayout(false);
-            this.tabTextBenchmark.PerformLayout();
-            this.tabGraphConfig.ResumeLayout(false);
+            this.benchmarkTextTab.ResumeLayout(false);
+            this.benchmarkTextTab.PerformLayout();
+            this.graphConfigTab.ResumeLayout(false);
             this.grpColors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
             this.grpClients.ResumeLayout(false);
@@ -631,58 +643,57 @@ namespace HFM.Forms.Views
             this.listBox1ContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
-      }
+        }
 
-      #endregion
+        #endregion
 
-      private System.Windows.Forms.GroupBox grpProjectInfo;
-      private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-      private System.Windows.Forms.TextBox WorkServerTextBox;
-      private System.Windows.Forms.TextBox ContactTextBox;
-      private System.Windows.Forms.TextBox ExpirationTextBox;
-      private System.Windows.Forms.TextBox TimeoutTextBox;
-      private System.Windows.Forms.TextBox CoreTextBox;
-      private System.Windows.Forms.TextBox AtomsTextBox;
-      private System.Windows.Forms.TextBox FramesTextBox;
-      private System.Windows.Forms.TextBox CreditTextBox;
-      private System.Windows.Forms.TextBox ProjectIDTextBox;
-      private System.Windows.Forms.LinkLabel DescriptionLinkLabel;
-      private System.Windows.Forms.Label WorkServerLabel;
-      private System.Windows.Forms.Label ContactLabel;
-      private System.Windows.Forms.Label CoreLabel;
-      private System.Windows.Forms.Label ExpirationLabel;
-      private System.Windows.Forms.Label TimeoutLabel;
-      private System.Windows.Forms.Label AtomsLabel;
-      private System.Windows.Forms.Label FramesLabel;
-      private System.Windows.Forms.Label CreditLabel;
-      private System.Windows.Forms.Label DescriptionLabel;
-      private System.Windows.Forms.Label ProjectIDLabel;
-      private System.Windows.Forms.SplitContainer splitContainerBench;
-      private System.Windows.Forms.ListBox listBox1;
-      private System.Windows.Forms.TextBox txtBenchmarks;
-      private System.Windows.Forms.Button btnExit;
-      private System.Windows.Forms.GroupBox grpClients;
-      private System.Windows.Forms.ComboBox cboClients;
-      private System.Windows.Forms.PictureBox picDeleteClient;
-      private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
-      private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
-      private System.Windows.Forms.ToolTip toolTip1;
-      private System.Windows.Forms.TabControl tabControl1;
-      private System.Windows.Forms.TabPage tabTextBenchmark;
-      private System.Windows.Forms.TabPage tabGraphPPD1;
-      private System.Windows.Forms.TabPage tabGraphFrameTime1;
-      private System.Windows.Forms.TabPage tabGraphConfig;
-      private System.Windows.Forms.Button btnMoveColorDown;
-      private System.Windows.Forms.Button btnMoveColorUp;
-      private System.Windows.Forms.Button btnDeleteColor;
-      private System.Windows.Forms.Button btnAddColor;
-      private System.Windows.Forms.ListBox lstColors;
-      private System.Windows.Forms.PictureBox picColorPreview;
-      private System.Windows.Forms.TextBox KFactorTextBox;
-      private System.Windows.Forms.Label KFactorLabel;
-      private System.Windows.Forms.GroupBox grpColors;
-
-
-   }
+        private System.Windows.Forms.GroupBox grpProjectInfo;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox WorkServerTextBox;
+        private System.Windows.Forms.TextBox ContactTextBox;
+        private System.Windows.Forms.TextBox ExpirationTextBox;
+        private System.Windows.Forms.TextBox TimeoutTextBox;
+        private System.Windows.Forms.TextBox CoreTextBox;
+        private System.Windows.Forms.TextBox AtomsTextBox;
+        private System.Windows.Forms.TextBox FramesTextBox;
+        private System.Windows.Forms.TextBox CreditTextBox;
+        private System.Windows.Forms.TextBox ProjectIDTextBox;
+        private System.Windows.Forms.LinkLabel DescriptionLinkLabel;
+        private System.Windows.Forms.Label WorkServerLabel;
+        private System.Windows.Forms.Label ContactLabel;
+        private System.Windows.Forms.Label CoreLabel;
+        private System.Windows.Forms.Label ExpirationLabel;
+        private System.Windows.Forms.Label TimeoutLabel;
+        private System.Windows.Forms.Label AtomsLabel;
+        private System.Windows.Forms.Label FramesLabel;
+        private System.Windows.Forms.Label CreditLabel;
+        private System.Windows.Forms.Label DescriptionLabel;
+        private System.Windows.Forms.Label ProjectIDLabel;
+        private System.Windows.Forms.SplitContainer splitContainerBench;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.TextBox txtBenchmarks;
+        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.GroupBox grpClients;
+        private System.Windows.Forms.ComboBox cboClients;
+        private System.Windows.Forms.PictureBox picDeleteClient;
+        private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
+        private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage benchmarkTextTab;
+        private System.Windows.Forms.TabPage productionGraphTab;
+        private System.Windows.Forms.TabPage frameTimeGraphTab;
+        private System.Windows.Forms.TabPage graphConfigTab;
+        private System.Windows.Forms.Button btnMoveColorDown;
+        private System.Windows.Forms.Button btnMoveColorUp;
+        private System.Windows.Forms.Button btnDeleteColor;
+        private System.Windows.Forms.Button btnAddColor;
+        private System.Windows.Forms.ListBox lstColors;
+        private System.Windows.Forms.PictureBox picColorPreview;
+        private System.Windows.Forms.TextBox KFactorTextBox;
+        private System.Windows.Forms.Label KFactorLabel;
+        private System.Windows.Forms.GroupBox grpColors;
+        private System.Windows.Forms.TabPage projectComparisonGraphTab;
+    }
 }

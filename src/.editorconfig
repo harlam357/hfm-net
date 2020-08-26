@@ -149,6 +149,8 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:non
 csharp_style_expression_bodied_properties = true:suggestion
 csharp_style_expression_bodied_indexers = true:suggestion
 csharp_style_expression_bodied_accessors = true:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_operators = when_on_single_line:suggestion
 
 ###############################
 # C# Formatting Rules         #

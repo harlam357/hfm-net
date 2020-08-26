@@ -118,23 +118,52 @@ namespace HFM.Forms.Models
             var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
             var model = CreateModel(benchmarkService);
             model.Load();
-            // get the second slot identifier
-            var slotIdentifier = benchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name).Last();
             // Act
-            model.SelectedSlotIdentifier = new ValueItem<SlotIdentifier>(slotIdentifier);
+            model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
             // Assert
             Assert.AreEqual(2, model.SlotProjects.Count);
             Assert.AreEqual(23456, model.SelectedSlotProject.Value);
         }
 
         [Test]
-        public void BenchmarksModel_Protein_IsSetFromProteinService()
+        public void BenchmarksModel_SelectedSlotProject_IsSetFromDefaultProjectID()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarkService);
+            model.DefaultProjectID = 65432;
+            model.Load();
+            // Act
+            model.SetDefaultSlotProject();
+            // Assert
+            Assert.IsNotNull(model.SelectedSlotProject);
+            Assert.AreEqual(1, model.SelectedSlotProjectListItems.Count);
+            Assert.AreEqual(65432, model.SelectedSlotProjectListItems.First().GetValue<ValueItem<int>>().Value);
+        }
+
+        [Test]
+        public void BenchmarksModel_SelectedSlotProject_IsSetWhenProjectListItemIsSelected()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
+            var model = CreateModel(benchmarkService);
+            model.Load();
+            model.SelectedSlotProjectListItems.Clear();
+            Assert.IsNull(model.SelectedSlotProject);
+            // Act
+            model.SelectedSlotProjectListItems.Add(model.SlotProjectListItems.First());
+            // Assert
+            Assert.IsNotNull(model.SelectedSlotProject);
+            Assert.AreEqual(1, model.SelectedSlotProjectListItems.Count);
+            Assert.AreEqual(12345, model.SelectedSlotProjectListItems.First().GetValue<ValueItem<int>>().Value);
+        }
+
+        [Test]
+        public void BenchmarksModel_Protein_IsSetFromProteinServiceWhenProjectListItemIsSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data.Add(protein);
-            var proteinService = new ProteinService(dataContainer, null, NullLogger.Instance);
+            var proteinService = CreateProteinService(protein);
             var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarkService);
             // Act
@@ -144,18 +173,17 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_Protein_IsSetNullWhenSelectedSlotProjectIsNull()
+        public void BenchmarksModel_Protein_IsSetNullWhenProjectListItemIsNotSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data.Add(protein);
-            var proteinService = new ProteinService(dataContainer, null, NullLogger.Instance);
+            var proteinService = CreateProteinService(protein);
             var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarkService);
             model.Load();
+            Assert.IsNotNull(model.Protein);
             // Act
-            model.SelectedSlotProject = null;
+            model.SelectedSlotProjectListItems.Clear();
             // Assert
             Assert.IsNull(model.Protein);
         }
@@ -165,28 +193,57 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data.Add(protein);
-            var proteinService = new ProteinService(dataContainer, null, NullLogger.Instance);
+            var proteinService = CreateProteinService(protein);
             var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
             var model = CreateModel(proteinService, benchmarkService);
             model.Load();
-            // get the second slot identifier
-            var slotIdentifier = benchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name).Last();
             // Act
-            model.SelectedSlotIdentifier = new ValueItem<SlotIdentifier>(slotIdentifier);
+            model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
             // Assert
             Assert.IsNull(model.Protein);
         }
 
         [Test]
-        public void BenchmarksModel_BenchmarkText_IsPopulatedFromTextBenchmarksReport()
+        public void BenchmarksModel_AsIBenchmarkReportSource()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarkService);
+            var preferences = model.Preferences;
+            preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
+            // Act
+            model.Load();
+            // Assert
+            IBenchmarksReportSource source = model;
+            Assert.AreEqual(model.SelectedSlotIdentifier.Value, source.SlotIdentifier);
+            CollectionAssert.AreEqual(model.SelectedSlotProjectListItems.Select(x => x.GetValue<ValueItem<int>>().Value), source.Projects);
+            CollectionAssert.AreEqual(model.GraphColors, source.Colors);
+        }
+
+        [Test]
+        public void BenchmarksModel_AsIBenchmarkReportSource_WhenSelectedSlotIdentifierIsNull()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarkService);
+            var preferences = model.Preferences;
+            preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
+            model.Load();
+            // Act
+            model.SelectedSlotIdentifier = null;
+            // Assert
+            IBenchmarksReportSource source = model;
+            Assert.IsNull(source.SlotIdentifier);
+            Assert.AreEqual(0, source.Projects.Count);
+            CollectionAssert.AreEqual(model.GraphColors, source.Colors);
+        }
+
+        [Test]
+        public void BenchmarksModel_BenchmarkText_IsPopulatedFromTextBenchmarksReportWhenProjectIsSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data.Add(protein);
-            var proteinService = new ProteinService(dataContainer, null, NullLogger.Instance);
+            var proteinService = CreateProteinService(protein);
             var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarkService, new[] { new MockTextBenchmarksReport() });
             // Act
@@ -196,9 +253,48 @@ namespace HFM.Forms.Models
             Assert.AreEqual(MockTextBenchmarksReport.Text, model.BenchmarkText.First());
         }
 
+        [Test]
+        public void BenchmarksModel_RemoveSlot_RemovesSlotFromSlotIdentifiers()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarkService);
+            model.Load();
+            Assert.AreEqual(3, model.SlotIdentifiers.Count);
+            // Act
+            model.RemoveSlot(model.SlotIdentifierValueItems.ElementAt(1).Value);
+            // Assert
+            Assert.AreEqual(2, model.SlotIdentifiers.Count);
+        }
+
+        [Test]
+        public void BenchmarksModel_RemoveProject_RemovesProjectFromSlotProjects()
+        {
+            // Arrange
+            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarkService);
+            model.Load();
+            Assert.AreEqual(3, model.SlotIdentifiers.Count);
+            Assert.AreEqual(3, model.SlotProjects.Count);
+            var slotIdentifier = model.SlotIdentifierValueItems.ElementAt(1).Value;
+            int projectID = model.SlotProjectListItems.First().GetValue<ValueItem<int>>().Value;
+            // Act
+            model.RemoveProject(slotIdentifier, projectID);
+            // Assert
+            Assert.AreEqual(2, model.SlotIdentifiers.Count);
+            Assert.AreEqual(2, model.SlotProjects.Count);
+        }
+
         private static SlotIdentifier CreateSlotIdentifier(string name, int slotID)
         {
             return new SlotIdentifier(new ClientIdentifier(name, "Server", ClientSettings.DefaultPort, Guid.NewGuid()), slotID);
+        }
+
+        private static IProteinService CreateProteinService(Protein protein)
+        {
+            var dataContainer = new ProteinDataContainer();
+            dataContainer.Data.Add(protein);
+            return new ProteinService(dataContainer, null, NullLogger.Instance);
         }
 
         private static IProteinBenchmarkService CreateBenchmarkServiceWithOneSlotAndProject()

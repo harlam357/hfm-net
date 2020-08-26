@@ -51,6 +51,8 @@ namespace HFM.Forms
                     Models.FrameTimeZedGraphBenchmarksReport.KeyName, new PerRequestLifeTime())
                 .Register<Models.BenchmarksReport, Models.ProductionZedGraphBenchmarksReport>(
                     Models.ProductionZedGraphBenchmarksReport.KeyName, new PerRequestLifeTime())
+                .Register<Models.BenchmarksReport, Models.ProjectComparisonZedGraphBenchmarksReport>(
+                    Models.ProjectComparisonZedGraphBenchmarksReport.KeyName, new PerRequestLifeTime())
                 .Register<Models.PreferencesModel>(new PerRequestLifeTime())
                 .Register<Models.ProteinCalculatorModel>(new PerRequestLifeTime())
                 .Register<Models.WorkUnitHistoryModel>(new PerRequestLifeTime())

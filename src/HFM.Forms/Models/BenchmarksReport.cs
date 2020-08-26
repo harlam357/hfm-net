@@ -15,7 +15,7 @@ namespace HFM.Forms.Models
     {
         SlotIdentifier? SlotIdentifier { get; }
 
-        int? ProjectID { get; }
+        IReadOnlyCollection<int> Projects { get; }
 
         IReadOnlyList<Color> Colors { get; }
     }
@@ -39,6 +39,16 @@ namespace HFM.Forms.Models
             yield return String.Format(CultureInfo.InvariantCulture, " Core: {0}", protein.Core);
             yield return String.Format(CultureInfo.InvariantCulture, " Credit: {0}", protein.Credit);
             yield return String.Format(CultureInfo.InvariantCulture, " Frames: {0}", protein.Frames);
+        }
+
+        protected static double GetPPD(Protein protein, TimeSpan frameTime, bool calculateBonus)
+        {
+            if (calculateBonus)
+            {
+                var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+                return protein.GetBonusPPD(frameTime, unitTime);
+            }
+            return protein.GetPPD(frameTime);
         }
     }
 }

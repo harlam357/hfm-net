@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace HFM.Forms.Models
             SlotIdentifiers.DataSource = new BindingList<ListItem> { RaiseListChangedEvents = false };
             SlotProjects = new BindingSource();
             SlotProjects.DataSource = new BindingList<ListItem> { RaiseListChangedEvents = false };
+            SelectedSlotProjectListItems = new ListItemCollection();
         }
 
         public override void Load()
@@ -42,7 +44,6 @@ namespace HFM.Forms.Models
 
             RefreshSlotIdentifiers();
             SetFirstSlotIdentifier();
-            SetDefaultSlotProject();
         }
 
         public override void Save()
@@ -151,7 +152,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool SelectedSlotDeleteEnabled => SelectedSlotIdentifier.Value != SlotIdentifier.AllSlots;
+        public bool SelectedSlotDeleteEnabled => SelectedSlotIdentifier != null && SelectedSlotIdentifier.Value != SlotIdentifier.AllSlots;
 
         private void RefreshSlotIdentifiers()
         {
@@ -167,8 +168,8 @@ namespace HFM.Forms.Models
             SlotIdentifiers.ResetBindings(false);
         }
 
-        private IEnumerable<ValueItem<SlotIdentifier>> SlotIdentifierValueItems =>
-            SlotIdentifiers.Cast<ListItem>().Select(x => (ValueItem<SlotIdentifier>)x.ValueMember);
+        internal IEnumerable<ValueItem<SlotIdentifier>> SlotIdentifierValueItems =>
+            SlotIdentifiers.Cast<ListItem>().Select(x => x.GetValue<ValueItem<SlotIdentifier>>());
 
         private void SetFirstSlotIdentifier()
         {
@@ -176,56 +177,94 @@ namespace HFM.Forms.Models
         }
 
         // SelectedSlotProject
-        int? IBenchmarksReportSource.ProjectID => SelectedSlotProject?.Value;
+        IReadOnlyCollection<int> IBenchmarksReportSource.Projects =>
+            SelectedSlotProjectListItems.Select(x => x.GetValue<ValueItem<int>>().Value).ToList();
 
-        private ValueItem<int> _selectedSlotProject;
+        public ValueItem<int> SelectedSlotProject { get; private set; }
 
-        public ValueItem<int> SelectedSlotProject
+        private ListItemCollection _selectedSlotProjectListItems;
+
+        public ListItemCollection SelectedSlotProjectListItems
         {
-            get => _selectedSlotProject;
+            get => _selectedSlotProjectListItems;
             set
             {
-                if (_selectedSlotProject != value)
+                if (value != null)
                 {
-                    _selectedSlotProject = value;
-                    OnPropertyChanged();
-
-                    SetProtein();
-                    RunReports();
+                    if (_selectedSlotProjectListItems != null)
+                    {
+                        _selectedSlotProjectListItems.CollectionChanged -= OnSelectedSlotProjectListItemsChanged;
+                    }
+                    _selectedSlotProjectListItems = value;
+                    _selectedSlotProjectListItems.CollectionChanged += OnSelectedSlotProjectListItemsChanged;
                 }
             }
         }
 
+        protected virtual void OnSelectedSlotProjectListItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (SelectedSlotProjectListItems.Count > 0)
+            {
+                SelectedSlotProject = SelectedSlotProjectListItems.First().GetValue<ValueItem<int>>();
+                RunReports();
+            }
+            else
+            {
+                SelectedSlotProject = null;
+                ClearReports();
+            }
+            SetProtein();
+        }
+
         private void RefreshSlotProjects()
         {
-            var projects = BenchmarkService.GetBenchmarkProjects(SelectedSlotIdentifier.Value)
-                .Select(x => new ListItem(x.ToString(), new ValueItem<int>(x)));
-
             SlotProjects.Clear();
-            foreach (var project in projects)
+
+            if (SelectedSlotIdentifier != null)
             {
-                SlotProjects.Add(project);
+                var projects = BenchmarkService.GetBenchmarkProjects(SelectedSlotIdentifier.Value)
+                    .Select(x => new ListItem(x.ToString(), new ValueItem<int>(x)));
+
+                foreach (var project in projects)
+                {
+                    SlotProjects.Add(project);
+                }
             }
+
             SlotProjects.ResetBindings(false);
         }
 
-        private IEnumerable<ValueItem<int>> SlotProjectValueItems =>
-            SlotProjects.Cast<ListItem>().Select(x => (ValueItem<int>)x.ValueMember);
+        internal IEnumerable<ListItem> SlotProjectListItems => SlotProjects.Cast<ListItem>();
+
+        private void SetFirstSlotProject()
+        {
+            if (SelectedSlotProjectListItems.Count > 0)
+            {
+                SelectedSlotProjectListItems.Clear();
+            }
+            var item = SlotProjectListItems.FirstOrDefault();
+            if (!item.IsEmpty)
+            {
+                SelectedSlotProjectListItems.Add(item);
+            }
+        }
 
         /// <summary>
         /// Set before calling <see cref="Load"/> to default the selected project to this project ID.
         /// </summary>
         public int DefaultProjectID { get; set; }
 
-        private void SetDefaultSlotProject()
+        public void SetDefaultSlotProject()
         {
-            var slotProject = SlotProjectValueItems.FirstOrDefault(x => x.Value == DefaultProjectID);
-            SelectedSlotProject = slotProject ?? SlotProjectValueItems.FirstOrDefault();
-        }
-
-        private void SetFirstSlotProject()
-        {
-            SelectedSlotProject = SlotProjectValueItems.FirstOrDefault();
+            var defaultSlotProject = SlotProjectListItems.FirstOrDefault(x => x.GetValue<ValueItem<int>>().Value == DefaultProjectID);
+            if (!defaultSlotProject.IsEmpty)
+            {
+                if (SelectedSlotProjectListItems.Count > 0)
+                {
+                    SelectedSlotProjectListItems.Clear();
+                }
+                SelectedSlotProjectListItems.Add(defaultSlotProject);
+            }
         }
 
         // Reports
@@ -245,8 +284,19 @@ namespace HFM.Forms.Models
                     case ProductionZedGraphBenchmarksReport.KeyName:
                         ProductionGraphControl = (Control)report.Result;
                         break;
+                    case ProjectComparisonZedGraphBenchmarksReport.KeyName:
+                        ProjectComparisonGraphControl = (Control)report.Result;
+                        break;
                 }
             }
+        }
+
+        private void ClearReports()
+        {
+            BenchmarkText = null;
+            FrameTimeGraphControl = null;
+            ProductionGraphControl = null;
+            ProjectComparisonGraphControl = null;
         }
 
         private IReadOnlyCollection<string> _benchmarkText;
@@ -289,6 +339,21 @@ namespace HFM.Forms.Models
                 if (_productionGraphControl != value)
                 {
                     _productionGraphControl = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private Control _projectComparisonGraphControl;
+
+        public Control ProjectComparisonGraphControl
+        {
+            get => _projectComparisonGraphControl;
+            set
+            {
+                if (_projectComparisonGraphControl != value)
+                {
+                    _projectComparisonGraphControl = value;
                     OnPropertyChanged();
                 }
             }
