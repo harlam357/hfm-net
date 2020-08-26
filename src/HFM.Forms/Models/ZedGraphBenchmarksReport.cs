@@ -24,6 +24,19 @@ namespace HFM.Forms.Models
             BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
         }
 
+        protected static ZedGraphControl CreateZedGraphControl()
+        {
+            var zg = new ZedGraphControl();
+            zg.GraphPane.Title.Text = "HFM.NET - Slot Benchmarks";
+            return zg;
+        }
+
+        protected static Color GetNextColor(int index, IReadOnlyList<Color> colors)
+        {
+            int colorIndex = index % colors.Count;
+            return colors[colorIndex];
+        }
+
         protected static string GetSlotNameAndProcessor(ProteinBenchmark benchmark, Protein protein)
         {
             if (protein != null)
@@ -38,6 +51,9 @@ namespace HFM.Forms.Models
             return benchmark.SlotIdentifier.Name;
         }
 
+        /// <summary>
+        /// Setup yAxis scale steps based on maximum y value.
+        /// </summary>
         protected static void SetYAxisScale(YAxis yAxis, double yMaximum)
         {
             double roundTo = GetRoundTo(yMaximum);
@@ -66,6 +82,11 @@ namespace HFM.Forms.Models
             // apply the roundTo increment
             return value + roundTo;
         }
+
+        protected static void FillGraphPane(GraphPane pane)
+        {
+            pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
+        }
     }
 
     public abstract class ZedGraphBarGraphBenchmarksReport : ZedGraphBenchmarksReport
@@ -79,15 +100,11 @@ namespace HFM.Forms.Models
         public sealed override void Generate(IBenchmarksReportSource source)
         {
             var slotIdentifier = source.SlotIdentifier;
-            var projectID = source.Projects.Count > 0 ? (int?)source.Projects.First() : null;
-            if (slotIdentifier is null || projectID is null)
-            {
-                Result = null;
-                return;
-            }
+            var projectID = GetProjectID(source);
+            var protein = GetProtein(projectID);
+            var colors = source.Colors;
 
-            var protein = ProteinService.Get(projectID.Value);
-            if (protein is null)
+            if (slotIdentifier is null || projectID is null || protein is null)
             {
                 Result = null;
                 return;
@@ -95,7 +112,7 @@ namespace HFM.Forms.Models
 
             var benchmarks = SortBenchmarks(BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber));
 
-            var zg = new ZedGraphControl();
+            var zg = CreateZedGraphControl();
             try
             {
                 GraphPane pane = zg.GraphPane;
@@ -103,7 +120,6 @@ namespace HFM.Forms.Models
                 // Create the bars for each benchmark
                 int i = 0;
                 double yMaximum = 0.0;
-                var graphColors = source.Colors;
                 foreach (ProteinBenchmark benchmark in benchmarks)
                 {
                     var yPoints = GetYPoints(protein, benchmark);
@@ -112,37 +128,34 @@ namespace HFM.Forms.Models
                         yMaximum = Math.Max(yMaximum, y);
                     }
 
-                    CreateBar(i++, pane, GetSlotNameAndProcessor(benchmark, protein), yPoints, graphColors);
+                    string label = GetSlotNameAndProcessor(benchmark, protein);
+                    var color = GetNextColor(i++, colors);
+                    CreateBarItem(pane, label, yPoints, color);
                 }
 
-                // Set the Titles
-                pane.Title.Text = "HFM.NET - Slot Benchmarks";
-                pane.XAxis.Title.Text = String.Join("   ", EnumerateProjectInformation(protein));
-                pane.YAxis.Title.Text = Key;
-
-                // Draw the X tics between the labels instead of at the labels
-                pane.XAxis.MajorTic.IsBetweenLabels = true;
-                // Set the XAxis labels
-                pane.XAxis.Scale.TextLabels = new[] { "Min. Frame Time", "Avg. Frame Time" };
-                // Set the XAxis to Text type
-                pane.XAxis.Type = AxisType.Text;
-
+                ConfigureXAxis(pane.XAxis, protein);
                 ConfigureYAxis(pane.YAxis, yMaximum);
 
-                // Fill the Axis and Pane backgrounds
-                pane.Chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-                pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
+                FillChart(pane.Chart);
+                FillGraphPane(pane);
             }
             finally
             {
-                // Tell ZedGraph to reconfigure the
-                // axes since the data has changed
                 zg.AxisChange();
-                // Refresh the control
-                zg.Refresh();
             }
 
             Result = zg;
+        }
+
+        private static int? GetProjectID(IBenchmarksReportSource source)
+        {
+            return source.Projects.Count > 0 ? (int?)source.Projects.First() : null;
+        }
+
+        private Protein GetProtein(int? projectID)
+        {
+            if (!projectID.HasValue) return null;
+            return ProteinService.Get(projectID.Value);
         }
 
         protected virtual IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks)
@@ -152,19 +165,29 @@ namespace HFM.Forms.Models
 
         protected abstract double[] GetYPoints(Protein protein, ProteinBenchmark benchmark);
 
-        protected virtual void ConfigureYAxis(YAxis yAxis, double yMaximum)
+        protected virtual void ConfigureXAxis(XAxis xAxis, Protein protein)
         {
+            xAxis.Title.Text = String.Join("   ", EnumerateProjectInformation(protein));
 
+            xAxis.MajorTic.IsBetweenLabels = true;
+            xAxis.Scale.TextLabels = new[] { "Min. Frame Time", "Avg. Frame Time" };
+            xAxis.Type = AxisType.Text;
         }
 
-        private static void CreateBar(int index, GraphPane pane, string name, double[] yPoints, IReadOnlyList<Color> graphColors)
+        protected virtual void ConfigureYAxis(YAxis yAxis, double yMaximum)
         {
-            int colorIndex = index % graphColors.Count;
-            Color barColor = graphColors[colorIndex];
+            yAxis.Title.Text = Key;
+        }
 
-            // Generate a bar with the name in the legend
-            BarItem myBar = pane.AddBar(name, null, yPoints, barColor);
-            myBar.Bar.Fill = new Fill(barColor, Color.White, barColor);
+        private static void CreateBarItem(GraphPane pane, string label, double[] yPoints, Color color)
+        {
+            var barItem = pane.AddBar(label, null, yPoints, color);
+            barItem.Bar.Fill = new Fill(color, Color.White, color);
+        }
+
+        private static void FillChart(Chart chart)
+        {
+            chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
         }
     }
 
@@ -217,9 +240,10 @@ namespace HFM.Forms.Models
 
         protected override void ConfigureYAxis(YAxis yAxis, double yMaximum)
         {
+            base.ConfigureYAxis(yAxis, yMaximum);
+
             // Don't show YAxis.Scale as 10^3         
             yAxis.Scale.MagAuto = false;
-            // Set the YAxis Steps
             SetYAxisScale(yAxis, yMaximum);
         }
     }

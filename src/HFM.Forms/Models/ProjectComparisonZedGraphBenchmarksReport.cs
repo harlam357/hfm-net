@@ -26,6 +26,8 @@ namespace HFM.Forms.Models
         {
             var slotIdentifier = source.SlotIdentifier;
             var projects = source.Projects;
+            var colors = source.Colors;
+
             if (slotIdentifier is null || projects.Count == 0)
             {
                 Result = null;
@@ -43,14 +45,9 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            double ordinal = 1.0;
-            var projectToXAxisOrdinal = new Dictionary<int, double>();
-            foreach (int projectID in benchmarks.Select(x => x.ProjectID).OrderBy(x => x).Distinct())
-            {
-                projectToXAxisOrdinal.Add(projectID, ordinal++);
-            }
+            var projectToXAxisOrdinal = BuildProjectToXAxisOrdinal(benchmarks);
 
-            var zg = new ZedGraphControl();
+            var zg = CreateZedGraphControl();
             try
             {
                 GraphPane pane = zg.GraphPane;
@@ -59,7 +56,6 @@ namespace HFM.Forms.Models
 
                 int i = 0;
                 var ppd = new List<double>();
-                var graphColors = source.Colors;
                 foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.Processor, x.Threads)))
                 {
                     string label = null;
@@ -84,8 +80,7 @@ namespace HFM.Forms.Models
 
                     if (points.Count > 0)
                     {
-                        int colorIndex = i++ % graphColors.Count;
-                        Color color = graphColors[colorIndex];
+                        Color color = GetNextColor(i++, colors);
                         var lineItem = pane.AddCurve(label, points, color, SymbolType.Circle);
                         lineItem.Symbol.Fill = new Fill(color);
                         lineItem.IsOverrideOrdinal = true;
@@ -102,38 +97,43 @@ namespace HFM.Forms.Models
                 averageLineItem.Symbol.Fill = new Fill(Color.Black);
                 averageLineItem.IsOverrideOrdinal = true;
 
-                // Set the Titles
-                pane.Title.Text = "HFM.NET - Slot Benchmarks";
-                pane.XAxis.Title.Text = "Project Number";
-                pane.YAxis.Title.Text = "PPD";
-
-                // Set the XAxis labels
-                pane.XAxis.Scale.TextLabels = projectToXAxisOrdinal.Keys.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
-                // Set the XAxis to Text type
-                pane.XAxis.Type = AxisType.Text;
-
+                ConfigureXAxis(pane.XAxis, projectToXAxisOrdinal);
                 ConfigureYAxis(pane.YAxis, ppd.Max());
 
-                // Fill Pane background
-                pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
+                FillGraphPane(pane);
             }
             finally
             {
-                // Tell ZedGraph to reconfigure the
-                // axes since the data has changed
                 zg.AxisChange();
-                // Refresh the control
-                zg.Refresh();
             }
 
             Result = zg;
         }
 
+        private static Dictionary<int, double> BuildProjectToXAxisOrdinal(IEnumerable<ProteinBenchmark> benchmarks)
+        {
+            double ordinal = 1.0;
+            var projectToXAxisOrdinal = new Dictionary<int, double>();
+            foreach (int projectID in benchmarks.Select(x => x.ProjectID).OrderBy(x => x).Distinct())
+            {
+                projectToXAxisOrdinal.Add(projectID, ordinal++);
+            }
+            return projectToXAxisOrdinal;
+        }
+
+        private static void ConfigureXAxis(XAxis xAxis, Dictionary<int, double> projectToXAxisOrdinal)
+        {
+            xAxis.Title.Text = "Project Number";
+            xAxis.Scale.TextLabels = projectToXAxisOrdinal.Keys.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+            xAxis.Type = AxisType.Text;
+        }
+
         private static void ConfigureYAxis(YAxis yAxis, double yMaximum)
         {
+            yAxis.Title.Text = "PPD";
+
             // Don't show YAxis.Scale as 10^3         
             yAxis.Scale.MagAuto = false;
-            // Set the YAxis Steps
             SetYAxisScale(yAxis, yMaximum);
         }
     }
