@@ -175,7 +175,7 @@ namespace HFM.Core.Client
         {
             if (description is null) return (SlotType.CPU, null, null, null, null);
 
-            var slotType = GetSlotTypeFromDescription(description);
+            var slotType = ConvertToSlotType.FromSlotDescription(description);
 
             string gpu = null;
             int? gpuBus = null;
@@ -194,13 +194,6 @@ namespace HFM.Core.Client
             }
 
             return (slotType, cpuThreads, gpu, gpuBus, gpuSlot);
-        }
-
-        private static SlotType GetSlotTypeFromDescription(string description)
-        {
-            return description.StartsWith("gpu", StringComparison.OrdinalIgnoreCase)
-                ? SlotType.GPU
-                : SlotType.CPU;
         }
 
         private static string GetGPUFromDescription(string description)

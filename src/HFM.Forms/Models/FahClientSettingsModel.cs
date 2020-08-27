@@ -166,7 +166,7 @@ namespace HFM.Forms.Models
                 Slots.Add(new FahClientSettingsSlotModel
                 {
                     ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.ID),
-                    SlotType = SlotTypeConvert.FromSlotOptions(slot.SlotOptions).ToString(),
+                    SlotType = ConvertToSlotType.FromSlotDescription(slot.Description).ToString(),
                     ClientType = slot.SlotOptions[Options.ClientType],
                     MaxPacketSize = slot.SlotOptions[Options.MaxPacketSize]
                 });

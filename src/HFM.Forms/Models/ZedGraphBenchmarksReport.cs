@@ -41,7 +41,7 @@ namespace HFM.Forms.Models
         {
             if (protein != null)
             {
-                var slotType = SlotTypeConvert.FromCoreName(protein.Core);
+                var slotType = ConvertToSlotType.FromCoreName(protein.Core);
                 var processorAndThreads = benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType);
                 if (!String.IsNullOrWhiteSpace(processorAndThreads))
                 {

@@ -53,7 +53,7 @@ namespace HFM.Forms.Models
             var bonusByUserSpecifiedTimeValues = protein.GetProductionValues(frameTime, totalTimeByUser);
             var bonusByFrameTimeValues = protein.GetProductionValues(frameTime, totalTimeByFrame);
             CoreName = protein.Core;
-            SlotType = SlotTypeConvert.FromCoreName(protein.Core).ToString();
+            SlotType = ConvertToSlotType.FromCoreName(protein.Core).ToString();
             NumberOfAtoms = protein.NumberOfAtoms;
             CompletionTime = Math.Round(TotalWuTimeEnabled ? totalTimeByUser.TotalDays : totalTimeByFrame.TotalDays, decimalPlaces);
             PreferredDeadline = protein.PreferredDays;

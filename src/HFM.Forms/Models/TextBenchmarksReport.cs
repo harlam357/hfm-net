@@ -81,7 +81,7 @@ namespace HFM.Forms.Models
             yield return $" Path: {benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString()}";
             if (benchmark.BenchmarkIdentifier.HasProcessor)
             {
-                var slotType = SlotTypeConvert.FromCoreName(protein.Core);
+                var slotType = ConvertToSlotType.FromCoreName(protein.Core);
                 yield return $" Proc: {benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType)}";
             }
             yield return $" Number of Frames Observed: {benchmark.FrameTimes.Count}";

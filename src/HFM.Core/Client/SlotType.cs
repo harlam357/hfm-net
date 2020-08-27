@@ -1,12 +1,9 @@
-﻿
-using System;
-
-using HFM.Client.ObjectModel;
+﻿using System;
 
 namespace HFM.Core.Client
 {
     /// <summary>
-    /// Folding Slot Type
+    /// Represents the FAHClient slot type.
     /// </summary>
     public enum SlotType
     {
@@ -15,19 +12,20 @@ namespace HFM.Core.Client
         GPU = 2
     }
 
-    public static class SlotTypeConvert
+    public static class ConvertToSlotType
     {
-        public static SlotType FromSlotOptions(SlotOptions slotOptions)
+        public static SlotType FromSlotDescription(string description)
         {
-            return (SlotType)Enum.Parse(typeof(SlotType), slotOptions[Options.GPUIndex] != null ? "GPU" : "CPU");
+            if (String.IsNullOrEmpty(description)) return SlotType.Unknown;
+
+            return description.StartsWith("gpu", StringComparison.OrdinalIgnoreCase)
+                ? SlotType.GPU
+                : SlotType.CPU;
         }
 
         public static SlotType FromCoreName(string coreName)
         {
-            if (String.IsNullOrEmpty(coreName))
-            {
-                return SlotType.Unknown;
-            }
+            if (String.IsNullOrEmpty(coreName)) return SlotType.Unknown;
 
             switch (coreName.ToUpperInvariant())
             {
@@ -69,14 +67,11 @@ namespace HFM.Core.Client
             }
         }
 
-        public static SlotType FromCoreId(string coreId)
+        public static SlotType FromCoreID(string coreID)
         {
-            if (String.IsNullOrEmpty(coreId))
-            {
-                return SlotType.Unknown;
-            }
+            if (String.IsNullOrEmpty(coreID)) return SlotType.Unknown;
 
-            switch (coreId.ToUpperInvariant())
+            switch (coreID.ToUpperInvariant())
             {
                 case "78": // Gromacs
                 case "79": // Double Gromacs

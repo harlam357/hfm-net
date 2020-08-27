@@ -25,7 +25,7 @@ namespace HFM.Core.Data
             }
 
             var core = (string)args[0];
-            return String.IsNullOrEmpty(core) ? String.Empty : SlotTypeConvert.FromCoreName(core).ToString();
+            return String.IsNullOrEmpty(core) ? String.Empty : ConvertToSlotType.FromCoreName(core).ToString();
          }
       }
 
