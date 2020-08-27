@@ -55,7 +55,7 @@ namespace HFM.Forms.Views
             this.ProjectIDLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainerBench = new System.Windows.Forms.SplitContainer();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.projectsListBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.benchmarkTextTab = new System.Windows.Forms.TabPage();
             this.txtBenchmarks = new System.Windows.Forms.TextBox();
@@ -365,7 +365,7 @@ namespace HFM.Forms.Views
             // 
             // splitContainerBench.Panel1
             // 
-            this.splitContainerBench.Panel1.Controls.Add(this.listBox1);
+            this.splitContainerBench.Panel1.Controls.Add(this.projectsListBox);
             // 
             // splitContainerBench.Panel2
             // 
@@ -375,17 +375,17 @@ namespace HFM.Forms.Views
             this.splitContainerBench.SplitterDistance = 65;
             this.splitContainerBench.TabIndex = 1;
             // 
-            // listBox1
+            // projectsListBox
             // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(65, 395);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
-            this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
+            this.projectsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.projectsListBox.FormattingEnabled = true;
+            this.projectsListBox.Location = new System.Drawing.Point(0, 0);
+            this.projectsListBox.Name = "projectsListBox";
+            this.projectsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.projectsListBox.Size = new System.Drawing.Size(65, 395);
+            this.projectsListBox.TabIndex = 0;
+            this.projectsListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.projectsListBox_MouseDown);
+            this.projectsListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.projectsListBox_MouseUp);
             // 
             // tabControl1
             // 
@@ -670,7 +670,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.Label ProjectIDLabel;
         private System.Windows.Forms.SplitContainer splitContainerBench;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox projectsListBox;
         private System.Windows.Forms.TextBox txtBenchmarks;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.GroupBox grpClients;

@@ -62,10 +62,10 @@ namespace HFM.Forms.Views
             WorkServerTextBox.BindText(model, nameof(BenchmarksModel.ServerIP));
 
             model.PropertyChanged += (s, e) => ModelPropertyChanged((BenchmarksModel)s, e);
-            model.SelectedSlotProjectListItems = new ListBoxSelectedListItemCollection(listBox1);
-            listBox1.DataSource = model.SlotProjects;
-            listBox1.DisplayMember = nameof(ListItem.DisplayMember);
-            listBox1.ValueMember = nameof(ListItem.ValueMember);
+            model.SelectedSlotProjectListItems = new ListBoxSelectedListItemCollection(projectsListBox);
+            projectsListBox.DataSource = model.SlotProjects;
+            projectsListBox.DisplayMember = nameof(ListItem.DisplayMember);
+            projectsListBox.ValueMember = nameof(ListItem.ValueMember);
             model.SetDefaultSlotProject();
 
             lstColors.DataSource = model.GraphColors;
@@ -127,23 +127,23 @@ namespace HFM.Forms.Views
 
         #region Event Handlers
 
-        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        private void projectsListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                int index = listBox1.IndexFromPoint(e.X, e.Y);
-                listBox1.SelectedItems.Clear();
-                listBox1.SelectedIndex = index;
+                int index = projectsListBox.IndexFromPoint(e.X, e.Y);
+                projectsListBox.SelectedItems.Clear();
+                projectsListBox.SelectedIndex = index;
             }
         }
 
-        private void listBox1_MouseUp(object sender, MouseEventArgs e)
+        private void projectsListBox_MouseUp(object sender, MouseEventArgs e)
         {
-            if (listBox1.SelectedIndex == -1) return;
+            if (projectsListBox.SelectedIndex == -1) return;
 
             if (e.Button == MouseButtons.Right)
             {
-                listBox1ContextMenuStrip.Show(listBox1.PointToScreen(new Point(e.X, e.Y)));
+                listBox1ContextMenuStrip.Show(projectsListBox.PointToScreen(new Point(e.X, e.Y)));
             }
         }
 
