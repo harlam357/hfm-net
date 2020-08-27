@@ -62,7 +62,7 @@ namespace HFM.Forms.Views
             this.graphConfigTab = new System.Windows.Forms.TabPage();
             this.grpColors = new System.Windows.Forms.GroupBox();
             this.lstColors = new System.Windows.Forms.ListBox();
-            this.picColorPreview = new System.Windows.Forms.PictureBox();
+            this.colorPreviewPictureBox = new System.Windows.Forms.PictureBox();
             this.btnMoveColorDown = new System.Windows.Forms.Button();
             this.btnAddColor = new System.Windows.Forms.Button();
             this.btnMoveColorUp = new System.Windows.Forms.Button();
@@ -88,7 +88,7 @@ namespace HFM.Forms.Views
             this.benchmarkTextTab.SuspendLayout();
             this.graphConfigTab.SuspendLayout();
             this.grpColors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).BeginInit();
             this.grpClients.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
             this.listBox1ContextMenuStrip.SuspendLayout();
@@ -438,7 +438,7 @@ namespace HFM.Forms.Views
             // grpColors
             // 
             this.grpColors.Controls.Add(this.lstColors);
-            this.grpColors.Controls.Add(this.picColorPreview);
+            this.grpColors.Controls.Add(this.colorPreviewPictureBox);
             this.grpColors.Controls.Add(this.btnMoveColorDown);
             this.grpColors.Controls.Add(this.btnAddColor);
             this.grpColors.Controls.Add(this.btnMoveColorUp);
@@ -461,14 +461,14 @@ namespace HFM.Forms.Views
             this.lstColors.TabIndex = 0;
             this.lstColors.SelectedIndexChanged += new System.EventHandler(this.lstColors_SelectedIndexChanged);
             // 
-            // picColorPreview
+            // colorPreviewPictureBox
             // 
-            this.picColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.picColorPreview.Location = new System.Drawing.Point(171, 19);
-            this.picColorPreview.Name = "picColorPreview";
-            this.picColorPreview.Size = new System.Drawing.Size(66, 66);
-            this.picColorPreview.TabIndex = 5;
-            this.picColorPreview.TabStop = false;
+            this.colorPreviewPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.colorPreviewPictureBox.Location = new System.Drawing.Point(171, 19);
+            this.colorPreviewPictureBox.Name = "colorPreviewPictureBox";
+            this.colorPreviewPictureBox.Size = new System.Drawing.Size(66, 66);
+            this.colorPreviewPictureBox.TabIndex = 5;
+            this.colorPreviewPictureBox.TabStop = false;
             // 
             // btnMoveColorDown
             // 
@@ -637,7 +637,7 @@ namespace HFM.Forms.Views
             this.benchmarkTextTab.PerformLayout();
             this.graphConfigTab.ResumeLayout(false);
             this.grpColors.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picColorPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).EndInit();
             this.grpClients.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
             this.listBox1ContextMenuStrip.ResumeLayout(false);
@@ -690,7 +690,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.Button btnDeleteColor;
         private System.Windows.Forms.Button btnAddColor;
         private System.Windows.Forms.ListBox lstColors;
-        private System.Windows.Forms.PictureBox picColorPreview;
+        private System.Windows.Forms.PictureBox colorPreviewPictureBox;
         private System.Windows.Forms.TextBox KFactorTextBox;
         private System.Windows.Forms.Label KFactorLabel;
         private System.Windows.Forms.GroupBox grpColors;

@@ -171,7 +171,7 @@ namespace HFM.Forms.Views
         {
             if (lstColors.SelectedIndex == -1) return;
 
-            picColorPreview.BackColor = _presenter.Model.GraphColors[lstColors.SelectedIndex];
+            colorPreviewPictureBox.BackColor = _presenter.Model.GraphColors[lstColors.SelectedIndex];
         }
 
         private void btnMoveColorUp_Click(object sender, EventArgs e)
