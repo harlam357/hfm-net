@@ -618,8 +618,18 @@ namespace HFM.Forms.Views
             SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
                 totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine));
 
-            string slots = totals.TotalSlots == 1 ? "Slot" : "Slots";
-            int percentWorking = ((totals.WorkingSlots * 200) + totals.TotalSlots) / (totals.TotalSlots * 2);
+            string slots = "Slots";
+            if (totals.TotalSlots == 1)
+            {
+                slots = "Slot";
+            }
+
+            int percentWorking = 0;
+            if (totals.TotalSlots > 0)
+            {
+                percentWorking = ((totals.WorkingSlots * 200) + totals.TotalSlots) / (totals.TotalSlots * 2);
+            }
+
             SetStatusLabelHostsText($"{totals.WorkingSlots} of {totals.TotalSlots} {slots} ({percentWorking}%)");
             SetStatusLabelPPDText($"{totals.PPD.ToString(numberFormat)} PPD");
         }
