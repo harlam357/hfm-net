@@ -39,9 +39,9 @@ namespace HFM.Forms.Models
         {
             FormLocation = Preferences.Get<Point>(Preference.BenchmarksFormLocation);
             FormSize = Preferences.Get<Size>(Preference.BenchmarksFormSize);
-            GraphColors.Clear();
-            GraphColors.AddRange(Preferences.Get<List<Color>>(Preference.GraphColors) ?? new List<Color>());
+            LoadGraphColors(Preferences.Get<List<Color>>(Preference.GraphColors) ?? new List<Color>());
 
+            SetFirstGraphColor();
             RefreshSlotIdentifiers();
             SetFirstSlotIdentifier();
         }
@@ -50,7 +50,7 @@ namespace HFM.Forms.Models
         {
             Preferences.Set(Preference.BenchmarksFormLocation, FormLocation);
             Preferences.Set(Preference.BenchmarksFormSize, FormSize);
-            Preferences.Set(Preference.GraphColors, GraphColors);
+            Preferences.Set(Preference.GraphColors, GraphColors.Select(x => x.GetValue<ValueItem<Color>>().Value).ToList());
             Preferences.Save();
         }
 
@@ -58,9 +58,9 @@ namespace HFM.Forms.Models
 
         public Size FormSize { get; set; }
 
-        IReadOnlyList<Color> IBenchmarksReportSource.Colors => GraphColors;
+        IReadOnlyList<Color> IBenchmarksReportSource.Colors => GraphColors.Select(x => x.GetValue<ValueItem<Color>>().Value).ToList();
 
-        public List<Color> GraphColors { get; } = new List<Color>();
+        public BindingList<ListItem> GraphColors { get; } = new BindingList<ListItem>();
 
         public BindingSource SlotIdentifiers { get; }
 
@@ -129,6 +129,38 @@ namespace HFM.Forms.Models
         public string ServerIP => Protein?.ServerIP;
 
         #endregion
+
+        // SelectedGraphColor
+        private ValueItem<Color> _selectedGraphColorItem;
+
+        public ValueItem<Color> SelectedGraphColorItem
+        {
+            get => _selectedGraphColorItem;
+            set
+            {
+                _selectedGraphColorItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedGraphColor));
+            }
+        }
+
+        public Color SelectedGraphColor => SelectedGraphColorItem?.Value ?? Color.Empty;
+
+        private void LoadGraphColors(IEnumerable<Color> graphColors)
+        {
+            foreach (var color in graphColors)
+            {
+                GraphColors.Add(new ListItem(color.Name, new ValueItem<Color>(color)));
+            }
+        }
+
+        private void SetFirstGraphColor()
+        {
+            if (GraphColors.Count > 0)
+            {
+                SelectedGraphColorItem = GraphColors.First().GetValue<ValueItem<Color>>();
+            }
+        }
 
         // SelectedSlotIdentifier
         SlotIdentifier? IBenchmarksReportSource.SlotIdentifier => SelectedSlotIdentifier?.Value;
@@ -376,6 +408,76 @@ namespace HFM.Forms.Models
             BenchmarkService.RemoveAll(slotIdentifier, projectID);
             RefreshSlotIdentifiers();
             RefreshSlotProjects();
+        }
+
+        // Color Actions
+        public void MoveSelectedGraphColorUp()
+        {
+            int index = IndexOfSelectedGraphColor();
+            if (index <= 0) return;
+
+            var item = GraphColors[index];
+            GraphColors.Insert(index - 1, item);
+            GraphColors.RemoveAt(index + 1);
+            SelectedGraphColorItem = item.GetValue<ValueItem<Color>>();
+        }
+
+        public void MoveSelectedGraphColorDown()
+        {
+            int index = IndexOfSelectedGraphColor();
+            if (index == GraphColors.Count - 1) return;
+
+            var item = GraphColors[index];
+            GraphColors.RemoveAt(index);
+            GraphColors.Insert(index + 1, item);
+            SelectedGraphColorItem = item.GetValue<ValueItem<Color>>();
+        }
+
+        public bool AddGraphColor(Color color)
+        {
+            if (HasGraphColor(color)) return false;
+            GraphColors.Add(new ListItem(color.Name, new ValueItem<Color>(color)));
+            return true;
+        }
+
+        private bool HasGraphColor(Color color)
+        {
+            return GraphColors.Select(x => x.GetValue<ValueItem<Color>>().Value).Contains(color);
+        }
+
+        public void DeleteSelectedGraphColor()
+        {
+            int index = IndexOfSelectedGraphColor();
+            if (index == -1) return;
+
+            GraphColors.RemoveAt(index);
+            index = GetNextSelectedGraphColorIndex(index);
+            if (index >= 0)
+            {
+                SelectedGraphColorItem = GraphColors[index].GetValue<ValueItem<Color>>();
+            }
+        }
+
+        private int GetNextSelectedGraphColorIndex(int index)
+        {
+            if (GraphColors.Count == 0) return -1;
+            if (index == 0) return index;
+            if (index >= GraphColors.Count) return index - 1;
+            return index;
+        }
+
+        private int IndexOfSelectedGraphColor()
+        {
+            int i = 0;
+            foreach (var item in GraphColors)
+            {
+                if (item.GetValue<ValueItem<Color>>() == SelectedGraphColorItem)
+                {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
         }
     }
 }

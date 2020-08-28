@@ -74,7 +74,7 @@ namespace HFM.Forms.Views
             this.grpClients = new System.Windows.Forms.GroupBox();
             this.picDeleteClient = new System.Windows.Forms.PictureBox();
             this.cboClients = new System.Windows.Forms.ComboBox();
-            this.listBox1ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.projectsListBoxContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuContextRefreshMinimum = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContextDeleteProject = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -91,7 +91,7 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).BeginInit();
             this.grpClients.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
-            this.listBox1ContextMenuStrip.SuspendLayout();
+            this.projectsListBoxContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpProjectInfo
@@ -459,7 +459,6 @@ namespace HFM.Forms.Views
             this.lstColors.Name = "lstColors";
             this.lstColors.Size = new System.Drawing.Size(111, 329);
             this.lstColors.TabIndex = 0;
-            this.lstColors.SelectedIndexChanged += new System.EventHandler(this.lstColors_SelectedIndexChanged);
             // 
             // colorPreviewPictureBox
             // 
@@ -591,13 +590,13 @@ namespace HFM.Forms.Views
             this.cboClients.Size = new System.Drawing.Size(518, 21);
             this.cboClients.TabIndex = 0;
             // 
-            // listBox1ContextMenuStrip
+            // projectsListBoxContextMenuStrip
             // 
-            this.listBox1ContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.projectsListBoxContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuContextRefreshMinimum,
             this.mnuContextDeleteProject});
-            this.listBox1ContextMenuStrip.Name = "listBox1ContextMenuStrip";
-            this.listBox1ContextMenuStrip.Size = new System.Drawing.Size(235, 48);
+            this.projectsListBoxContextMenuStrip.Name = "projectsListBoxContextMenuStrip";
+            this.projectsListBoxContextMenuStrip.Size = new System.Drawing.Size(235, 48);
             // 
             // mnuContextRefreshMinimum
             // 
@@ -640,7 +639,7 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).EndInit();
             this.grpClients.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
-            this.listBox1ContextMenuStrip.ResumeLayout(false);
+            this.projectsListBoxContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -676,7 +675,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.GroupBox grpClients;
         private System.Windows.Forms.ComboBox cboClients;
         private System.Windows.Forms.PictureBox picDeleteClient;
-        private System.Windows.Forms.ContextMenuStrip listBox1ContextMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip projectsListBoxContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
         private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
         private System.Windows.Forms.ToolTip toolTip1;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -29,8 +28,6 @@ namespace HFM.Forms.Views
         {
             LoadData(_presenter.Model);
         }
-
-        // ReSharper disable InconsistentNaming
 
         private void LoadData(BenchmarksModel model)
         {
@@ -69,6 +66,11 @@ namespace HFM.Forms.Views
             model.SetDefaultSlotProject();
 
             lstColors.DataSource = model.GraphColors;
+            lstColors.DisplayMember = nameof(ListItem.DisplayMember);
+            lstColors.ValueMember = nameof(ListItem.ValueMember);
+            lstColors.BindSelectedValue(model, nameof(BenchmarksModel.SelectedGraphColorItem));
+
+            colorPreviewPictureBox.DataBindings.Add(nameof(PictureBox.BackColor), model, nameof(BenchmarksModel.SelectedGraphColor), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void ModelPropertyChanged(BenchmarksModel model, PropertyChangedEventArgs e)
@@ -125,7 +127,7 @@ namespace HFM.Forms.Views
             }
         }
 
-        #region Event Handlers
+        // Event Handlers
 
         private void projectsListBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -143,7 +145,7 @@ namespace HFM.Forms.Views
 
             if (e.Button == MouseButtons.Right)
             {
-                listBox1ContextMenuStrip.Show(projectsListBox.PointToScreen(new Point(e.X, e.Y)));
+                projectsListBoxContextMenuStrip.Show(projectsListBox.PointToScreen(new Point(e.X, e.Y)));
             }
         }
 
@@ -167,133 +169,32 @@ namespace HFM.Forms.Views
             _presenter.DeleteSlotClicked();
         }
 
-        private void lstColors_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstColors.SelectedIndex == -1) return;
-
-            colorPreviewPictureBox.BackColor = _presenter.Model.GraphColors[lstColors.SelectedIndex];
-        }
-
         private void btnMoveColorUp_Click(object sender, EventArgs e)
         {
-            if (lstColors.SelectedIndex == -1)
-            {
-                _presenter.MessageBox.ShowInformation(this, "No Color Selected.", Text);
-                return;
-            }
-
-            if (lstColors.SelectedIndex == 0) return;
-
-            int index = lstColors.SelectedIndex;
-            Color moveColor = _presenter.Model.GraphColors[index];
-            _presenter.Model.GraphColors.RemoveAt(index);
-            _presenter.Model.GraphColors.Insert(index - 1, moveColor);
-            UpdateGraphColorsBinding();
-            lstColors.SelectedIndex = index - 1;
+            _presenter.Model.MoveSelectedGraphColorUp();
         }
 
         private void btnMoveColorDown_Click(object sender, EventArgs e)
         {
-            if (lstColors.SelectedIndex == -1)
-            {
-                _presenter.MessageBox.ShowInformation(this, "No Color Selected.", Text);
-                return;
-            }
-
-            if (lstColors.SelectedIndex == _presenter.Model.GraphColors.Count - 1) return;
-
-            int index = lstColors.SelectedIndex;
-            Color moveColor = _presenter.Model.GraphColors[index];
-            _presenter.Model.GraphColors.RemoveAt(index);
-            _presenter.Model.GraphColors.Insert(index + 1, moveColor);
-            UpdateGraphColorsBinding();
-            lstColors.SelectedIndex = index + 1;
+            _presenter.Model.MoveSelectedGraphColorDown();
         }
 
         private void btnAddColor_Click(object sender, EventArgs e)
         {
-            using (var dlg = new ColorDialog())
+            using (var dialog = new DefaultColorDialogPresenter(new ColorDialog()))
             {
-                if (dlg.ShowDialog(this).Equals(DialogResult.OK))
-                {
-                    Color addColor = FindNearestKnown(dlg.Color);
-                    if (_presenter.Model.GraphColors.Contains(addColor))
-                    {
-                        _presenter.MessageBox.ShowInformation(this, String.Format(CultureInfo.CurrentCulture,
-                            "{0} is already a graph color.", addColor.Name), Text);
-                        return;
-                    }
-
-                    _presenter.Model.GraphColors.Add(addColor);
-                    UpdateGraphColorsBinding();
-                    lstColors.SelectedIndex = _presenter.Model.GraphColors.Count - 1;
-                }
+                _presenter.AddGraphColorClicked(dialog);
             }
-        }
-
-        private static Color FindNearestKnown(Color c)
-        {
-            var best = new ColorName { Name = null };
-
-            foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
-            {
-                var known = Color.FromName(colorName);
-                int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
-
-                if (best.Name == null || dist < best.Distance)
-                {
-                    best.Color = known;
-                    best.Name = colorName;
-                    best.Distance = dist;
-                }
-            }
-
-            return best.Color;
-        }
-
-        private struct ColorName
-        {
-            public Color Color;
-            public string Name;
-            public int Distance;
         }
 
         private void btnDeleteColor_Click(object sender, EventArgs e)
         {
-            if (lstColors.SelectedIndex == -1)
-            {
-                _presenter.MessageBox.ShowInformation(this, "No Color Selected.", Text);
-                return;
-            }
-
-            if (_presenter.Model.GraphColors.Count <= 3)
-            {
-                _presenter.MessageBox.ShowInformation(this, "Must have at least three colors.", Text);
-                return;
-            }
-
-            int index = lstColors.SelectedIndex;
-            _presenter.Model.GraphColors.RemoveAt(index);
-            UpdateGraphColorsBinding();
-            if (index == _presenter.Model.GraphColors.Count)
-            {
-                lstColors.SelectedIndex = _presenter.Model.GraphColors.Count - 1;
-            }
+            _presenter.DeleteGraphColorClicked();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        // ReSharper restore InconsistentNaming
-
-        #endregion
-
-        private void UpdateGraphColorsBinding()
-        {
-            var cm = (CurrencyManager)lstColors.BindingContext[lstColors.DataSource];
-            cm.Refresh();
         }
     }
 }

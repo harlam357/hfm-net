@@ -25,13 +25,29 @@ namespace HFM.Forms.Models
             var preferences = model.Preferences;
             preferences.Set(Preference.BenchmarksFormLocation, new Point(10, 20));
             preferences.Set(Preference.BenchmarksFormSize, new Size(30, 40));
-            preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
+            var color = Color.AliceBlue;
+            preferences.Set(Preference.GraphColors, new List<Color> { color });
             // Act
             model.Load();
             // Assert
             Assert.AreEqual(new Point(10, 20), model.FormLocation);
             Assert.AreEqual(new Size(30, 40), model.FormSize);
-            CollectionAssert.AreEqual(new List<Color> { Color.AliceBlue }, model.GraphColors);
+            CollectionAssert.AreEqual(new List<ListItem> { new ListItem(color.Name, new ValueItem<Color>(color)) }, model.GraphColors);
+        }
+
+        [Test]
+        public void BenchmarksModel_Load_FirstSelectedGraphColor()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color = Color.AliceBlue;
+            preferences.Set(Preference.GraphColors, new List<Color> { color });
+            // Act
+            model.Load();
+            // Assert
+            Assert.AreEqual(color, model.SelectedGraphColorItem.Value);
+            Assert.AreEqual(color, model.SelectedGraphColor);
         }
 
         [Test]
@@ -86,7 +102,8 @@ namespace HFM.Forms.Models
             var preferences = model.Preferences;
             model.FormLocation = new Point(50, 60);
             model.FormSize = new Size(70, 80);
-            model.GraphColors.AddRange(new[] { Color.SaddleBrown });
+            var color = Color.SaddleBrown;
+            model.GraphColors.Add(new ListItem(color.Name, new ValueItem<Color>(color)));
             // Act
             model.Save();
             // Assert
@@ -217,7 +234,7 @@ namespace HFM.Forms.Models
             IBenchmarksReportSource source = model;
             Assert.AreEqual(model.SelectedSlotIdentifier.Value, source.SlotIdentifier);
             CollectionAssert.AreEqual(model.SelectedSlotProjectListItems.Select(x => x.GetValue<ValueItem<int>>().Value), source.Projects);
-            CollectionAssert.AreEqual(model.GraphColors, source.Colors);
+            CollectionAssert.AreEqual(model.GraphColors.Select(x => x.GetValue<ValueItem<Color>>().Value), source.Colors);
         }
 
         [Test]
@@ -235,7 +252,7 @@ namespace HFM.Forms.Models
             IBenchmarksReportSource source = model;
             Assert.IsNull(source.SlotIdentifier);
             Assert.AreEqual(0, source.Projects.Count);
-            CollectionAssert.AreEqual(model.GraphColors, source.Colors);
+            CollectionAssert.AreEqual(model.GraphColors.Select(x => x.GetValue<ValueItem<Color>>().Value), source.Colors);
         }
 
         [Test]
@@ -283,6 +300,149 @@ namespace HFM.Forms.Models
             // Assert
             Assert.AreEqual(2, model.SlotIdentifiers.Count);
             Assert.AreEqual(2, model.SlotProjects.Count);
+        }
+
+        [Test]
+        public void BenchmarkModel_MoveSelectedGraphColorUp_DoesNotMoveTheColorAtIndexZero()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            // Act
+            model.MoveSelectedGraphColorUp();
+            // Assert
+            Assert.AreEqual(color0, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color1, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
+        }
+
+        [Test]
+        public void BenchmarkModel_MoveSelectedGraphColorUp_MovesTheColorUpOneIndex()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            model.SelectedGraphColorItem = model.GraphColors.Last().GetValue<ValueItem<Color>>();
+            // Act
+            model.MoveSelectedGraphColorUp();
+            // Assert
+            Assert.AreEqual(color1, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color0, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
+        }
+
+        [Test]
+        public void BenchmarkModel_MoveSelectedGraphColorDown_DoesNotMoveTheColorAtIndexN()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            model.SelectedGraphColorItem = model.GraphColors.Last().GetValue<ValueItem<Color>>();
+            // Act
+            model.MoveSelectedGraphColorDown();
+            // Assert
+            Assert.AreEqual(color0, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color1, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
+        }
+
+        [Test]
+        public void BenchmarkModel_MoveSelectedGraphColorDown_MovesTheColorDownOneIndex()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            // Act
+            model.MoveSelectedGraphColorDown();
+            // Assert
+            Assert.AreEqual(color1, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color0, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
+        }
+
+        [Test]
+        public void BenchmarkModel_AddGraphColor_ReturnsFalseWhenColorAlreadyExists()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            // Act
+            bool result = model.AddGraphColor(color0);
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void BenchmarkModel_AddGraphColor_ReturnsTrueAndAddsNewColorToTheEndOfTheList()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            var color2 = Color.ForestGreen;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            // Act
+            bool result = model.AddGraphColor(color2);
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(color0, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color1, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color2, model.GraphColors[2].GetValue<ValueItem<Color>>().Value);
+        }
+
+        [Test]
+        public void BenchmarkModel_DeleteSelectedGraphColor_DoesNotRemoveColorWhenSelectedColorIsNull()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            model.SelectedGraphColorItem = null;
+            // Act
+            model.DeleteSelectedGraphColor();
+            // Assert
+            Assert.AreEqual(2, model.GraphColors.Count);
+            Assert.IsNull(model.SelectedGraphColorItem);
+            Assert.AreEqual(Color.Empty, model.SelectedGraphColor);
+        }
+
+        [Test]
+        public void BenchmarkModel_DeleteSelectedGraphColor_RemovesTheColorAndSetsNewSelectedColor()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            var color0 = Color.AliceBlue;
+            var color1 = Color.SaddleBrown;
+            preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
+            model.Load();
+            // Act
+            model.DeleteSelectedGraphColor();
+            // Assert
+            Assert.AreEqual(1, model.GraphColors.Count);
+            Assert.AreEqual(color1, model.SelectedGraphColorItem.Value);
+            Assert.AreEqual(color1, model.SelectedGraphColor);
         }
 
         private static SlotIdentifier CreateSlotIdentifier(string name, int slotID)

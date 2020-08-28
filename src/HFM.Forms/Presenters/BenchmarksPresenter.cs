@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -71,8 +72,65 @@ namespace HFM.Forms.Presenters
             {
                 Logger.Error(ex.Message, ex);
                 string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "description");
-                MessageBox.ShowError(text, Core.Application.NameAndVersion);
+                MessageBox.ShowError(Form, text, Core.Application.NameAndVersion);
             }
+        }
+
+        public void AddGraphColorClicked(ColorDialogPresenter dialog)
+        {
+            if (dialog.ShowDialog(Form) == DialogResult.OK)
+            {
+                Color addColor = FindNearestKnown(dialog.Color);
+                if (!Model.AddGraphColor(addColor))
+                {
+                    string text = String.Format(CultureInfo.CurrentCulture, "{0} is already a graph color.", addColor.Name);
+                    MessageBox.ShowInformation(Form, text, Core.Application.NameAndVersion);
+                }
+            }
+        }
+
+        private static Color FindNearestKnown(Color c)
+        {
+            var best = new ColorName { Name = null };
+
+            foreach (string colorName in Enum.GetNames(typeof(KnownColor)))
+            {
+                var known = Color.FromName(colorName);
+                int dist = Math.Abs(c.R - known.R) + Math.Abs(c.G - known.G) + Math.Abs(c.B - known.B);
+
+                if (best.Name == null || dist < best.Distance)
+                {
+                    best.Color = known;
+                    best.Name = colorName;
+                    best.Distance = dist;
+                }
+            }
+
+            return best.Color;
+        }
+
+        private struct ColorName
+        {
+            public Color Color { get; set; }
+            public string Name { get; set; }
+            public int Distance { get; set; }
+        }
+
+        public void DeleteGraphColorClicked()
+        {
+            if (Model.SelectedGraphColorItem is null)
+            {
+                MessageBox.ShowInformation(Form, "No Color Selected.", Core.Application.NameAndVersion);
+                return;
+            }
+
+            if (Model.GraphColors.Count <= 3)
+            {
+                MessageBox.ShowInformation(Form, "Must have at least three colors.", Core.Application.NameAndVersion);
+                return;
+            }
+
+            Model.DeleteSelectedGraphColor();
         }
     }
 }
