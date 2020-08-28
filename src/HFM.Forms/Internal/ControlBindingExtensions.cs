@@ -33,5 +33,10 @@ namespace HFM.Forms.Internal
         {
             control.DataBindings.Add(nameof(ComboBox.SelectedValue), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
         }
+
+        internal static void BindSelectedValue(this ListBox control, object dataSource, string dataMember)
+        {
+            control.DataBindings.Add(nameof(ListBox.SelectedValue), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
+        }
     }
 }
