@@ -177,7 +177,7 @@ namespace HFM.Forms.Models
             var model = new FahClientSettingsModel();
             var slotCollection = new SlotCollection();
             var slotOptions = new SlotOptions { { Options.ClientType, "foo" }, { Options.MaxPacketSize, "bar" } };
-            slotCollection.Add(new Slot { ID = 0, SlotOptions = slotOptions });
+            slotCollection.Add(new Slot { ID = 0, Description = "cpu:15", SlotOptions = slotOptions });
             // Act
             model.RefreshSlots(slotCollection);
             // Assert
