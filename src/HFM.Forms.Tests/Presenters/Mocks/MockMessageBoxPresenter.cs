@@ -45,26 +45,30 @@ namespace HFM.Forms.Presenters.Mocks
 
         public override DialogResult AskYesNoQuestion(string text, string caption)
         {
-            Invocations.Add(new MethodInvocation(nameof(AskYesNoQuestion), null, text, caption));
-            return OnProvideDialogResult(null, text, caption);
+            var result = OnProvideDialogResult(null, text, caption);
+            Invocations.Add(new MethodInvocationWithReturnValue(result, nameof(AskYesNoQuestion), null, text, caption));
+            return result;
         }
 
         public override DialogResult AskYesNoQuestion(IWin32Window owner, string text, string caption)
         {
-            Invocations.Add(new MethodInvocation(nameof(AskYesNoQuestion), owner, text, caption));
-            return OnProvideDialogResult(owner, text, caption);
+            var result = OnProvideDialogResult(owner, text, caption);
+            Invocations.Add(new MethodInvocationWithReturnValue(result, nameof(AskYesNoQuestion), owner, text, caption));
+            return result;
         }
 
         public override DialogResult AskYesNoCancelQuestion(string text, string caption)
         {
-            Invocations.Add(new MethodInvocation(nameof(AskYesNoCancelQuestion), null, text, caption));
-            return OnProvideDialogResult(null, text, caption);
+            var result = OnProvideDialogResult(null, text, caption);
+            Invocations.Add(new MethodInvocationWithReturnValue(result, nameof(AskYesNoCancelQuestion), null, text, caption));
+            return result;
         }
 
         public override DialogResult AskYesNoCancelQuestion(IWin32Window owner, string text, string caption)
         {
-            Invocations.Add(new MethodInvocation(nameof(AskYesNoCancelQuestion), owner, text, caption));
-            return OnProvideDialogResult(owner, text, caption);
+            var result = OnProvideDialogResult(owner, text, caption);
+            Invocations.Add(new MethodInvocationWithReturnValue(result, nameof(AskYesNoCancelQuestion), owner, text, caption));
+            return result;
         }
 
         protected virtual DialogResult OnProvideDialogResult(IWin32Window owner, string text, string caption)

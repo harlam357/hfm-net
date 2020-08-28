@@ -17,4 +17,15 @@ namespace HFM.Forms.Mocks
             Arguments = arguments;
         }
     }
+
+    [DebuggerDisplay("{ReturnValue} {Name} {ArgumentsString}")]
+    public class MethodInvocationWithReturnValue : MethodInvocation
+    {
+        public object ReturnValue { get; }
+
+        public MethodInvocationWithReturnValue(object returnValue, string name, params object[] arguments) : base(name, arguments)
+        {
+            ReturnValue = returnValue;
+        }
+    }
 }
