@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Windows.Forms;
 
@@ -10,7 +9,6 @@ using HFM.Log;
 
 namespace HFM.Forms.Controls
 {
-    [ExcludeFromCodeCoverage]
     public partial class LogFileViewer : RichTextBox
     {
         private ICollection<LogLine> _logLines;

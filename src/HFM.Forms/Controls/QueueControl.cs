@@ -12,7 +12,6 @@ using HFM.Core.WorkUnits;
 namespace HFM.Forms.Controls
 {
     // TODO: Rename to WorkUnitInfoControl
-    [ExcludeFromCodeCoverage]
     public sealed partial class QueueControl : UserControl
     {
         // ReSharper disable UnusedMember.Local
@@ -191,7 +190,6 @@ namespace HFM.Forms.Controls
         }
     }
 
-    [ExcludeFromCodeCoverage]
     public class QueueIndexChangedEventArgs : EventArgs
     {
         public int Index { get; }

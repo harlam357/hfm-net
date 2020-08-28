@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 using HFM.Core.Data;
 
 namespace HFM.Forms.Controls
 {
-    [ExcludeFromCodeCoverage]
     internal class DataGridViewQueryValueTextBoxCell : DataGridViewTextBoxCell
     {
         private bool CalendarEdit
