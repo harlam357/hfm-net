@@ -224,7 +224,7 @@ namespace HFM.Preferences.Data
         public UserSettings()
         {
             //TeamId = 0;
-            EocUserId = 260692;
+            EocUserId = 811139;
             StanfordId = "anonymous";
         }
 
