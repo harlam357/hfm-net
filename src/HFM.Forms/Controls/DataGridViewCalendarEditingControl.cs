@@ -6,17 +6,12 @@ namespace HFM.Forms.Controls
 {
     internal class DataGridViewCalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
     {
-        private bool _valueChanged;
-
         public DataGridViewCalendarEditingControl()
         {
             Format = DateTimePickerFormat.Custom;
             CustomFormat = "MM/dd/yyyy hh:mm:ss tt";
         }
 
-        #region IDataGridViewEditingControl Members
-
-        // Implements the IDataGridViewEditingControl.EditingControlFormattedValue property.
         public object EditingControlFormattedValue
         {
             // calling ToShortDateString() will reset the time portion of the
@@ -25,34 +20,26 @@ namespace HFM.Forms.Controls
 
             // return the entire value using Invariant Culture rules
             // not tested on cultures other than en-US as of 10/7/10
-            get { return Value.ToString(CultureInfo.InvariantCulture); }
+            get => Value.ToString(CultureInfo.InvariantCulture);
             set
             {
-                if (value is String)
+                if (value is string stringValue)
                 {
-                    try
+                    if (DateTime.TryParse(stringValue, out var result))
                     {
-                        // This will throw an exception of the string is 
-                        // null, empty, or not in the format of a date.
-                        Value = DateTime.Parse((String)value);
+                        Value = result;
                     }
-                    catch
+                    else
                     {
-                        // In the case of an exception, just use the 
-                        // default value so we're not left with a null value.
+                        // just use the default value so we're not left with a null value.
                         Value = DateTime.Now;
                     }
                 }
             }
         }
 
-        // Implements the IDataGridViewEditingControl.GetEditingControlFormattedValue method.
-        public object GetEditingControlFormattedValue(DataGridViewDataErrorContexts context)
-        {
-            return EditingControlFormattedValue;
-        }
+        public object GetEditingControlFormattedValue(DataGridViewDataErrorContexts context) => EditingControlFormattedValue;
 
-        // Implements the IDataGridViewEditingControl.ApplyCellStyleToEditingControl method.
         public void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
         {
             Font = dataGridViewCellStyle.Font;
@@ -60,10 +47,8 @@ namespace HFM.Forms.Controls
             CalendarMonthBackground = dataGridViewCellStyle.BackColor;
         }
 
-        // Implements the IDataGridViewEditingControl.EditingControlRowIndex property.
         public int EditingControlRowIndex { get; set; }
 
-        // Implements the IDataGridViewEditingControl.EditingControlWantsInputKey method.
         public bool EditingControlWantsInputKey(Keys key, bool dataGridViewWantsInputKey)
         {
             // Let the DateTimePicker handle the keys listed.
@@ -83,42 +68,25 @@ namespace HFM.Forms.Controls
             }
         }
 
-        // Implements the IDataGridViewEditingControl.PrepareEditingControlForEdit method.
         public void PrepareEditingControlForEdit(bool selectAll)
         {
             // No preparation needs to be done.
         }
 
-        // Implements the IDataGridViewEditingControl.RepositionEditingControlOnValueChange property.
-        public bool RepositionEditingControlOnValueChange
-        {
-            get { return false; }
-        }
+        public bool RepositionEditingControlOnValueChange => false;
 
-        // Implements the IDataGridViewEditingControl.EditingControlDataGridView property.
         public DataGridView EditingControlDataGridView { get; set; }
 
-        // Implements the IDataGridViewEditingControl.EditingControlValueChanged property.
-        public bool EditingControlValueChanged
-        {
-            get { return _valueChanged; }
-            set { _valueChanged = value; }
-        }
+        public bool EditingControlValueChanged { get; set; }
 
-        // Implements the IDataGridViewEditingControl.EditingPanelCursor property.
-        public Cursor EditingPanelCursor
-        {
-            get { return base.Cursor; }
-        }
+        public Cursor EditingPanelCursor => base.Cursor;
 
-        #endregion
-
-        protected override void OnValueChanged(EventArgs eventargs)
+        protected override void OnValueChanged(EventArgs e)
         {
             // Notify the DataGridView that the contents of the cell have changed.
-            _valueChanged = true;
+            EditingControlValueChanged = true;
             EditingControlDataGridView.NotifyCurrentCellDirty(true);
-            base.OnValueChanged(eventargs);
+            base.OnValueChanged(e);
         }
     }
 }
