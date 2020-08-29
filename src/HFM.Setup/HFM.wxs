@@ -1,60 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-   <?define ProductName="$(fileVersion.ProductName($(var.HFM.TargetPath)\HFM.exe))" ?>
-   <?define CompanyName="$(fileVersion.CompanyName($(var.HFM.TargetPath)\HFM.exe))" ?>
-   <?define ProductVersion="$(fileVersion.ProductVersion($(var.HFM.TargetPath)\HFM.exe))" ?>
+  <?define ProductName="$(fileVersion.ProductName($(var.HFM.TargetPath)\HFM.exe))" ?>
+  <?define CompanyName="$(fileVersion.CompanyName($(var.HFM.TargetPath)\HFM.exe))" ?>
+  <?define ProductVersion="$(fileVersion.ProductVersion($(var.HFM.TargetPath)\HFM.exe))" ?>
 
-   <Product Name="$(var.ProductName) $(var.ProductVersion)" Id="*" UpgradeCode="FF322DDA-7E89-4552-9455-CE7917FD7D91"
-     Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.CompanyName)">
+  <Product Name="$(var.ProductName) $(var.ProductVersion)" Id="*" UpgradeCode="FF322DDA-7E89-4552-9455-CE7917FD7D91"
+    Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.CompanyName)">
 
-      <Package Id="*" Keywords="Installer" Description="HFM.NET $(var.ProductVersion) Installer"
-        Manufacturer="$(var.CompanyName)"
-        InstallerVersion="200" Languages="1033" Compressed="yes" />
+    <Package Id="*" Keywords="Installer" Description="HFM.NET $(var.ProductVersion) Installer"
+      Manufacturer="$(var.CompanyName)"
+      InstallerVersion="200" Languages="1033" Compressed="yes"  />
 
-      <Property Id="ARPPRODUCTICON" Value="HFM.exe" />
-      <Property Id="ARPHELPLINK" Value="https://github.com/harlam357/hfm-net" />
+    <Property Id="ARPPRODUCTICON" Value="HFM.exe" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/harlam357/hfm-net" />
 
-      <Upgrade Id="FF322DDA-7E89-4552-9455-CE7917FD7D91">
-         <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND"
-                         Minimum="0.3.0" Maximum="$(var.ProductVersion)" IncludeMaximum="no" />
-      </Upgrade>
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
 
-      <Media Id="1" Cabinet="HFM1.cab" EmbedCab="yes" />
+    <MediaTemplate EmbedCab="yes" />
 
-      <Directory Id="TARGETDIR" Name="SourceDir">
-         <Directory Id="AppDataFolder" />
-         <Directory Id="DesktopFolder" />
-         <Directory Id="ProgramMenuFolder" Name="Programs">
-            <Directory Id="ProgramMenuDir" Name="HFM.NET">
-               <Component Id="ProgramMenuDir" Guid="26828A71-9B34-4086-A233-5972639553D6">
-                  <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
-                  <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
-               </Component>
-            </Directory>
-         </Directory>
-
-         <Directory Id="ProgramFilesFolder">
-            <Directory Id="INSTALLDIR" Name="HFM.NET" />
-         </Directory>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="AppDataFolder" />
+      <Directory Id="DesktopFolder" />
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="HFM.NET">
+          <Component Id="ProgramMenuDir" Guid="26828A71-9B34-4086-A233-5972639553D6">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
       </Directory>
 
-      <Feature Id="Complete" Title="HFM.NET" Level="1" ConfigurableDirectory='INSTALLDIR'>
-         <ComponentGroupRef Id="group_hfm" />
-         <ComponentRef Id="ProgramMenuDir" />
-      </Feature>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="HFM.NET" />
+      </Directory>
+    </Directory>
 
-      <Binary Id="HFM.Setup.CustomActions" SourceFile="..\HFM.Setup.CustomActions\bin\$(var.Configuration)\HFM.Setup.CustomActions.CA.dll" />
-      <CustomAction Id="DeleteAppDataFolderFilesAction" BinaryKey="HFM.Setup.CustomActions" DllEntry="DeleteAppDataFolderFilesAction" Execute="immediate" Return="check" />
+    <Feature Id="Complete" Title="HFM.NET" Level="1" ConfigurableDirectory='INSTALLDIR'>
+      <ComponentGroupRef Id="group_hfm" />
+      <ComponentRef Id="ProgramMenuDir" />
+    </Feature>
 
-      <InstallExecuteSequence>
-         <RemoveExistingProducts After="InstallInitialize" />
-         <Custom Action="DeleteAppDataFolderFilesAction" After="InstallFinalize" />
-      </InstallExecuteSequence>
+    <Binary Id="HFM.Setup.CustomActions" SourceFile="..\HFM.Setup.CustomActions\bin\$(var.Configuration)\HFM.Setup.CustomActions.CA.dll" />
+    <CustomAction Id="DeleteAppDataFolderFilesAction" BinaryKey="HFM.Setup.CustomActions" DllEntry="DeleteAppDataFolderFilesAction" Execute="immediate" Return="check" />
 
-      <Icon Id="HFM.exe" SourceFile="$(var.HFM.TargetPath)\HFM.exe" />
+    <InstallExecuteSequence>
+      <Custom Action="DeleteAppDataFolderFilesAction" After="InstallFinalize" />
+    </InstallExecuteSequence>
 
-      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" ></Property>
-      <UIRef Id="WixUI_InstallDir"/>
-   </Product>
+    <Icon Id="HFM.exe" SourceFile="$(var.HFM.TargetPath)\HFM.exe" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" ></Property>
+    <UIRef Id="WixUI_InstallDir"/>
+  </Product>
 </Wix>
