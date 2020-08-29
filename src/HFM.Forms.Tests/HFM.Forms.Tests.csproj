@@ -112,6 +112,7 @@
     <Compile Include="Models\MessagesModelTests.cs" />
     <Compile Include="Presenters\BenchmarkPresenterTests.cs" />
     <Compile Include="Presenters\MessagesPresenterTests.cs" />
+    <Compile Include="Presenters\Mocks\MockColorDialogPresenter.cs" />
     <Compile Include="WorkUnitHistoryPresenterTests.cs" />
     <Compile Include="Mocks\MethodInvocation.cs" />
     <Compile Include="Mocks\MockWin32Form.cs" />

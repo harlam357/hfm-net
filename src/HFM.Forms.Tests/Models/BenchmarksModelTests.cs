@@ -406,6 +406,7 @@ namespace HFM.Forms.Models
             Assert.AreEqual(color0, model.GraphColors[0].GetValue<ValueItem<Color>>().Value);
             Assert.AreEqual(color1, model.GraphColors[1].GetValue<ValueItem<Color>>().Value);
             Assert.AreEqual(color2, model.GraphColors[2].GetValue<ValueItem<Color>>().Value);
+            Assert.AreEqual(color2, model.SelectedGraphColorItem.Value);
         }
 
         [Test]

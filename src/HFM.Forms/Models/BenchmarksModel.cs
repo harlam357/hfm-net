@@ -436,7 +436,9 @@ namespace HFM.Forms.Models
         public bool AddGraphColor(Color color)
         {
             if (HasGraphColor(color)) return false;
-            GraphColors.Add(new ListItem(color.Name, new ValueItem<Color>(color)));
+            var colorItem = new ValueItem<Color>(color);
+            GraphColors.Add(new ListItem(color.Name, colorItem));
+            SelectedGraphColorItem = colorItem;
             return true;
         }
 
