@@ -283,7 +283,15 @@ namespace HFM.Forms
                 _applicationUpdateModel = new ApplicationUpdateModel(update);
                 using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _prefs, _messageBox))
                 {
-                    presenter.ShowDialog(_view);
+                    if (presenter.ShowDialog(_view) == DialogResult.OK)
+                    {
+                        if (_applicationUpdateModel.SelectedUpdateFileIsReadyToBeExecuted)
+                        {
+                            string text = String.Format(CultureInfo.CurrentCulture,
+                                "{0} will install the new version when you exit the application.", Core.Application.Name);
+                            _messageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+                        }
+                    }
                 }
                 return true;
             }
