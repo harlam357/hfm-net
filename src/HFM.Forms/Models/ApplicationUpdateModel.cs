@@ -15,6 +15,10 @@ namespace HFM.Forms.Models
         {
             Update = update;
             UpdateFilesList = BuildUpdateFilesList(update);
+            if (UpdateFilesList.Count > 0)
+            {
+                SelectedUpdateFile = UpdateFilesList.First().GetValue<ApplicationUpdateFile>();
+            }
         }
 
         private static ICollection<ListItem> BuildUpdateFilesList(ApplicationUpdate update)

@@ -71,6 +71,8 @@ namespace HFM.Forms.Presenters
 
         private bool ShowSaveFileView(FileDialogPresenter saveFile)
         {
+            if (Model.SelectedUpdateFile is null) return false;
+
             saveFile.FileName = Model.SelectedUpdateFile.Name;
             if (saveFile.ShowDialog() == DialogResult.OK)
             {

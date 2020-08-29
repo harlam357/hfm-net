@@ -34,6 +34,24 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
+        public async Task ApplicationUpdatePresenter_DownloadClicked_DoesNothingWhenThereIsNoSelectedUpdateFile()
+        {
+            // Arrange
+            var model = CreateUpdateModel("foo", ApplicationUpdateFileType.Executable);
+            model.SelectedUpdateFile = null;
+            using (var presenter = new MockDialogApplicationUpdatePresenter(model))
+            {
+                presenter.ShowDialog(null);
+                Assert.IsTrue(presenter.MockDialog.Shown);
+                // Act
+                var saveFile = new MockFileDialogPresenterReturnsFileName(null, "bar");
+                await presenter.DownloadClick(saveFile);
+                // Assert
+                Assert.IsTrue(presenter.MockDialog.Shown);
+            }
+        }
+
+        [Test]
         public async Task ApplicationUpdatePresenter_DownloadClicked_DownloadsSetsDialogResultOKAndCloses()
         {
             // Arrange
@@ -143,7 +161,6 @@ namespace HFM.Forms.Presenters
                 UpdateFiles = new List<ApplicationUpdateFile> { updateFile }
             };
             var model = new ApplicationUpdateModel(update);
-            model.SelectedUpdateFile = update.UpdateFiles.First();
             return model;
         }
 
