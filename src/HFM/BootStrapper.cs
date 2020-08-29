@@ -47,10 +47,8 @@ namespace HFM
 
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-            // Issue 180 - Restore the already running instance to the screen.
-            using (var singleInstance = new SingleInstanceHelper())
+            if (CheckSingleInstance())
             {
-                CheckSingleInstance(singleInstance);
                 Logger = InitializeLogging();
                 CheckMonoVersion();
                 Preferences = InitializePreferences(arguments);
@@ -62,14 +60,16 @@ namespace HFM
             }
         }
 
-        private void CheckSingleInstance(SingleInstanceHelper singleInstance)
+        private bool CheckSingleInstance()
         {
             try
             {
-                if (!singleInstance.Start())
+                bool singleInstance = SingleInstanceHelper.Start();
+                if (!singleInstance)
                 {
                     SingleInstanceHelper.SignalFirstInstance(Args);
                 }
+                return singleInstance;
             }
             catch (RemotingException ex)
             {
@@ -79,6 +79,7 @@ namespace HFM
                 {
                     throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
                 }
+                return true;
             }
             catch (Exception ex)
             {

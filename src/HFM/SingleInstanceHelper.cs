@@ -13,15 +13,18 @@ using System.Threading;
 
 namespace HFM
 {
-    internal sealed class SingleInstanceHelper : IDisposable
+    internal static class SingleInstanceHelper
     {
-        private Mutex _mutex;
+        // ReSharper disable once NotAccessedField.Local
+#pragma warning disable IDE0052 // Remove unread private members
+        private static Mutex _Mutex;
+#pragma warning restore IDE0052 // Remove unread private members
 
         private const string ObjectName = "SingleInstanceProxy";
-        private static readonly string AssemblyGuid = GetAssemblyGuid();
-        private static readonly string MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\hfm-{0}-{1}", Environment.UserName, AssemblyGuid);
+        private static readonly string _AssemblyGuid = GetAssemblyGuid();
+        private static readonly string _MutexName = String.Format(CultureInfo.InvariantCulture, "Global\\hfm-{0}-{1}", Environment.UserName, _AssemblyGuid);
 
-        public bool Start()
+        public static bool Start()
         {
             // Issue 236
             // Under Mono there seems to be an issue with the original Mutex
@@ -30,14 +33,13 @@ namespace HFM
             // In fact, Mono 2.8 has turned off shared file handles all together.
             // http://www.mono-project.com/Release_Notes_Mono_2.8
 
-            bool onlyInstance;
-            _mutex = new Mutex(true, MutexName, out onlyInstance);
+            _Mutex = new Mutex(true, _MutexName, out bool onlyInstance);
             return onlyInstance;
         }
 
         public static void RegisterIpcChannel(EventHandler<NewInstanceDetectedEventArgs> handler)
         {
-            IChannel ipcChannel = new IpcServerChannel(String.Format(CultureInfo.InvariantCulture, "hfm-{0}-{1}", Environment.UserName, AssemblyGuid));
+            IChannel ipcChannel = new IpcServerChannel(String.Format(CultureInfo.InvariantCulture, "hfm-{0}-{1}", Environment.UserName, _AssemblyGuid));
             ChannelServices.RegisterChannel(ipcChannel, false);
 
             var obj = new IpcObject(handler);
@@ -51,7 +53,7 @@ namespace HFM
             // if we accurately detected if another instance was
             // running or not, then this would not be a problem.
 
-            string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://hfm-{0}-{1}/{2}", Environment.UserName, AssemblyGuid, ObjectName);
+            string objectUri = String.Format(CultureInfo.InvariantCulture, "ipc://hfm-{0}-{1}/{2}", Environment.UserName, _AssemblyGuid, ObjectName);
 
             IChannel ipcChannel = new IpcClientChannel();
             ChannelServices.RegisterChannel(ipcChannel, false);
@@ -69,42 +71,6 @@ namespace HFM
             }
             return ((System.Runtime.InteropServices.GuidAttribute)attributes[0]).Value;
         }
-
-        #region IDisposable Members
-
-        private bool _disposed;
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-
-                }
-
-                // Mutex is an unmanaged resource
-                if (_mutex != null)
-                {
-                    _mutex.Close();
-                }
-            }
-
-            _disposed = true;
-        }
-
-        ~SingleInstanceHelper()
-        {
-            Dispose(false);
-        }
-
-        #endregion
     }
 
     public class IpcObject : MarshalByRefObject
@@ -113,7 +79,7 @@ namespace HFM
 
         public IpcObject(EventHandler<NewInstanceDetectedEventArgs> handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             NewInstanceDetected += handler;
         }
 
@@ -132,16 +98,11 @@ namespace HFM
 
     public class NewInstanceDetectedEventArgs : EventArgs
     {
-        private readonly string[] _args;
-
-        public string[] Args
-        {
-            get { return _args; }
-        }
+        public string[] Args { get; }
 
         public NewInstanceDetectedEventArgs(string[] args)
         {
-            _args = args;
+            Args = args;
         }
     }
 }
