@@ -49,9 +49,9 @@ namespace HFM.Forms.Models
             }
 
             var decimalPlaces = _preferences.Get<int>(Preference.DecimalPlaces);
-            var noBonusValues = protein.GetProductionValues(frameTime, TimeSpan.Zero);
-            var bonusByUserSpecifiedTimeValues = protein.GetProductionValues(frameTime, totalTimeByUser);
-            var bonusByFrameTimeValues = protein.GetProductionValues(frameTime, totalTimeByFrame);
+            var noBonus = protein.GetProteinProduction(frameTime, TimeSpan.Zero);
+            var bonusByUserSpecifiedTime = protein.GetProteinProduction(frameTime, totalTimeByUser);
+            var bonusByFrameTime = protein.GetProteinProduction(frameTime, totalTimeByFrame);
             CoreName = protein.Core;
             SlotType = ConvertToSlotType.FromCoreName(protein.Core).ToString();
             NumberOfAtoms = protein.NumberOfAtoms;
@@ -59,11 +59,11 @@ namespace HFM.Forms.Models
             PreferredDeadline = protein.PreferredDays;
             FinalDeadline = protein.MaximumDays;
             KFactor = protein.KFactor;
-            BonusMultiplier = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Multiplier : bonusByFrameTimeValues.Multiplier, decimalPlaces);
-            BaseCredit = noBonusValues.Credit;
-            TotalCredit = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.Credit : bonusByFrameTimeValues.Credit, decimalPlaces);
-            BasePpd = noBonusValues.PPD;
-            TotalPpd = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTimeValues.PPD : bonusByFrameTimeValues.PPD, decimalPlaces);
+            BonusMultiplier = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.Multiplier : bonusByFrameTime.Multiplier, decimalPlaces);
+            BaseCredit = noBonus.Credit;
+            TotalCredit = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.Credit : bonusByFrameTime.Credit, decimalPlaces);
+            BasePpd = noBonus.PPD;
+            TotalPpd = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.PPD : bonusByFrameTime.PPD, decimalPlaces);
         }
 
         public ICollection<int> Projects => _proteinService.GetProjects().OrderBy(x => x).ToList();

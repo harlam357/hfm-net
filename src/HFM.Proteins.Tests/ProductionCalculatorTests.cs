@@ -103,11 +103,11 @@ namespace HFM.Proteins
       }
 
       [Test]
-      public void ProductionCalculator_GetProductionValues_NoBonus_Test()
+      public void ProductionCalculator_GetProteinProduction_NoBonus_Test()
       {
          var frameTime = TimeSpan.FromMinutes(5);
          var unitTime = TimeSpan.Zero;
-         var values = ProductionCalculator.GetProductionValues(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
+         var values = ProductionCalculator.GetProteinProduction(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
          Assert.AreEqual(2.88, values.UPD);
          Assert.AreEqual(1.0, values.Multiplier);
          Assert.AreEqual(700.0, values.Credit);
@@ -115,11 +115,11 @@ namespace HFM.Proteins
       }
 
       [Test]
-      public void ProductionCalculator_GetProductionValues_WithBonus_Test()
+      public void ProductionCalculator_GetProteinProduction_WithBonus_Test()
       {
          var frameTime = TimeSpan.FromMinutes(5);
          var unitTime = TimeSpan.FromMinutes(5 * 100);
-         var values = ProductionCalculator.GetProductionValues(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
+         var values = ProductionCalculator.GetProteinProduction(frameTime, 100, 700.0, 26.4, 3.0, 5.0, unitTime);
          Assert.AreEqual(2.88, values.UPD);
          Assert.AreEqual(19.5, values.Multiplier, 0.01);
          Assert.AreEqual(13648.383, values.Credit);

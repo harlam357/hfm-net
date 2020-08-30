@@ -345,19 +345,19 @@ namespace HFM.Core.WorkUnits
             }
 
             TimeSpan frameTime = GetFrameTime(ppdCalculation);
-            var noBonusValues = CurrentProtein.GetProductionValues(frameTime, TimeSpan.Zero);
+            var noBonus = CurrentProtein.GetProteinProduction(frameTime, TimeSpan.Zero);
             TimeSpan unitTimeByDownloadTime = GetUnitTimeByDownloadTime(frameTime);
-            var bonusByDownloadValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByDownloadTime);
+            var bonusByDownload = CurrentProtein.GetProteinProduction(frameTime, unitTimeByDownloadTime);
             TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
-            var bonusByFrameValues = CurrentProtein.GetProductionValues(frameTime, unitTimeByFrameTime);
-            logger.Debug(CreateProductionDebugOutput(WorkUnit.ToShortProjectString(), frameTime, CurrentProtein, noBonusValues,
-                                                           unitTimeByDownloadTime, bonusByDownloadValues,
-                                                           unitTimeByFrameTime, bonusByFrameValues));
+            var bonusByFrame = CurrentProtein.GetProteinProduction(frameTime, unitTimeByFrameTime);
+            logger.Debug(CreateProductionDebugOutput(WorkUnit.ToShortProjectString(), frameTime, CurrentProtein, noBonus,
+                                                           unitTimeByDownloadTime, bonusByDownload,
+                                                           unitTimeByFrameTime, bonusByFrame));
         }
 
-        private static string CreateProductionDebugOutput(string project, TimeSpan frameTime, Protein protein, ProductionValues noBonusValues,
-                                                          TimeSpan unitTimeByDownloadTime, ProductionValues bonusByDownloadValues,
-                                                          TimeSpan unitTimeByFrameTime, ProductionValues bonusByFrameValues)
+        private static string CreateProductionDebugOutput(string project, TimeSpan frameTime, Protein protein, ProteinProduction noBonus,
+                                                          TimeSpan unitTimeByDownloadTime, ProteinProduction bonusByDownload,
+                                                          TimeSpan unitTimeByFrameTime, ProteinProduction bonusByFrame)
         {
             var sb = new StringBuilder();
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " ******* Project: {0} *******", project));
@@ -368,18 +368,18 @@ namespace HFM.Core.WorkUnits
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "    Maximum Time: {0}", TimeSpan.FromDays(protein.MaximumDays)));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "No Bonus"));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "      Frame Time: {0}", frameTime));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             UPD: {0}", noBonusValues.UPD));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", noBonusValues.PPD));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             UPD: {0}", noBonus.UPD));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", noBonus.PPD));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Download Time"));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByDownloadTime));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByDownloadValues.Multiplier));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByDownloadValues.Credit));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByDownloadValues.PPD));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByDownload.Multiplier));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByDownload.Credit));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByDownload.PPD));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Frame Time"));
             sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByFrameTime));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByFrameValues.Multiplier));
-            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByFrameValues.Credit));
-            sb.Append(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByFrameValues.PPD));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByFrame.Multiplier));
+            sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByFrame.Credit));
+            sb.Append(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByFrame.PPD));
             return sb.ToString();
         }
 

@@ -97,7 +97,7 @@ namespace HFM.Proteins
         }
 
         /// <summary>
-        /// Gets all production measurements based the given frame time, work unit information, and the unit completion time.
+        /// Gets all protein production measurements based the given frame time, work unit information, and the unit completion time.
         /// </summary>
         /// <param name="frameTime">The work unit frame time.</param>
         /// <param name="frames">The number of frames in the work unit.</param>
@@ -107,9 +107,9 @@ namespace HFM.Proteins
         /// <param name="maximumDays">The final deadline (in decimal days).</param>
         /// <param name="unitTime">The overall unit completion time.</param>
         /// <returns>The production measurements for the work unit.</returns> 
-        public static ProductionValues GetProductionValues(TimeSpan frameTime, int frames, double credit, double kFactor, double preferredDays, double maximumDays, TimeSpan unitTime)
+        public static ProteinProduction GetProteinProduction(TimeSpan frameTime, int frames, double credit, double kFactor, double preferredDays, double maximumDays, TimeSpan unitTime)
         {
-            var value = new ProductionValues
+            var value = new ProteinProduction
             {
                 UPD = GetUPD(frameTime, frames),
                 Multiplier = GetBonusMultiplier(kFactor, preferredDays, maximumDays, unitTime),
@@ -121,9 +121,9 @@ namespace HFM.Proteins
     }
 
     /// <summary>
-    /// Represents all production measurements.
+    /// Represents all protein production measurements.
     /// </summary>
-    public struct ProductionValues
+    public struct ProteinProduction
     {
         /// <summary>
         /// Gets or sets the units per day (UPD) measurement.

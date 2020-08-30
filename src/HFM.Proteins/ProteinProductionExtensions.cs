@@ -71,9 +71,9 @@ namespace HFM.Proteins
         /// <param name="frameTime">The work unit frame time.</param>
         /// <param name="unitTime">The overall unit completion time.</param>
         /// <returns>The production measurements for the work unit.</returns> 
-        public static ProductionValues GetProductionValues(this Protein protein, TimeSpan frameTime, TimeSpan unitTime)
+        public static ProteinProduction GetProteinProduction(this Protein protein, TimeSpan frameTime, TimeSpan unitTime)
         {
-            return ProductionCalculator.GetProductionValues(frameTime, protein.Frames, protein.Credit, protein.KFactor, protein.PreferredDays, protein.MaximumDays, unitTime);
+            return ProductionCalculator.GetProteinProduction(frameTime, protein.Frames, protein.Credit, protein.KFactor, protein.PreferredDays, protein.MaximumDays, unitTime);
         }
     }
 }
