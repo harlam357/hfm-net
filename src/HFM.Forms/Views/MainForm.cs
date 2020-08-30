@@ -70,7 +70,7 @@ namespace HFM.Forms.Views
 
     // ReSharper disable InconsistentNaming
 
-    public partial class MainForm : FormWrapper, IMainView
+    public partial class MainForm : FormBase, IMainView
     {
         #region Properties
 

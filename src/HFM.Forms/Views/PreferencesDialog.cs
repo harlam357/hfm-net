@@ -14,7 +14,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Views
 {
-    public partial class PreferencesDialog : FormWrapper, IWin32Dialog
+    public partial class PreferencesDialog : FormBase, IWin32Dialog
     {
         /// <summary>
         /// Tab Name Enumeration (maintain in same order as tab pages)

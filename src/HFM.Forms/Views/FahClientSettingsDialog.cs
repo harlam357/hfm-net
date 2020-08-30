@@ -8,7 +8,7 @@ using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class FahClientSettingsDialog : FormWrapper, IWin32Dialog
+    public partial class FahClientSettingsDialog : FormBase, IWin32Dialog
     {
         private readonly FahClientSettingsPresenter _presenter;
         private readonly BindingSource _slotsGridBindingSource;

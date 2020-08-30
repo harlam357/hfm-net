@@ -10,7 +10,7 @@ using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class MessagesForm : FormWrapper, IWin32Form
+    public partial class MessagesForm : FormBase, IWin32Form
     {
         private readonly MessagesPresenter _presenter;
 

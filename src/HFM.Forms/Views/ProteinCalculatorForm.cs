@@ -8,7 +8,7 @@ using HFM.Forms.Models;
 
 namespace HFM.Forms.Views
 {
-    public partial class ProteinCalculatorForm : FormWrapper, IWin32Form
+    public partial class ProteinCalculatorForm : FormBase, IWin32Form
     {
         private readonly ProteinCalculatorModel _model;
 

@@ -5,7 +5,7 @@ using HFM.Proteins;
 
 namespace HFM.Forms.Views
 {
-    public partial class ProteinLoadResultsDialog : FormWrapper
+    public partial class ProteinLoadResultsDialog : FormBase
     {
         public ProteinLoadResultsDialog()
         {

@@ -12,7 +12,7 @@ using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class BenchmarksForm : FormWrapper, IWin32Form
+    public partial class BenchmarksForm : FormBase, IWin32Form
     {
         private readonly BenchmarksPresenter _presenter;
 

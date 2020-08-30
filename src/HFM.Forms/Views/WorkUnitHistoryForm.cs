@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
-    public partial class WorkUnitHistoryForm : FormWrapper, IWin32Form
+    public partial class WorkUnitHistoryForm : FormBase, IWin32Form
     {
         private readonly WorkUnitHistoryPresenter _presenter;
 

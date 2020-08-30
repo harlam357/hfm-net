@@ -169,11 +169,11 @@
       <DependentUpon>DataGridViewExt.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataGridViewProgressColumn.cs" />
-    <Compile Include="Controls\FormWrapper.cs">
+    <Compile Include="Controls\FormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\FormWrapper.Designer.cs">
-      <DependentUpon>FormWrapper.cs</DependentUpon>
+    <Compile Include="Controls\FormBase.Designer.cs">
+      <DependentUpon>FormBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SlotsGridColumn.cs" />
     <Compile Include="Presenters\ExceptionPresenter.cs" />

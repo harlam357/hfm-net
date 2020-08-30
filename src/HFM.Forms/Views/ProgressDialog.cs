@@ -12,7 +12,7 @@ namespace HFM.Forms.Views
 {
     public delegate void ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
 
-    public sealed partial class ProgressDialog : FormWrapper
+    public sealed partial class ProgressDialog : FormBase
     {
         private readonly ProgressFunction _progressFunction;
 

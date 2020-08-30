@@ -10,7 +10,7 @@ using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class WorkUnitQueryDialog : FormWrapper, IWin32Dialog
+    public partial class WorkUnitQueryDialog : FormBase, IWin32Dialog
     {
         private readonly WorkUnitQueryPresenter _presenter;
 

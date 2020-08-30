@@ -11,7 +11,7 @@ using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class AboutDialog : FormWrapper
+    public partial class AboutDialog : FormBase
     {
         public ILogger Logger { get; }
         public MessageBoxPresenter MessageBox { get; }
