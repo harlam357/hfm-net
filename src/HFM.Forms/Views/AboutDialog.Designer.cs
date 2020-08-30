@@ -30,26 +30,26 @@ namespace HFM.Forms.Views
       private void InitializeComponent()
       {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
-            this.lblVersion = new System.Windows.Forms.Label();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.textBoxWrapper1 = new System.Windows.Forms.TextBox();
-            this.lnkHfmGoogleCode = new System.Windows.Forms.LinkLabel();
-            this.lnkHfmGoogleGroup = new System.Windows.Forms.LinkLabel();
+            this.googleCodeLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.googleGroupLinkLabel = new System.Windows.Forms.LinkLabel();
             this.lblDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblVersion
             // 
-            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVersion.ForeColor = System.Drawing.Color.White;
-            this.lblVersion.Location = new System.Drawing.Point(298, 16);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(269, 28);
-            this.lblVersion.TabIndex = 1;
-            this.lblVersion.Text = "[Version]";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.versionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.versionLabel.ForeColor = System.Drawing.Color.White;
+            this.versionLabel.Location = new System.Drawing.Point(298, 16);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(269, 28);
+            this.versionLabel.TabIndex = 1;
+            this.versionLabel.Text = "[Version]";
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnClose
             // 
@@ -91,27 +91,27 @@ namespace HFM.Forms.Views
             // 
             // lnkHfmGoogleCode
             // 
-            this.lnkHfmGoogleCode.AutoSize = true;
-            this.lnkHfmGoogleCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkHfmGoogleCode.LinkColor = System.Drawing.Color.Goldenrod;
-            this.lnkHfmGoogleCode.Location = new System.Drawing.Point(313, 90);
-            this.lnkHfmGoogleCode.Name = "lnkHfmGoogleCode";
-            this.lnkHfmGoogleCode.Size = new System.Drawing.Size(0, 16);
-            this.lnkHfmGoogleCode.TabIndex = 2;
-            this.lnkHfmGoogleCode.TabStop = true;
-            this.lnkHfmGoogleCode.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ProjectSiteLink_LinkClicked);
+            this.googleCodeLinkLabel.AutoSize = true;
+            this.googleCodeLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.googleCodeLinkLabel.LinkColor = System.Drawing.Color.Goldenrod;
+            this.googleCodeLinkLabel.Location = new System.Drawing.Point(313, 90);
+            this.googleCodeLinkLabel.Name = "googleCodeLinkLabel";
+            this.googleCodeLinkLabel.Size = new System.Drawing.Size(0, 16);
+            this.googleCodeLinkLabel.TabIndex = 2;
+            this.googleCodeLinkLabel.TabStop = true;
+            this.googleCodeLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ProjectSiteLink_LinkClicked);
             // 
             // lnkHfmGoogleGroup
             // 
-            this.lnkHfmGoogleGroup.AutoSize = true;
-            this.lnkHfmGoogleGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkHfmGoogleGroup.LinkColor = System.Drawing.Color.Goldenrod;
-            this.lnkHfmGoogleGroup.Location = new System.Drawing.Point(313, 117);
-            this.lnkHfmGoogleGroup.Name = "lnkHfmGoogleGroup";
-            this.lnkHfmGoogleGroup.Size = new System.Drawing.Size(0, 16);
-            this.lnkHfmGoogleGroup.TabIndex = 3;
-            this.lnkHfmGoogleGroup.TabStop = true;
-            this.lnkHfmGoogleGroup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SupportForumLink_LinkClicked);
+            this.googleGroupLinkLabel.AutoSize = true;
+            this.googleGroupLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.googleGroupLinkLabel.LinkColor = System.Drawing.Color.Goldenrod;
+            this.googleGroupLinkLabel.Location = new System.Drawing.Point(313, 117);
+            this.googleGroupLinkLabel.Name = "googleGroupLinkLabel";
+            this.googleGroupLinkLabel.Size = new System.Drawing.Size(0, 16);
+            this.googleGroupLinkLabel.TabIndex = 3;
+            this.googleGroupLinkLabel.TabStop = true;
+            this.googleGroupLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SupportForumLink_LinkClicked);
             // 
             // lblDate
             // 
@@ -132,11 +132,11 @@ namespace HFM.Forms.Views
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(579, 381);
             this.Controls.Add(this.lblDate);
-            this.Controls.Add(this.lnkHfmGoogleGroup);
-            this.Controls.Add(this.lnkHfmGoogleCode);
+            this.Controls.Add(this.googleGroupLinkLabel);
+            this.Controls.Add(this.googleCodeLinkLabel);
             this.Controls.Add(this.textBoxWrapper1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.lblVersion);
+            this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -152,12 +152,12 @@ namespace HFM.Forms.Views
       }
 
       #endregion
-      private System.Windows.Forms.Label lblVersion;
+      private System.Windows.Forms.Label versionLabel;
       private System.Windows.Forms.PictureBox pictureBox1;
       private System.Windows.Forms.Button btnClose;
       private System.Windows.Forms.TextBox textBoxWrapper1;
-      private System.Windows.Forms.LinkLabel lnkHfmGoogleCode;
-      private System.Windows.Forms.LinkLabel lnkHfmGoogleGroup;
+      private System.Windows.Forms.LinkLabel googleCodeLinkLabel;
+      private System.Windows.Forms.LinkLabel googleGroupLinkLabel;
       private System.Windows.Forms.Label lblDate;
 
    }

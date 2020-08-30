@@ -33,7 +33,7 @@ namespace HFM.Forms.Views
 
         private void SetVersionLabelText()
         {
-            lblVersion.Text = $"Version {Core.Application.FullVersion}";
+            versionLabel.Text = $"Version {Core.Application.FullVersion}";
         }
 
         private void SetBuildDateLabelText()
@@ -54,12 +54,12 @@ namespace HFM.Forms.Views
 
         private void SetProjectSiteLinkText()
         {
-            lnkHfmGoogleCode.Text = Core.Application.ProjectSiteUrl;
+            googleCodeLinkLabel.Text = Core.Application.ProjectSiteUrl;
         }
 
         private void SetSupportForumLinkText()
         {
-            lnkHfmGoogleGroup.Text = Core.Application.SupportForumUrl;
+            googleGroupLinkLabel.Text = Core.Application.SupportForumUrl;
         }
 
         private void ProjectSiteLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
