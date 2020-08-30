@@ -1,9 +1,8 @@
-﻿
-using System;
-using HFM.Core.Client;
+﻿using System;
+
 using NUnit.Framework;
 
-namespace HFM.Core.DataTypes
+namespace HFM.Core.Client
 {
     [TestFixture]
     public class ClientSettingsTests
