@@ -46,7 +46,7 @@ Function Update-AssemblyVersion
 Function Build-Solution
 {
     param([string]$Target='Rebuild',
-          [string]$Configuration='ScriptedRelease',
+          [string]$Configuration='Release',
           [string]$Platform=$Global:Platform,
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
