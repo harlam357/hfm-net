@@ -190,7 +190,7 @@ namespace HFM.Core.Client
             else
             {
                 Debug.Assert(slotType == SlotType.CPU);
-                cpuThreads = GetGPUThreadsFromDescription(description);
+                cpuThreads = GetCPUThreadsFromDescription(description);
             }
 
             return (slotType, cpuThreads, gpu, gpuBus, gpuSlot);
@@ -219,7 +219,7 @@ namespace HFM.Core.Client
             return (gpuBus, gpuSlot);
         }
 
-        private static int? GetGPUThreadsFromDescription(string description)
+        private static int? GetCPUThreadsFromDescription(string description)
         {
             var match = Regex.Match(description, @"[cpu|smp]\:(?<CPUThreads>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
             return match.Success && Int32.TryParse(match.Groups["CPUThreads"].Value, out var threads)
