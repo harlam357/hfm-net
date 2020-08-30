@@ -39,6 +39,7 @@ namespace HFM.Forms.Views
             _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
+            EscapeKeyButton(cancelButton);
 
             clientsDecimalPlacesUpDown.Minimum = 0;
             clientsDecimalPlacesUpDown.Maximum = MaxDecimalPlaces;

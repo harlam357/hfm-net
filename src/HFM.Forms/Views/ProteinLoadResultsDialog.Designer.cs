@@ -28,39 +28,39 @@
       /// </summary>
       private void InitializeComponent()
       {
-            this.ProteinListBox = new System.Windows.Forms.ListBox();
-            this.DialogOkButton = new System.Windows.Forms.Button();
+            this.changesListBox = new System.Windows.Forms.ListBox();
+            this.okButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ProteinListBox
             // 
-            this.ProteinListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.changesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ProteinListBox.FormattingEnabled = true;
-            this.ProteinListBox.Location = new System.Drawing.Point(12, 12);
-            this.ProteinListBox.Name = "ProteinListBox";
-            this.ProteinListBox.Size = new System.Drawing.Size(260, 225);
-            this.ProteinListBox.TabIndex = 2;
+            this.changesListBox.FormattingEnabled = true;
+            this.changesListBox.Location = new System.Drawing.Point(12, 12);
+            this.changesListBox.Name = "changesListBox";
+            this.changesListBox.Size = new System.Drawing.Size(260, 225);
+            this.changesListBox.TabIndex = 2;
             // 
             // DialogOkButton
             // 
-            this.DialogOkButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.DialogOkButton.Location = new System.Drawing.Point(97, 249);
-            this.DialogOkButton.Name = "DialogOkButton";
-            this.DialogOkButton.Size = new System.Drawing.Size(91, 29);
-            this.DialogOkButton.TabIndex = 0;
-            this.DialogOkButton.Text = "OK";
-            this.DialogOkButton.UseVisualStyleBackColor = true;
-            this.DialogOkButton.Click += new System.EventHandler(this.DialogOkButtonClick);
+            this.okButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.okButton.Location = new System.Drawing.Point(97, 249);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(91, 29);
+            this.okButton.TabIndex = 0;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // ProteinLoadResultsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 287);
-            this.Controls.Add(this.ProteinListBox);
-            this.Controls.Add(this.DialogOkButton);
+            this.Controls.Add(this.changesListBox);
+            this.Controls.Add(this.okButton);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(300, 325);
@@ -68,13 +68,14 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Project Load Results";
+            this.Load += new System.EventHandler(this.ProteinLoadResultsDialog_Load);
             this.ResumeLayout(false);
 
       }
 
       #endregion
 
-      private System.Windows.Forms.Button DialogOkButton;
-      private System.Windows.Forms.ListBox ProteinListBox;
+      private System.Windows.Forms.Button okButton;
+      private System.Windows.Forms.ListBox changesListBox;
    }
 }

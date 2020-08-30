@@ -14,13 +14,18 @@ namespace HFM.Forms.Views
 
         public ProteinCalculatorForm(ProteinCalculatorModel model)
         {
-            _model = model;
+            _model = model ?? throw new ArgumentNullException(nameof(model));
 
             InitializeComponent();
-            DataBind();
+            EscapeKeyReturnsCancelDialogResult();
         }
 
-        private void DataBind()
+        private void ProteinCalculatorForm_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void LoadData()
         {
             ProjectComboBox.DisplayMember = nameof(ListItem.DisplayMember);
             ProjectComboBox.ValueMember = nameof(ListItem.ValueMember);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using HFM.Forms.Controls;
 using HFM.Proteins;
@@ -7,23 +8,30 @@ namespace HFM.Forms.Views
 {
     public partial class ProteinLoadResultsDialog : FormBase
     {
-        public ProteinLoadResultsDialog()
+        private readonly IEnumerable<ProteinDictionaryChange> _proteinChanges;
+
+        public ProteinLoadResultsDialog(IEnumerable<ProteinDictionaryChange> proteinChanges)
         {
+            _proteinChanges = proteinChanges ?? throw new ArgumentNullException(nameof(proteinChanges));
+
             InitializeComponent();
+            EscapeKeyReturnsCancelDialogResult();
         }
 
-        public void DataBind(IEnumerable<ProteinDictionaryChange> loadResults)
+        private void ProteinLoadResultsDialog_Load(object sender, EventArgs e)
         {
-            foreach (var loadResult in loadResults)
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            foreach (var change in _proteinChanges)
             {
-                if (!loadResult.Result.Equals(ProteinDictionaryChangeResult.NoChange))
-                {
-                    ProteinListBox.Items.Add(loadResult.ToString());
-                }
+                changesListBox.Items.Add(change.ToString());
             }
         }
 
-        private void DialogOkButtonClick(object sender, System.EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             Close();
         }

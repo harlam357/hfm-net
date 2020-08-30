@@ -521,6 +521,7 @@
             this.Name = "ProteinCalculatorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Points Calculator";
+            this.Load += new System.EventHandler(this.ProteinCalculatorForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

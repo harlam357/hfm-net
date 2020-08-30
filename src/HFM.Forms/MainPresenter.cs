@@ -1134,10 +1134,9 @@ namespace HFM.Forms
                         {
                             _clientConfiguration.ScheduledTasks.RetrieveAll();
                         }
-                        using (var dlg = new ProteinLoadResultsDialog())
+                        using (var dialog = new ProteinLoadResultsDialog(proteinChanges))
                         {
-                            dlg.DataBind(proteinChanges);
-                            dlg.ShowDialog(_view);
+                            dialog.ShowDialog(_view);
                         }
                     }
                 }
