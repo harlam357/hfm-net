@@ -32,12 +32,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
-            this.btnRemove = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
+            this.removeParameterButton = new System.Windows.Forms.Button();
+            this.addParameterButton = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.okButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -65,8 +65,8 @@
             // 
             this.panel1.Controls.Add(this.txtName);
             this.panel1.Controls.Add(this.lblName);
-            this.panel1.Controls.Add(this.btnRemove);
-            this.panel1.Controls.Add(this.btnAdd);
+            this.panel1.Controls.Add(this.removeParameterButton);
+            this.panel1.Controls.Add(this.addParameterButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
@@ -91,25 +91,25 @@
             // 
             // btnRemove
             // 
-            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Location = new System.Drawing.Point(498, 6);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(81, 23);
-            this.btnRemove.TabIndex = 1;
-            this.btnRemove.Text = "Remove Row";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            this.removeParameterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.removeParameterButton.Location = new System.Drawing.Point(498, 6);
+            this.removeParameterButton.Name = "removeParameterButton";
+            this.removeParameterButton.Size = new System.Drawing.Size(81, 23);
+            this.removeParameterButton.TabIndex = 1;
+            this.removeParameterButton.Text = "Remove Row";
+            this.removeParameterButton.UseVisualStyleBackColor = true;
+            this.removeParameterButton.Click += new System.EventHandler(this.removeParameterButton_Click);
             // 
             // btnAdd
             // 
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Location = new System.Drawing.Point(411, 6);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(81, 23);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "Add Row";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.addParameterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addParameterButton.Location = new System.Drawing.Point(411, 6);
+            this.addParameterButton.Name = "addParameterButton";
+            this.addParameterButton.Size = new System.Drawing.Size(81, 23);
+            this.addParameterButton.TabIndex = 0;
+            this.addParameterButton.Text = "Add Row";
+            this.addParameterButton.UseVisualStyleBackColor = true;
+            this.addParameterButton.Click += new System.EventHandler(this.addParameterButton_Click);
             // 
             // dataGridView1
             // 
@@ -130,8 +130,8 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.btnOK);
-            this.panel2.Controls.Add(this.btnCancel);
+            this.panel2.Controls.Add(this.okButton);
+            this.panel2.Controls.Add(this.cancelButton);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 266);
             this.panel2.Name = "panel2";
@@ -140,25 +140,25 @@
             // 
             // btnOK
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(421, 6);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 2;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.Location = new System.Drawing.Point(421, 6);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(75, 23);
+            this.okButton.TabIndex = 2;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(503, 6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(503, 6);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 3;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // WorkUnitQueryDialog
             // 
@@ -172,6 +172,7 @@
             this.Name = "WorkUnitQueryDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "History Query";
+            this.Load += new System.EventHandler(this.WorkUnitQueryDialog_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -185,10 +186,10 @@
 
       private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
       private System.Windows.Forms.Panel panel1;
-      private System.Windows.Forms.Button btnAdd;
-      private System.Windows.Forms.Button btnOK;
-      private System.Windows.Forms.Button btnRemove;
-      private System.Windows.Forms.Button btnCancel;
+      private System.Windows.Forms.Button addParameterButton;
+      private System.Windows.Forms.Button okButton;
+      private System.Windows.Forms.Button removeParameterButton;
+      private System.Windows.Forms.Button cancelButton;
       private System.Windows.Forms.DataGridView dataGridView1;
       private System.Windows.Forms.TextBox txtName;
       private System.Windows.Forms.Label lblName;

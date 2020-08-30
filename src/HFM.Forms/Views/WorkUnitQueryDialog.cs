@@ -16,29 +16,34 @@ namespace HFM.Forms.Views
 
         public WorkUnitQueryDialog(WorkUnitQueryPresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
+            EscapeKeyButton(cancelButton);
+
             SetupDataGridViewColumns();
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
+        }
 
-            LoadData();
+        private void WorkUnitQueryDialog_Load(object sender, EventArgs e)
+        {
+            LoadData(_presenter.Query);
         }
 
         private BindingList<WorkUnitQueryParameter> _parametersList;
 
-        private void LoadData()
+        private void LoadData(WorkUnitQuery query)
         {
-            _parametersList = new BindingList<WorkUnitQueryParameter>(_presenter.Query.Parameters);
-            BindNameTextBox(_presenter.Query);
+            _parametersList = new BindingList<WorkUnitQueryParameter>(query.Parameters);
+            BindNameTextBox(query);
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = _parametersList;
         }
 
-        public void BindNameTextBox(WorkUnitQuery parameters)
+        public void BindNameTextBox(WorkUnitQuery query)
         {
             txtName.DataBindings.Clear();
-            txtName.DataBindings.Add("Text", parameters, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
+            txtName.DataBindings.Add("Text", query, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void SetupDataGridViewColumns()
@@ -176,13 +181,13 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void addParameterButton_Click(object sender, EventArgs e)
         {
             _presenter.Query.Parameters.Add(new WorkUnitQueryParameter());
             RefreshDisplay();
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        private void removeParameterButton_Click(object sender, EventArgs e)
         {
             Debug.Assert(dataGridView1.SelectedCells.Count == 1);
             foreach (DataGridViewCell cell in dataGridView1.SelectedCells)
@@ -197,12 +202,12 @@ namespace HFM.Forms.Views
             _parametersList.ResetBindings();
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             _presenter.OKClicked();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             _presenter.CancelClicked();
         }

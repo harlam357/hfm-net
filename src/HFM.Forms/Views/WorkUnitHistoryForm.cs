@@ -23,9 +23,10 @@ namespace HFM.Forms.Views
 
         public WorkUnitHistoryForm(WorkUnitHistoryPresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
+            EscapeKeyReturnsCancelDialogResult();
 
             // split container does not scale when
             // there is a fixed panel
@@ -42,10 +43,10 @@ namespace HFM.Forms.Views
 
         private void HistoryForm_Load(object sender, EventArgs e)
         {
-            DataBindModel(_presenter.Model);
+            LoadData(_presenter.Model);
         }
 
-        private void DataBindModel(WorkUnitHistoryModel model)
+        private void LoadData(WorkUnitHistoryModel model)
         {
             DataViewComboBox.DataSource = model.QueryBindingSource;
             DataViewEditButton.BindEnabled(model, nameof(WorkUnitHistoryModel.EditAndDeleteButtonsEnabled));
