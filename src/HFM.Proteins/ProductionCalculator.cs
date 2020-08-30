@@ -108,14 +108,11 @@ namespace HFM.Proteins
         /// <returns>The production measurements for the work unit.</returns> 
         public static ProteinProduction GetProteinProduction(TimeSpan frameTime, int frames, double credit, double kFactor, double preferredDays, double maximumDays, TimeSpan unitTime)
         {
-            var value = new ProteinProduction
-            {
-                UPD = GetUPD(frameTime, frames),
-                Multiplier = GetBonusMultiplier(kFactor, preferredDays, maximumDays, unitTime),
-                Credit = GetBonusCredit(credit, kFactor, preferredDays, maximumDays, unitTime),
-                PPD = GetBonusPPD(frameTime, frames, credit, kFactor, preferredDays, maximumDays, unitTime)
-            };
-            return value;
+            return new ProteinProduction(
+                GetUPD(frameTime, frames),
+                GetBonusMultiplier(kFactor, preferredDays, maximumDays, unitTime),
+                GetBonusCredit(credit, kFactor, preferredDays, maximumDays, unitTime),
+                GetBonusPPD(frameTime, frames, credit, kFactor, preferredDays, maximumDays, unitTime));
         }
     }
 }
