@@ -31,7 +31,6 @@ namespace HFM.Forms.Views
       {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
             this.versionLabel = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.textBoxWrapper1 = new System.Windows.Forms.TextBox();
             this.googleCodeLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -40,7 +39,7 @@ namespace HFM.Forms.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblVersion
+            // versionLabel
             // 
             this.versionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.versionLabel.ForeColor = System.Drawing.Color.White;
@@ -50,17 +49,6 @@ namespace HFM.Forms.Views
             this.versionLabel.TabIndex = 1;
             this.versionLabel.Text = "[Version]";
             this.versionLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // btnClose
-            // 
-            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(30, 30);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(74, 23);
-            this.btnClose.TabIndex = 5;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // pictureBox1
             // 
@@ -89,7 +77,7 @@ namespace HFM.Forms.Views
             this.textBoxWrapper1.Text = resources.GetString("textBoxWrapper1.Text");
             this.textBoxWrapper1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lnkHfmGoogleCode
+            // googleCodeLinkLabel
             // 
             this.googleCodeLinkLabel.AutoSize = true;
             this.googleCodeLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -101,7 +89,7 @@ namespace HFM.Forms.Views
             this.googleCodeLinkLabel.TabStop = true;
             this.googleCodeLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ProjectSiteLink_LinkClicked);
             // 
-            // lnkHfmGoogleGroup
+            // googleGroupLinkLabel
             // 
             this.googleGroupLinkLabel.AutoSize = true;
             this.googleGroupLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,7 +117,6 @@ namespace HFM.Forms.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(579, 381);
             this.Controls.Add(this.lblDate);
             this.Controls.Add(this.googleGroupLinkLabel);
@@ -137,7 +124,6 @@ namespace HFM.Forms.Views
             this.Controls.Add(this.textBoxWrapper1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.versionLabel);
-            this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -154,7 +140,6 @@ namespace HFM.Forms.Views
       #endregion
       private System.Windows.Forms.Label versionLabel;
       private System.Windows.Forms.PictureBox pictureBox1;
-      private System.Windows.Forms.Button btnClose;
       private System.Windows.Forms.TextBox textBoxWrapper1;
       private System.Windows.Forms.LinkLabel googleCodeLinkLabel;
       private System.Windows.Forms.LinkLabel googleGroupLinkLabel;

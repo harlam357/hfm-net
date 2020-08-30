@@ -22,6 +22,7 @@ namespace HFM.Forms.Views
 
             InitializeComponent();
             StartPosition = FormStartPosition.Manual;
+            EscapeKeyReturnsCancelDialogResult();
         }
 
         private void BenchmarksForm_Load(object sender, EventArgs e)
@@ -190,11 +191,6 @@ namespace HFM.Forms.Views
         private void btnDeleteColor_Click(object sender, EventArgs e)
         {
             _presenter.DeleteGraphColorClicked();
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Close();
         }
     }
 }

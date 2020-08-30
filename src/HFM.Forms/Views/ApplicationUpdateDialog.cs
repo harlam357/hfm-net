@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 
 namespace HFM.Forms.Views
 {
-    public partial class ApplicationUpdateDialog : Form, IWin32Dialog
+    public partial class ApplicationUpdateDialog : FormBase, IWin32Dialog
     {
         private readonly ApplicationUpdatePresenter _presenter;
 
@@ -16,6 +17,7 @@ namespace HFM.Forms.Views
             _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
+            EscapeKeyButton(cancelButton);
         }
 
         private void ApplicationUpdateDialog_Load(object sender, EventArgs e)

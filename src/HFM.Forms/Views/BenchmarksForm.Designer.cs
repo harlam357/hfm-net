@@ -70,7 +70,6 @@ namespace HFM.Forms.Views
             this.frameTimeGraphTab = new System.Windows.Forms.TabPage();
             this.productionGraphTab = new System.Windows.Forms.TabPage();
             this.projectComparisonGraphTab = new System.Windows.Forms.TabPage();
-            this.btnExit = new System.Windows.Forms.Button();
             this.grpClients = new System.Windows.Forms.GroupBox();
             this.picDeleteClient = new System.Windows.Forms.PictureBox();
             this.cboClients = new System.Windows.Forms.ComboBox();
@@ -370,7 +369,6 @@ namespace HFM.Forms.Views
             // splitContainerBench.Panel2
             // 
             this.splitContainerBench.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainerBench.Panel2.Controls.Add(this.btnExit);
             this.splitContainerBench.Size = new System.Drawing.Size(556, 395);
             this.splitContainerBench.SplitterDistance = 65;
             this.splitContainerBench.TabIndex = 1;
@@ -542,18 +540,6 @@ namespace HFM.Forms.Views
             this.projectComparisonGraphTab.Text = "Comparison Graph";
             this.projectComparisonGraphTab.UseVisualStyleBackColor = true;
             // 
-            // btnExit
-            // 
-            this.btnExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnExit.Location = new System.Drawing.Point(385, 182);
-            this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(56, 39);
-            this.btnExit.TabIndex = 1;
-            this.btnExit.TabStop = false;
-            this.btnExit.Text = "Exit";
-            this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
             // grpClients
             // 
             this.grpClients.BackColor = System.Drawing.SystemColors.Control;
@@ -616,7 +602,6 @@ namespace HFM.Forms.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(556, 595);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(564, 300);
@@ -671,7 +656,6 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.SplitContainer splitContainerBench;
         private System.Windows.Forms.ListBox projectsListBox;
         private System.Windows.Forms.TextBox txtBenchmarks;
-        private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.GroupBox grpClients;
         private System.Windows.Forms.ComboBox cboClients;
         private System.Windows.Forms.PictureBox picDeleteClient;

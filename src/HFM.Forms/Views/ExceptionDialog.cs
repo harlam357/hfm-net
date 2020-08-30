@@ -11,7 +11,7 @@ namespace HFM.Forms.Views
 
         public ExceptionDialog(ExceptionPresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
             InitializeComponent();
 

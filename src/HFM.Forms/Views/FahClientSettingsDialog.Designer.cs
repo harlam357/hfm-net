@@ -244,7 +244,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Client Setup";
-            this.Shown += new System.EventHandler(this.FahClientSettingsDialogShown);
+            this.Load += new System.EventHandler(this.FahClientSettingsDialog_Load);
+            this.Shown += new System.EventHandler(this.FahClientSettingsDialog_Shown);
             this.SetupTabControl.ResumeLayout(false);
             this.ConnectionTabPage.ResumeLayout(false);
             this.ConnectionTabPage.PerformLayout();

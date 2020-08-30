@@ -24,6 +24,7 @@ namespace HFM.Forms.Views
             LocalProcess = localProcess ?? NullLocalProcessService.Instance;
 
             InitializeComponent();
+            EscapeKeyReturnsCancelDialogResult();
 
             SetVersionLabelText();
             SetBuildDateLabelText();
@@ -86,12 +87,6 @@ namespace HFM.Forms.Views
                 string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group");
                 MessageBox.ShowError(this, text, Core.Application.NameAndVersion);
             }
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
         }
     }
 }

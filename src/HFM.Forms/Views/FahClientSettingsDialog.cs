@@ -15,14 +15,12 @@ namespace HFM.Forms.Views
 
         public FahClientSettingsDialog(FahClientSettingsPresenter presenter)
         {
-            _presenter = presenter;
+            _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
             _slotsGridBindingSource = new BindingSource();
 
             InitializeComponent();
+            EscapeKeyReturnsCancelDialogResult();
             SetupDataGridViewColumns(SlotsDataGridView);
-
-            DataBind(_presenter.Model);
-            _presenter.Model.PropertyChanged += ModelPropertyChanged;
         }
 
         private static void SetupDataGridViewColumns(DataGridView dgv)
@@ -42,9 +40,14 @@ namespace HFM.Forms.Views
             dgv.Columns["MaxPacketSize"].Width = 90;
         }
 
-        private void FahClientSettingsDialogShown(object sender, EventArgs e)
+        private void FahClientSettingsDialog_Shown(object sender, EventArgs e)
         {
             DummyTextBox.Visible = false;
+        }
+
+        private void FahClientSettingsDialog_Load(object sender, EventArgs e)
+        {
+            LoadData(_presenter.Model);
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -55,7 +58,7 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void DataBind(FahClientSettingsModel settings)
+        private void LoadData(FahClientSettingsModel settings)
         {
             ClientNameTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Name), false, DataSourceUpdateMode.OnValidation);
             AddressTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Server), false, DataSourceUpdateMode.OnValidation);
@@ -64,6 +67,8 @@ namespace HFM.Forms.Views
             ConnectButton.DataBindings.Add(nameof(Button.Enabled), settings, nameof(FahClientSettingsModel.ConnectEnabled), false, DataSourceUpdateMode.OnPropertyChanged);
             _slotsGridBindingSource.DataSource = settings.Slots;
             SlotsDataGridView.DataSource = _slotsGridBindingSource;
+
+            _presenter.Model.PropertyChanged += ModelPropertyChanged;
         }
 
         private void ConnectButtonClick(object sender, EventArgs e)

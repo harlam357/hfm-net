@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace HFM.Forms.Controls
 {
@@ -21,5 +22,34 @@ namespace HFM.Forms.Controls
                 return cp;
             }
         }
+
+        /// <summary>
+        /// When the user presses the ESC key, close the form and return <see cref="DialogResult.Cancel" />.
+        /// </summary>
+        protected void EscapeKeyReturnsCancelDialogResult()
+        {
+            EscapeKeyReturnsDialogResult(DialogResult.Cancel);
+        }
+
+        /// <summary>
+        /// When the user presses the ESC key, close the form and return <paramref name="dialogResult" />.
+        /// </summary>
+        protected void EscapeKeyReturnsDialogResult(DialogResult dialogResult)
+        {
+            var escapeKeyButton = new Button();
+            escapeKeyButton.DialogResult = dialogResult;
+            escapeKeyButton.Name = "escapeKeyButton";
+            escapeKeyButton.TabStop = false;
+            escapeKeyButton.Size = Size.Empty;
+            escapeKeyButton.Location = Point.Empty;
+            escapeKeyButton.Click += (s, e) => Close();
+            Controls.Add(escapeKeyButton);
+            EscapeKeyButton(escapeKeyButton);
+        }
+
+        /// <summary>
+        /// When the user presses the ESC key, execute the <paramref name="button" /> Click event.
+        /// </summary>
+        protected void EscapeKeyButton(Button button) => CancelButton = button;
     }
 }
