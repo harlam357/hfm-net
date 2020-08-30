@@ -1,4 +1,4 @@
-
+﻿
 namespace HFM.Proteins
 {
     /// <summary>
@@ -11,7 +11,7 @@ namespace HFM.Proteins
         /// </summary>
         public Protein()
         {
-            
+
         }
 
         /// <summary>
