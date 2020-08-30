@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -81,11 +82,13 @@ namespace HFM.Proteins
             return default(T);
         }
 
+        [ExcludeFromCodeCoverage]
         void IProteinCollectionSerializer.Serialize(Stream stream, ICollection<Protein> collection)
         {
             throw new NotSupportedException("Serialization is not supported.");
         }
 
+        [ExcludeFromCodeCoverage]
         Task IProteinCollectionSerializer.SerializeAsync(Stream stream, ICollection<Protein> collection)
         {
             throw new NotSupportedException("Serialization is not supported.");

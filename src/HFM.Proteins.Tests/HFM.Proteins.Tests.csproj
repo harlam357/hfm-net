@@ -84,7 +84,7 @@
     <Compile Include="ProjectSummaryJsonDeserializerTests.cs" />
     <Compile Include="ProductionCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinDictionaryTests.cs" />
+    <Compile Include="ProteinCollectionTests.cs" />
     <Compile Include="ProteinProductionExtensionsTests.cs" />
     <Compile Include="ProteinCollectionSerializerExtensionsTests.cs" />
     <Compile Include="ProteinTests.cs" />

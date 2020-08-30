@@ -93,14 +93,15 @@
     <Compile Include="ProjectSummaryJsonDeserializer.cs" />
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
-    <Compile Include="ProteinDictionaryChange.cs" />
+    <Compile Include="ProteinChange.cs" />
+    <Compile Include="ProteinCollection.cs" />
     <Compile Include="ProteinProduction.cs" />
     <Compile Include="ProteinProductionExtensions.cs" />
     <Compile Include="ProteinCollectionSerializerExtensions.cs" />
     <Compile Include="ProjectSummaryUrl.cs" />
+    <Compile Include="ProteinPropertyChange.cs" />
     <Compile Include="TabDelimitedTextSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteinDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

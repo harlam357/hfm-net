@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace HFM.Proteins
         /// <summary>
         /// Reads a collection of <see cref="Protein"/> objects from a resource described by a <see cref="Uri"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static ICollection<Protein> ReadUri(this IProteinCollectionSerializer serializer, Uri address)
         {
             using (var client = new WebClient())
@@ -50,6 +52,7 @@ namespace HFM.Proteins
         /// <summary>
         /// Asynchronously reads a collection of <see cref="Protein"/> objects from a resource described by a <see cref="Uri"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static async Task<ICollection<Protein>> ReadUriAsync(this IProteinCollectionSerializer serializer, Uri address)
         {
             using (var client = new WebClient())
