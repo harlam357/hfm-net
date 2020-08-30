@@ -87,6 +87,7 @@
     <Compile Include="ProteinCollectionTests.cs" />
     <Compile Include="ProteinProductionExtensionsTests.cs" />
     <Compile Include="ProteinCollectionSerializerExtensionsTests.cs" />
+    <Compile Include="ProteinProductionTests.cs" />
     <Compile Include="ProteinTests.cs" />
     <Compile Include="SetUpFixture.cs" />
     <Compile Include="TabDelimitedTextSerializerTests.cs" />
