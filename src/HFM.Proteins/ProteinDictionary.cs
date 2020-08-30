@@ -43,7 +43,7 @@ namespace HFM.Proteins
 
             var dictionary = new ProteinDictionary();
             var dictionaryChanges = new List<ProteinDictionaryChange>();
-            foreach (Protein protein in proteins.Where(ProteinValidator.IsValid))
+            foreach (Protein protein in proteins.Where(Protein.IsValid))
             {
                 dictionaryChanges.Add(new ProteinDictionaryChange(protein.ProjectNumber, ProteinDictionaryChangeResult.Added));
                 dictionary.Add(protein.ProjectNumber, protein);
@@ -64,7 +64,7 @@ namespace HFM.Proteins
 
             var dictionary = new ProteinDictionary(existingDictionary);
             var dictionaryChanges = new List<ProteinDictionaryChange>();
-            foreach (Protein protein in proteins.Where(ProteinValidator.IsValid))
+            foreach (Protein protein in proteins.Where(Protein.IsValid))
             {
                 if (dictionary.ContainsKey(protein.ProjectNumber))
                 {

@@ -95,5 +95,20 @@ namespace HFM.Proteins
         /// Gets or sets the bonus K factor.
         /// </summary>
         public double KFactor { get; set; }
+
+        /// <summary>
+        /// Returns true if this <see cref="Protein"/> has valid values for <see cref="ProjectNumber"/>, <see cref="PreferredDays"/>, <see cref="MaximumDays"/>, <see cref="Credit"/>, <see cref="Frames"/>, and <see cref="KFactor"/>; otherwise, false.
+        /// </summary>
+        public static bool IsValid(Protein protein)
+        {
+            if (protein == null) return false;
+
+            return protein.ProjectNumber > 0 &&
+                   protein.PreferredDays > 0 &&
+                   protein.MaximumDays > 0 &&
+                   protein.Credit > 0 &&
+                   protein.Frames > 0 &&
+                   protein.KFactor >= 0;
+        }
     }
 }

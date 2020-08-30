@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -27,7 +26,7 @@ namespace HFM.Proteins
                 while ((line = reader.ReadLine()) != null)
                 {
                     var p = ParseProtein(line);
-                    if (ProteinValidator.IsValid(p))
+                    if (Protein.IsValid(p))
                     {
                         collection.Add(p);
                     }
@@ -50,7 +49,7 @@ namespace HFM.Proteins
                 while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
                 {
                     var p = ParseProtein(line);
-                    if (ProteinValidator.IsValid(p))
+                    if (Protein.IsValid(p))
                     {
                         collection.Add(p);
                     }
