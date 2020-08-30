@@ -94,6 +94,7 @@
     <Compile Include="ProductionCalculator.cs" />
     <Compile Include="Protein.cs" />
     <Compile Include="ProteinDictionaryChange.cs" />
+    <Compile Include="ProteinProduction.cs" />
     <Compile Include="ProteinProductionExtensions.cs" />
     <Compile Include="ProteinCollectionSerializerExtensions.cs" />
     <Compile Include="ProjectSummaryUrl.cs" />
