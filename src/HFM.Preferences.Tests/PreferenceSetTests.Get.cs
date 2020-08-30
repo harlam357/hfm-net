@@ -46,7 +46,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_NullStringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
+        public void PreferenceSet_Get_NullStringAsEnum_ReturnsEnumDefaultWhenValueIsNull_Test()
         {
             // Arrange
             var data = new PreferenceData();

@@ -252,6 +252,11 @@ namespace HFM.Preferences
             }
             if (typeof(T).IsEnum && metadata.DataType == typeof(string))
             {
+                if (metadata.Data is null)
+                {
+                    return default(T);
+                }
+
                 try
                 {
                     return (T)Enum.Parse(typeof(T), ((IMetadata<string>)metadata).Data);
