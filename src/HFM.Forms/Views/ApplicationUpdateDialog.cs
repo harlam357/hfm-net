@@ -14,7 +14,6 @@ namespace HFM.Forms.Views
         public ApplicationUpdateDialog(ApplicationUpdatePresenter presenter)
         {
             _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
-            _presenter.Model.PropertyChanged += ModelOnPropertyChanged;
 
             InitializeComponent();
         }
@@ -26,21 +25,23 @@ namespace HFM.Forms.Views
             // run under a higher DPI setting, just turn
             // it off once the Form is loaded
             ControlBox = false;
-            LoadData();
+            LoadData(_presenter.Model);
         }
 
         private const string SelectedValuePropertyName = "SelectedValue";
 
-        private void LoadData()
+        private void LoadData(ApplicationUpdateModel model)
         {
             captionLabel.Text = $"A new version of {Core.Application.Name} is available for download.";
             thisVersionLabel.Text = $"This version: {Core.Application.FullVersion}";
-            newVersionLabel.Text = $"New version: {_presenter.Model.Update.Version}";
+            newVersionLabel.Text = $"New version: {model.Update.Version}";
 
-            updateFilesComboBox.DataSource = _presenter.Model.UpdateFilesList;
+            model.PropertyChanged += ModelPropertyChanged;
+
+            updateFilesComboBox.DataSource = model.UpdateFilesList;
             updateFilesComboBox.DisplayMember = nameof(ListItem.DisplayMember);
             updateFilesComboBox.ValueMember = nameof(ListItem.ValueMember);
-            updateFilesComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model, nameof(ApplicationUpdateModel.SelectedUpdateFile), false, DataSourceUpdateMode.OnPropertyChanged);
+            updateFilesComboBox.DataBindings.Add(SelectedValuePropertyName, model, nameof(ApplicationUpdateModel.SelectedUpdateFile), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private async void downloadButton_Click(object sender, EventArgs e)
@@ -56,16 +57,17 @@ namespace HFM.Forms.Views
             _presenter.CancelClick();
         }
 
-        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (IsDisposed) return;
 
+            var model = _presenter.Model;
             switch (e.PropertyName)
             {
                 case nameof(ApplicationUpdateModel.DownloadInProgress):
-                    if (_presenter.Model.DownloadInProgress)
+                    if (model.DownloadInProgress)
                     {
-                        SetViewControlsForDownload();
+                        SetViewControlsForDownload(model);
                     }
                     else
                     {
@@ -75,9 +77,9 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void SetViewControlsForDownload()
+        private void SetViewControlsForDownload(ApplicationUpdateModel model)
         {
-            downloadProgressLabel.Text = $"Downloading {_presenter.Model.SelectedUpdateFile.Name}...";
+            downloadProgressLabel.Text = $"Downloading {model.SelectedUpdateFile.Name}...";
             downloadButton.Enabled = false;
             updateFilesComboBox.Visible = false;
             downloadProgressBar.Visible = true;
