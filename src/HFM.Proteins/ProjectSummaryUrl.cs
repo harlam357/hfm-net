@@ -1,5 +1,4 @@
-﻿
-namespace HFM.Proteins
+﻿namespace HFM.Proteins
 {
     /// <summary>
     /// Provides urls for Folding@Home project (protein) information. 
