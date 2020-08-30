@@ -39,6 +39,7 @@ namespace HFM.Proteins
         /// </summary>
         public bool ContainsKey(int projectNumber)
         {
+            if (Dictionary is null) return false;
             return Dictionary.ContainsKey(projectNumber);
         }
 
@@ -47,6 +48,11 @@ namespace HFM.Proteins
         /// </summary>
         public bool TryGetValue(int projectNumber, out Protein protein)
         {
+            if (Dictionary is null)
+            {
+                protein = null;
+                return false;
+            }
             return Dictionary.TryGetValue(projectNumber, out protein);
         }
 

@@ -1,8 +1,11 @@
-﻿namespace HFM.Proteins
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace HFM.Proteins
 {
     /// <summary>
     /// Provides urls for Folding@Home project (protein) information. 
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ProjectSummaryUrl
     {
 #pragma warning disable 1591

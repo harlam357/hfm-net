@@ -18,6 +18,29 @@ namespace HFM.Proteins
         }
 
         [Test]
+        public void ProteinCollection_ContainsKey_ReturnsFalseWhenTheCollectionIsEmpty()
+        {
+            // Arrange
+            var collection = new ProteinCollection();
+            // Act
+            bool result = collection.ContainsKey(1);
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void ProteinCollection_TryGetValue_ReturnsFalseWhenTheCollectionIsEmpty()
+        {
+            // Arrange
+            var collection = new ProteinCollection();
+            // Act
+            bool result = collection.TryGetValue(1, out var protein);
+            // Assert
+            Assert.IsFalse(result);
+            Assert.IsNull(protein);
+        }
+
+        [Test]
         public void ProteinCollection_Ctor_AddsValidProteins()
         {
             // Arrange
@@ -139,8 +162,10 @@ namespace HFM.Proteins
             Assert.AreEqual(2, collection[2].ProjectNumber);
             Assert.AreEqual(3, collection[2].MaximumDays);
             Assert.AreEqual(26.4, collection[2].KFactor);
+            Assert.AreEqual(ProteinChangeAction.Property, changes[0].Action);
             // check project 3
             Assert.AreEqual(3, collection[3].ProjectNumber);
+            Assert.AreEqual(ProteinChangeAction.None, changes[1].Action);
         }
 
         private static Protein CreateValidProtein(int projectNumber)
