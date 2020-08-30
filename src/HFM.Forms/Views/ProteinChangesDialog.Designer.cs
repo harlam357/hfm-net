@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms.Views
 {
-   partial class ProteinLoadResultsDialog
+   partial class ProteinChangesDialog
    {
       /// <summary>
       /// Required designer variable.
@@ -64,7 +64,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(300, 325);
-            this.Name = "ProteinLoadResultsDialog";
+            this.Name = "ProteinChangesDialog";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Project Load Results";

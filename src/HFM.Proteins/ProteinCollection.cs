@@ -20,7 +20,7 @@ namespace HFM.Proteins
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProteinCollection"/> class initialized from valid proteins copied from the specified collection.
+        /// Initializes a new instance of the <see cref="ProteinCollection"/> class from valid proteins copied from the <paramref name="proteins"/> collection.
         /// </summary>
         public ProteinCollection(IEnumerable<Protein> proteins)
         {

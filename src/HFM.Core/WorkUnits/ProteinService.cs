@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
@@ -31,14 +31,14 @@ namespace HFM.Core.WorkUnits
         /// Gets a collection of all protein project ID numbers.
         /// </summary>
         /// <returns>A collection of all protein project ID numbers.</returns>
-        IReadOnlyCollection<int> GetProjects();
+        ICollection<int> GetProjects();
 
         /// <summary>
         /// Refreshes the service data from the project summary and returns a collection of objects detailing how the service data was changed.
         /// </summary>
         /// <param name="progress">The object used to report refresh progress.</param>
         /// <returns>A collection of objects detailing how the service data was changed</returns>
-        IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress);
+        IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress);
     }
 
     public class ProteinService : IProteinService
@@ -46,41 +46,41 @@ namespace HFM.Core.WorkUnits
         private readonly ProteinDataContainer _dataContainer;
         private readonly IProjectSummaryService _projectSummaryService;
         private readonly ILogger _logger;
-        private ProteinDictionary _dictionary;
+        private ProteinCollection _collection;
 
         public ProteinService(ProteinDataContainer dataContainer, IProjectSummaryService projectSummaryService, ILogger logger)
         {
             _dataContainer = dataContainer;
             _projectSummaryService = projectSummaryService;
             _logger = logger ?? NullLogger.Instance;
-            _dictionary = CreateProteinDictionary(_dataContainer.Data);
+            _collection = CreateProteinCollection(_dataContainer.Data);
 
             LastProjectRefresh = new Dictionary<int, DateTime>();
         }
 
-        private static ProteinDictionary CreateProteinDictionary(IEnumerable<Protein> proteins)
+        private static ProteinCollection CreateProteinCollection(IEnumerable<Protein> proteins)
         {
-            var dictionary = new ProteinDictionary();
+            var collection = new ProteinCollection();
             foreach (var p in proteins)
             {
-                dictionary.Add(p.ProjectNumber, p);
+                collection.Add(p);
             }
-            return dictionary;
+            return collection;
         }
 
         public Protein Get(int projectID)
         {
-            return _dictionary.TryGetValue(projectID, out Protein p) ? p : null;
+            return _collection.TryGetValue(projectID, out Protein p) ? p : null;
         }
 
-        public IReadOnlyCollection<int> GetProjects()
+        public ICollection<int> GetProjects()
         {
-            return _dictionary.Keys;
+            return _collection.Select(x => x.ProjectNumber).ToList();
         }
 
         public Protein GetOrRefresh(int projectID)
         {
-            if (_dictionary.TryGetValue(projectID, out Protein p))
+            if (_collection.TryGetValue(projectID, out Protein p))
             {
                 return p;
             }
@@ -94,7 +94,7 @@ namespace HFM.Core.WorkUnits
             try
             {
                 Refresh(null);
-                if (_dictionary.TryGetValue(projectID, out p))
+                if (_collection.TryGetValue(projectID, out p))
                 {
                     return p;
                 }
@@ -113,8 +113,9 @@ namespace HFM.Core.WorkUnits
             return projectID <= 0;
         }
 
-        public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
+        public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress)
         {
+            IReadOnlyCollection<ProteinChange> changes;
             using (var stream = new MemoryStream())
             {
                 _logger.Info("Downloading new project data from Stanford...");
@@ -122,10 +123,12 @@ namespace HFM.Core.WorkUnits
                 stream.Position = 0;
 
                 var serializer = new ProjectSummaryJsonDeserializer();
-                _dictionary = ProteinDictionary.CreateFromExisting(_dictionary, serializer.Deserialize(stream));
+                var collection = new ProteinCollection(_collection);
+                changes = collection.Update(serializer.Deserialize(stream));
+                Interlocked.Exchange(ref _collection, collection);
             }
 
-            foreach (var info in _dictionary.Changes.Where(info => info.Result != ProteinDictionaryChangeResult.NoChange))
+            foreach (var info in changes.Where(info => info.Action != ProteinChangeAction.None))
             {
                 _logger.Info(info.ToString());
             }
@@ -133,7 +136,7 @@ namespace HFM.Core.WorkUnits
             var now = DateTime.UtcNow;
             foreach (var key in LastProjectRefresh.Keys.ToList())
             {
-                if (_dictionary.ContainsKey(key))
+                if (_collection.ContainsKey(key))
                 {
                     LastProjectRefresh.Remove(key);
                 }
@@ -145,12 +148,12 @@ namespace HFM.Core.WorkUnits
             LastRefresh = now;
 
             Write();
-            return _dictionary.Changes;
+            return changes;
         }
 
         private void Write()
         {
-            _dataContainer.Data = _dictionary.Values.ToList();
+            _dataContainer.Data = _collection.ToList();
             _dataContainer.Write();
         }
 
@@ -205,14 +208,14 @@ namespace HFM.Core.WorkUnits
             return null;
         }
 
-        public IReadOnlyCollection<int> GetProjects()
+        public ICollection<int> GetProjects()
         {
             return new List<int>(0);
         }
 
-        public IReadOnlyCollection<ProteinDictionaryChange> Refresh(IProgress<ProgressInfo> progress)
+        public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress)
         {
-            return new List<ProteinDictionaryChange>(0);
+            return new List<ProteinChange>();
         }
     }
 }

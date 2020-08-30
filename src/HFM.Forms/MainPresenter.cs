@@ -1109,13 +1109,9 @@ namespace HFM.Forms
         {
             try
             {
-                IEnumerable<ProteinDictionaryChange> result = null;
-                using (var dialog = new ProgressDialog((progress, token) =>
+                IEnumerable<ProteinChange> result = null;
+                using (var dialog = new ProgressDialog((progress, token) => result = _proteinService.Refresh(progress), false))
                 {
-                    result = _proteinService.Refresh(progress);
-                }, false))
-                {
-                    dialog.Icon = Properties.Resources.hfm_48_48;
                     dialog.Text = Core.Application.NameAndVersion;
                     dialog.ShowDialog(_view);
                     if (dialog.Exception != null)
@@ -1127,14 +1123,14 @@ namespace HFM.Forms
 
                 if (result != null)
                 {
-                    var proteinChanges = result.Where(x => x.Result != ProteinDictionaryChangeResult.NoChange).ToList();
+                    var proteinChanges = result.Where(x => x.Action != ProteinChangeAction.None).ToList();
                     if (proteinChanges.Count > 0)
                     {
                         if (_clientConfiguration.Count > 0)
                         {
                             _clientConfiguration.ScheduledTasks.RetrieveAll();
                         }
-                        using (var dialog = new ProteinLoadResultsDialog(proteinChanges))
+                        using (var dialog = new ProteinChangesDialog(proteinChanges))
                         {
                             dialog.ShowDialog(_view);
                         }

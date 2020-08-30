@@ -6,11 +6,11 @@ using HFM.Proteins;
 
 namespace HFM.Forms.Views
 {
-    public partial class ProteinLoadResultsDialog : FormBase
+    public partial class ProteinChangesDialog : FormBase
     {
-        private readonly IEnumerable<ProteinDictionaryChange> _proteinChanges;
+        private readonly IEnumerable<ProteinChange> _proteinChanges;
 
-        public ProteinLoadResultsDialog(IEnumerable<ProteinDictionaryChange> proteinChanges)
+        public ProteinChangesDialog(IEnumerable<ProteinChange> proteinChanges)
         {
             _proteinChanges = proteinChanges ?? throw new ArgumentNullException(nameof(proteinChanges));
 
