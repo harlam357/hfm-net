@@ -108,6 +108,9 @@
       <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HFM.Proteins, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HFM.Proteins.0.1.0\lib\net45\HFM.Proteins.dll</HintPath>
+    </Reference>
     <Reference Include="LightInject, Version=6.3.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LightInject.6.3.4\lib\net46\LightInject.dll</HintPath>
     </Reference>
@@ -116,6 +119,9 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -221,10 +227,6 @@
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
       <Project>{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}</Project>
       <Name>HFM.Preferences</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Proteins\HFM.Proteins.csproj">
-      <Project>{7500a8ca-521d-4397-892b-27c6917847e1}</Project>
-      <Name>HFM.Proteins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
