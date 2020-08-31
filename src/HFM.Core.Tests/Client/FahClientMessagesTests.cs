@@ -396,7 +396,7 @@ namespace HFM.Core.Client
         {
             var fahClient = MockRepository.GenerateStub<IFahClient>();
             fahClient.Stub(x => x.Logger).Return(NullLogger.Instance);
-            var preferences = new InMemoryPreferenceSet(null, path, null);
+            var preferences = new InMemoryPreferencesProvider(null, path, null);
             fahClient.Stub(x => x.Preferences).Return(preferences);
             var settings = new ClientSettings { Name = "test" };
             fahClient.Settings = settings;

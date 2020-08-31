@@ -145,7 +145,7 @@ namespace HFM.Core.SlotXml
 
         private static IPreferenceSet CreatePreferences(string applicationDataFolderPath)
         {
-            var preferences = new InMemoryPreferenceSet(@"..\..\..\HFM", applicationDataFolderPath, null);
+            var preferences = new InMemoryPreferencesProvider(@"..\..\..\HFM", applicationDataFolderPath, null);
             preferences.Set(Preference.DecimalPlaces, 0);
             preferences.Set(Preference.WebOverview, "WebOverview.xslt");
             preferences.Set(Preference.WebSummary, "WebSummary.xslt");

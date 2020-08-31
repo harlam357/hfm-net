@@ -16,7 +16,7 @@ namespace HFM.Core
 
             // IPreferenceSet - Singleton
             serviceRegistry.Register<Preferences.IPreferenceSet>(
-                _ => new Preferences.PreferenceSet(Application.Path, Application.DataFolderPath, Application.FullVersion), new PerContainerLifetime());
+                _ => new Preferences.XmlPreferencesProvider(Application.Path, Application.DataFolderPath, Application.FullVersion), new PerContainerLifetime());
 
             // IWorkUnitRepository - Singleton
             serviceRegistry.Register<Data.IWorkUnitRepository, Data.WorkUnitRepository>(new PerContainerLifetime());

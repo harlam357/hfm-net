@@ -26,7 +26,7 @@ namespace HFM.Core.Client
             // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var workUnitRepository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), benchmarkService, null, workUnitRepository);
+            var fahClient = new FahClient(null, new InMemoryPreferencesProvider(), benchmarkService, null, workUnitRepository);
 
             var workUnit = new WorkUnit();
             workUnit.ProjectID = 2669;
@@ -77,7 +77,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
-            var fahClient = new FahClient(null, new InMemoryPreferenceSet(), benchmarkService, null, null);
+            var fahClient = new FahClient(null, new InMemoryPreferencesProvider(), benchmarkService, null, null);
 
             var workUnit = new WorkUnit();
             workUnit.ProjectID = 12345;

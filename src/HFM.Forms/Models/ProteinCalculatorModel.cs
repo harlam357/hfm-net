@@ -18,7 +18,7 @@ namespace HFM.Forms.Models
 
         public ProteinCalculatorModel(IPreferenceSet preferences, IProteinService proteinService)
         {
-            _preferences = preferences ?? new InMemoryPreferenceSet();
+            _preferences = preferences ?? new InMemoryPreferencesProvider();
             _proteinService = proteinService ?? NullProteinService.Instance;
         }
 

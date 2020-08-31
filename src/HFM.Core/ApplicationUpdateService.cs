@@ -17,7 +17,7 @@ namespace HFM.Core
 
         public ApplicationUpdateService(IPreferenceSet preferences)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
         public ApplicationUpdate GetApplicationUpdate(string url)

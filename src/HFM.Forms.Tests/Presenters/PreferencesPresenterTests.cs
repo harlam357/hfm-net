@@ -25,7 +25,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_OKClicked_DoesNotCloseWhenModelHasError()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 presenter.Model.WebProxyModel.Enabled = true;
                 presenter.ShowDialog(null);
@@ -57,7 +57,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_OKClicked_SetsDialogResultAndClosesDialogWhenModelHasNoError()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 presenter.ShowDialog(null);
                 Assert.IsTrue(presenter.MockDialog.Shown);
@@ -73,7 +73,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForWebGenerationPath_SetsFolderDialogSelectedPathWhenModelPathIsSet()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 presenter.Model.WebGenerationModel.Path = @"foo\";
                 var dialog = new MockFolderDialogPresenter(_ => default);
@@ -88,7 +88,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForWebGenerationPath_DoesNotSetFolderDialogSelectedPathWhenModelPathIsNotSet()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFolderDialogPresenter(_ => default);
                 // Act
@@ -102,7 +102,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForWebGenerationPath_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFolderDialogPresenter(_ => DialogResult.OK);
                 dialog.SelectedPath = @"foo\";
@@ -117,7 +117,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenModelHasError()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -134,7 +134,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenTestEmailSucceeds()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -155,7 +155,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestReportingEmail_ShowsMessageBoxWhenTestEmailFails()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -175,7 +175,7 @@ namespace HFM.Forms.Presenters
         [Test]
         public void PreferencesPresenter_TestExtremeOverclockingUser_StartsLocalProcess()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             using (var presenter = new MockDialogPreferencesPresenter(model))
             {
                 model.OptionsModel.EocUserID = 12345;
@@ -191,7 +191,7 @@ namespace HFM.Forms.Presenters
         [Test]
         public void PreferencesPresenter_TestExtremeOverclockingUser_ShowsMessageBoxWhenLocalProcessFailsToStart()
         {
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -207,7 +207,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestWebGenerationConnection_DoesNotThrowWhenFtpTestConnectionSucceeds()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -222,7 +222,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestWebGenerationConnection_ThrowsWhenFtpTestConnectionFails()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -237,7 +237,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestWebGenerationConnection_DoesNotThrowWhenPathTestConnectionSucceeds()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -256,7 +256,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_TestWebGenerationConnection_ThrowsWhenPathTestConnectionFails()
         {
             // Arrange
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration());
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration());
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockDialogPreferencesPresenter(model, messageBox))
             {
@@ -275,7 +275,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForConfigurationFile_SetsFolderDialogInitialDirectoryAndFileNameWhenModelPathIsFileAndExists()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 using (var artifacts = new ArtifactFolder())
                 {
@@ -296,7 +296,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForConfigurationFile_SetsFolderDialogInitialDirectoryWhenModelPathIsDirectoryAndExists()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 using (var artifacts = new ArtifactFolder())
                 {
@@ -315,7 +315,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForConfigurationFile_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFileDialogPresenter(_ => DialogResult.OK);
                 string path = @"C:\foo\bar.hfmx";
@@ -331,7 +331,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForOverviewTransform_SetsFolderDialogInitialDirectoryAndFileNameWhenModelPathIsFileAndExists()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 using (var artifacts = new ArtifactFolder())
                 {
@@ -354,7 +354,7 @@ namespace HFM.Forms.Presenters
             // Arrange
             using (var artifacts = new ArtifactFolder())
             {
-                var preferences = new InMemoryPreferenceSet(artifacts.Path, null, null);
+                var preferences = new InMemoryPreferencesProvider(artifacts.Path, null, null);
                 using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(preferences, new InMemoryAutoRunConfiguration())))
                 {
                     string defaultXsltPath = Path.Combine(artifacts.Path, Core.Application.XsltFolderName);
@@ -377,7 +377,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForOverviewTransform_SetsFolderDialogInitialDirectoryWhenModelPathIsDirectoryAndExists()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 using (var artifacts = new ArtifactFolder())
                 {
@@ -396,7 +396,7 @@ namespace HFM.Forms.Presenters
         public void PreferencesPresenter_BrowseForOverviewTransform_SetsModelPathWhenDialogResultIsOK()
         {
             // Arrange
-            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())))
+            using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
                 var dialog = new MockFileDialogPresenter(_ => DialogResult.OK);
                 string path = @"C:\foo\overview.xslt";
@@ -414,7 +414,7 @@ namespace HFM.Forms.Presenters
             // Arrange
             using (var artifacts = new ArtifactFolder())
             {
-                var preferences = new InMemoryPreferenceSet(artifacts.Path, null, null);
+                var preferences = new InMemoryPreferencesProvider(artifacts.Path, null, null);
                 using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(preferences, new InMemoryAutoRunConfiguration())))
                 {
                     string defaultXsltPath = Path.Combine(artifacts.Path, Core.Application.XsltFolderName);
@@ -451,7 +451,7 @@ namespace HFM.Forms.Presenters
 
         private class PreferencesModelThrowsOnSave : PreferencesModel
         {
-            public PreferencesModelThrowsOnSave() : base(new InMemoryPreferenceSet(), new InMemoryAutoRunConfiguration())
+            public PreferencesModelThrowsOnSave() : base(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())
             {
             }
 

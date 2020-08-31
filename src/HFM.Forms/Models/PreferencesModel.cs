@@ -11,7 +11,7 @@ namespace HFM.Forms.Models
     {
         public PreferencesModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             ClientsModel = new ClientsModel(Preferences);
             OptionsModel = new OptionsModel(Preferences, autoRunConfiguration);
             WebGenerationModel = new WebGenerationModel(Preferences);

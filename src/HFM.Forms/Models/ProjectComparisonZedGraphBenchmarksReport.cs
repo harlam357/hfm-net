@@ -19,7 +19,7 @@ namespace HFM.Forms.Models
         public ProjectComparisonZedGraphBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
             : base(KeyName, proteinService, benchmarkService)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
         public override void Generate(IBenchmarksReportSource source)

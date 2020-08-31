@@ -10,12 +10,12 @@ using NUnit.Framework;
 
 namespace HFM.Preferences
 {
-    public partial class PreferenceSetTests
+    public partial class PreferencesProviderTests
     {
         [Test]
-        public void PreferenceSet_Get_Test()
+        public void PreferencesProvider_Get_Test()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             // value type
             Assert.AreEqual(360, prefs.Get<int>(Preference.FormSplitterLocation));
@@ -37,21 +37,21 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_ThrowsOnDataTypeMismatch_Test()
+        public void PreferencesProvider_Get_ThrowsOnDataTypeMismatch_Test()
         {
             // Arrange
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
             // Act & Assert
             Assert.Throws<ArgumentException>(() => prefs.Get<int>(Preference.CacheFolder));
         }
 
         [Test]
-        public void PreferenceSet_Get_NullStringAsEnum_ReturnsEnumDefaultWhenValueIsNull_Test()
+        public void PreferencesProvider_Get_NullStringAsEnum_ReturnsEnumDefaultWhenValueIsNull_Test()
         {
             // Arrange
             var data = new PreferenceData();
             data.WebDeployment.FtpMode = null;
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             var value = prefs.Get<FtpMode>(Preference.WebGenFtpMode);
             // Assert
@@ -59,12 +59,12 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_StringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
+        public void PreferencesProvider_Get_StringAsEnum_ReturnsEnumDefaultWhenParsingFails_Test()
         {
             // Arrange
             var data = new PreferenceData();
             data.ApplicationSettings.BonusCalculation = "Foo";
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             var value = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
             // Assert
@@ -72,12 +72,12 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_StringAsEnum_Test()
+        public void PreferencesProvider_Get_StringAsEnum_Test()
         {
             // Arrange
             var data = new PreferenceData();
             data.ApplicationSettings.BonusCalculation = "DownloadTime";
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             var value = prefs.Get<BonusCalculation>(Preference.BonusCalculation);
             // Assert
@@ -85,12 +85,12 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_Int32AsEnum_Test()
+        public void PreferencesProvider_Get_Int32AsEnum_Test()
         {
             // Arrange
             var data = new PreferenceData();
             data.ApplicationSettings.MessageLevel = (int)LoggerLevel.Info;
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             var value = prefs.Get<LoggerLevel>(Preference.MessageLevel);
             // Assert
@@ -107,9 +107,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_ValueType_Benchmark()
+        public void PreferencesProvider_Get_ValueType_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)
@@ -122,9 +122,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_NullString_Benchmark()
+        public void PreferencesProvider_Get_NullString_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)
@@ -137,9 +137,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_String_Benchmark()
+        public void PreferencesProvider_Get_String_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)
@@ -152,9 +152,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_Class_Benchmark()
+        public void PreferencesProvider_Get_Class_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)
@@ -167,9 +167,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_NullCollection_Benchmark()
+        public void PreferencesProvider_Get_NullCollection_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)
@@ -182,9 +182,9 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Get_Collection_Benchmark()
+        public void PreferencesProvider_Get_Collection_Benchmark()
         {
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
 
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < 1000000; i++)

@@ -23,7 +23,7 @@ namespace HFM.Forms.Models
         public TextBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService,
             IProteinBenchmarkService benchmarkService, ClientConfiguration clientConfiguration) : base(KeyName)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             ProteinService = proteinService ?? NullProteinService.Instance;
             BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
             ClientConfiguration = clientConfiguration;

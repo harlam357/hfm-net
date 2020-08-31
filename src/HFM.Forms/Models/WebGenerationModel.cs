@@ -17,7 +17,7 @@ namespace HFM.Forms.Models
 
         public WebGenerationModel(IPreferenceSet preferences)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
         public override void Load()

@@ -16,7 +16,7 @@ namespace HFM.Forms.Models
 
         public ClientsModel(IPreferenceSet preferences)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
         public override void Load()

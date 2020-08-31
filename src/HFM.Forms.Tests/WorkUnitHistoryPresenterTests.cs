@@ -318,7 +318,7 @@ namespace HFM.Forms
             public MockFormWorkUnitHistoryPresenter(MessageBoxPresenter messageBox)
                 : base(
                     new WorkUnitHistoryModel(
-                        new InMemoryPreferenceSet(),
+                        new InMemoryPreferencesProvider(),
                         new WorkUnitQueryDataContainer(),
                         MockRepository.GenerateMock<IWorkUnitRepository>()),
                     null,

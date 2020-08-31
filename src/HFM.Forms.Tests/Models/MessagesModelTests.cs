@@ -83,7 +83,7 @@ namespace HFM.Forms.Models
         public void MessagesModel_Load_FormLocationAndSize()
         {
             // Arrange
-            var preferences = new InMemoryPreferenceSet();
+            var preferences = new InMemoryPreferencesProvider();
             preferences.Set(Preference.MessagesFormLocation, new Point(10, 20));
             preferences.Set(Preference.MessagesFormSize, new Size(30, 40));
             var model = new MessagesModel(preferences, null);
@@ -98,7 +98,7 @@ namespace HFM.Forms.Models
         public void MessagesModel_Save_FormLocationAndSize()
         {
             // Arrange
-            var preferences = new InMemoryPreferenceSet();
+            var preferences = new InMemoryPreferencesProvider();
             var model = new MessagesModel(preferences, null);
             model.FormLocation = new Point(50, 60);
             model.FormSize = new Size(70, 80);

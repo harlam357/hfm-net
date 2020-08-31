@@ -63,9 +63,9 @@
     <Compile Include="ArtifactFolder.cs" />
     <Compile Include="Internal\CryptographyTests.cs" />
     <Compile Include="Internal\ObjectExtensionsTests.cs" />
-    <Compile Include="PreferenceSetTests.cs" />
-    <Compile Include="PreferenceSetTests.Get.cs" />
-    <Compile Include="PreferenceSetTests.Set.cs" />
+    <Compile Include="PreferencesProviderTests.cs" />
+    <Compile Include="PreferencesProviderTests.Get.cs" />
+    <Compile Include="PreferencesProviderTests.Set.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUpFixture.cs" />
   </ItemGroup>

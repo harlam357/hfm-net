@@ -78,7 +78,7 @@ namespace HFM.Core.Client
         protected Client(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService)
         {
             Logger = logger ?? NullLogger.Instance;
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             BenchmarkService = benchmarkService ?? new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
         }
 

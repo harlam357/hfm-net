@@ -72,7 +72,7 @@ namespace HFM.Forms.Models
         public void PreferencesModel_Load_FromPreferences()
         {
             // Arrange
-            var preferences = new InMemoryPreferenceSet();
+            var preferences = new InMemoryPreferencesProvider();
             preferences.Set(Preference.UseProxy, true);
             var model = new PreferencesModel(preferences, new InMemoryAutoRunConfiguration());
             // Act
@@ -99,7 +99,7 @@ namespace HFM.Forms.Models
             // Arrange
             var autoRunConfiguration = new InMemoryAutoRunConfiguration();
             autoRunConfiguration.SetFilePath("foo");
-            var model = new PreferencesModel(new InMemoryPreferenceSet(), autoRunConfiguration);
+            var model = new PreferencesModel(new InMemoryPreferencesProvider(), autoRunConfiguration);
             // Act
             model.Load();
             // Assert

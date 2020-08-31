@@ -220,7 +220,7 @@ namespace HFM.Forms.Models
         public ProductionZedGraphBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
             : base(KeyName, proteinService, benchmarkService)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
         protected override double[] GetYPoints(Protein protein, ProteinBenchmark benchmark)

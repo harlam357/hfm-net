@@ -23,7 +23,7 @@ namespace HFM.Forms.Presenters
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 

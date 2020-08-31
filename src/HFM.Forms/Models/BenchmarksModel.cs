@@ -23,7 +23,7 @@ namespace HFM.Forms.Models
         public BenchmarksModel(IPreferenceSet preferences, IProteinService proteinService,
             IProteinBenchmarkService benchmarkService, IEnumerable<BenchmarksReport> reports)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             ProteinService = proteinService ?? NullProteinService.Instance;
             BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
             Reports = reports ?? Array.Empty<BenchmarksReport>();

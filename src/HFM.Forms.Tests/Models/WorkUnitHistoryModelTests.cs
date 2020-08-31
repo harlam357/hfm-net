@@ -21,7 +21,7 @@ namespace HFM.Forms.Models
         {
             _repository = MockRepository.GenerateMock<IWorkUnitRepository>();
             _repository.Stub(x => x.Connected).Return(true);
-            _model = new WorkUnitHistoryModel(new InMemoryPreferenceSet(), new WorkUnitQueryDataContainer(), _repository);
+            _model = new WorkUnitHistoryModel(new InMemoryPreferencesProvider(), new WorkUnitQueryDataContainer(), _repository);
         }
 
         [Test]

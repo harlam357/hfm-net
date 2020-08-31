@@ -15,7 +15,7 @@ namespace HFM.Forms.Models
 
         public MessagesModel(IPreferenceSet preferences, ILoggerEvents loggerEvents)
         {
-            Preferences = preferences ?? new InMemoryPreferenceSet();
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             LoggerEvents = loggerEvents ?? NullLoggerEvents.Instance;
             LoggerEvents.Logged += (s, e) => AddMessage(e.Messages);
         }

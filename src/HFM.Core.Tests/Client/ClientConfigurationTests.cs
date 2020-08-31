@@ -311,7 +311,7 @@ namespace HFM.Core.Client
         private static ClientConfiguration CreateConfiguration()
         {
             return new ClientConfiguration(null,
-                new InMemoryPreferenceSet(),
+                new InMemoryPreferencesProvider(),
                 new ClientFactory(),
                 (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
         }

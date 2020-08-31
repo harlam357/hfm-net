@@ -88,7 +88,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="InMemoryPreferenceSet.cs" />
+    <Compile Include="InMemoryPreferencesProvider.cs" />
     <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Internal\ExpressionExtensions.cs" />
     <Compile Include="IPreferenceSet.cs" />
@@ -96,9 +96,9 @@
     <Compile Include="Internal\ObjectExtensions.cs" />
     <Compile Include="Data\PreferenceData.cs" />
     <Compile Include="Preference.cs" />
-    <Compile Include="PreferenceSet.cs" />
+    <Compile Include="XmlPreferencesProvider.cs" />
     <Compile Include="Data\PreferenceTasks.cs" />
-    <Compile Include="PreferenceSetBase.cs" />
+    <Compile Include="PreferencesProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\TypeExtensions.cs" />
   </ItemGroup>

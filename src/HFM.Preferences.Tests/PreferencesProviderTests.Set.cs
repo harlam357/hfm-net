@@ -8,31 +8,31 @@ using NUnit.Framework;
 
 namespace HFM.Preferences
 {
-    public partial class PreferenceSetTests
+    public partial class PreferencesProviderTests
     {
         [Test]
-        public void PreferenceSet_Set_ThrowsOnDataTypeMismatch_Test()
+        public void PreferencesProvider_Set_ThrowsOnDataTypeMismatch_Test()
         {
             // Arrange
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
             // Act & Assert
             Assert.Throws<ArgumentException>(() => prefs.Set(Preference.ClientRetrievalTask, String.Empty));
         }
 
         [Test]
-        public void PreferenceSet_Set_ThrowsOnReadOnlyPreference_Test()
+        public void PreferencesProvider_Set_ThrowsOnReadOnlyPreference_Test()
         {
             // Arrange
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => prefs.Set(Preference.ApplicationPath, String.Empty));
         }
 
         [Test]
-        public void PreferenceSet_Set_ValueType_Test()
+        public void PreferencesProvider_Set_ValueType_Test()
         {
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
 
             prefs.Set(Preference.FormSplitterLocation, (object)null);
             Assert.AreEqual(0, data.MainWindowState.SplitterLocation);
@@ -45,10 +45,10 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Set_String_Test()
+        public void PreferencesProvider_Set_String_Test()
         {
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
 
             prefs.Set(Preference.EmailReportingFromAddress, (string)null);
             Assert.AreEqual(null, data.Email.FromAddress);
@@ -59,11 +59,11 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Set_StringAsEnum_Test()
+        public void PreferencesProvider_Set_StringAsEnum_Test()
         {
             // Arrange
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             prefs.Set(Preference.BonusCalculation, BonusCalculation.Default);
             // Assert
@@ -71,11 +71,11 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Set_Int32AsEnum_Test()
+        public void PreferencesProvider_Set_Int32AsEnum_Test()
         {
             // Arrange
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             prefs.Set(Preference.MessageLevel, LoggerLevel.Debug);
             // Assert
@@ -83,10 +83,10 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Set_Class_Test()
+        public void PreferencesProvider_Set_Class_Test()
         {
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
 
             ClientRetrievalTask task = null;
             prefs.Set(Preference.ClientRetrievalTask, task);
@@ -100,10 +100,10 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Set_Collection_Test()
+        public void PreferencesProvider_Set_Collection_Test()
         {
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
 
             prefs.Set(Preference.FormColumns, (List<string>)null);
             Assert.AreEqual(null, data.MainWindowGrid.Columns);

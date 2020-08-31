@@ -11,10 +11,10 @@ using HFM.Preferences.Data;
 namespace HFM.Preferences
 {
     [TestFixture]
-    public partial class PreferenceSetTests
+    public partial class PreferencesProviderTests
     {
         [Test]
-        public void PreferenceSet_ConstructorArgumentValues_Test()
+        public void XmlPreferencesProvider_ConstructorArgumentValues_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -22,7 +22,7 @@ namespace HFM.Preferences
                 const string applicationVersion = "1.0.0.0";
                 string applicationPath = Environment.CurrentDirectory;
                 // Act
-                var prefs = new PreferenceSet(applicationPath, artifacts.Path, applicationVersion);
+                var prefs = new XmlPreferencesProvider(applicationPath, artifacts.Path, applicationVersion);
                 // Assert
                 Assert.AreEqual(applicationPath, prefs.ApplicationPath);
                 Assert.AreEqual(applicationPath, prefs.Get<string>(Preference.ApplicationPath));
@@ -36,7 +36,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Reset_Test()
+        public void XmlPreferencesProvider_Reset_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -55,7 +55,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Load_LoadsDefaultsWhenNoConfigXmlOrUserSettingsExists_Test()
+        public void XmlPreferencesProvider_Load_LoadsDefaultsWhenNoConfigXmlOrUserSettingsExists_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -74,7 +74,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Load_LoadsDefaultsWhenConfigXmlReadFails_Test()
+        public void XmlPreferencesProvider_Load_LoadsDefaultsWhenConfigXmlReadFails_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -94,14 +94,14 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Load_ExecutesPreferenceUpgrades_Test()
+        public void XmlPreferencesProvider_Load_ExecutesPreferenceUpgrades_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
             {
                 const string applicationVersion = "1.0.0.0";
                 string configPath = Path.Combine(artifacts.Path, "config.xml");
-                var prefs = new TestPreferenceUpgradePreferenceSet(artifacts.Path, applicationVersion);
+                var prefs = new TestPreferenceUpgradeXmlPreferencesProvider(artifacts.Path, applicationVersion);
                 Assert.IsFalse(File.Exists(configPath));
                 // Act
                 prefs.Load();
@@ -113,9 +113,9 @@ namespace HFM.Preferences
             }
         }
 
-        private class TestPreferenceUpgradePreferenceSet : PreferenceSet
+        private class TestPreferenceUpgradeXmlPreferencesProvider : XmlPreferencesProvider
         {
-            public TestPreferenceUpgradePreferenceSet(string applicationDataFolderPath, string applicationVersion)
+            public TestPreferenceUpgradeXmlPreferencesProvider(string applicationDataFolderPath, string applicationVersion)
                : base(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion)
             {
 
@@ -131,7 +131,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Load_FromConfigFile_Test()
+        public void XmlPreferencesProvider_Load_FromConfigFile_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -161,7 +161,7 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_Save_Test()
+        public void XmlPreferencesProvider_Save_Test()
         {
             // Arrange
             using (var artifacts = new ArtifactFolder())
@@ -180,12 +180,12 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_RoundTripEncryptedPreference_Test()
+        public void PreferencesProvider_RoundTripEncryptedPreference_Test()
         {
             // Arrange
             const string value = "fizzbizz";
             var data = new PreferenceData();
-            var prefs = new InMemoryPreferenceSet(data);
+            var prefs = new MockPreferencesProvider(data);
             // Act
             prefs.Set(Preference.WebGenPassword, value);
             // Assert
@@ -194,10 +194,10 @@ namespace HFM.Preferences
         }
 
         [Test]
-        public void PreferenceSet_PreferenceChanged_Test()
+        public void PreferencesProvider_PreferenceChanged_Test()
         {
             // Arrange
-            var prefs = new InMemoryPreferenceSet();
+            var prefs = new MockPreferencesProvider();
             object sender = null;
             PreferenceChangedEventArgs args = null;
             prefs.PreferenceChanged += (s, e) =>
@@ -224,24 +224,23 @@ namespace HFM.Preferences
             DownloadTime
         }
 
-        private class InMemoryPreferenceSet : PreferenceSetBase
+        private class MockPreferencesProvider : InMemoryPreferencesProvider
         {
-            public InMemoryPreferenceSet()
+            public MockPreferencesProvider()
                : base(Environment.CurrentDirectory, Environment.CurrentDirectory, "1.0.0.0")
             {
 
             }
 
-            public InMemoryPreferenceSet(PreferenceData data)
-               : this()
+            public MockPreferencesProvider(PreferenceData data) : this()
             {
                 Load(data);
             }
         }
 
-        private static PreferenceSet Create(string applicationDataFolderPath, string applicationVersion)
+        private static XmlPreferencesProvider Create(string applicationDataFolderPath, string applicationVersion)
         {
-            return new PreferenceSet(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion);
+            return new XmlPreferencesProvider(Environment.CurrentDirectory, applicationDataFolderPath, applicationVersion);
         }
     }
 }
