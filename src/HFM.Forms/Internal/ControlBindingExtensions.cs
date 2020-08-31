@@ -9,6 +9,11 @@ namespace HFM.Forms.Internal
             control.DataBindings.Add(nameof(Control.Text), dataSource, dataMember, false, DataSourceUpdateMode.OnValidation);
         }
 
+        internal static void BindText<T>(this T toolStripItem, object dataSource, string dataMember) where T : ToolStripItem, IBindableComponent
+        {
+            toolStripItem.DataBindings.Add(nameof(ToolStripItem.Text), dataSource, dataMember, false, DataSourceUpdateMode.OnValidation);
+        }
+
         internal static void BindEnabled(this Control control, object dataSource, string dataMember)
         {
             control.DataBindings.Add(nameof(Control.Enabled), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
