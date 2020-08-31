@@ -91,7 +91,7 @@
     <Compile Include="InMemoryPreferencesProvider.cs" />
     <Compile Include="Internal\Cryptography.cs" />
     <Compile Include="Internal\ExpressionExtensions.cs" />
-    <Compile Include="IPreferenceSet.cs" />
+    <Compile Include="IPreferences.cs" />
     <Compile Include="Internal\Metadata.cs" />
     <Compile Include="Internal\ObjectExtensions.cs" />
     <Compile Include="Data\PreferenceData.cs" />
