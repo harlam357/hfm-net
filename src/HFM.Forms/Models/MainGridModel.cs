@@ -27,7 +27,7 @@ namespace HFM.Forms.Models
 
         public SlotModel SelectedSlot
         {
-            get { return _selectedSlot; }
+            get => _selectedSlot;
             set
             {
                 if (!ReferenceEquals(_selectedSlot, value))
@@ -106,16 +106,11 @@ namespace HFM.Forms.Models
             }
         }
 
-        public SlotTotals SlotTotals
-        {
+        public SlotTotals SlotTotals =>
             // use SlotCollection, it's provides synchronized access to the slot list
-            get { return SlotTotals.Create(SlotCollection); }
-        }
+            SlotTotals.Create(SlotCollection);
 
-        public object BindingSource
-        {
-            get { return _bindingSource; }
-        }
+        public BindingSource BindingSource => _bindingSource;
 
         public IPreferences Preferences { get; }
 
@@ -252,15 +247,9 @@ namespace HFM.Forms.Models
             }
         }
 
-        private void OnAfterResetBindings(EventArgs e)
-        {
-            AfterResetBindings?.Invoke(this, e);
-        }
+        private void OnAfterResetBindings(EventArgs e) => AfterResetBindings?.Invoke(this, e);
 
-        private void OnSelectedSlotChanged(IndexChangedEventArgs e)
-        {
-            SelectedSlotChanged?.Invoke(this, e);
-        }
+        private void OnSelectedSlotChanged(IndexChangedEventArgs e) => SelectedSlotChanged?.Invoke(this, e);
     }
 
     public sealed class IndexChangedEventArgs : EventArgs
