@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -33,7 +32,7 @@ namespace HFM.Core.WorkUnits
             Assert.AreEqual(0, workUnit.FramesObserved);
             Assert.IsNull(workUnit.CurrentFrame);
             Assert.IsNull(workUnit.LogLines);
-            Assert.IsNull(workUnit.FrameData);
+            Assert.IsNull(workUnit.Frames);
             Assert.IsNull(workUnit.CoreID);
             Assert.AreEqual(-1, workUnit.QueueIndex);
         }
@@ -52,10 +51,10 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>().With(new LogLineFrameData { ID = 0 });
+            workUnit.Frames = frames;
             // Act & Assert
-            Assert.AreSame(frameDataDictionary[0], workUnit.CurrentFrame);
+            Assert.AreSame(frames[0], workUnit.CurrentFrame);
         }
 
         [Test]
@@ -63,11 +62,11 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 0 }, new WorkUnitFrameData { ID = 1 }, new WorkUnitFrameData { ID = 5 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 0 }, new LogLineFrameData { ID = 1 }, new LogLineFrameData { ID = 5 });
+            workUnit.Frames = frames;
             // Act & Assert
-            Assert.AreSame(frameDataDictionary[5], workUnit.CurrentFrame);
+            Assert.AreSame(frames[5], workUnit.CurrentFrame);
         }
 
         [Test]
@@ -75,30 +74,30 @@ namespace HFM.Core.WorkUnits
         {
             // Arrange
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = -1 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>().With(new LogLineFrameData { ID = -1 });
+            workUnit.Frames = frames;
             // Act & Assert
             Assert.IsNull(workUnit.CurrentFrame);
         }
 
         [Test]
-        public void WorkUnit_GetFrameData_ReturnsNullIfRequestedIdDoesNotExist_Test()
+        public void WorkUnit_GetFrame_ReturnsNullIfRequestedIdDoesNotExist_Test()
         {
             // Arrange
             var workUnit = new WorkUnit();
             // Act & Assert
-            Assert.IsNull(workUnit.GetFrameData(0));
+            Assert.IsNull(workUnit.GetFrame(0));
         }
 
         [Test]
-        public void WorkUnit_GetFrameData_ReturnsObjectIfRequestedIdExists_Test()
+        public void WorkUnit_GetFrame_ReturnsObjectIfRequestedIdExists_Test()
         {
             // Arrange
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(new WorkUnitFrameData { ID = 0 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>().With(new LogLineFrameData { ID = 0 });
+            workUnit.Frames = frames;
             // Act & Assert
-            Assert.IsNotNull(workUnit.GetFrameData(0));
+            Assert.IsNotNull(workUnit.GetFrame(0));
         }
     }
 }

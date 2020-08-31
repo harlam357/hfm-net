@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,12 +40,12 @@ namespace HFM.Core.Client
 
             var workUnitCopy = workUnit.Copy();
             workUnitCopy.FramesObserved = 4;
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
-                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
-                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
-                     new WorkUnitFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
-            workUnitCopy.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { Duration = TimeSpan.FromMinutes(0), ID = 0 },
+                     new LogLineFrameData { Duration = TimeSpan.FromMinutes(5), ID = 1 },
+                     new LogLineFrameData { Duration = TimeSpan.FromMinutes(5), ID = 2 },
+                     new LogLineFrameData { Duration = TimeSpan.FromMinutes(5), ID = 3 });
+            workUnitCopy.Frames = frames;
             workUnitCopy.UnitResult = WorkUnitResult.FinishedUnit;
 
             var parsedUnits = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };

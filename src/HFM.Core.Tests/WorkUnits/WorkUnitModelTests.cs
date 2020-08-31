@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -200,9 +199,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FramesCompleteTest1()
         {
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 1 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 1 });
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(1, workUnitModel.FramesComplete);
@@ -212,9 +211,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FramesCompleteTest2()
         {
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = -1 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = -1 });
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(0, workUnitModel.FramesComplete);
@@ -224,9 +223,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_FramesCompleteTest3()
         {
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 101 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 101 });
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(100, workUnitModel.FramesComplete);
@@ -244,9 +243,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PercentCompleteTest1()
         {
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 5 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 5 });
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(5, workUnitModel.PercentComplete);
@@ -257,9 +256,9 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { Frames = 200 };
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 5 });
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 5 });
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(2, workUnitModel.PercentComplete);
@@ -274,12 +273,12 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { Assigned = DateTime.UtcNow, FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             workUnit.UnitRetrievalTime = workUnit.Assigned.ToLocalTime().Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
@@ -302,12 +301,12 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerUnitDownloadTest3()
         {
             var workUnit = new WorkUnit { FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
@@ -319,9 +318,9 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_PerUnitDownloadTest4()
         {
             var workUnit = new WorkUnit { Assigned = DateTime.UtcNow, FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, -1));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, -1));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(0, workUnitModel.GetRawTime(PPDCalculation.EffectiveRate));
@@ -334,13 +333,13 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(360, workUnitModel.GetRawTime(PPDCalculation.AllFrames));
@@ -363,13 +362,13 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(376, workUnitModel.GetRawTime(PPDCalculation.LastThreeFrames));
@@ -392,13 +391,13 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(380, workUnitModel.GetRawTime(PPDCalculation.LastFrame));
@@ -420,13 +419,13 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_TimePerSectionTest1()
         {
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(380, workUnitModel.GetRawTime(PPDCalculation.LastFrame));
@@ -437,13 +436,13 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_TimePerSectionTest2()
         {
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(376, workUnitModel.GetRawTime(PPDCalculation.LastThreeFrames));
@@ -454,13 +453,13 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_TimePerSectionTest3()
         {
             var workUnit = new WorkUnit { FramesObserved = 5 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(new TimeSpan(0, 5, 10), 1),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 2),
-                     CreateFrameData(new TimeSpan(0, 6, 10), 3),
-                     CreateFrameData(new TimeSpan(0, 6, 20), 4));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(new TimeSpan(0, 5, 10), 1),
+                     CreateFrame(new TimeSpan(0, 6, 20), 2),
+                     CreateFrame(new TimeSpan(0, 6, 10), 3),
+                     CreateFrame(new TimeSpan(0, 6, 20), 4));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(360, workUnitModel.GetRawTime(PPDCalculation.AllFrames));
@@ -472,12 +471,12 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { Assigned = DateTime.UtcNow, FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             workUnit.UnitRetrievalTime = workUnit.Assigned.ToLocalTime().Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
@@ -513,12 +512,12 @@ namespace HFM.Core.WorkUnits
             var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
             var utcNow = DateTime.UtcNow;
             var workUnit = new WorkUnit { Finished = utcNow, Assigned = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(848.528, workUnitModel.GetCredit(SlotStatus.RunningNoFrameTimes, PPDCalculation.LastFrame, BonusCalculation.DownloadTime));
@@ -532,12 +531,12 @@ namespace HFM.Core.WorkUnits
             var protein = new Protein { ProjectNumber = 1, Credit = 100, KFactor = 5, PreferredDays = 3, MaximumDays = 6 };
             var utcNow = DateTime.UtcNow;
             var workUnit = new WorkUnit { Finished = utcNow, Assigned = utcNow.Subtract(TimeSpan.FromHours(2)), FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(1897.367, workUnitModel.GetCredit(SlotStatus.Running, PPDCalculation.LastFrame, BonusCalculation.DownloadTime));
@@ -550,12 +549,12 @@ namespace HFM.Core.WorkUnits
         {
             var protein = new Protein { ProjectNumber = 1, Credit = 100 };
             var workUnit = new WorkUnit { FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(protein, workUnit);
 
             Assert.AreEqual(100, workUnitModel.GetCredit(SlotStatus.Unknown, PPDCalculation.LastFrame, BonusCalculation.None));
@@ -567,12 +566,12 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_CreditUPDAndPPDTest4()
         {
             var workUnit = new WorkUnit { FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(0, workUnitModel.GetCredit(SlotStatus.Unknown, PPDCalculation.LastFrame, BonusCalculation.None));
@@ -588,12 +587,12 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_EtaTest1()
         {
             var workUnit = new WorkUnit { FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.AreEqual(TimeSpan.FromMinutes(582), workUnitModel.GetEta(PPDCalculation.LastFrame));
@@ -603,12 +602,12 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_EtaTest2()
         {
             var workUnit = new WorkUnit { Assigned = DateTime.UtcNow, FramesObserved = 4 };
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(CreateFrameData(TimeSpan.Zero, 0),
-                     CreateFrameData(TimeSpan.FromMinutes(4), 1),
-                     CreateFrameData(TimeSpan.FromMinutes(5), 2),
-                     CreateFrameData(TimeSpan.FromMinutes(6), 3));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>()
+               .With(CreateFrame(TimeSpan.Zero, 0),
+                     CreateFrame(TimeSpan.FromMinutes(4), 1),
+                     CreateFrame(TimeSpan.FromMinutes(5), 2),
+                     CreateFrame(TimeSpan.FromMinutes(6), 3));
+            workUnit.Frames = frames;
             workUnit.UnitRetrievalTime = workUnit.Assigned.Add(TimeSpan.FromMinutes(30));
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
@@ -623,8 +622,8 @@ namespace HFM.Core.WorkUnits
         public void WorkUnitModel_AllFramesCompleted1()
         {
             var workUnit = new WorkUnit();
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>().With(CreateFrameData(TimeSpan.Zero, 100));
-            workUnit.FrameData = frameDataDictionary;
+            var frames = new Dictionary<int, LogLineFrameData>().With(CreateFrame(TimeSpan.Zero, 100));
+            workUnit.Frames = frames;
             var workUnitModel = CreateWorkUnitModel(null, workUnit);
 
             Assert.IsTrue(workUnitModel.AllFramesCompleted);
@@ -650,9 +649,9 @@ namespace HFM.Core.WorkUnits
             };
         }
 
-        private static WorkUnitFrameData CreateFrameData(TimeSpan duration, int frameId)
+        private static LogLineFrameData CreateFrame(TimeSpan duration, int frameId)
         {
-            return new WorkUnitFrameData { ID = frameId, Duration = duration };
+            return new LogLineFrameData { ID = frameId, Duration = duration };
         }
 
         #endregion

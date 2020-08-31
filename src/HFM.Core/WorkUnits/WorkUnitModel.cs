@@ -405,18 +405,17 @@ namespace HFM.Core.WorkUnits
 
             // Make sure we only add frame durations greater than a Zero TimeSpan
             // The first frame will always have a Zero TimeSpan for frame duration
-            // we don't want to take this frame into account when calculating 'AllFrames' - Issue 23
+            // we don't want to take this frame into account when calculating 'AllFrames'
             TimeSpan totalTime = TimeSpan.Zero;
             int countFrames = 0;
 
             int frameId = WorkUnit.CurrentFrame.ID;
             for (int i = 0; i < numberOfFrames; i++)
             {
-                // Issue 199
-                var frameData = WorkUnit.GetFrameData(frameId);
-                if (frameData != null && frameData.Duration > TimeSpan.Zero)
+                var frame = WorkUnit.GetFrame(frameId);
+                if (frame != null && frame.Duration > TimeSpan.Zero)
                 {
-                    totalTime = totalTime.Add(frameData.Duration);
+                    totalTime = totalTime.Add(frame.Duration);
                     countFrames++;
                 }
                 frameId--;

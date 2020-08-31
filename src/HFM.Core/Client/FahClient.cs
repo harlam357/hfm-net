@@ -455,7 +455,7 @@ namespace HFM.Core.Client
         private static ICollection<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
         {
             return Enumerable.Range(nextFrame, count)
-                .Select(workUnit.GetFrameData)
+                .Select(workUnit.GetFrame)
                 .Where(f => f != null)
                 .Select(f => f.Duration)
                 .ToList();

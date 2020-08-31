@@ -109,7 +109,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="HFM.Proteins, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Proteins.0.1.1\lib\net45\HFM.Proteins.dll</HintPath>
+      <HintPath>..\packages\HFM.Proteins.0.1.2\lib\net45\HFM.Proteins.dll</HintPath>
     </Reference>
     <Reference Include="LightInject, Version=6.3.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LightInject.6.3.4\lib\net46\LightInject.dll</HintPath>

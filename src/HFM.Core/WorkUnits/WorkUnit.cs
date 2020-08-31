@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -123,22 +123,22 @@ namespace HFM.Core.WorkUnits
         public int FramesObserved { get; set; }
 
         /// <summary>
-        /// Last Observed Frame on this Unit
+        /// Gets the last observed frame of this work unit.
         /// </summary>
-        public WorkUnitFrameData CurrentFrame
+        public LogLineFrameData CurrentFrame
         {
             get
             {
-                if (FrameData == null || FrameData.Count == 0)
+                if (Frames == null || Frames.Count == 0)
                 {
                     return null;
                 }
 
-                int max = FrameData.Keys.Max();
+                int max = Frames.Keys.Max();
                 if (max >= 0)
                 {
-                    Debug.Assert(FrameData[max].ID == max);
-                    return FrameData[max];
+                    Debug.Assert(Frames[max].ID == max);
+                    return Frames[max];
                 }
 
                 return null;
@@ -161,9 +161,9 @@ namespace HFM.Core.WorkUnits
         }
 
         /// <summary>
-        /// Frame Data for this Unit
+        /// Gets or sets the dictionary of frame data parsed from log lines.
         /// </summary>
-        public IDictionary<int, WorkUnitFrameData> FrameData { get; set; }
+        public IDictionary<int, LogLineFrameData> Frames { get; set; }
 
         /// <summary>
         /// Core ID (Hex) Value
@@ -180,11 +180,11 @@ namespace HFM.Core.WorkUnits
         #region Methods
 
         /// <summary>
-        /// Gets the WorkUnitFrameData for the frame ID.
+        /// Gets the frame by frame ID.
         /// </summary>
-        public WorkUnitFrameData GetFrameData(int frameId)
+        public LogLineFrameData GetFrame(int frameId)
         {
-            return FrameData != null && FrameData.ContainsKey(frameId) ? FrameData[frameId] : null;
+            return Frames != null && Frames.ContainsKey(frameId) ? Frames[frameId] : null;
         }
 
         internal bool EqualsProjectAndDownloadTime(WorkUnit other)

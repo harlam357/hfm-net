@@ -73,10 +73,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="HFM.Client, Version=0.4.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Client.0.4.0\lib\net47\HFM.Client.dll</HintPath>
+      <HintPath>..\packages\HFM.Client.0.4.1\lib\net47\HFM.Client.dll</HintPath>
     </Reference>
     <Reference Include="HFM.Proteins, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Proteins.0.1.1\lib\net45\HFM.Proteins.dll</HintPath>
+      <HintPath>..\packages\HFM.Proteins.0.1.2\lib\net45\HFM.Proteins.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.2\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>

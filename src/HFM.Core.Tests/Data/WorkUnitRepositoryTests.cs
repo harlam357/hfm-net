@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -272,9 +271,9 @@ namespace HFM.Core.Data
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-            workUnit.FrameData = frameDataDictionary;
+            var frameDataDictionary = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+            workUnit.Frames = frameDataDictionary;
             return workUnit;
         }
 
@@ -346,9 +345,9 @@ namespace HFM.Core.Data
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             workUnit.FramesObserved = 1;
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 56, Duration = TimeSpan.FromSeconds(1000) });
-            workUnit.FrameData = frameDataDictionary;
+            var frameDataDictionary = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 56, Duration = TimeSpan.FromSeconds(1000) });
+            workUnit.Frames = frameDataDictionary;
             return workUnit;
         }
 
@@ -420,9 +419,9 @@ namespace HFM.Core.Data
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-            workUnit.FrameData = frameDataDictionary;
+            var frameDataDictionary = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+            workUnit.Frames = frameDataDictionary;
             return workUnit;
         }
 
@@ -494,9 +493,9 @@ namespace HFM.Core.Data
 
             // these values effect the value reported when WorkUnitModel.GetRawTime() is called
             //workUnit.FramesObserved = 1;
-            var frameDataDictionary = new Dictionary<int, WorkUnitFrameData>()
-               .With(new WorkUnitFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
-            workUnit.FrameData = frameDataDictionary;
+            var frameDataDictionary = new Dictionary<int, LogLineFrameData>()
+               .With(new LogLineFrameData { ID = 100, Duration = TimeSpan.FromMinutes(10) });
+            workUnit.Frames = frameDataDictionary;
             return workUnit;
         }
 
