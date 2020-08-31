@@ -84,7 +84,6 @@ namespace HFM.Forms.Models
         #region Fields
 
         private readonly ISynchronizeInvoke _syncObject;
-        private readonly ClientConfiguration _clientConfiguration;
         private readonly SlotModelSortableBindingList _slotList;
         private readonly BindingSource _bindingSource;
 
@@ -118,19 +117,23 @@ namespace HFM.Forms.Models
             get { return _bindingSource; }
         }
 
-        public MainGridModel(IPreferences prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
+        public IPreferences Preferences { get; }
+
+        public ClientConfiguration ClientConfiguration { get; }
+
+        public MainGridModel(IPreferences preferences, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
         {
             _syncObject = syncObject;
-            _clientConfiguration = clientConfiguration;
+            ClientConfiguration = clientConfiguration;
             _slotList = new SlotModelSortableBindingList();
             _slotList.RaiseListChangedEvents = false;
-            _slotList.OfflineClientsLast = prefs.Get<bool>(Preference.OfflineLast);
+            _slotList.OfflineClientsLast = preferences.Get<bool>(Preference.OfflineLast);
             _slotList.Sorted += (sender, e) =>
                                 {
                                     SortColumnName = e.Name;
-                                    prefs.Set(Preference.FormSortColumn, SortColumnName);
+                                    preferences.Set(Preference.FormSortColumn, SortColumnName);
                                     SortColumnOrder = e.Direction;
-                                    prefs.Set(Preference.FormSortOrder, SortColumnOrder);
+                                    preferences.Set(Preference.FormSortOrder, SortColumnOrder);
                                 };
             _bindingSource = new BindingSource();
             _bindingSource.DataSource = _slotList;
@@ -140,8 +143,9 @@ namespace HFM.Forms.Models
             _bindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
 #endif
             // subscribe to services raising events that require a view action
-            prefs.PreferenceChanged += (s, e) => OnPreferenceChanged(prefs, e);
-            _clientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
+            Preferences = preferences;
+            Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(preferences, e);
+            ClientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
         }
 
         private void OnPreferenceChanged(IPreferences preferences, PreferenceChangedEventArgs e)
@@ -194,7 +198,7 @@ namespace HFM.Forms.Models
             lock (_slotsListLock)
             {
                 // get slots from the dictionary
-                var slots = _clientConfiguration.Slots as IList<SlotModel> ?? _clientConfiguration.Slots.ToList();
+                var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
 
                 // refresh the underlying binding list
                 _bindingSource.Clear();

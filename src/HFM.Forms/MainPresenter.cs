@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
@@ -38,41 +39,31 @@ namespace HFM.Forms
         /// </summary>
         public FormWindowState OriginalWindowState { get; private set; }
 
-        private ILogger _logger;
+        public MainGridModel GridModel { get; }
+        public ILogger Logger { get; }
+        public IServiceScopeFactory ServiceScopeFactory { get; }
+        public MessageBoxPresenter MessageBox { get; }
 
-        public ILogger Logger
-        {
-            get { return _logger ?? (_logger = NullLogger.Instance); }
-            set { _logger = value; }
-        }
-
-        private readonly MainGridModel _gridModel;
         private readonly IMainView _view;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly MessageBoxPresenter _messageBox;
         private readonly UserStatsDataModel _userStatsDataModel;
         private readonly ClientConfiguration _clientConfiguration;
-        private readonly IProteinService _proteinService;
-        private readonly IExternalProcessStarter _processStarter;
         private readonly IPreferences _preferences;
         private readonly ClientSettingsManager _settingsManager;
 
-        public MainPresenter(MainGridModel gridModel, IMainView view, IServiceScopeFactory serviceScopeFactory,
-                             MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
-                             ClientConfiguration clientConfiguration, IProteinService proteinService,
-                             IExternalProcessStarter processStarter, IPreferences preferences)
+        public MainPresenter(MainGridModel gridModel, IMainView view, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox,
+                             UserStatsDataModel userStatsDataModel)
         {
-            _gridModel = gridModel;
-            _gridModel.AfterResetBindings += (sender, e) =>
+            GridModel = gridModel;
+            GridModel.AfterResetBindings += (sender, e) =>
             {
                 // run asynchronously so binding operation can finish
                 _view.BeginInvoke(new Action(() =>
                 {
                     DisplaySelectedSlotData();
-                    _view.RefreshControlsWithTotalsData(_gridModel.SlotTotals);
+                    _view.RefreshControlsWithTotalsData(GridModel.SlotTotals);
                 }), null);
             };
-            _gridModel.SelectedSlotChanged += (sender, e) =>
+            GridModel.SelectedSlotChanged += (sender, e) =>
             {
                 if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
                 {
@@ -84,18 +75,15 @@ namespace HFM.Forms
                     }), null);
                 }
             };
+
+            _view = view;
+            Logger = logger ?? NullLogger.Instance;
+            ServiceScopeFactory = serviceScopeFactory;
+            MessageBox = messageBox;
             _userStatsDataModel = userStatsDataModel;
 
-            // Views
-            _view = view;
-            _messageBox = messageBox;
-            _serviceScopeFactory = serviceScopeFactory;
-            // Collections
-            _clientConfiguration = clientConfiguration;
-            _proteinService = proteinService;
-            _processStarter = processStarter;
-            // Data Services
-            _preferences = preferences;
+            _clientConfiguration = GridModel.ClientConfiguration;
+            _preferences = GridModel.Preferences;
             _settingsManager = new ClientSettingsManager();
 
             _clientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
@@ -112,7 +100,7 @@ namespace HFM.Forms
             // Restore View Preferences (must be done AFTER DataGridView columns are setup)
             RestoreViewPreferences();
             //
-            _view.SetGridDataSource(_gridModel.BindingSource);
+            _view.SetGridDataSource(GridModel.BindingSource);
             //
             _preferences.PreferenceChanged += (s, e) =>
             {
@@ -162,8 +150,8 @@ namespace HFM.Forms
             }
             _view.FollowLogFileChecked = _preferences.Get<bool>(Preference.FollowLog);
 
-            _gridModel.SortColumnName = _preferences.Get<string>(Preference.FormSortColumn);
-            _gridModel.SortColumnOrder = _preferences.Get<ListSortDirection>(Preference.FormSortOrder);
+            GridModel.SortColumnName = _preferences.Get<string>(Preference.FormSortColumn);
+            GridModel.SortColumnOrder = _preferences.Get<ListSortDirection>(Preference.FormSortOrder);
 
             try
             {
@@ -247,7 +235,7 @@ namespace HFM.Forms
             if (result.HasValue && !result.Value)
             {
                 string text = $"{Core.Application.NameAndVersion} is already up-to-date.";
-                _messageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+                MessageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
             }
         }
 
@@ -269,7 +257,7 @@ namespace HFM.Forms
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
 
                 _applicationUpdateModel = new ApplicationUpdateModel(update);
-                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _preferences, _messageBox))
+                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _preferences, MessageBox))
                 {
                     if (presenter.ShowDialog(_view) == DialogResult.OK)
                     {
@@ -277,7 +265,7 @@ namespace HFM.Forms
                         {
                             string text = String.Format(CultureInfo.CurrentCulture,
                                 "{0} will install the new version when you exit the application.", Core.Application.Name);
-                            _messageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+                            MessageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
                         }
                     }
                 }
@@ -297,7 +285,7 @@ namespace HFM.Forms
                 // ReApply Sort when restoring from the sys tray - Issue 32
                 if (_view.ShowInTaskbar == false)
                 {
-                    _gridModel.Sort();
+                    GridModel.Sort();
                 }
             }
 
@@ -375,7 +363,7 @@ namespace HFM.Forms
                     Logger.Error(ex.Message, ex);
                     string message = String.Format(CultureInfo.CurrentCulture,
                         "Update process failed to start with the following error:{0}{0}{1}", Environment.NewLine, ex.Message);
-                    _messageBox.ShowError(_view, message, _view.Text);
+                    MessageBox.ShowError(_view, message, _view.Text);
                 }
             }
         }
@@ -386,21 +374,21 @@ namespace HFM.Forms
 
         private void DisplaySelectedSlotData()
         {
-            if (_gridModel.SelectedSlot != null)
+            if (GridModel.SelectedSlot != null)
             {
                 // TODO: Surface client arguments?
                 //_view.StatusLabelLeftText = $"{_gridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString()} {_gridModel.SelectedSlot.Arguments}";
-                _view.StatusLabelLeftText = _gridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
+                _view.StatusLabelLeftText = GridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
 
-                _view.SetWorkUnitInfos(_gridModel.SelectedSlot.WorkUnitInfos,
-                                       _gridModel.SelectedSlot.SlotType);
+                _view.SetWorkUnitInfos(GridModel.SelectedSlot.WorkUnitInfos,
+                                       GridModel.SelectedSlot.SlotType);
 
                 // if we've got a good queue read, let queueControl_QueueIndexChanged()
                 // handle populating the log lines.
-                if (_gridModel.SelectedSlot.WorkUnitInfos != null) return;
+                if (GridModel.SelectedSlot.WorkUnitInfos != null) return;
 
                 // otherwise, load up the CurrentLogLines
-                SetLogLines(_gridModel.SelectedSlot, _gridModel.SelectedSlot.CurrentLogLines);
+                SetLogLines(GridModel.SelectedSlot, GridModel.SelectedSlot.CurrentLogLines);
             }
             else
             {
@@ -416,19 +404,19 @@ namespace HFM.Forms
                 return;
             }
 
-            if (_gridModel.SelectedSlot != null)
+            if (GridModel.SelectedSlot != null)
             {
                 // Check the UnitLogLines array against the requested Queue Index - Issue 171
                 try
                 {
-                    var logLines = _gridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
+                    var logLines = GridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
                     // show the current log even if not the current unit index - 2/17/12
                     if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
                     {
-                        logLines = _gridModel.SelectedSlot.CurrentLogLines;
+                        logLines = GridModel.SelectedSlot.CurrentLogLines;
                     }
 
-                    SetLogLines(_gridModel.SelectedSlot, logLines);
+                    SetLogLines(GridModel.SelectedSlot, logLines);
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
@@ -543,7 +531,7 @@ namespace HFM.Forms
 
         public void DataGridViewSorted()
         {
-            _gridModel.ResetSelectedSlot();
+            GridModel.ResetSelectedSlot();
         }
 
         public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
@@ -559,7 +547,7 @@ namespace HFM.Forms
                     }
 
                     // Check for SelectedSlot, and get out if not found
-                    if (_gridModel.SelectedSlot == null) return;
+                    if (GridModel.SelectedSlot == null) return;
 
                     _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
                 }
@@ -569,7 +557,7 @@ namespace HFM.Forms
                 if (hti.Type == DataGridViewHitTestType.Cell)
                 {
                     // Check for SelectedSlot, and get out if not found
-                    if (_gridModel.SelectedSlot == null) return;
+                    if (GridModel.SelectedSlot == null) return;
 
                     // TODO: What to do on double left click on v7 client?
                 }
@@ -622,13 +610,13 @@ namespace HFM.Forms
 
                 if (_clientConfiguration.Count == 0)
                 {
-                    _messageBox.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+                    MessageBox.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                _messageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                MessageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                    "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
         }
@@ -691,7 +679,7 @@ namespace HFM.Forms
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                _messageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
+                MessageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
                     "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
             }
         }
@@ -721,7 +709,7 @@ namespace HFM.Forms
         {
             if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
             {
-                DialogResult result = _messageBox.AskYesNoCancelQuestion(_view,
+                DialogResult result = MessageBox.AskYesNoCancelQuestion(_view,
                    String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes{0}No - Continue and do not save the changes{0}Cancel - Do not continue", Environment.NewLine),
                    _view.Text);
 
@@ -747,7 +735,7 @@ namespace HFM.Forms
 
         public void EditPreferencesClick()
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            using (var scope = ServiceScopeFactory.CreateScope())
             {
                 using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
                 {
@@ -762,19 +750,34 @@ namespace HFM.Forms
 
         #region Help Menu Handling Methods
 
-        public void ShowHfmLogFile()
+        public void ShowHfmLogFile(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowHfmLogFile());
+            string path = Path.Combine(_preferences.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
+            string errorMessage = String.Format(CultureInfo.CurrentCulture,
+                "An error occurred while attempting to open the HFM log file.{0}{0}Please check the log file viewer defined in the preferences.",
+                Environment.NewLine);
+
+            string fileName = _preferences.Get<string>(Preference.LogFileViewer);
+            string arguments = WrapString.InQuotes(path);
+            localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
         }
 
-        public void ShowHfmDataFiles()
+        public void ShowHfmDataFiles(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowFileExplorer(_preferences.Get<string>(Preference.ApplicationDataFolderPath)));
+            string path = _preferences.Get<string>(Preference.ApplicationDataFolderPath);
+            string errorMessage = String.Format(CultureInfo.CurrentCulture,
+                "An error occurred while attempting to open '{0}'.{1}{1}Please check the current file explorer defined in the preferences.",
+                path, Environment.NewLine);
+
+            string fileName = _preferences.Get<string>(Preference.FileExplorer);
+            string arguments = WrapString.InQuotes(path);
+            localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
         }
 
-        public void ShowHfmGoogleGroup()
+        public void ShowHfmGoogleGroup(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowHfmGoogleGroup());
+            const string errorMessage = "An error occurred while attempting to open the HFM.NET Google Group.";
+            localProcess.StartAndNotifyError(Core.Application.SupportForumUrl, errorMessage, Logger, MessageBox);
         }
 
         public void CheckForUpdateClick(IApplicationUpdateService service)
@@ -788,7 +791,7 @@ namespace HFM.Forms
 
         internal void ClientsAddClick()
         {
-            using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, _messageBox))
+            using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, MessageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
@@ -809,7 +812,7 @@ namespace HFM.Forms
                     catch (ArgumentException ex)
                     {
                         Logger.Error(ex.Message, ex);
-                        _messageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
             }
@@ -818,21 +821,21 @@ namespace HFM.Forms
         public void ClientsEditClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
             EditFahClient();
         }
 
         private void EditFahClient()
         {
-            Debug.Assert(_gridModel.SelectedSlot != null);
-            IClient client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
+            Debug.Assert(GridModel.SelectedSlot != null);
+            IClient client = _clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
             ClientSettings originalSettings = client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var model = new FahClientSettingsModel(originalSettings);
             model.Load();
-            using (var dialog = new FahClientSettingsPresenter(model, Logger, _messageBox))
+            using (var dialog = new FahClientSettingsPresenter(model, Logger, MessageBox))
             {
                 while (dialog.ShowDialog(_view) == DialogResult.OK)
                 {
@@ -847,7 +850,7 @@ namespace HFM.Forms
                     catch (ArgumentException ex)
                     {
                         Logger.Error(ex.Message, ex);
-                        _messageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
             }
@@ -856,18 +859,18 @@ namespace HFM.Forms
         public void ClientsDeleteClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            _clientConfiguration.Remove(_gridModel.SelectedSlot.Settings.Name);
+            _clientConfiguration.Remove(GridModel.SelectedSlot.Settings.Name);
         }
 
         public void ClientsRefreshSelectedClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            var client = _clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name);
-            Task.Factory.StartNew(client.Retrieve);
+            var client = _clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
+            Task.Run(client.Retrieve);
         }
 
         public void ClientsRefreshAllClick()
@@ -875,21 +878,26 @@ namespace HFM.Forms
             _clientConfiguration.ScheduledTasks.RetrieveAll();
         }
 
-        public void ClientsViewCachedLogClick()
+        public void ClientsViewCachedLogClick(LocalProcessService localProcess)
         {
             // Check for SelectedSlot, and get out if not found
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            string logFilePath = Path.Combine(_preferences.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.ClientLogFileName);
-            if (File.Exists(logFilePath))
+            string path = Path.Combine(_preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Settings.ClientLogFileName);
+            if (File.Exists(path))
             {
-                HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
+                string errorMessage = String.Format(CultureInfo.CurrentCulture,
+                    "An error occurred while attempting to open the client log file.{0}{0}Please check the current log file viewer defined in the preferences.",
+                    Environment.NewLine);
+
+                string fileName = _preferences.Get<string>(Preference.LogFileViewer);
+                string arguments = WrapString.InQuotes(path);
+                localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
             }
             else
             {
-                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.",
-                                               _gridModel.SelectedSlot.Settings.Name);
-                _messageBox.ShowInformation(_view, message, _view.Text);
+                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", GridModel.SelectedSlot.Settings.Name);
+                MessageBox.ShowInformation(_view, message, _view.Text);
             }
         }
 
@@ -899,39 +907,39 @@ namespace HFM.Forms
 
         internal void ClientsFoldSlotClick()
         {
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
-                client.Fold(_gridModel.SelectedSlot.SlotID);
+                client.Fold(GridModel.SelectedSlot.SlotID);
             }
         }
 
         internal void ClientsPauseSlotClick()
         {
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
-                client.Pause(_gridModel.SelectedSlot.SlotID);
+                client.Pause(GridModel.SelectedSlot.SlotID);
             }
         }
 
         internal void ClientsFinishSlotClick()
         {
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(_gridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
-                client.Finish(_gridModel.SelectedSlot.SlotID);
+                client.Finish(GridModel.SelectedSlot.SlotID);
             }
         }
 
         public void CopyPRCGToClipboardClicked()
         {
-            if (_gridModel.SelectedSlot == null) return;
+            if (GridModel.SelectedSlot == null) return;
 
-            string projectString = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
+            string projectString = GridModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
 
             // TODO: Replace ClipboardWrapper.SetText() with abstraction
             ClipboardWrapper.SetText(projectString);
@@ -949,7 +957,7 @@ namespace HFM.Forms
             {
                 if (_messagesPresenter is null)
                 {
-                    var scope = _serviceScopeFactory.CreateScope();
+                    var scope = ServiceScopeFactory.CreateScope();
                     _messagesPresenter = scope.ServiceProvider.GetRequiredService<MessagesPresenter>();
                     _messagesPresenter.Closed += (sender, args) =>
                     {
@@ -1093,19 +1101,19 @@ namespace HFM.Forms
 
         #region Tools Menu Handling Methods
 
-        public void ToolsDownloadProjectsClick()
+        public void ToolsDownloadProjectsClick(IProteinService proteinService)
         {
             try
             {
                 IEnumerable<ProteinChange> result = null;
-                using (var dialog = new ProgressDialog((progress, token) => result = _proteinService.Refresh(progress), false))
+                using (var dialog = new ProgressDialog((progress, token) => result = proteinService.Refresh(progress), false))
                 {
                     dialog.Text = Core.Application.NameAndVersion;
                     dialog.ShowDialog(_view);
                     if (dialog.Exception != null)
                     {
                         Logger.Error(dialog.Exception.Message, dialog.Exception);
-                        _messageBox.ShowError(dialog.Exception.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(dialog.Exception.Message, Core.Application.NameAndVersion);
                     }
                 }
 
@@ -1127,7 +1135,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                _messageBox.ShowError(ex.Message, Core.Application.NameAndVersion);
+                MessageBox.ShowError(ex.Message, Core.Application.NameAndVersion);
             }
         }
 
@@ -1136,12 +1144,12 @@ namespace HFM.Forms
             int projectID = 0;
 
             // Check for SelectedSlot, and if found... load its ProjectID.
-            if (_gridModel.SelectedSlot != null)
+            if (GridModel.SelectedSlot != null)
             {
-                projectID = _gridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
+                projectID = GridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
 
-            var scope = _serviceScopeFactory.CreateScope();
+            var scope = ServiceScopeFactory.CreateScope();
             var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
             presenter.Closed += (s, e) => scope.Dispose();
             presenter.Model.DefaultProjectID = projectID;
@@ -1156,7 +1164,7 @@ namespace HFM.Forms
             {
                 if (_historyPresenter is null)
                 {
-                    var scope = _serviceScopeFactory.CreateScope();
+                    var scope = ServiceScopeFactory.CreateScope();
                     _historyPresenter = scope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
                     _historyPresenter.Closed += (sender, args) =>
                     {
@@ -1177,7 +1185,7 @@ namespace HFM.Forms
 
         internal void ToolsPointsCalculatorClick()
         {
-            var scope = _serviceScopeFactory.CreateScope();
+            var scope = ServiceScopeFactory.CreateScope();
             IWin32Form calculatorForm = scope.ServiceProvider.GetRequiredService<ProteinCalculatorForm>();
             calculatorForm.Closed += (s, e) => scope.Dispose();
             calculatorForm.Show();
@@ -1187,19 +1195,25 @@ namespace HFM.Forms
 
         #region Web Menu Handling Methods
 
-        public void ShowEocUserPage()
+        public void ShowEocUserPage(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowEocUserPage());
+            string fileName = new Uri(String.Concat(EocStatsService.UserBaseUrl, _preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
+            const string errorMessage = "An error occurred while attempting to open the EOC user stats page.";
+            localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
-        public void ShowStanfordUserPage()
+        public void ShowStanfordUserPage(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowStanfordUserPage());
+            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, _preferences.Get<string>(Preference.StanfordId))).AbsoluteUri;
+            const string errorMessage = "An error occurred while attempting to open the FAH user stats page.";
+            localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
-        public void ShowEocTeamPage()
+        public void ShowEocTeamPage(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowEocTeamPage());
+            string fileName = new Uri(String.Concat(EocStatsService.TeamBaseUrl, _preferences.Get<int>(Preference.TeamId))).AbsoluteUri;
+            const string errorMessage = "An error occurred while attempting to open the EOC team stats page.";
+            localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
         public void RefreshUserStatsData()
@@ -1207,9 +1221,10 @@ namespace HFM.Forms
             _userStatsDataModel.Refresh();
         }
 
-        public void ShowHfmGitHub()
+        public void ShowHfmGitHub(LocalProcessService localProcess)
         {
-            HandleProcessStartResult(_processStarter.ShowHfmGitHub());
+            const string errorMessage = "An error occurred while attempting to open the HFM.NET GitHub project.";
+            localProcess.StartAndNotifyError(Core.Application.ProjectSiteUrl, errorMessage, Logger, MessageBox);
         }
 
         #endregion
@@ -1263,7 +1278,7 @@ namespace HFM.Forms
 
         public void AboutClicked()
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            using (var scope = ServiceScopeFactory.CreateScope())
             {
                 using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
                 {
@@ -1283,7 +1298,7 @@ namespace HFM.Forms
         {
             if (message != null)
             {
-                _messageBox.ShowError(_view, message, _view.Text);
+                MessageBox.ShowError(_view, message, _view.Text);
             }
         }
 

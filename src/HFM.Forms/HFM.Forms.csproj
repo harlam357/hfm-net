@@ -115,6 +115,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
+    <Compile Include="Internal\WrapString.cs" />
     <Compile Include="ListItemCollection.cs" />
     <Compile Include="Models\ApplicationUpdateModel.cs" />
     <Compile Include="Models\BenchmarksModel.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Presenters\MessagesPresenter.cs" />
     <Compile Include="Presenters\NullServiceScopeFactory.cs" />
     <Compile Include="Presenters\WorkUnitQueryPresenter.cs" />
+    <Compile Include="Internal\LocalProcessServiceExtensions.cs" />
     <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -284,7 +286,6 @@
       <DependentUpon>WorkUnitQueryDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\RegistryAutoRunConfiguration.cs" />
-    <Compile Include="Services\ExternalProcessStarter.cs" />
     <Compile Include="SlotModelSortableBindingList.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="Views\ApplicationUpdateDialog.cs">

@@ -70,7 +70,6 @@ namespace HFM.Forms
 
             // Singleton Services
             serviceRegistry.Register<IAutoRunConfiguration, RegistryAutoRunConfiguration>(new PerContainerLifetime());
-            serviceRegistry.Register<IExternalProcessStarter, ExternalProcessStarter>(new PerContainerLifetime());
         }
     }
 }

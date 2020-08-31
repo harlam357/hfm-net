@@ -1,5 +1,4 @@
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -22,12 +21,12 @@ namespace HFM.Core
 
         public const string ShortName = "HFM";
         public const string Name = "HFM.NET";
-        
+
         public const string CssFolderName = "CSS";
         public const string XsltFolderName = "XSL";
-        
+
         public const string ProjectSiteUrl = "https://github.com/harlam357/hfm-net";
-        public const string SupportForumUrl = "https://groups.google.com/group/hfm-net/";
+        public const string SupportForumUrl = "https://groups.google.com/g/hfm-net";
 
         /// <summary>
         /// Gets a string in the format Name vMajor.Minor.Build.

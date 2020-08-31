@@ -5,11 +5,14 @@ using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
+using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
@@ -400,17 +403,17 @@ namespace HFM.Forms.Views
 
         private void mnuHelpHfmLogFile_Click(object sender, EventArgs e)
         {
-            _presenter.ShowHfmLogFile();
+            _presenter.ShowHfmLogFile(LocalProcessService.Default);
         }
 
         private void mnuHelpHfmDataFiles_Click(object sender, EventArgs e)
         {
-            _presenter.ShowHfmDataFiles();
+            _presenter.ShowHfmDataFiles(LocalProcessService.Default);
         }
 
         private void mnuHelpHfmGroup_Click(object sender, EventArgs e)
         {
-            _presenter.ShowHfmGoogleGroup();
+            _presenter.ShowHfmGoogleGroup(LocalProcessService.Default);
         }
 
         private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
@@ -454,7 +457,7 @@ namespace HFM.Forms.Views
 
         private void ViewCachedLog_Click(object sender, EventArgs e)
         {
-            _presenter.ClientsViewCachedLogClick();
+            _presenter.ClientsViewCachedLogClick(LocalProcessService.Default);
         }
 
         #endregion
@@ -560,7 +563,10 @@ namespace HFM.Forms.Views
 
         private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
         {
-            _presenter.ToolsDownloadProjectsClick();
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                _presenter.ToolsDownloadProjectsClick(scope.ServiceProvider.GetRequiredService<IProteinService>());
+            }
         }
 
         private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
@@ -584,17 +590,17 @@ namespace HFM.Forms.Views
 
         private void mnuWebEOCUser_Click(object sender, EventArgs e)
         {
-            _presenter.ShowEocUserPage();
+            _presenter.ShowEocUserPage(LocalProcessService.Default);
         }
 
         private void mnuWebStanfordUser_Click(object sender, EventArgs e)
         {
-            _presenter.ShowStanfordUserPage();
+            _presenter.ShowStanfordUserPage(LocalProcessService.Default);
         }
 
         private void mnuWebEOCTeam_Click(object sender, EventArgs e)
         {
-            _presenter.ShowEocTeamPage();
+            _presenter.ShowEocTeamPage(LocalProcessService.Default);
         }
 
         private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
@@ -604,7 +610,7 @@ namespace HFM.Forms.Views
 
         private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
         {
-            _presenter.ShowHfmGitHub();
+            _presenter.ShowHfmGitHub(LocalProcessService.Default);
         }
 
         #endregion
