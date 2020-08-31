@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Xml;
 
 using HFM.Preferences;
@@ -17,16 +16,16 @@ namespace HFM.Core.Services
         public const string TeamBaseUrl = "https://folding.extremeoverclocking.com/team_summary.php?s=&t=";
         public const string UserXmlBaseUrl = "https://folding.extremeoverclocking.com/xml/user_summary.php?u=";
 
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferenceSet _preferences;
 
-        public EocStatsService(IPreferenceSet prefs)
+        public EocStatsService(IPreferenceSet preferences)
         {
-            _prefs = prefs;
+            _preferences = preferences;
         }
 
         public EocStatsData GetStatsData()
         {
-            string eocXmlDataUrl = String.Concat(UserXmlBaseUrl, _prefs.Get<int>(Preference.EocUserId));
+            string eocXmlDataUrl = String.Concat(UserXmlBaseUrl, _preferences.Get<int>(Preference.EocUserId));
 
             var xmlData = new XmlDocument();
             xmlData.Load(eocXmlDataUrl);
