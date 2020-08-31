@@ -95,6 +95,7 @@
     <Compile Include="Internal\Metadata.cs" />
     <Compile Include="Internal\ObjectExtensions.cs" />
     <Compile Include="Data\PreferenceData.cs" />
+    <Compile Include="Preference.cs" />
     <Compile Include="PreferenceSet.cs" />
     <Compile Include="Data\PreferenceTasks.cs" />
     <Compile Include="PreferenceSetBase.cs" />
