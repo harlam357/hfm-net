@@ -188,24 +188,16 @@ namespace HFM.Core.WorkUnits
         private static IProjectSummaryService CreateProjectSummaryServiceStub()
         {
             var summaryService = MockRepository.GenerateStub<IProjectSummaryService>();
-            summaryService.Stub(x => x.CopyToStream(null, null)).IgnoreArguments()
-                .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
-                {
-                    File.OpenRead("..\\..\\..\\TestFiles\\summary.json").CopyTo(stream);
-                    return true;
-                }));
+            var proteins = new ProjectSummaryJsonDeserializer().Deserialize(File.OpenRead("..\\..\\..\\TestFiles\\summary.json"));
+            summaryService.Stub(x => x.GetProteins(null)).IgnoreArguments().Return(proteins);
             return summaryService;
         }
 
         private static IProjectSummaryService CreateProjectSummaryServiceMockRepeatOnce()
         {
             var summaryService = MockRepository.GenerateMock<IProjectSummaryService>();
-            summaryService.Expect(x => x.CopyToStream(null, null)).IgnoreArguments()
-                .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
-                {
-                    File.OpenRead("..\\..\\..\\TestFiles\\summary.json").CopyTo(stream);
-                    return true;
-                })).Repeat.Once();
+            var proteins = new ProjectSummaryJsonDeserializer().Deserialize(File.OpenRead("..\\..\\..\\TestFiles\\summary.json"));
+            summaryService.Expect(x => x.GetProteins(null)).IgnoreArguments().Return(proteins).Repeat.Once();
             return summaryService;
         }
 

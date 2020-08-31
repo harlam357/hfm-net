@@ -115,22 +115,20 @@ namespace HFM.Core.WorkUnits
 
         public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress)
         {
-            IReadOnlyCollection<ProteinChange> changes;
-            using (var stream = new MemoryStream())
-            {
-                _logger.Info("Downloading new project data from Stanford...");
-                _projectSummaryService.CopyToStream(stream, progress);
-                stream.Position = 0;
+            _logger.Info("Downloading new project data from Stanford...");
+            var proteins = _projectSummaryService.GetProteins(progress);
 
-                var serializer = new ProjectSummaryJsonDeserializer();
+            IReadOnlyCollection<ProteinChange> changes = null;
+            if (proteins != null)
+            {
                 var collection = new ProteinCollection(_collection);
-                changes = collection.Update(serializer.Deserialize(stream));
+                changes = collection.Update(proteins);
                 Interlocked.Exchange(ref _collection, collection);
-            }
 
-            foreach (var info in changes.Where(info => info.Action != ProteinChangeAction.None))
-            {
-                _logger.Info(info.ToString());
+                foreach (var info in changes.Where(info => info.Action != ProteinChangeAction.None))
+                {
+                    _logger.Info(info.ToString());
+                }
             }
 
             var now = DateTime.UtcNow;

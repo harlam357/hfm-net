@@ -1,19 +1,17 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Cache;
 
 using HFM.Core.Net;
 using HFM.Preferences;
+using HFM.Proteins;
 
 namespace HFM.Core.Services
 {
     public interface IProjectSummaryService
     {
-        /// <summary>
-        /// Copies the project summary data to the given stream.
-        /// </summary>
-        void CopyToStream(Stream stream, IProgress<ProgressInfo> progress);
+        ICollection<Protein> GetProteins(IProgress<ProgressInfo> progress);
     }
 
     public class ProjectSummaryService : IProjectSummaryService
@@ -25,7 +23,7 @@ namespace HFM.Core.Services
             _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
         }
 
-        public void CopyToStream(Stream stream, IProgress<ProgressInfo> progress)
+        public ICollection<Protein> GetProteins(IProgress<ProgressInfo> progress)
         {
             var webOperation = WebOperation.Create(_preferences.Get<string>(Preference.ProjectDownloadUrl));
             if (progress != null)
@@ -39,7 +37,14 @@ namespace HFM.Core.Services
             }
             webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
             webOperation.WebRequest.Proxy = WebProxyFactory.Create(_preferences);
-            webOperation.Download(stream);
+            using (var stream = new MemoryStream())
+            {
+                webOperation.Download(stream);
+                stream.Position = 0;
+
+                var serializer = new ProjectSummaryJsonDeserializer();
+                return serializer.Deserialize(stream);
+            }
         }
     }
 }
