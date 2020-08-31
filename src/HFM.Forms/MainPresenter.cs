@@ -33,8 +33,6 @@ namespace HFM.Forms
 {
     public sealed class MainPresenter
     {
-        #region Properties
-
         /// <summary>
         /// Holds the state of the window before it is hidden (minimize to tray behaviour)
         /// </summary>
@@ -48,10 +46,6 @@ namespace HFM.Forms
             set { _logger = value; }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MainGridModel _gridModel;
         private readonly IMainView _view;
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -60,17 +54,13 @@ namespace HFM.Forms
         private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
         private readonly IExternalProcessStarter _processStarter;
-        private readonly IPreferences _prefs;
+        private readonly IPreferences _preferences;
         private readonly ClientSettingsManager _settingsManager;
-
-        #endregion
-
-        #region Constructor
 
         public MainPresenter(MainGridModel gridModel, IMainView view, IServiceScopeFactory serviceScopeFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
                              ClientConfiguration clientConfiguration, IProteinService proteinService,
-                             IExternalProcessStarter processStarter, IPreferences prefs)
+                             IExternalProcessStarter processStarter, IPreferences preferences)
         {
             _gridModel = gridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
@@ -105,13 +95,11 @@ namespace HFM.Forms
             _proteinService = proteinService;
             _processStarter = processStarter;
             // Data Services
-            _prefs = prefs;
+            _preferences = preferences;
             _settingsManager = new ClientSettingsManager();
 
             _clientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
         }
-
-        #endregion
 
         #region Initialize
 
@@ -126,7 +114,7 @@ namespace HFM.Forms
             //
             _view.SetGridDataSource(_gridModel.BindingSource);
             //
-            _prefs.PreferenceChanged += (s, e) =>
+            _preferences.PreferenceChanged += (s, e) =>
             {
                 switch (e.Preference)
                 {
@@ -145,42 +133,42 @@ namespace HFM.Forms
 
         private void RestoreViewPreferences()
         {
-            var restoreLocation = _prefs.Get<Point>(Preference.FormLocation);
-            var restoreSize = _prefs.Get<Size>(Preference.FormSize);
+            var restoreLocation = _preferences.Get<Point>(Preference.FormLocation);
+            var restoreSize = _preferences.Get<Size>(Preference.FormSize);
             var (location, size) = WindowPosition.Normalize(_view, restoreLocation, restoreSize);
             _view.Location = location;
 
             // Look for view size
             if (size.Width != 0 && size.Height != 0)
             {
-                if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
+                if (!_preferences.Get<bool>(Preference.FormLogWindowVisible))
                 {
-                    size = new Size(size.Width, size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
+                    size = new Size(size.Width, size.Height + _preferences.Get<int>(Preference.FormLogWindowHeight));
                 }
                 _view.Size = size;
                 // make sure split location from the prefs is at least the minimum panel size - Issue 234
-                var formSplitLocation = _prefs.Get<int>(Preference.FormSplitterLocation);
+                var formSplitLocation = _preferences.Get<int>(Preference.FormSplitterLocation);
                 if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
                 _view.SplitContainer.SplitterDistance = formSplitLocation;
             }
 
-            if (!_prefs.Get<bool>(Preference.FormLogWindowVisible))
+            if (!_preferences.Get<bool>(Preference.FormLogWindowVisible))
             {
                 ShowHideLogWindow(false);
             }
-            if (!_prefs.Get<bool>(Preference.QueueWindowVisible))
+            if (!_preferences.Get<bool>(Preference.QueueWindowVisible))
             {
                 ShowHideQueue(false);
             }
-            _view.FollowLogFileChecked = _prefs.Get<bool>(Preference.FollowLog);
+            _view.FollowLogFileChecked = _preferences.Get<bool>(Preference.FollowLog);
 
-            _gridModel.SortColumnName = _prefs.Get<string>(Preference.FormSortColumn);
-            _gridModel.SortColumnOrder = _prefs.Get<ListSortDirection>(Preference.FormSortOrder);
+            _gridModel.SortColumnName = _preferences.Get<string>(Preference.FormSortColumn);
+            _gridModel.SortColumnOrder = _preferences.Get<ListSortDirection>(Preference.FormSortOrder);
 
             try
             {
                 // Restore the columns' state
-                var columns = _prefs.Get<ICollection<string>>(Preference.FormColumns);
+                var columns = _preferences.Get<ICollection<string>>(Preference.FormColumns);
                 if (columns != null)
                 {
                     var colsList = columns.ToList();
@@ -220,11 +208,11 @@ namespace HFM.Forms
             // Update the split location directly from the split panel control. - Issue 8
             _view.SplitContainer.SplitterMoved += delegate
                                                   {
-                                                      _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
-                                                      _prefs.Save();
+                                                      _preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
+                                                      _preferences.Save();
                                                   };
 
-            if (_prefs.Get<bool>(Preference.RunMinimized))
+            if (_preferences.Get<bool>(Preference.RunMinimized))
             {
                 _view.WindowState = FormWindowState.Minimized;
             }
@@ -233,9 +221,9 @@ namespace HFM.Forms
             {
                 LoadConfigFile(_openFile);
             }
-            else if (_prefs.Get<bool>(Preference.UseDefaultConfigFile))
+            else if (_preferences.Get<bool>(Preference.UseDefaultConfigFile))
             {
-                var fileName = _prefs.Get<string>(Preference.DefaultConfigFile);
+                var fileName = _preferences.Get<string>(Preference.DefaultConfigFile);
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     LoadConfigFile(fileName);
@@ -247,7 +235,7 @@ namespace HFM.Forms
 
         public void CheckForUpdateOnStartup(IApplicationUpdateService service)
         {
-            if (_prefs.Get<bool>(Preference.StartupCheckForUpdate))
+            if (_preferences.Get<bool>(Preference.StartupCheckForUpdate))
             {
                 CheckForUpdateInternal(service);
             }
@@ -281,7 +269,7 @@ namespace HFM.Forms
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
 
                 _applicationUpdateModel = new ApplicationUpdateModel(update);
-                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _prefs, _messageBox))
+                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _preferences, _messageBox))
                 {
                     if (presenter.ShowDialog(_view) == DialogResult.OK)
                     {
@@ -319,7 +307,7 @@ namespace HFM.Forms
             // changes based on the height of Panel1 - Issue 8
             if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
             {
-                _prefs.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
+                _preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
             }
         }
 
@@ -336,17 +324,17 @@ namespace HFM.Forms
             // RestoreBounds remembers normal position if minimized or maximized
             if (_view.WindowState == FormWindowState.Normal)
             {
-                _prefs.Set(Preference.FormLocation, _view.Location);
-                _prefs.Set(Preference.FormSize, _view.Size);
+                _preferences.Set(Preference.FormLocation, _view.Location);
+                _preferences.Set(Preference.FormSize, _view.Size);
             }
             else
             {
-                _prefs.Set(Preference.FormLocation, _view.RestoreBounds.Location);
-                _prefs.Set(Preference.FormSize, _view.RestoreBounds.Size);
+                _preferences.Set(Preference.FormLocation, _view.RestoreBounds.Location);
+                _preferences.Set(Preference.FormSize, _view.RestoreBounds.Size);
             }
 
-            _prefs.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
-            _prefs.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
+            _preferences.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
+            _preferences.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
 
             CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
@@ -355,7 +343,7 @@ namespace HFM.Forms
 
         public void SetViewShowStyle()
         {
-            switch (_prefs.Get<MinimizeToOption>(Preference.MinimizeTo))
+            switch (_preferences.Get<MinimizeToOption>(Preference.MinimizeTo))
             {
                 case MinimizeToOption.SystemTray:
                     _view.SetNotifyIconVisible(true);
@@ -470,7 +458,7 @@ namespace HFM.Forms
                 // Different Client... Load LogLines
                 if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
                 {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
                 }
                 // Textbox has text lines
                 else if (_view.LogFileViewer.Lines.Length > 0)
@@ -492,13 +480,13 @@ namespace HFM.Forms
                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
                     if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
-                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
                     }
                 }
                 // Nothing in the Textbox... Load LogLines
                 else
                 {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _prefs.Get<bool>(Preference.ColorLogFile));
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
                 }
             }
             else
@@ -506,7 +494,7 @@ namespace HFM.Forms
                 _view.LogFileViewer.SetNoLogLines();
             }
 
-            if (_prefs.Get<bool>(Preference.FollowLog))
+            if (_preferences.Get<bool>(Preference.FollowLog))
             {
                 _view.LogFileViewer.ScrollToBottom();
             }
@@ -529,7 +517,7 @@ namespace HFM.Forms
                 }
 
                 SaveColumnSettings(); // Save Column Settings - Issue 73
-                _prefs.Save();
+                _preferences.Save();
             }
         }
 
@@ -550,7 +538,7 @@ namespace HFM.Forms
                                         i++));
             }
 
-            _prefs.Set(Preference.FormColumns, columns);
+            _preferences.Set(Preference.FormColumns, columns);
         }
 
         public void DataGridViewSorted()
@@ -647,7 +635,7 @@ namespace HFM.Forms
 
         private void AutoSaveConfig()
         {
-            if (_prefs.Get<bool>(Preference.AutoSaveConfig) &&
+            if (_preferences.Get<bool>(Preference.AutoSaveConfig) &&
                 _clientConfiguration.IsDirty)
             {
                 FileSaveClick();
@@ -781,7 +769,7 @@ namespace HFM.Forms
 
         public void ShowHfmDataFiles()
         {
-            HandleProcessStartResult(_processStarter.ShowFileExplorer(_prefs.Get<string>(Preference.ApplicationDataFolderPath)));
+            HandleProcessStartResult(_processStarter.ShowFileExplorer(_preferences.Get<string>(Preference.ApplicationDataFolderPath)));
         }
 
         public void ShowHfmGoogleGroup()
@@ -892,7 +880,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (_gridModel.SelectedSlot == null) return;
 
-            string logFilePath = Path.Combine(_prefs.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.ClientLogFileName);
+            string logFilePath = Path.Combine(_preferences.Get<string>(Preference.CacheDirectory), _gridModel.SelectedSlot.Settings.ClientLogFileName);
             if (File.Exists(logFilePath))
             {
                 HandleProcessStartResult(_processStarter.ShowCachedLogFile(logFilePath));
@@ -991,14 +979,14 @@ namespace HFM.Forms
             {
                 _view.LogFileViewer.Visible = false;
                 _view.SplitContainer.Panel2Collapsed = true;
-                _prefs.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height - _prefs.Get<int>(Preference.FormLogWindowHeight));
+                _preferences.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height - _preferences.Get<int>(Preference.FormLogWindowHeight));
             }
             else
             {
                 _view.LogFileViewer.Visible = true;
                 _view.DisableViewResizeEvent();  // disable Form resize event for this operation
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height + _prefs.Get<int>(Preference.FormLogWindowHeight));
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height + _preferences.Get<int>(Preference.FormLogWindowHeight));
                 _view.EnableViewResizeEvent();   // re-enable
                 _view.SplitContainer.Panel2Collapsed = false;
             }
@@ -1027,34 +1015,34 @@ namespace HFM.Forms
 
         public void ViewToggleDateTimeClick()
         {
-            var style = _prefs.Get<TimeFormatting>(Preference.TimeFormatting);
-            _prefs.Set(Preference.TimeFormatting, style == TimeFormatting.None
+            var style = _preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+            _preferences.Set(Preference.TimeFormatting, style == TimeFormatting.None
                                     ? TimeFormatting.Format1
                                     : TimeFormatting.None);
-            _prefs.Save();
+            _preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleCompletedCountStyleClick()
         {
-            var style = _prefs.Get<UnitTotalsType>(Preference.UnitTotals);
-            _prefs.Set(Preference.UnitTotals, style == UnitTotalsType.All
+            var style = _preferences.Get<UnitTotalsType>(Preference.UnitTotals);
+            _preferences.Set(Preference.UnitTotals, style == UnitTotalsType.All
                                     ? UnitTotalsType.ClientStart
                                     : UnitTotalsType.All);
-            _prefs.Save();
+            _preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleVersionInformationClick()
         {
-            _prefs.Set(Preference.DisplayVersions, !_prefs.Get<bool>(Preference.DisplayVersions));
-            _prefs.Save();
+            _preferences.Set(Preference.DisplayVersions, !_preferences.Get<bool>(Preference.DisplayVersions));
+            _preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewCycleBonusCalculationClick()
         {
-            var calculationType = _prefs.Get<BonusCalculation>(Preference.BonusCalculation);
+            var calculationType = _preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             int typeIndex = 0;
             // None is always LAST entry
             if (calculationType != BonusCalculation.None)
@@ -1064,8 +1052,8 @@ namespace HFM.Forms
             }
 
             calculationType = (BonusCalculation)typeIndex;
-            _prefs.Set(Preference.BonusCalculation, calculationType);
-            _prefs.Save();
+            _preferences.Set(Preference.BonusCalculation, calculationType);
+            _preferences.Save();
 
             string calculationTypeString = (from item in ClientsModel.BonusCalculationList
                                             where ((BonusCalculation)item.ValueMember) == calculationType
@@ -1076,7 +1064,7 @@ namespace HFM.Forms
 
         public void ViewCycleCalculationClick()
         {
-            var calculationType = _prefs.Get<PPDCalculation>(Preference.PPDCalculation);
+            var calculationType = _preferences.Get<PPDCalculation>(Preference.PPDCalculation);
             int typeIndex = 0;
             // EffectiveRate is always LAST entry
             if (calculationType != PPDCalculation.EffectiveRate)
@@ -1086,8 +1074,8 @@ namespace HFM.Forms
             }
 
             calculationType = (PPDCalculation)typeIndex;
-            _prefs.Set(Preference.PPDCalculation, calculationType);
-            _prefs.Save();
+            _preferences.Set(Preference.PPDCalculation, calculationType);
+            _preferences.Save();
 
             string calculationTypeString = (from item in ClientsModel.PpdCalculationList
                                             where ((PPDCalculation)item.ValueMember) == calculationType
@@ -1098,7 +1086,7 @@ namespace HFM.Forms
 
         internal void ViewToggleFollowLogFile()
         {
-            _prefs.Set(Preference.FollowLog, !_prefs.Get<bool>(Preference.FollowLog));
+            _preferences.Set(Preference.FollowLog, !_preferences.Get<bool>(Preference.FollowLog));
         }
 
         #endregion
@@ -1288,7 +1276,7 @@ namespace HFM.Forms
 
         private void ApplyColorLogFileSetting()
         {
-            _view.LogFileViewer.HighlightLines(_prefs.Get<bool>(Preference.ColorLogFile));
+            _view.LogFileViewer.HighlightLines(_preferences.Get<bool>(Preference.ColorLogFile));
         }
 
         private void HandleProcessStartResult(string message)
