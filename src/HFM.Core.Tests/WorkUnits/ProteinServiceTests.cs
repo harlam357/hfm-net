@@ -191,7 +191,7 @@ namespace HFM.Core.WorkUnits
             summaryService.Stub(x => x.CopyToStream(null, null)).IgnoreArguments()
                 .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
                 {
-                    File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+                    File.OpenRead("..\\..\\..\\TestFiles\\summary.json").CopyTo(stream);
                     return true;
                 }));
             return summaryService;
@@ -203,7 +203,7 @@ namespace HFM.Core.WorkUnits
             summaryService.Expect(x => x.CopyToStream(null, null)).IgnoreArguments()
                 .Callback(new Func<Stream, IProgress<ProgressInfo>, bool>((stream, progress) =>
                 {
-                    File.OpenRead("..\\..\\..\\HFM.Proteins.Tests\\TestFiles\\summary.json").CopyTo(stream);
+                    File.OpenRead("..\\..\\..\\TestFiles\\summary.json").CopyTo(stream);
                     return true;
                 })).Repeat.Once();
             return summaryService;
