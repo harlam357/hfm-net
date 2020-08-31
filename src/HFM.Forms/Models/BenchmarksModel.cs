@@ -15,12 +15,12 @@ namespace HFM.Forms.Models
 {
     public class BenchmarksModel : ViewModelBase, IBenchmarksReportSource
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public IProteinService ProteinService { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
         public IEnumerable<BenchmarksReport> Reports { get; }
 
-        public BenchmarksModel(IPreferenceSet preferences, IProteinService proteinService,
+        public BenchmarksModel(IPreferences preferences, IProteinService proteinService,
             IProteinBenchmarkService benchmarkService, IEnumerable<BenchmarksReport> reports)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();

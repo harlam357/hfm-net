@@ -9,7 +9,7 @@ namespace HFM.Forms.Models
 {
     public class PreferencesModel : ViewModelBase
     {
-        public PreferencesModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
+        public PreferencesModel(IPreferences preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             ClientsModel = new ClientsModel(Preferences);
@@ -20,7 +20,7 @@ namespace HFM.Forms.Models
             WebProxyModel = new WebProxyModel(Preferences);
         }
 
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public ClientsModel ClientsModel { get; set; }
         public OptionsModel OptionsModel { get; set; }
         public WebGenerationModel WebGenerationModel { get; set; }

@@ -31,16 +31,16 @@ namespace HFM.Core.SlotXml
     public class WebArtifactBuilder
     {
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public string Path { get; }
 
-        public WebArtifactBuilder(ILogger logger, IPreferenceSet preferences)
+        public WebArtifactBuilder(ILogger logger, IPreferences preferences)
             : this(logger, preferences, System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName()))
         {
 
         }
 
-        public WebArtifactBuilder(ILogger logger, IPreferenceSet preferences, string path)
+        public WebArtifactBuilder(ILogger logger, IPreferences preferences, string path)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences;

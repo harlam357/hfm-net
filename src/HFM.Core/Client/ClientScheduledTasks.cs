@@ -19,7 +19,7 @@ namespace HFM.Core.Client
         Serial
     }
 
-    public delegate ClientScheduledTasks ClientScheduledTasksFactory(ILogger logger, IPreferenceSet preferences, ClientConfiguration clientConfiguration);
+    public delegate ClientScheduledTasks ClientScheduledTasksFactory(ILogger logger, IPreferences preferences, ClientConfiguration clientConfiguration);
 
     public class ClientScheduledTasks
     {
@@ -27,7 +27,7 @@ namespace HFM.Core.Client
         private const string WebTaskKey = "Web Generation";
 
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public ClientConfiguration ClientConfiguration { get; }
 
         private readonly DelegateScheduledTask _clientRetrievalTask;
@@ -35,7 +35,7 @@ namespace HFM.Core.Client
 
         public static ClientScheduledTasksFactory Factory => (l, p, c) => new ClientScheduledTasks(l, p, c);
 
-        public ClientScheduledTasks(ILogger logger, IPreferenceSet preferences, ClientConfiguration clientConfiguration)
+        public ClientScheduledTasks(ILogger logger, IPreferences preferences, ClientConfiguration clientConfiguration)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences;

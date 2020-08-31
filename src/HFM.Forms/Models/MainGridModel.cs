@@ -118,7 +118,7 @@ namespace HFM.Forms.Models
             get { return _bindingSource; }
         }
 
-        public MainGridModel(IPreferenceSet prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
+        public MainGridModel(IPreferences prefs, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
         {
             _syncObject = syncObject;
             _clientConfiguration = clientConfiguration;
@@ -144,7 +144,7 @@ namespace HFM.Forms.Models
             _clientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
         }
 
-        private void OnPreferenceChanged(IPreferenceSet preferences, PreferenceChangedEventArgs e)
+        private void OnPreferenceChanged(IPreferences preferences, PreferenceChangedEventArgs e)
         {
             switch (e.Preference)
             {

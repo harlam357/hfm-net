@@ -12,9 +12,9 @@ namespace HFM.Forms.Models
 {
     public class ClientsModel : ViewModelBase, IDataErrorInfo
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public ClientsModel(IPreferenceSet preferences)
+        public ClientsModel(IPreferences preferences)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }

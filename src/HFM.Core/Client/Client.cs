@@ -25,7 +25,7 @@ namespace HFM.Core.Client
 
         ILogger Logger { get; }
         
-        IPreferenceSet Preferences { get; }
+        IPreferences Preferences { get; }
 
         IProteinBenchmarkService BenchmarkService { get; }
 
@@ -72,10 +72,10 @@ namespace HFM.Core.Client
         }
 
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
         
-        protected Client(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService)
+        protected Client(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences ?? new InMemoryPreferencesProvider();

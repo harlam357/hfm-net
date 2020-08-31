@@ -26,7 +26,7 @@ namespace HFM
         public string[] Args { get; }
         public IServiceFactory Container { get; }
         public Logger Logger { get; private set; }
-        public IPreferenceSet Preferences { get; private set; }
+        public IPreferences Preferences { get; private set; }
         public Form MainForm { get; private set; }
 
         public BootStrapper(string[] args, IServiceFactory container)
@@ -138,10 +138,10 @@ namespace HFM
             }
         }
 
-        private IPreferenceSet InitializePreferences(ICollection<Argument> arguments)
+        private IPreferences InitializePreferences(ICollection<Argument> arguments)
         {
             bool reset = arguments.Any(x => x.Type == ArgumentType.ResetPrefs);
-            var preferences = Container.GetInstance<IPreferenceSet>();
+            var preferences = Container.GetInstance<IPreferences>();
 
             try
             {
@@ -180,7 +180,7 @@ namespace HFM
             return preferences;
         }
 
-        private static void ValidatePreferences(IPreferenceSet preferences)
+        private static void ValidatePreferences(IPreferences preferences)
         {
             // MessageLevel
             var level = preferences.Get<LoggerLevel>(Preference.MessageLevel);

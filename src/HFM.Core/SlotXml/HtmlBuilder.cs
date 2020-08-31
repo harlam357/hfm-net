@@ -30,9 +30,9 @@ namespace HFM.Core.SlotXml
 
     public class HtmlBuilder
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public HtmlBuilder(IPreferenceSet preferences)
+        public HtmlBuilder(IPreferences preferences)
         {
             Preferences = preferences;
         }

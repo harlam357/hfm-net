@@ -12,7 +12,7 @@ namespace HFM.Core.Client
             
         }
 
-        public NullClient(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService) 
+        public NullClient(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService) 
             : base(logger, preferences, benchmarkService)
         {
 

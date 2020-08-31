@@ -35,7 +35,7 @@ namespace HFM.Core.Data
 
         }
 
-        public WorkUnitQueryDataContainer(IPreferenceSet prefs)
+        public WorkUnitQueryDataContainer(IPreferences prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

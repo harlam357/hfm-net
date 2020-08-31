@@ -18,7 +18,7 @@ namespace HFM.Core.Data
 
         }
 
-        public ProteinBenchmarkDataContainer(IPreferenceSet prefs)
+        public ProteinBenchmarkDataContainer(IPreferences prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

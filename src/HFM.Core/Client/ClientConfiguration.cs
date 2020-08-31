@@ -22,20 +22,20 @@ namespace HFM.Core.Client
         public bool IsDirty { get; set; }
 
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public ClientFactory ClientFactory { get; }
         public ClientScheduledTasks ScheduledTasks { get; }
 
         private readonly Dictionary<string, IClient> _clientDictionary;
         private readonly ReaderWriterLockSlim _syncLock;
 
-        public ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory)
+        public ClientConfiguration(ILogger logger, IPreferences preferences, ClientFactory clientFactory)
             : this(logger, preferences, clientFactory, ClientScheduledTasks.Factory)
         {
             
         }
 
-        internal ClientConfiguration(ILogger logger, IPreferenceSet preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
+        internal ClientConfiguration(ILogger logger, IPreferences preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences;

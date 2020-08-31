@@ -12,7 +12,7 @@ using HFM.Preferences.Internal;
 
 namespace HFM.Preferences
 {
-    public abstract class PreferencesProvider : IPreferenceSet
+    public abstract class PreferencesProvider : IPreferences
     {
         public string ApplicationPath { get; }
 

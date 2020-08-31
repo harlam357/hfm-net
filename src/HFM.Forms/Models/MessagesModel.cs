@@ -10,10 +10,10 @@ namespace HFM.Forms.Models
 {
     public class MessagesModel : ViewModelBase
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public ILoggerEvents LoggerEvents { get; }
 
-        public MessagesModel(IPreferenceSet preferences, ILoggerEvents loggerEvents)
+        public MessagesModel(IPreferences preferences, ILoggerEvents loggerEvents)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             LoggerEvents = loggerEvents ?? NullLoggerEvents.Instance;

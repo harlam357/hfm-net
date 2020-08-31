@@ -113,13 +113,13 @@ namespace HFM.Forms.Views
         private MainPresenter _presenter;
         private NotifyIcon _notifyIcon;
 
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferences _prefs;
 
         #endregion
 
         #region Constructor
 
-        public MainForm(IPreferenceSet prefs)
+        public MainForm(IPreferences prefs)
         {
             _prefs = prefs;
 

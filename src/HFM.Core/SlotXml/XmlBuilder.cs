@@ -28,11 +28,11 @@ namespace HFM.Core.SlotXml
 
     public class XmlBuilder
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
         private readonly IMapper _mapper;
 
-        public XmlBuilder(IPreferenceSet preferences)
+        public XmlBuilder(IPreferences preferences)
         {
             Preferences = preferences;
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<XmlBuilderProfile>()).CreateMapper();

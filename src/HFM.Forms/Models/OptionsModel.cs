@@ -10,10 +10,10 @@ namespace HFM.Forms.Models
 {
     public class OptionsModel : ViewModelBase, IDataErrorInfo
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public IAutoRunConfiguration AutoRunConfiguration { get; }
 
-        public OptionsModel(IPreferenceSet preferences, IAutoRunConfiguration autoRunConfiguration)
+        public OptionsModel(IPreferences preferences, IAutoRunConfiguration autoRunConfiguration)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             AutoRunConfiguration = autoRunConfiguration ?? new InMemoryAutoRunConfiguration();

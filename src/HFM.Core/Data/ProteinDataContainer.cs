@@ -20,7 +20,7 @@ namespace HFM.Core.Data
             
         }
 
-        public ProteinDataContainer(IPreferenceSet prefs)
+        public ProteinDataContainer(IPreferences prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

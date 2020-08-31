@@ -16,7 +16,7 @@ namespace HFM.Forms.Models
 {
     public sealed class WorkUnitHistoryModel : ViewModelBase
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public WorkUnitQueryDataContainer QueryContainer { get; }
         public IWorkUnitRepository Repository { get; }
         public BindingSource QueryBindingSource { get; }
@@ -26,7 +26,7 @@ namespace HFM.Forms.Models
         private readonly WorkUnitHistoryRowSortableBindingList _workUnitHistoryList;
         private PetaPoco.Page<WorkUnitRow> _page;
 
-        public WorkUnitHistoryModel(IPreferenceSet preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
+        public WorkUnitHistoryModel(IPreferences preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
         {
             Preferences = preferences;
             QueryContainer = queryContainer;

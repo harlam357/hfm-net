@@ -58,10 +58,10 @@ namespace HFM.Forms
     [ExcludeFromCodeCoverage]
     public sealed class ExternalProcessStarter : IExternalProcessStarter
     {
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferences _prefs;
         private readonly ILogger _logger;
 
-        public ExternalProcessStarter(IPreferenceSet prefs, ILogger logger)
+        public ExternalProcessStarter(IPreferences prefs, ILogger logger)
         {
             _prefs = prefs;
             _logger = logger;

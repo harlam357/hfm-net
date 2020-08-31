@@ -16,9 +16,9 @@ namespace HFM.Core.Services
         public const string TeamBaseUrl = "https://folding.extremeoverclocking.com/team_summary.php?s=&t=";
         public const string UserXmlBaseUrl = "https://folding.extremeoverclocking.com/xml/user_summary.php?u=";
 
-        private readonly IPreferenceSet _preferences;
+        private readonly IPreferences _preferences;
 
-        public EocStatsService(IPreferenceSet preferences)
+        public EocStatsService(IPreferences preferences)
         {
             _preferences = preferences;
         }

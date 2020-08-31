@@ -13,10 +13,10 @@ namespace HFM.Forms.Models
 {
     public class ProteinCalculatorModel : INotifyPropertyChanged
     {
-        private readonly IPreferenceSet _preferences;
+        private readonly IPreferences _preferences;
         private readonly IProteinService _proteinService;
 
-        public ProteinCalculatorModel(IPreferenceSet preferences, IProteinService proteinService)
+        public ProteinCalculatorModel(IPreferences preferences, IProteinService proteinService)
         {
             _preferences = preferences ?? new InMemoryPreferencesProvider();
             _proteinService = proteinService ?? NullProteinService.Instance;

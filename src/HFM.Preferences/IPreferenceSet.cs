@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HFM.Preferences
 {
-    public interface IPreferenceSet
+    public interface IPreferences
     {
         /// <summary>
         /// Resets the preferences to default values.

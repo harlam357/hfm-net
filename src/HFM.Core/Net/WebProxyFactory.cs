@@ -10,7 +10,7 @@ namespace HFM.Core.Net
         /// <summary>
         /// Creates a WebProxy object based on preference settings.
         /// </summary>
-        public static WebProxy Create(IPreferenceSet preferences)
+        public static WebProxy Create(IPreferences preferences)
         {
             if (preferences == null || !preferences.Get<bool>(Preference.UseProxy))
             {

@@ -11,7 +11,7 @@ namespace HFM.Core.ScheduledTasks
 {
     public class EocStatsScheduledTask : ScheduledTask
     {
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferences _prefs;
 
         private ILogger _logger;
 
@@ -21,7 +21,7 @@ namespace HFM.Core.ScheduledTasks
 
         public EocStatsDataContainer DataContainer { get; }
 
-        public EocStatsScheduledTask(IPreferenceSet prefs, ILogger logger, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
+        public EocStatsScheduledTask(IPreferences prefs, ILogger logger, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
             : base("EOC stats")
         {
             _prefs = prefs;

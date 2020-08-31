@@ -35,7 +35,7 @@ namespace HFM.Core.Data
 
         }
 
-        public EocStatsDataContainer(IPreferenceSet prefs)
+        public EocStatsDataContainer(IPreferences prefs)
         {
             var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))

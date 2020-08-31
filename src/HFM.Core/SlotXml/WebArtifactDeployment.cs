@@ -20,9 +20,9 @@ namespace HFM.Core.SlotXml
     public abstract class WebArtifactDeployment
     {
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        protected WebArtifactDeployment(ILogger logger, IPreferenceSet preferences)
+        protected WebArtifactDeployment(ILogger logger, IPreferences preferences)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences;
@@ -57,7 +57,7 @@ namespace HFM.Core.SlotXml
             }
         }
 
-        public static WebArtifactDeployment Create(WebDeploymentType deploymentType, ILogger logger, IPreferenceSet preferences)
+        public static WebArtifactDeployment Create(WebDeploymentType deploymentType, ILogger logger, IPreferences preferences)
         {
             switch (deploymentType)
             {
@@ -73,7 +73,7 @@ namespace HFM.Core.SlotXml
 
     public class PathDeployment : WebArtifactDeployment
     {
-        public PathDeployment(ILogger logger, IPreferenceSet preferences) : base(logger, preferences)
+        public PathDeployment(ILogger logger, IPreferences preferences) : base(logger, preferences)
         {
 
         }
@@ -95,7 +95,7 @@ namespace HFM.Core.SlotXml
     {
         public FtpService FtpService { get; }
 
-        public FtpDeployment(ILogger logger, IPreferenceSet preferences, FtpService ftpService) : base(logger, preferences)
+        public FtpDeployment(ILogger logger, IPreferences preferences, FtpService ftpService) : base(logger, preferences)
         {
             FtpService = ftpService;
         }

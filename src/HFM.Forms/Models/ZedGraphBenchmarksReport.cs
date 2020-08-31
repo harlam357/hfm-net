@@ -215,9 +215,9 @@ namespace HFM.Forms.Models
     {
         public const string KeyName = "PPD";
 
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public ProductionZedGraphBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
+        public ProductionZedGraphBenchmarksReport(IPreferences preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
             : base(KeyName, proteinService, benchmarkService)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();

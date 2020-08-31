@@ -16,10 +16,10 @@ namespace HFM.Forms.Presenters
     {
         public ApplicationUpdateModel Model { get; }
         public ILogger Logger { get; }
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public MessageBoxPresenter MessageBox { get; }
 
-        public ApplicationUpdatePresenter(ApplicationUpdateModel model, ILogger logger, IPreferenceSet preferences, MessageBoxPresenter messageBox)
+        public ApplicationUpdatePresenter(ApplicationUpdateModel model, ILogger logger, IPreferences preferences, MessageBoxPresenter messageBox)
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;

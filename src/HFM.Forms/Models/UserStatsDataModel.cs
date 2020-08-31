@@ -19,11 +19,11 @@ namespace HFM.Forms.Models
 
     public sealed class UserStatsDataModel : INotifyPropertyChanged
     {
-        private readonly IPreferenceSet _preferences;
+        private readonly IPreferences _preferences;
         private readonly EocStatsScheduledTask _scheduledTask;
         private readonly IMapper _mapper;
 
-        public UserStatsDataModel(ISynchronizeInvoke synchronizeInvoke, IPreferenceSet preferences, EocStatsScheduledTask scheduledTask)
+        public UserStatsDataModel(ISynchronizeInvoke synchronizeInvoke, IPreferences preferences, EocStatsScheduledTask scheduledTask)
         {
             _preferences = preferences;
             _scheduledTask = scheduledTask;

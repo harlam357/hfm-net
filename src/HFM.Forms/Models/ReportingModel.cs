@@ -10,9 +10,9 @@ namespace HFM.Forms.Models
 {
     public class ReportingModel : ViewModelBase, IDataErrorInfo
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public ReportingModel(IPreferenceSet preferences)
+        public ReportingModel(IPreferences preferences)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }

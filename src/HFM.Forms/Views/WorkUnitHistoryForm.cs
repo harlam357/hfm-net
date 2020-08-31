@@ -196,7 +196,7 @@ namespace HFM.Forms.Views
             _presenter.RefreshDataByIdClick();
         }
 
-        private void SetupDataGridView(IPreferenceSet preferences)
+        private void SetupDataGridView(IPreferences preferences)
         {
             // Add Column Selector
             new DataGridViewColumnSelector(dataGridView1);

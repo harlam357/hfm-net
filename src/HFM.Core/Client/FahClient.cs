@@ -94,7 +94,7 @@ namespace HFM.Core.Client
         private readonly List<SlotModel> _slots;
         private readonly ReaderWriterLockSlim _slotsLock;
 
-        public FahClient(ILogger logger, IPreferenceSet preferences, IProteinBenchmarkService benchmarkService,
+        public FahClient(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService,
             IProteinService proteinService, IWorkUnitRepository workUnitRepository) : base(logger, preferences, benchmarkService)
         {
             ProteinService = proteinService;

@@ -10,9 +10,9 @@ namespace HFM.Forms.Models
 {
     public class WebProxyModel : ViewModelBase, IDataErrorInfo
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public WebProxyModel(IPreferenceSet preferences)
+        public WebProxyModel(IPreferences preferences)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }

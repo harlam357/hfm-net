@@ -15,12 +15,12 @@ namespace HFM.Forms.Models
     {
         public const string KeyName = "Text";
 
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
         public IProteinService ProteinService { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
         public ClientConfiguration ClientConfiguration { get; }
 
-        public TextBenchmarksReport(IPreferenceSet preferences, IProteinService proteinService,
+        public TextBenchmarksReport(IPreferences preferences, IProteinService proteinService,
             IProteinBenchmarkService benchmarkService, ClientConfiguration clientConfiguration) : base(KeyName)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();

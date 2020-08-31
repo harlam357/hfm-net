@@ -138,12 +138,12 @@ namespace HFM.Core.SlotXml
             new object[] { true, true, true, 10 }
         };
 
-        private static IPreferenceSet CreatePreferences()
+        private static IPreferences CreatePreferences()
         {
             return CreatePreferences(String.Empty);
         }
 
-        private static IPreferenceSet CreatePreferences(string applicationDataFolderPath)
+        private static IPreferences CreatePreferences(string applicationDataFolderPath)
         {
             var preferences = new InMemoryPreferencesProvider(@"..\..\..\HFM", applicationDataFolderPath, null);
             preferences.Set(Preference.DecimalPlaces, 0);

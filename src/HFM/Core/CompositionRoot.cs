@@ -15,7 +15,7 @@ namespace HFM.Core
             serviceRegistry.Register<Logging.ILoggerEvents>(factory => factory.GetInstance<Logging.Logger>(), new PerContainerLifetime());
 
             // IPreferenceSet - Singleton
-            serviceRegistry.Register<Preferences.IPreferenceSet>(
+            serviceRegistry.Register<Preferences.IPreferences>(
                 _ => new Preferences.XmlPreferencesProvider(Application.Path, Application.DataFolderPath, Application.FullVersion), new PerContainerLifetime());
 
             // IWorkUnitRepository - Singleton

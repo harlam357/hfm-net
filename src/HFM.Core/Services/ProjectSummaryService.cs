@@ -16,9 +16,9 @@ namespace HFM.Core.Services
 
     public class ProjectSummaryService : IProjectSummaryService
     {
-        private readonly IPreferenceSet _preferences;
+        private readonly IPreferences _preferences;
 
-        public ProjectSummaryService(IPreferenceSet preferences)
+        public ProjectSummaryService(IPreferences preferences)
         {
             _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
         }

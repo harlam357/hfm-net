@@ -12,9 +12,9 @@ namespace HFM.Forms.Models
 {
     public class WebVisualStylesModel : ViewModelBase, IDataErrorInfo
     {
-        public IPreferenceSet Preferences { get; }
+        public IPreferences Preferences { get; }
 
-        public WebVisualStylesModel(IPreferenceSet preferences)
+        public WebVisualStylesModel(IPreferences preferences)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }

@@ -28,7 +28,7 @@ namespace HFM.Core.Client
     {
         #region IPreferenceSet
 
-        public IPreferenceSet Prefs => Client.Preferences;
+        public IPreferences Prefs => Client.Preferences;
 
         private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
 

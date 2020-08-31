@@ -60,7 +60,7 @@ namespace HFM.Forms
         private readonly ClientConfiguration _clientConfiguration;
         private readonly IProteinService _proteinService;
         private readonly IExternalProcessStarter _processStarter;
-        private readonly IPreferenceSet _prefs;
+        private readonly IPreferences _prefs;
         private readonly ClientSettingsManager _settingsManager;
 
         #endregion
@@ -70,7 +70,7 @@ namespace HFM.Forms
         public MainPresenter(MainGridModel gridModel, IMainView view, IServiceScopeFactory serviceScopeFactory,
                              MessageBoxPresenter messageBox, UserStatsDataModel userStatsDataModel,
                              ClientConfiguration clientConfiguration, IProteinService proteinService,
-                             IExternalProcessStarter processStarter, IPreferenceSet prefs)
+                             IExternalProcessStarter processStarter, IPreferences prefs)
         {
             _gridModel = gridModel;
             _gridModel.AfterResetBindings += (sender, e) =>
