@@ -17,12 +17,22 @@ namespace HFM.Forms.Models
         {
             FormLocation = Preferences.Get<Point>(Preference.FormLocation);
             FormSize = Preferences.Get<Size>(Preference.FormSize);
+            FormLogWindowVisible = Preferences.Get<bool>(Preference.FormLogWindowVisible);
+            FormLogWindowHeight = Preferences.Get<int>(Preference.FormLogWindowHeight);
+            FormSplitterLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
+            QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
+            FollowLog = Preferences.Get<bool>(Preference.FollowLog);
         }
 
         public override void Save()
         {
             Preferences.Set(Preference.FormLocation, FormLocation);
             Preferences.Set(Preference.FormSize, FormSize);
+            Preferences.Set(Preference.FormLogWindowVisible, FormLogWindowVisible);
+            Preferences.Set(Preference.FormLogWindowHeight, FormLogWindowHeight);
+            Preferences.Set(Preference.FormSplitterLocation, FormSplitterLocation);
+            Preferences.Set(Preference.QueueWindowVisible, QueueWindowVisible);
+            Preferences.Set(Preference.FollowLog, FollowLog);
 
             Preferences.Save();
         }
@@ -39,6 +49,36 @@ namespace HFM.Forms.Models
         public Point FormLocation { get; set; }
 
         public Size FormSize { get; set; }
+
+        private bool _formLogWindowVisible;
+
+        public bool FormLogWindowVisible
+        {
+            get => _formLogWindowVisible;
+            set
+            {
+                _formLogWindowVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int FormLogWindowHeight { get; set; }
+
+        public int FormSplitterLocation { get; set; }
+
+        private bool _queueWindowVisible;
+
+        public bool QueueWindowVisible
+        {
+            get => _queueWindowVisible;
+            set
+            {
+                _queueWindowVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool FollowLog { get; set; }
 
         private string _clientDetails;
 

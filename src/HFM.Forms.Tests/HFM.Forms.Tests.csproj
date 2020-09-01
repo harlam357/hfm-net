@@ -112,6 +112,7 @@
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
     <Compile Include="Models\BenchmarksModelTests.cs" />
+    <Compile Include="Models\MainModelTests.cs" />
     <Compile Include="Models\MessagesModelTests.cs" />
     <Compile Include="Presenters\BenchmarkPresenterTests.cs" />
     <Compile Include="Presenters\MessagesPresenterTests.cs" />
