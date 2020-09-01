@@ -129,35 +129,6 @@ namespace HFM.Forms
 
         public void RestoreViewPreferences()
         {
-            var restoreLocation = Preferences.Get<Point>(Preference.FormLocation);
-            var restoreSize = Preferences.Get<Size>(Preference.FormSize);
-            var (location, size) = WindowPosition.Normalize(_view, restoreLocation, restoreSize);
-            _view.Location = location;
-
-            // Look for view size
-            if (size.Width != 0 && size.Height != 0)
-            {
-                if (!Preferences.Get<bool>(Preference.FormLogWindowVisible))
-                {
-                    size = new Size(size.Width, size.Height + Preferences.Get<int>(Preference.FormLogWindowHeight));
-                }
-                _view.Size = size;
-                // make sure split location from the prefs is at least the minimum panel size - Issue 234
-                var formSplitLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
-                if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
-                _view.SplitContainer.SplitterDistance = formSplitLocation;
-            }
-
-            if (!Preferences.Get<bool>(Preference.FormLogWindowVisible))
-            {
-                ShowHideLogWindow(false);
-            }
-            if (!Preferences.Get<bool>(Preference.QueueWindowVisible))
-            {
-                ShowHideQueue(false);
-            }
-            _view.FollowLogFileChecked = Preferences.Get<bool>(Preference.FollowLog);
-
             GridModel.SortColumnName = Preferences.Get<string>(Preference.FormSortColumn);
             GridModel.SortColumnOrder = Preferences.Get<ListSortDirection>(Preference.FormSortOrder);
 
@@ -199,14 +170,6 @@ namespace HFM.Forms
             _view.DataGridView.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
             // Then run it once to ensure the last column is set to Fill
             DataGridViewColumnDisplayIndexChanged();
-            // Add the Splitter Moved Handler here after everything is shown - Issue 8
-            // When the log file window (Panel2) is visible, this event will fire.
-            // Update the split location directly from the split panel control. - Issue 8
-            _view.SplitContainer.SplitterMoved += delegate
-                                                  {
-                                                      Preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
-                                                      Preferences.Save();
-                                                  };
 
             if (Preferences.Get<bool>(Preference.RunMinimized))
             {
@@ -298,13 +261,6 @@ namespace HFM.Forms
             }
 
             SetViewShowStyle();
-
-            // When the log file window (panel) is collapsed, get the split location
-            // changes based on the height of Panel1 - Issue 8
-            if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
-            {
-                Preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
-            }
         }
 
         public bool ViewClosing()
@@ -315,22 +271,6 @@ namespace HFM.Forms
             }
 
             SaveColumnSettings();
-
-            // Save location and size data
-            // RestoreBounds remembers normal position if minimized or maximized
-            if (_view.WindowState == FormWindowState.Normal)
-            {
-                Preferences.Set(Preference.FormLocation, _view.Location);
-                Preferences.Set(Preference.FormSize, _view.Size);
-            }
-            else
-            {
-                Preferences.Set(Preference.FormLocation, _view.RestoreBounds.Location);
-                Preferences.Set(Preference.FormSize, _view.RestoreBounds.Size);
-            }
-
-            Preferences.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
-            Preferences.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
 
             CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
@@ -986,47 +926,12 @@ namespace HFM.Forms
 
         public void ShowHideLogWindow()
         {
-            ShowHideLogWindow(!_view.LogFileViewer.Visible);
-        }
-
-        private void ShowHideLogWindow(bool show)
-        {
-            if (!show)
-            {
-                _view.LogFileViewer.Visible = false;
-                _view.SplitContainer.Panel2Collapsed = true;
-                Preferences.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height - Preferences.Get<int>(Preference.FormLogWindowHeight));
-            }
-            else
-            {
-                _view.LogFileViewer.Visible = true;
-                _view.DisableViewResizeEvent();  // disable Form resize event for this operation
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height + Preferences.Get<int>(Preference.FormLogWindowHeight));
-                _view.EnableViewResizeEvent();   // re-enable
-                _view.SplitContainer.Panel2Collapsed = false;
-            }
+            Model.FormLogWindowVisible = !Model.FormLogWindowVisible;
         }
 
         public void ShowHideQueue()
         {
-            ShowHideQueue(!_view.QueueControlVisible);
-        }
-
-        private void ShowHideQueue(bool show)
-        {
-            if (!show)
-            {
-                _view.QueueControlVisible = false;
-                _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
-                _view.SplitContainer2.SplitterDistance = 27;
-            }
-            else
-            {
-                _view.QueueControlVisible = true;
-                _view.SetQueueButtonText(String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine));
-                _view.SplitContainer2.SplitterDistance = 289;
-            }
+            Model.QueueWindowVisible = !Model.QueueWindowVisible;
         }
 
         public void ViewToggleDateTimeClick()
@@ -1098,11 +1003,6 @@ namespace HFM.Forms
                                             select item.DisplayMember).First();
             _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();
-        }
-
-        internal void ViewToggleFollowLogFile()
-        {
-            Preferences.Set(Preference.FollowLog, !Preferences.Get<bool>(Preference.FollowLog));
         }
 
         #endregion

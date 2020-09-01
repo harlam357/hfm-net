@@ -82,7 +82,7 @@ namespace HFM.Forms.Views
             this.mnuViewToggleDateTime = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewToggleCompletedCountStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewToggleVersionInformation = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewToggleFollowLogFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewToggleFollowLogFileMenuItem = new HFM.Forms.Controls.BindableToolStripMenuItem();
             this.mnuViewSep3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuViewToggleBonusCalculation = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewCycleCalculationStyle = new System.Windows.Forms.ToolStripMenuItem();
@@ -604,7 +604,6 @@ namespace HFM.Forms.Views
             this.ViewToggleFollowLogFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
             this.ViewToggleFollowLogFileMenuItem.Size = new System.Drawing.Size(303, 22);
             this.ViewToggleFollowLogFileMenuItem.Text = "Toggle Follo&w Log File";
-            this.ViewToggleFollowLogFileMenuItem.Click += new System.EventHandler(this.ViewToggleFollowLogFileMenuItem_Click);
             // 
             // mnuViewSep3
             // 
@@ -1176,7 +1175,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripMenuItem mnuViewToggleBonusCalculation;
         private System.Windows.Forms.ToolTip toolTipNotify;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsPointsCalculator;
-        private System.Windows.Forms.ToolStripMenuItem ViewToggleFollowLogFileMenuItem;
+        private HFM.Forms.Controls.BindableToolStripMenuItem ViewToggleFollowLogFileMenuItem;
         private System.Windows.Forms.ToolStripSeparator gridContextMenuSep3;
         private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFoldSlot;
         private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemPauseSlot;

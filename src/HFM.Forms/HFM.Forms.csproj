@@ -114,6 +114,9 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Controls\BindableToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Internal\WrapString.cs" />
     <Compile Include="ListItemCollection.cs" />

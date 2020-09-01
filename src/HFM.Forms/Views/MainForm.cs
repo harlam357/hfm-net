@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 using HFM.Core;
@@ -7,6 +10,7 @@ using HFM.Core.Client;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
+using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Preferences;
@@ -17,19 +21,7 @@ namespace HFM.Forms.Views
 {
     public interface IMainView : IWin32Form
     {
-        #region System.Windows.Forms.Form Properties
-
         bool ShowInTaskbar { get; set; }
-
-        string Text { get; set; }
-
-        bool Visible { get; set; }
-
-        Rectangle RestoreBounds { get; }
-
-        #endregion
-
-        #region Properties
 
         string StatusLabelLeftText { get; set; }
 
@@ -37,35 +29,15 @@ namespace HFM.Forms.Views
 
         DataGridView DataGridView { get; }
 
-        SplitContainer SplitContainer { get; }
-
-        SplitContainer SplitContainer2 { get; }
-
-        bool QueueControlVisible { get; set; }
-
-        bool FollowLogFileChecked { get; set; }
-
-        #endregion
-
-        #region Methods
-
         void SetNotifyIconVisible(bool visible);
 
         void ShowGridContextMenuStrip(Point screenLocation);
-
-        void DisableViewResizeEvent();
-
-        void EnableViewResizeEvent();
-
-        void SetQueueButtonText(string text);
 
         void ShowNotifyToolTip(string text);
 
         void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType);
 
         void RefreshControlsWithTotalsData(SlotTotals totals);
-
-        #endregion
     }
 
     // ReSharper disable InconsistentNaming
@@ -88,22 +60,6 @@ namespace HFM.Forms.Views
 
         public DataGridView DataGridView { get { return dataGridView1; } }
 
-        public SplitContainer SplitContainer { get { return splitContainer1; } }
-
-        public SplitContainer SplitContainer2 { get { return splitContainer2; } }
-
-        public bool QueueControlVisible
-        {
-            get { return queueControl.Visible; }
-            set { queueControl.Visible = value; }
-        }
-
-        public bool FollowLogFileChecked
-        {
-            get { return ViewToggleFollowLogFileMenuItem.Checked; }
-            set { ViewToggleFollowLogFileMenuItem.Checked = value; }
-        }
-
         private readonly MainPresenter _presenter;
         private NotifyIcon _notifyIcon;
 
@@ -125,13 +81,41 @@ namespace HFM.Forms.Views
 
         private void LoadData(MainModel model)
         {
-            // TODO: Load from MainModel
-            //var (location, size) = WindowPosition.Normalize(this, model.FormLocation, model.FormSize);
+            var (location, size) = WindowPosition.Normalize(this, model.FormLocation, model.FormSize);
 
-            //Location = location;
-            //LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
-            //Size = size;
-            //SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+            Location = location;
+            LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
+
+            if (size.Width != 0 && size.Height != 0)
+            {
+                if (!model.FormLogWindowVisible)
+                {
+                    size = new Size(size.Width, size.Height + model.FormLogWindowHeight);
+                }
+                Size = size;
+                SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+
+                // make sure split location is at least the minimum panel size
+                if (model.FormSplitterLocation < splitContainer1.Panel2MinSize)
+                {
+                    model.FormSplitterLocation = splitContainer1.Panel2MinSize;
+                }
+                splitContainer1.SplitterDistance = model.FormSplitterLocation;
+                splitContainer1.SplitterMoved += (s, e) => model.FormSplitterLocation = splitContainer1.SplitterDistance;
+            }
+
+            if (!model.FormLogWindowVisible)
+            {
+                ShowHideLogWindow(false);
+            }
+            if (!model.QueueWindowVisible)
+            {
+                ShowHideQueue(false);
+            }
+
+            ViewToggleFollowLogFileMenuItem.BindChecked(model, nameof(MainModel.FollowLog));
+
+            model.PropertyChanged += ModelPropertyChanged;
 
             // *** OLD CODE FROM HERE ON ***
             Resize += MainFormResize;
@@ -189,6 +173,55 @@ namespace HFM.Forms.Views
             }
 
             #endregion
+        }
+
+        private void ShowHideLogWindow(bool show)
+        {
+            if (!show)
+            {
+                txtLogFile.Visible = false;
+                splitContainer1.Panel2Collapsed = true;
+                _presenter.Model.FormLogWindowHeight = splitContainer1.Height - splitContainer1.SplitterDistance;
+                Size = new Size(Size.Width, Size.Height - _presenter.Model.FormLogWindowHeight);
+            }
+            else
+            {
+                txtLogFile.Visible = true;
+                DisableViewResizeEvent();  // disable Form resize event for this operation
+                Size = new Size(Size.Width, Size.Height + _presenter.Model.FormLogWindowHeight);
+                EnableViewResizeEvent();   // re-enable
+                splitContainer1.Panel2Collapsed = false;
+            }
+        }
+
+        private void ShowHideQueue(bool show)
+        {
+            if (!show)
+            {
+                queueControl.Visible = false;
+                btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+                splitContainer2.SplitterDistance = 27;
+            }
+            else
+            {
+                queueControl.Visible = true;
+                btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+                splitContainer2.SplitterDistance = 289;
+            }
+        }
+
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var model = _presenter.Model;
+            switch (e.PropertyName)
+            {
+                case nameof(MainModel.FormLogWindowVisible):
+                    ShowHideLogWindow(model.FormLogWindowVisible);
+                    break;
+                case nameof(MainModel.QueueWindowVisible):
+                    ShowHideQueue(model.QueueWindowVisible);
+                    break;
+            }
         }
 
         private void BindToUserStatsDataModel(UserStatsDataModel userStatsDataModel)
@@ -270,7 +303,7 @@ namespace HFM.Forms.Views
                 }
                 else
                 {
-                    Internal.NativeMethods.SetForegroundWindow(Handle);
+                    NativeMethods.SetForegroundWindow(Handle);
                 }
             }
         }
@@ -291,6 +324,14 @@ namespace HFM.Forms.Views
         private void MainFormResize(object sender, EventArgs e)
         {
             _presenter.ViewResize();
+
+            // When the log file window (panel) is collapsed, get the split location
+            // changes based on the height of Panel1 - Issue 8
+            if (Visible && splitContainer1.Panel2Collapsed)
+            {
+                Debug.Assert(_presenter.Model.FormSplitterLocation == splitContainer1.Panel1.Height);
+                _presenter.Model.FormSplitterLocation = splitContainer1.Panel1.Height;
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -302,29 +343,19 @@ namespace HFM.Forms.Views
 
         #region Other IMainView Interface Methods
 
-        public void SetManualStartPosition()
-        {
-            StartPosition = FormStartPosition.Manual;
-        }
-
         public void SetNotifyIconVisible(bool visible)
         {
             if (_notifyIcon != null) _notifyIcon.Visible = visible;
         }
 
-        public void DisableViewResizeEvent()
+        private void DisableViewResizeEvent()
         {
             Resize -= MainFormResize;
         }
 
-        public void EnableViewResizeEvent()
+        private void EnableViewResizeEvent()
         {
             Resize += MainFormResize;
-        }
-
-        public void SetQueueButtonText(string text)
-        {
-            btnQueue.Text = text;
         }
 
         #endregion
@@ -532,11 +563,6 @@ namespace HFM.Forms.Views
         private void mnuViewCycleCalculation_Click(object sender, EventArgs e)
         {
             _presenter.ViewCycleCalculationClick();
-        }
-
-        private void ViewToggleFollowLogFileMenuItem_Click(object sender, EventArgs e)
-        {
-            _presenter.ViewToggleFollowLogFile();
         }
 
         public void ShowNotifyToolTip(string text)
