@@ -17,11 +17,7 @@ namespace HFM.Forms
             // MainPresenter - Singleton
             serviceRegistry
                 .Register<MainPresenter>(new PerContainerLifetime())
-                .Register<MainForm>(new PerContainerLifetime())
-                .Register<IMainView>(factory => factory.GetInstance<MainForm>(), new PerContainerLifetime())
-                .Register<System.ComponentModel.ISynchronizeInvoke>(factory => factory.GetInstance<MainForm>(), new PerContainerLifetime())
-                .Register<Models.MainGridModel>(new PerContainerLifetime())
-                .Register<Models.UserStatsDataModel>(new PerContainerLifetime());
+                .Register<Models.MainModel>(new PerContainerLifetime());
 
             // Singleton Models
             serviceRegistry

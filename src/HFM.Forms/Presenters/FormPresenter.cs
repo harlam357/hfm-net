@@ -7,7 +7,7 @@ namespace HFM.Forms.Presenters
 {
     public abstract class FormPresenter : IFormPresenter
     {
-        public IWin32Form Form { get; protected set; }
+        public virtual IWin32Form Form { get; protected set; }
 
         public virtual void Show()
         {

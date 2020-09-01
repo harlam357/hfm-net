@@ -10,7 +10,6 @@ using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
-using HFM.Core.WorkUnits;
 using HFM.Forms;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
@@ -258,18 +257,18 @@ namespace HFM
 
         private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
-            var mainForm = (MainForm)Container.GetInstance<IMainView>();
             var mainPresenter = Container.GetInstance<MainPresenter>();
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainForm.Initialize(mainPresenter, Container.GetInstance<IProteinService>(), Container.GetInstance<UserStatsDataModel>(), openFile);
+                mainPresenter.Initialize(openFile);
             }
             catch (Exception ex)
             {
                 throw new StartupException(Properties.Resources.FailedToInitUI, ex);
             }
 
+            var mainForm = (MainForm)mainPresenter.Form;
             mainForm.WorkUnitHistoryMenuEnabled = false;
             var repository = (WorkUnitRepository)Container.GetInstance<IWorkUnitRepository>();
             try

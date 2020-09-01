@@ -118,6 +118,8 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemFoldSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuItemPauseSlot = new System.Windows.Forms.ToolStripMenuItem();
             this.gridContextMenuItemFinishSlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridContextMenuSep4 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridContextMenuItemCopyPRCG = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipGrid = new System.Windows.Forms.ToolTip(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
@@ -131,8 +133,6 @@ namespace HFM.Forms.Views
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipNotify = new System.Windows.Forms.ToolTip(this.components);
-            this.gridContextMenuSep4 = new System.Windows.Forms.ToolStripSeparator();
-            this.gridContextMenuItemCopyPRCG = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.notifyMenu.SuspendLayout();
             this.AppMenu.SuspendLayout();
@@ -807,7 +807,7 @@ namespace HFM.Forms.Views
             this.gridContextMenuSep4,
             this.gridContextMenuItemCopyPRCG});
             this.gridContextMenuStrip.Name = "contextMenuStrip1";
-            this.gridContextMenuStrip.Size = new System.Drawing.Size(205, 226);
+            this.gridContextMenuStrip.Size = new System.Drawing.Size(205, 204);
             // 
             // gridContextMenuItemRefreshSelectedSlot
             // 
@@ -872,6 +872,18 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemFinishSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemFinishSlot.Text = "Finish Slot";
             this.gridContextMenuItemFinishSlot.Click += new System.EventHandler(this.FinishSlot_Click);
+            // 
+            // gridContextMenuSep4
+            // 
+            this.gridContextMenuSep4.Name = "gridContextMenuSep4";
+            this.gridContextMenuSep4.Size = new System.Drawing.Size(201, 6);
+            // 
+            // gridContextMenuItemCopyPRCG
+            // 
+            this.gridContextMenuItemCopyPRCG.Name = "gridContextMenuItemCopyPRCG";
+            this.gridContextMenuItemCopyPRCG.Size = new System.Drawing.Size(204, 22);
+            this.gridContextMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
+            this.gridContextMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
             // 
             // splitContainer1
             // 
@@ -1034,18 +1046,6 @@ namespace HFM.Forms.Views
             this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
             this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
             // 
-            // gridContextMenuSep4
-            // 
-            this.gridContextMenuSep4.Name = "gridContextMenuSep4";
-            this.gridContextMenuSep4.Size = new System.Drawing.Size(201, 6);
-            // 
-            // gridContextMenuItemCopyPRCG
-            // 
-            this.gridContextMenuItemCopyPRCG.Name = "gridContextMenuItemCopyPRCG";
-            this.gridContextMenuItemCopyPRCG.Size = new System.Drawing.Size(204, 22);
-            this.gridContextMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
-            this.gridContextMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1059,6 +1059,7 @@ namespace HFM.Forms.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "HFM.NET";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();

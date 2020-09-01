@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.Logging;
+using HFM.Core.ScheduledTasks;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
@@ -32,32 +33,35 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms
 {
-    public sealed class MainPresenter
+    public sealed class MainPresenter : FormPresenter<MainModel>
     {
         /// <summary>
         /// Holds the state of the window before it is hidden (minimize to tray behaviour)
         /// </summary>
         public FormWindowState OriginalWindowState { get; private set; }
 
+        public MainModel Model { get; }
         public MainGridModel GridModel { get; }
         public ILogger Logger { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
+        public ClientConfiguration ClientConfiguration { get; }
+        public IProteinService ProteinService { get; }
+        public UserStatsDataModel UserStatsDataModel { get; }
+        private IPreferences Preferences { get; }
 
-        private readonly IMainView _view;
-        private readonly UserStatsDataModel _userStatsDataModel;
-        private readonly ClientConfiguration _clientConfiguration;
-        private readonly IPreferences _preferences;
         private readonly ClientSettingsManager _settingsManager;
 
-        public MainPresenter(MainGridModel gridModel, IMainView view, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox,
-                             UserStatsDataModel userStatsDataModel)
+        public MainPresenter(MainModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox,
+                             ClientConfiguration clientConfiguration, IProteinService proteinService, EocStatsScheduledTask eocStatsScheduledTask)
+            : base(model)
         {
-            GridModel = gridModel;
+            Model = model;
+            GridModel = new MainGridModel(Model.Preferences, Form, clientConfiguration);
             GridModel.AfterResetBindings += (sender, e) =>
             {
                 // run asynchronously so binding operation can finish
-                _view.BeginInvoke(new Action(() =>
+                Form.BeginInvoke(new Action(() =>
                 {
                     DisplaySelectedSlotData();
                     _view.RefreshControlsWithTotalsData(GridModel.SlotTotals);
@@ -68,26 +72,51 @@ namespace HFM.Forms
                 if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
                 {
                     // run asynchronously so binding operation can finish
-                    _view.BeginInvoke(new Action(() =>
+                    Form.BeginInvoke(new Action(() =>
                     {
                         _view.DataGridView.Rows[e.Index].Selected = true;
                         DisplaySelectedSlotData();
+                        Model.GridModelSelectedSlotChanged(sender, e);
                     }), null);
                 }
             };
 
-            _view = view;
             Logger = logger ?? NullLogger.Instance;
             ServiceScopeFactory = serviceScopeFactory;
-            MessageBox = messageBox;
-            _userStatsDataModel = userStatsDataModel;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            ClientConfiguration = clientConfiguration;
+            ProteinService = proteinService ?? NullProteinService.Instance;
+            UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
+            Preferences = Model.Preferences;
 
-            _clientConfiguration = GridModel.ClientConfiguration;
-            _preferences = GridModel.Preferences;
             _settingsManager = new ClientSettingsManager();
 
-            _clientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
+            ClientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
         }
+
+        private IMainView _view;
+
+        public override IWin32Form Form
+        {
+            get
+            {
+                if (base.Form is null)
+                {
+                    ModelBase.Load();
+
+                    base.Form = OnCreateForm();
+                    base.Form.Closed += OnClosed;
+
+                    _view = (IMainView)base.Form;
+                }
+                return base.Form;
+            }
+            protected set => throw new InvalidOperationException("Use MainForm property.");
+        }
+
+        public override void Show() => throw new InvalidOperationException("Use MainForm property.");
+
+        protected override IWin32Form OnCreateForm() => new MainForm(this);
 
         #region Initialize
 
@@ -96,67 +125,46 @@ namespace HFM.Forms
         public void Initialize(string openFile)
         {
             _openFile = openFile;
-
-            // Restore View Preferences (must be done AFTER DataGridView columns are setup)
-            RestoreViewPreferences();
-            //
-            _view.SetGridDataSource(GridModel.BindingSource);
-            //
-            _preferences.PreferenceChanged += (s, e) =>
-            {
-                switch (e.Preference)
-                {
-                    case Preference.MinimizeTo:
-                        SetViewShowStyle();
-                        break;
-                    case Preference.ColorLogFile:
-                        ApplyColorLogFileSetting();
-                        break;
-                    case Preference.EocUserId:
-                        _userStatsDataModel.Refresh();
-                        break;
-                }
-            };
         }
 
-        private void RestoreViewPreferences()
+        public void RestoreViewPreferences()
         {
-            var restoreLocation = _preferences.Get<Point>(Preference.FormLocation);
-            var restoreSize = _preferences.Get<Size>(Preference.FormSize);
+            var restoreLocation = Preferences.Get<Point>(Preference.FormLocation);
+            var restoreSize = Preferences.Get<Size>(Preference.FormSize);
             var (location, size) = WindowPosition.Normalize(_view, restoreLocation, restoreSize);
             _view.Location = location;
 
             // Look for view size
             if (size.Width != 0 && size.Height != 0)
             {
-                if (!_preferences.Get<bool>(Preference.FormLogWindowVisible))
+                if (!Preferences.Get<bool>(Preference.FormLogWindowVisible))
                 {
-                    size = new Size(size.Width, size.Height + _preferences.Get<int>(Preference.FormLogWindowHeight));
+                    size = new Size(size.Width, size.Height + Preferences.Get<int>(Preference.FormLogWindowHeight));
                 }
                 _view.Size = size;
                 // make sure split location from the prefs is at least the minimum panel size - Issue 234
-                var formSplitLocation = _preferences.Get<int>(Preference.FormSplitterLocation);
+                var formSplitLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
                 if (formSplitLocation < _view.SplitContainer.Panel2MinSize) formSplitLocation = _view.SplitContainer.Panel2MinSize;
                 _view.SplitContainer.SplitterDistance = formSplitLocation;
             }
 
-            if (!_preferences.Get<bool>(Preference.FormLogWindowVisible))
+            if (!Preferences.Get<bool>(Preference.FormLogWindowVisible))
             {
                 ShowHideLogWindow(false);
             }
-            if (!_preferences.Get<bool>(Preference.QueueWindowVisible))
+            if (!Preferences.Get<bool>(Preference.QueueWindowVisible))
             {
                 ShowHideQueue(false);
             }
-            _view.FollowLogFileChecked = _preferences.Get<bool>(Preference.FollowLog);
+            _view.FollowLogFileChecked = Preferences.Get<bool>(Preference.FollowLog);
 
-            GridModel.SortColumnName = _preferences.Get<string>(Preference.FormSortColumn);
-            GridModel.SortColumnOrder = _preferences.Get<ListSortDirection>(Preference.FormSortOrder);
+            GridModel.SortColumnName = Preferences.Get<string>(Preference.FormSortColumn);
+            GridModel.SortColumnOrder = Preferences.Get<ListSortDirection>(Preference.FormSortOrder);
 
             try
             {
                 // Restore the columns' state
-                var columns = _preferences.Get<ICollection<string>>(Preference.FormColumns);
+                var columns = Preferences.Get<ICollection<string>>(Preference.FormColumns);
                 if (columns != null)
                 {
                     var colsList = columns.ToList();
@@ -196,11 +204,11 @@ namespace HFM.Forms
             // Update the split location directly from the split panel control. - Issue 8
             _view.SplitContainer.SplitterMoved += delegate
                                                   {
-                                                      _preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
-                                                      _preferences.Save();
+                                                      Preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.SplitterDistance);
+                                                      Preferences.Save();
                                                   };
 
-            if (_preferences.Get<bool>(Preference.RunMinimized))
+            if (Preferences.Get<bool>(Preference.RunMinimized))
             {
                 _view.WindowState = FormWindowState.Minimized;
             }
@@ -209,9 +217,9 @@ namespace HFM.Forms
             {
                 LoadConfigFile(_openFile);
             }
-            else if (_preferences.Get<bool>(Preference.UseDefaultConfigFile))
+            else if (Preferences.Get<bool>(Preference.UseDefaultConfigFile))
             {
-                var fileName = _preferences.Get<string>(Preference.DefaultConfigFile);
+                var fileName = Preferences.Get<string>(Preference.DefaultConfigFile);
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     LoadConfigFile(fileName);
@@ -223,7 +231,7 @@ namespace HFM.Forms
 
         public void CheckForUpdateOnStartup(IApplicationUpdateService service)
         {
-            if (_preferences.Get<bool>(Preference.StartupCheckForUpdate))
+            if (Preferences.Get<bool>(Preference.StartupCheckForUpdate))
             {
                 CheckForUpdateInternal(service);
             }
@@ -235,7 +243,7 @@ namespace HFM.Forms
             if (result.HasValue && !result.Value)
             {
                 string text = $"{Core.Application.NameAndVersion} is already up-to-date.";
-                MessageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+                MessageBox.ShowInformation(Form, text, Core.Application.NameAndVersion);
             }
         }
 
@@ -257,15 +265,15 @@ namespace HFM.Forms
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
 
                 _applicationUpdateModel = new ApplicationUpdateModel(update);
-                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, _preferences, MessageBox))
+                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, Preferences, MessageBox))
                 {
-                    if (presenter.ShowDialog(_view) == DialogResult.OK)
+                    if (presenter.ShowDialog(Form) == DialogResult.OK)
                     {
                         if (_applicationUpdateModel.SelectedUpdateFileIsReadyToBeExecuted)
                         {
                             string text = String.Format(CultureInfo.CurrentCulture,
                                 "{0} will install the new version when you exit the application.", Core.Application.Name);
-                            MessageBox.ShowInformation(_view, text, Core.Application.NameAndVersion);
+                            MessageBox.ShowInformation(Form, text, Core.Application.NameAndVersion);
                         }
                     }
                 }
@@ -295,7 +303,7 @@ namespace HFM.Forms
             // changes based on the height of Panel1 - Issue 8
             if (_view.Visible && _view.SplitContainer.Panel2Collapsed)
             {
-                _preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
+                Preferences.Set(Preference.FormSplitterLocation, _view.SplitContainer.Panel1.Height);
             }
         }
 
@@ -312,17 +320,17 @@ namespace HFM.Forms
             // RestoreBounds remembers normal position if minimized or maximized
             if (_view.WindowState == FormWindowState.Normal)
             {
-                _preferences.Set(Preference.FormLocation, _view.Location);
-                _preferences.Set(Preference.FormSize, _view.Size);
+                Preferences.Set(Preference.FormLocation, _view.Location);
+                Preferences.Set(Preference.FormSize, _view.Size);
             }
             else
             {
-                _preferences.Set(Preference.FormLocation, _view.RestoreBounds.Location);
-                _preferences.Set(Preference.FormSize, _view.RestoreBounds.Size);
+                Preferences.Set(Preference.FormLocation, _view.RestoreBounds.Location);
+                Preferences.Set(Preference.FormSize, _view.RestoreBounds.Size);
             }
 
-            _preferences.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
-            _preferences.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
+            Preferences.Set(Preference.FormLogWindowVisible, _view.LogFileViewer.Visible);
+            Preferences.Set(Preference.QueueWindowVisible, _view.QueueControlVisible);
 
             CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
@@ -331,7 +339,7 @@ namespace HFM.Forms
 
         public void SetViewShowStyle()
         {
-            switch (_preferences.Get<MinimizeToOption>(Preference.MinimizeTo))
+            switch (Preferences.Get<MinimizeToOption>(Preference.MinimizeTo))
             {
                 case MinimizeToOption.SystemTray:
                     _view.SetNotifyIconVisible(true);
@@ -363,7 +371,7 @@ namespace HFM.Forms
                     Logger.Error(ex.Message, ex);
                     string message = String.Format(CultureInfo.CurrentCulture,
                         "Update process failed to start with the following error:{0}{0}{1}", Environment.NewLine, ex.Message);
-                    MessageBox.ShowError(_view, message, _view.Text);
+                    MessageBox.ShowError(Form, message, Core.Application.NameAndVersion);
                 }
             }
         }
@@ -446,7 +454,7 @@ namespace HFM.Forms
                 // Different Client... Load LogLines
                 if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
                 {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
                 }
                 // Textbox has text lines
                 else if (_view.LogFileViewer.Lines.Length > 0)
@@ -468,13 +476,13 @@ namespace HFM.Forms
                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
                     if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
-                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
+                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
                     }
                 }
                 // Nothing in the Textbox... Load LogLines
                 else
                 {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, _preferences.Get<bool>(Preference.ColorLogFile));
+                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
                 }
             }
             else
@@ -482,7 +490,7 @@ namespace HFM.Forms
                 _view.LogFileViewer.SetNoLogLines();
             }
 
-            if (_preferences.Get<bool>(Preference.FollowLog))
+            if (Preferences.Get<bool>(Preference.FollowLog))
             {
                 _view.LogFileViewer.ScrollToBottom();
             }
@@ -505,7 +513,7 @@ namespace HFM.Forms
                 }
 
                 SaveColumnSettings(); // Save Column Settings - Issue 73
-                _preferences.Save();
+                Preferences.Save();
             }
         }
 
@@ -526,7 +534,7 @@ namespace HFM.Forms
                                         i++));
             }
 
-            _preferences.Set(Preference.FormColumns, columns);
+            Preferences.Set(Preference.FormColumns, columns);
         }
 
         public void DataGridViewSorted()
@@ -596,7 +604,7 @@ namespace HFM.Forms
         {
             // clear the clients and UI
             _settingsManager.ClearFileName();
-            _clientConfiguration.Clear();
+            ClientConfiguration.Clear();
         }
 
         private void LoadConfigFile(string filePath, int filterIndex = 1)
@@ -606,25 +614,25 @@ namespace HFM.Forms
             try
             {
                 // Read the config file
-                _clientConfiguration.Load(_settingsManager.Read(filePath, filterIndex));
+                ClientConfiguration.Load(_settingsManager.Read(filePath, filterIndex));
 
-                if (_clientConfiguration.Count == 0)
+                if (ClientConfiguration.Count == 0)
                 {
-                    MessageBox.ShowError(_view, "No client configurations were loaded from the given config file.", _view.Text);
+                    MessageBox.ShowError(Form, "No client configurations were loaded from the given config file.", Core.Application.NameAndVersion);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                MessageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                   "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                MessageBox.ShowError(Form, String.Format(CultureInfo.CurrentCulture,
+                   "No client configurations were loaded from the given config file.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
             }
         }
 
         private void AutoSaveConfig()
         {
-            if (_preferences.Get<bool>(Preference.AutoSaveConfig) &&
-                _clientConfiguration.IsDirty)
+            if (Preferences.Get<bool>(Preference.AutoSaveConfig) &&
+                ClientConfiguration.IsDirty)
             {
                 FileSaveClick();
             }
@@ -632,7 +640,7 @@ namespace HFM.Forms
 
         public void FileSaveClick()
         {
-            if (_clientConfiguration.Count == 0)
+            if (ClientConfiguration.Count == 0)
             {
                 return;
             }
@@ -653,7 +661,7 @@ namespace HFM.Forms
 
         public void FileSaveAsClick(FileDialogPresenter saveFile)
         {
-            if (_clientConfiguration.Count == 0)
+            if (ClientConfiguration.Count == 0)
             {
                 return;
             }
@@ -670,17 +678,17 @@ namespace HFM.Forms
         {
             try
             {
-                var clients = _clientConfiguration.GetClients();
+                var clients = ClientConfiguration.GetClients();
                 _settingsManager.Write(clients.Select(x => x.Settings), fileName, filterIndex);
-                _clientConfiguration.IsDirty = false;
+                ClientConfiguration.IsDirty = false;
 
                 ApplyClientIdentifierToBenchmarks(clients);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-                MessageBox.ShowError(_view, String.Format(CultureInfo.CurrentCulture,
-                    "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), _view.Text);
+                MessageBox.ShowError(Form, String.Format(CultureInfo.CurrentCulture,
+                    "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
             }
         }
 
@@ -707,17 +715,17 @@ namespace HFM.Forms
 
         private bool CheckForConfigurationChanges()
         {
-            if (_clientConfiguration.Count != 0 && _clientConfiguration.IsDirty)
+            if (ClientConfiguration.Count != 0 && ClientConfiguration.IsDirty)
             {
-                DialogResult result = MessageBox.AskYesNoCancelQuestion(_view,
+                DialogResult result = MessageBox.AskYesNoCancelQuestion(Form,
                    String.Format("There are changes to the configuration that have not been saved.  Would you like to save these changes?{0}{0}Yes - Continue and save the changes{0}No - Continue and do not save the changes{0}Cancel - Do not continue", Environment.NewLine),
-                   _view.Text);
+                   Core.Application.NameAndVersion);
 
                 switch (result)
                 {
                     case DialogResult.Yes:
                         FileSaveClick();
-                        return !_clientConfiguration.IsDirty;
+                        return !ClientConfiguration.IsDirty;
                     case DialogResult.No:
                         return true;
                     case DialogResult.Cancel:
@@ -739,7 +747,7 @@ namespace HFM.Forms
             {
                 using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
                 {
-                    presenter.ShowDialog(_view);
+                    presenter.ShowDialog(Form);
                     // TODO: Invalidate View by mutating the Model
                     _view.DataGridView.Invalidate();
                 }
@@ -752,24 +760,24 @@ namespace HFM.Forms
 
         public void ShowHfmLogFile(LocalProcessService localProcess)
         {
-            string path = Path.Combine(_preferences.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
+            string path = Path.Combine(Preferences.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
             string errorMessage = String.Format(CultureInfo.CurrentCulture,
                 "An error occurred while attempting to open the HFM log file.{0}{0}Please check the log file viewer defined in the preferences.",
                 Environment.NewLine);
 
-            string fileName = _preferences.Get<string>(Preference.LogFileViewer);
+            string fileName = Preferences.Get<string>(Preference.LogFileViewer);
             string arguments = WrapString.InQuotes(path);
             localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
         }
 
         public void ShowHfmDataFiles(LocalProcessService localProcess)
         {
-            string path = _preferences.Get<string>(Preference.ApplicationDataFolderPath);
+            string path = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
             string errorMessage = String.Format(CultureInfo.CurrentCulture,
                 "An error occurred while attempting to open '{0}'.{1}{1}Please check the current file explorer defined in the preferences.",
                 path, Environment.NewLine);
 
-            string fileName = _preferences.Get<string>(Preference.FileExplorer);
+            string fileName = Preferences.Get<string>(Preference.FileExplorer);
             string arguments = WrapString.InQuotes(path);
             localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
         }
@@ -793,7 +801,7 @@ namespace HFM.Forms
         {
             using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, MessageBox))
             {
-                while (dialog.ShowDialog(_view) == DialogResult.OK)
+                while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {
                     dialog.Model.Save();
                     var settings = dialog.Model.ClientSettings;
@@ -806,13 +814,13 @@ namespace HFM.Forms
                     // perform the add
                     try
                     {
-                        _clientConfiguration.Add(settings);
+                        ClientConfiguration.Add(settings);
                         break;
                     }
                     catch (ArgumentException ex)
                     {
                         Logger.Error(ex.Message, ex);
-                        MessageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
             }
@@ -829,7 +837,7 @@ namespace HFM.Forms
         private void EditFahClient()
         {
             Debug.Assert(GridModel.SelectedSlot != null);
-            IClient client = _clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
+            IClient client = ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
             ClientSettings originalSettings = client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
@@ -837,20 +845,20 @@ namespace HFM.Forms
             model.Load();
             using (var dialog = new FahClientSettingsPresenter(model, Logger, MessageBox))
             {
-                while (dialog.ShowDialog(_view) == DialogResult.OK)
+                while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {
                     dialog.Model.Save();
                     var newSettings = dialog.Model.ClientSettings;
                     // perform the edit
                     try
                     {
-                        _clientConfiguration.Edit(originalSettings.Name, newSettings);
+                        ClientConfiguration.Edit(originalSettings.Name, newSettings);
                         break;
                     }
                     catch (ArgumentException ex)
                     {
                         Logger.Error(ex.Message, ex);
-                        MessageBox.ShowError(_view, ex.Message, Core.Application.NameAndVersion);
+                        MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
                     }
                 }
             }
@@ -861,7 +869,7 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            _clientConfiguration.Remove(GridModel.SelectedSlot.Settings.Name);
+            ClientConfiguration.Remove(GridModel.SelectedSlot.Settings.Name);
         }
 
         public void ClientsRefreshSelectedClick()
@@ -869,13 +877,13 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            var client = _clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
+            var client = ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
             Task.Run(client.Retrieve);
         }
 
         public void ClientsRefreshAllClick()
         {
-            _clientConfiguration.ScheduledTasks.RetrieveAll();
+            ClientConfiguration.ScheduledTasks.RetrieveAll();
         }
 
         public void ClientsViewCachedLogClick(LocalProcessService localProcess)
@@ -883,21 +891,21 @@ namespace HFM.Forms
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            string path = Path.Combine(_preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Settings.ClientLogFileName);
+            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Settings.ClientLogFileName);
             if (File.Exists(path))
             {
                 string errorMessage = String.Format(CultureInfo.CurrentCulture,
                     "An error occurred while attempting to open the client log file.{0}{0}Please check the current log file viewer defined in the preferences.",
                     Environment.NewLine);
 
-                string fileName = _preferences.Get<string>(Preference.LogFileViewer);
+                string fileName = Preferences.Get<string>(Preference.LogFileViewer);
                 string arguments = WrapString.InQuotes(path);
                 localProcess.StartAndNotifyError(fileName, arguments, errorMessage, Logger, MessageBox);
             }
             else
             {
                 string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", GridModel.SelectedSlot.Settings.Name);
-                MessageBox.ShowInformation(_view, message, _view.Text);
+                MessageBox.ShowInformation(Form, message, Core.Application.NameAndVersion);
             }
         }
 
@@ -909,7 +917,7 @@ namespace HFM.Forms
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Fold(GridModel.SelectedSlot.SlotID);
             }
@@ -919,7 +927,7 @@ namespace HFM.Forms
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Pause(GridModel.SelectedSlot.SlotID);
             }
@@ -929,7 +937,7 @@ namespace HFM.Forms
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (_clientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
             {
                 client.Finish(GridModel.SelectedSlot.SlotID);
             }
@@ -987,14 +995,14 @@ namespace HFM.Forms
             {
                 _view.LogFileViewer.Visible = false;
                 _view.SplitContainer.Panel2Collapsed = true;
-                _preferences.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height - _preferences.Get<int>(Preference.FormLogWindowHeight));
+                Preferences.Set(Preference.FormLogWindowHeight, (_view.SplitContainer.Height - _view.SplitContainer.SplitterDistance));
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height - Preferences.Get<int>(Preference.FormLogWindowHeight));
             }
             else
             {
                 _view.LogFileViewer.Visible = true;
                 _view.DisableViewResizeEvent();  // disable Form resize event for this operation
-                _view.Size = new Size(_view.Size.Width, _view.Size.Height + _preferences.Get<int>(Preference.FormLogWindowHeight));
+                _view.Size = new Size(_view.Size.Width, _view.Size.Height + Preferences.Get<int>(Preference.FormLogWindowHeight));
                 _view.EnableViewResizeEvent();   // re-enable
                 _view.SplitContainer.Panel2Collapsed = false;
             }
@@ -1023,34 +1031,34 @@ namespace HFM.Forms
 
         public void ViewToggleDateTimeClick()
         {
-            var style = _preferences.Get<TimeFormatting>(Preference.TimeFormatting);
-            _preferences.Set(Preference.TimeFormatting, style == TimeFormatting.None
+            var style = Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+            Preferences.Set(Preference.TimeFormatting, style == TimeFormatting.None
                                     ? TimeFormatting.Format1
                                     : TimeFormatting.None);
-            _preferences.Save();
+            Preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleCompletedCountStyleClick()
         {
-            var style = _preferences.Get<UnitTotalsType>(Preference.UnitTotals);
-            _preferences.Set(Preference.UnitTotals, style == UnitTotalsType.All
+            var style = Preferences.Get<UnitTotalsType>(Preference.UnitTotals);
+            Preferences.Set(Preference.UnitTotals, style == UnitTotalsType.All
                                     ? UnitTotalsType.ClientStart
                                     : UnitTotalsType.All);
-            _preferences.Save();
+            Preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleVersionInformationClick()
         {
-            _preferences.Set(Preference.DisplayVersions, !_preferences.Get<bool>(Preference.DisplayVersions));
-            _preferences.Save();
+            Preferences.Set(Preference.DisplayVersions, !Preferences.Get<bool>(Preference.DisplayVersions));
+            Preferences.Save();
             _view.DataGridView.Invalidate();
         }
 
         public void ViewCycleBonusCalculationClick()
         {
-            var calculationType = _preferences.Get<BonusCalculation>(Preference.BonusCalculation);
+            var calculationType = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             int typeIndex = 0;
             // None is always LAST entry
             if (calculationType != BonusCalculation.None)
@@ -1060,8 +1068,8 @@ namespace HFM.Forms
             }
 
             calculationType = (BonusCalculation)typeIndex;
-            _preferences.Set(Preference.BonusCalculation, calculationType);
-            _preferences.Save();
+            Preferences.Set(Preference.BonusCalculation, calculationType);
+            Preferences.Save();
 
             string calculationTypeString = (from item in ClientsModel.BonusCalculationList
                                             where ((BonusCalculation)item.ValueMember) == calculationType
@@ -1072,7 +1080,7 @@ namespace HFM.Forms
 
         public void ViewCycleCalculationClick()
         {
-            var calculationType = _preferences.Get<PPDCalculation>(Preference.PPDCalculation);
+            var calculationType = Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
             int typeIndex = 0;
             // EffectiveRate is always LAST entry
             if (calculationType != PPDCalculation.EffectiveRate)
@@ -1082,8 +1090,8 @@ namespace HFM.Forms
             }
 
             calculationType = (PPDCalculation)typeIndex;
-            _preferences.Set(Preference.PPDCalculation, calculationType);
-            _preferences.Save();
+            Preferences.Set(Preference.PPDCalculation, calculationType);
+            Preferences.Save();
 
             string calculationTypeString = (from item in ClientsModel.PpdCalculationList
                                             where ((PPDCalculation)item.ValueMember) == calculationType
@@ -1094,7 +1102,7 @@ namespace HFM.Forms
 
         internal void ViewToggleFollowLogFile()
         {
-            _preferences.Set(Preference.FollowLog, !_preferences.Get<bool>(Preference.FollowLog));
+            Preferences.Set(Preference.FollowLog, !Preferences.Get<bool>(Preference.FollowLog));
         }
 
         #endregion
@@ -1109,7 +1117,7 @@ namespace HFM.Forms
                 using (var dialog = new ProgressDialog((progress, token) => result = proteinService.Refresh(progress), false))
                 {
                     dialog.Text = Core.Application.NameAndVersion;
-                    dialog.ShowDialog(_view);
+                    dialog.ShowDialog(Form);
                     if (dialog.Exception != null)
                     {
                         Logger.Error(dialog.Exception.Message, dialog.Exception);
@@ -1122,13 +1130,13 @@ namespace HFM.Forms
                     var proteinChanges = result.Where(x => x.Action != ProteinChangeAction.None).ToList();
                     if (proteinChanges.Count > 0)
                     {
-                        if (_clientConfiguration.Count > 0)
+                        if (ClientConfiguration.Count > 0)
                         {
-                            _clientConfiguration.ScheduledTasks.RetrieveAll();
+                            ClientConfiguration.ScheduledTasks.RetrieveAll();
                         }
                         using (var dialog = new ProteinChangesDialog(proteinChanges))
                         {
-                            dialog.ShowDialog(_view);
+                            dialog.ShowDialog(Form);
                         }
                     }
                 }
@@ -1197,28 +1205,28 @@ namespace HFM.Forms
 
         public void ShowEocUserPage(LocalProcessService localProcess)
         {
-            string fileName = new Uri(String.Concat(EocStatsService.UserBaseUrl, _preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
+            string fileName = new Uri(String.Concat(EocStatsService.UserBaseUrl, Preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the EOC user stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
         public void ShowStanfordUserPage(LocalProcessService localProcess)
         {
-            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, _preferences.Get<string>(Preference.StanfordId))).AbsoluteUri;
+            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, Preferences.Get<string>(Preference.StanfordId))).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the FAH user stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
         public void ShowEocTeamPage(LocalProcessService localProcess)
         {
-            string fileName = new Uri(String.Concat(EocStatsService.TeamBaseUrl, _preferences.Get<int>(Preference.TeamId))).AbsoluteUri;
+            string fileName = new Uri(String.Concat(EocStatsService.TeamBaseUrl, Preferences.Get<int>(Preference.TeamId))).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the EOC team stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
         public void RefreshUserStatsData()
         {
-            _userStatsDataModel.Refresh();
+            UserStatsDataModel.Refresh();
         }
 
         public void ShowHfmGitHub(LocalProcessService localProcess)
@@ -1282,29 +1290,21 @@ namespace HFM.Forms
             {
                 using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
                 {
-                    dialog.ShowDialog(_view);
+                    dialog.ShowDialog(Form);
                 }
             }
         }
 
         #region Other Handling Methods
 
-        private void ApplyColorLogFileSetting()
+        public void ApplyColorLogFileSetting()
         {
-            _view.LogFileViewer.HighlightLines(_preferences.Get<bool>(Preference.ColorLogFile));
-        }
-
-        private void HandleProcessStartResult(string message)
-        {
-            if (message != null)
-            {
-                MessageBox.ShowError(_view, message, _view.Text);
-            }
+            _view.LogFileViewer.HighlightLines(Preferences.Get<bool>(Preference.ColorLogFile));
         }
 
         public void SetUserStatsDataViewStyle(bool showTeamStats)
         {
-            _userStatsDataModel.SetViewStyle(showTeamStats);
+            UserStatsDataModel.SetViewStyle(showTeamStats);
         }
 
         #endregion

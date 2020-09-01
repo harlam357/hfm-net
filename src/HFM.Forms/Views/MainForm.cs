@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -16,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
-    public interface IMainView : IWin32Form, ISynchronizeInvoke
+    public interface IMainView : IWin32Form
     {
         #region System.Windows.Forms.Form Properties
 
@@ -50,8 +49,6 @@ namespace HFM.Forms.Views
 
         #region Methods
 
-        void SetGridDataSource(object dataSource);
-
         void SetNotifyIconVisible(bool visible);
 
         void ShowGridContextMenuStrip(Point screenLocation);
@@ -75,8 +72,6 @@ namespace HFM.Forms.Views
 
     public partial class MainForm : FormBase, IMainView
     {
-        #region Properties
-
         public string StatusLabelLeftText
         {
             get { return statusLabelLeft.Text; }
@@ -109,22 +104,12 @@ namespace HFM.Forms.Views
             set { ViewToggleFollowLogFileMenuItem.Checked = value; }
         }
 
-        #endregion
-
-        #region Fields
-
-        private MainPresenter _presenter;
+        private readonly MainPresenter _presenter;
         private NotifyIcon _notifyIcon;
 
-        private readonly IPreferences _prefs;
-
-        #endregion
-
-        #region Constructor
-
-        public MainForm(IPreferences prefs)
+        public MainForm(MainPresenter presenter)
         {
-            _prefs = prefs;
+            _presenter = presenter;
 
             // This call is Required by the Windows Form Designer
             InitializeComponent();
@@ -133,20 +118,23 @@ namespace HFM.Forms.Views
             base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
         }
 
-        #endregion
-
-        #region Initialize
-
-        public void Initialize(MainPresenter presenter, IProteinService service, UserStatsDataModel userStatsDataModel, string openFile)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            _presenter = presenter;
-            // Resize can be invoked when InitializeComponent() is called
-            // if the DPI is not set to Normal (96 DPI).  The MainFormResize
-            // method depends on _presenter HAVING A VALUE.  Wait to hook
-            // up this event until after _presenter has been set (above).
-            Resize += MainFormResize;
+            LoadData(_presenter.Model);
+        }
 
-            #region Initialize Controls
+        private void LoadData(MainModel model)
+        {
+            // TODO: Load from MainModel
+            //var (location, size) = WindowPosition.Normalize(this, model.FormLocation, model.FormSize);
+
+            //Location = location;
+            //LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
+            //Size = size;
+            //SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+
+            // *** OLD CODE FROM HERE ON ***
+            Resize += MainFormResize;
 
             // Manually Create the Columns - Issue 41
             dataGridView1.AutoGenerateColumns = false;
@@ -154,14 +142,31 @@ namespace HFM.Forms.Views
             // Add Column Selector
             new DataGridViewColumnSelector(dataGridView1);
             // Give the Queue Control access to the Protein Collection
-            queueControl.SetProteinService(service);
-
-            #endregion
+            queueControl.SetProteinService(_presenter.ProteinService);
 
             // Initialize the Presenter
-            _presenter.Initialize(openFile);
+            // Restore View Preferences (must be done AFTER DataGridView columns are setup)
+            _presenter.RestoreViewPreferences();
+            //
+            dataGridView1.DataSource = _presenter.GridModel.BindingSource;
+            //
+            _presenter.Model.Preferences.PreferenceChanged += (s, e) =>
+            {
+                switch (e.Preference)
+                {
+                    case Preference.MinimizeTo:
+                        _presenter.SetViewShowStyle();
+                        break;
+                    case Preference.ColorLogFile:
+                        _presenter.ApplyColorLogFileSetting();
+                        break;
+                    case Preference.EocUserId:
+                        _presenter.UserStatsDataModel.Refresh();
+                        break;
+                }
+            };
 
-            BindToUserStatsDataModel(userStatsDataModel);
+            BindToUserStatsDataModel(_presenter.UserStatsDataModel);
             // Hook-up Status Label Event Handlers
             SubscribeToStatsLabelEvents();
 
@@ -240,13 +245,6 @@ namespace HFM.Forms.Views
             statusUserWUs.MouseDown += StatsLabelMouseDown;
         }
 
-        public void SetGridDataSource(object dataSource)
-        {
-            dataGridView1.DataSource = dataSource;
-        }
-
-        #endregion
-
         #region Form Handlers
 
         public void SecondInstanceStarted(string[] args)
@@ -287,7 +285,7 @@ namespace HFM.Forms.Views
             _notifyIcon.DoubleClick += delegate { _presenter.NotifyIconDoubleClick(); };
 
             _presenter.ViewShown();
-            _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_prefs));
+            _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_presenter.Model.Preferences));
         }
 
         private void MainFormResize(object sender, EventArgs e)
@@ -418,7 +416,7 @@ namespace HFM.Forms.Views
 
         private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
         {
-            _presenter.CheckForUpdateClick(new ApplicationUpdateService(_prefs));
+            _presenter.CheckForUpdateClick(new ApplicationUpdateService(_presenter.Model.Preferences));
         }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
@@ -619,7 +617,8 @@ namespace HFM.Forms.Views
 
         public void RefreshControlsWithTotalsData(SlotTotals totals)
         {
-            string numberFormat = NumberFormat.Get(_prefs.Get<int>(Preference.DecimalPlaces));
+            var preferences = _presenter.Model.Preferences;
+            string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
             SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
                 totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine));

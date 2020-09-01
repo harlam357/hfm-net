@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -42,7 +43,7 @@ namespace HFM.Forms.Mocks
             Closed?.Invoke(this, e);
         }
 
-        public IntPtr Handle { get; }
+        public IntPtr Handle => IntPtr.Zero;
 
         public void Dispose()
         {
@@ -50,5 +51,14 @@ namespace HFM.Forms.Mocks
         }
 
         public ICollection<MethodInvocation> Invocations { get; } = new List<MethodInvocation>();
+
+        // ISynchronizeInvoke
+        IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args) => throw new NotImplementedException();
+
+        object ISynchronizeInvoke.EndInvoke(IAsyncResult result) => throw new NotImplementedException();
+
+        object ISynchronizeInvoke.Invoke(Delegate method, object[] args) => throw new NotImplementedException();
+
+        bool ISynchronizeInvoke.InvokeRequired => false;
     }
 }
