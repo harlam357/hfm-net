@@ -34,6 +34,11 @@ namespace HFM.Forms.Internal
             control.DataBindings.Add(nameof(RadioButton.Checked), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
+        internal static void BindChecked<T>(this T toolStripMenuItem, object dataSource, string dataMember) where T : ToolStripMenuItem, IBindableComponent
+        {
+            toolStripMenuItem.DataBindings.Add(nameof(ToolStripMenuItem.Checked), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
+        }
+
         internal static void BindSelectedValue(this ComboBox control, object dataSource, string dataMember)
         {
             control.DataBindings.Add(nameof(ComboBox.SelectedValue), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
