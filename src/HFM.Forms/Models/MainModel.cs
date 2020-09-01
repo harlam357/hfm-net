@@ -78,7 +78,17 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool FollowLog { get; set; }
+        private bool _followLog;
+
+        public bool FollowLog
+        {
+            get => _followLog;
+            set
+            {
+                _followLog = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _clientDetails;
 
