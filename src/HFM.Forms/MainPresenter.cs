@@ -35,11 +35,6 @@ namespace HFM.Forms
 {
     public sealed class MainPresenter : FormPresenter<MainModel>
     {
-        /// <summary>
-        /// Holds the state of the window before it is hidden (minimize to tray behaviour)
-        /// </summary>
-        public FormWindowState OriginalWindowState { get; private set; }
-
         public MainModel Model { get; }
         public MainGridModel GridModel { get; }
         public ILogger Logger { get; }
@@ -173,7 +168,7 @@ namespace HFM.Forms
 
             if (Preferences.Get<bool>(Preference.RunMinimized))
             {
-                _view.WindowState = FormWindowState.Minimized;
+                Form.WindowState = FormWindowState.Minimized;
             }
 
             if (!String.IsNullOrEmpty(_openFile))
@@ -188,8 +183,6 @@ namespace HFM.Forms
                     LoadConfigFile(fileName);
                 }
             }
-
-            SetViewShowStyle();
         }
 
         public void CheckForUpdateOnStartup(IApplicationUpdateService service)
@@ -248,21 +241,6 @@ namespace HFM.Forms
             }
         }
 
-        public void ViewResize()
-        {
-            if (_view.WindowState != FormWindowState.Minimized)
-            {
-                OriginalWindowState = _view.WindowState;
-                // ReApply Sort when restoring from the sys tray - Issue 32
-                if (_view.ShowInTaskbar == false)
-                {
-                    GridModel.Sort();
-                }
-            }
-
-            SetViewShowStyle();
-        }
-
         public bool ViewClosing()
         {
             if (!CheckForConfigurationChanges())
@@ -275,25 +253,6 @@ namespace HFM.Forms
             CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
             return false;
-        }
-
-        public void SetViewShowStyle()
-        {
-            switch (Preferences.Get<MinimizeToOption>(Preference.MinimizeTo))
-            {
-                case MinimizeToOption.SystemTray:
-                    _view.SetNotifyIconVisible(true);
-                    _view.ShowInTaskbar = (_view.WindowState != FormWindowState.Minimized);
-                    break;
-                case MinimizeToOption.TaskBar:
-                    _view.SetNotifyIconVisible(false);
-                    _view.ShowInTaskbar = true;
-                    break;
-                case MinimizeToOption.Both:
-                    _view.SetNotifyIconVisible(true);
-                    _view.ShowInTaskbar = true;
-                    break;
-            }
         }
 
         private void CheckForAndFireUpdateProcess(ApplicationUpdateModel update)
@@ -1141,44 +1100,41 @@ namespace HFM.Forms
 
         public void NotifyIconDoubleClick()
         {
-            if (_view.WindowState == FormWindowState.Minimized)
+            if (Form.WindowState == FormWindowState.Minimized)
             {
-                _view.WindowState = OriginalWindowState;
+                Form.WindowState = Model.OriginalWindowState;
             }
             else
             {
-                OriginalWindowState = _view.WindowState;
-                _view.WindowState = FormWindowState.Minimized;
+                Form.WindowState = FormWindowState.Minimized;
             }
         }
 
         public void NotifyIconRestoreClick()
         {
-            if (_view.WindowState == FormWindowState.Minimized)
+            if (Form.WindowState == FormWindowState.Minimized)
             {
-                _view.WindowState = OriginalWindowState;
+                Form.WindowState = Model.OriginalWindowState;
             }
-            else if (_view.WindowState == FormWindowState.Maximized)
+            else if (Form.WindowState == FormWindowState.Maximized)
             {
-                _view.WindowState = FormWindowState.Normal;
+                Form.WindowState = FormWindowState.Normal;
             }
         }
 
         public void NotifyIconMinimizeClick()
         {
-            if (_view.WindowState != FormWindowState.Minimized)
+            if (Form.WindowState != FormWindowState.Minimized)
             {
-                OriginalWindowState = _view.WindowState;
-                _view.WindowState = FormWindowState.Minimized;
+                Form.WindowState = FormWindowState.Minimized;
             }
         }
 
         public void NotifyIconMaximizeClick()
         {
-            if (_view.WindowState != FormWindowState.Maximized)
+            if (Form.WindowState != FormWindowState.Maximized)
             {
-                _view.WindowState = FormWindowState.Maximized;
-                OriginalWindowState = _view.WindowState;
+                Form.WindowState = FormWindowState.Maximized;
             }
         }
 

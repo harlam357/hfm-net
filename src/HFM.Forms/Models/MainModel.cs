@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
 
 using HFM.Preferences;
 
@@ -22,6 +23,17 @@ namespace HFM.Forms.Models
             FormSplitterLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
             QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
             FollowLog = Preferences.Get<bool>(Preference.FollowLog);
+            MinimizeTo = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
+
+            Preferences.PreferenceChanged += (s, e) =>
+            {
+                switch (e.Preference)
+                {
+                    case Preference.MinimizeTo:
+                        MinimizeTo = Preferences.Get<MinimizeToOption>(e.Preference);
+                        break;
+                }
+            };
         }
 
         public override void Save()
@@ -46,6 +58,28 @@ namespace HFM.Forms.Models
             }
         }
 
+        /// <summary>
+        /// Holds the state of the window before it is hidden (minimize to tray behaviour)
+        /// </summary>
+        public FormWindowState OriginalWindowState { get; private set; }
+
+        private FormWindowState _windowState;
+
+        public FormWindowState WindowState
+        {
+            get => _windowState;
+            set
+            {
+                if (_windowState != value)
+                {
+                    OriginalWindowState = _windowState;
+                    _windowState = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(ShowInTaskbar));
+                }
+            }
+        }
+
         public Point FormLocation { get; set; }
 
         public Size FormSize { get; set; }
@@ -57,8 +91,11 @@ namespace HFM.Forms.Models
             get => _formLogWindowVisible;
             set
             {
-                _formLogWindowVisible = value;
-                OnPropertyChanged();
+                if (_formLogWindowVisible != value)
+                {
+                    _formLogWindowVisible = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -73,8 +110,11 @@ namespace HFM.Forms.Models
             get => _queueWindowVisible;
             set
             {
-                _queueWindowVisible = value;
-                OnPropertyChanged();
+                if (_queueWindowVisible != value)
+                {
+                    _queueWindowVisible = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -85,8 +125,39 @@ namespace HFM.Forms.Models
             get => _followLog;
             set
             {
-                _followLog = value;
-                OnPropertyChanged();
+                if (_followLog != value)
+                {
+                    _followLog = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private MinimizeToOption _minimizeTo;
+
+        public MinimizeToOption MinimizeTo
+        {
+            get => _minimizeTo;
+            set
+            {
+                if (_minimizeTo != value)
+                {
+                    _minimizeTo = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(NotifyIconVisible));
+                    OnPropertyChanged(nameof(ShowInTaskbar));
+                }
+            }
+        }
+
+        public bool NotifyIconVisible => MinimizeTo == MinimizeToOption.SystemTray || MinimizeTo == MinimizeToOption.Both;
+
+        public bool ShowInTaskbar
+        {
+            get
+            {
+                if (WindowState != FormWindowState.Minimized) return true;
+                return MinimizeTo == MinimizeToOption.TaskBar || MinimizeTo == MinimizeToOption.Both;
             }
         }
 
@@ -97,8 +168,11 @@ namespace HFM.Forms.Models
             get => _clientDetails;
             set
             {
-                _clientDetails = value;
-                OnPropertyChanged();
+                if (_clientDetails != value)
+                {
+                    _clientDetails = value;
+                    OnPropertyChanged();
+                }
             }
         }
     }

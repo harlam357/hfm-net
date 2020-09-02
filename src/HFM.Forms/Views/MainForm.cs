@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -21,15 +20,11 @@ namespace HFM.Forms.Views
 {
     public interface IMainView : IWin32Form
     {
-        bool ShowInTaskbar { get; set; }
-
         string StatusLabelLeftText { get; set; }
 
         LogFileViewer LogFileViewer { get; }
 
         DataGridView DataGridView { get; }
-
-        void SetNotifyIconVisible(bool visible);
 
         void ShowGridContextMenuStrip(Point screenLocation);
 
@@ -81,6 +76,10 @@ namespace HFM.Forms.Views
 
         private void LoadData(MainModel model)
         {
+            // keep the model value synchronized with the form
+            Resize += (s, e) => model.WindowState = WindowState;
+            DataBindings.Add(nameof(ShowInTaskbar), model, nameof(MainModel.ShowInTaskbar), false, DataSourceUpdateMode.OnPropertyChanged);
+
             var (location, size) = WindowPosition.Normalize(this, model.FormLocation, model.FormSize);
 
             Location = location;
@@ -117,9 +116,6 @@ namespace HFM.Forms.Views
 
             model.PropertyChanged += ModelPropertyChanged;
 
-            // *** OLD CODE FROM HERE ON ***
-            Resize += MainFormResize;
-
             // Manually Create the Columns - Issue 41
             dataGridView1.AutoGenerateColumns = false;
             SetupDataGridViewColumns(dataGridView1);
@@ -138,9 +134,6 @@ namespace HFM.Forms.Views
             {
                 switch (e.Preference)
                 {
-                    case Preference.MinimizeTo:
-                        _presenter.SetViewShowStyle();
-                        break;
                     case Preference.ColorLogFile:
                         _presenter.ApplyColorLogFileSetting();
                         break;
@@ -187,9 +180,7 @@ namespace HFM.Forms.Views
             else
             {
                 txtLogFile.Visible = true;
-                DisableViewResizeEvent();  // disable Form resize event for this operation
                 Size = new Size(Size.Width, Size.Height + _presenter.Model.FormLogWindowHeight);
-                EnableViewResizeEvent();   // re-enable
                 splitContainer1.Panel2Collapsed = false;
             }
         }
@@ -220,6 +211,12 @@ namespace HFM.Forms.Views
                     break;
                 case nameof(MainModel.QueueWindowVisible):
                     ShowHideQueue(model.QueueWindowVisible);
+                    break;
+                case nameof(MainModel.NotifyIconVisible):
+                    if (_notifyIcon != null)
+                    {
+                        _notifyIcon.Visible = model.NotifyIconVisible;
+                    }
                     break;
             }
         }
@@ -293,7 +290,7 @@ namespace HFM.Forms.Views
 
             if (WindowState == FormWindowState.Minimized)
             {
-                WindowState = _presenter.OriginalWindowState;
+                WindowState = _presenter.Model.OriginalWindowState;
             }
             else
             {
@@ -316,46 +313,15 @@ namespace HFM.Forms.Views
             _notifyIcon.Icon = Icon;
             _notifyIcon.Text = Text;
             _notifyIcon.DoubleClick += delegate { _presenter.NotifyIconDoubleClick(); };
+            _notifyIcon.Visible = _presenter.Model.NotifyIconVisible;
 
             _presenter.ViewShown();
             _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_presenter.Model.Preferences));
         }
 
-        private void MainFormResize(object sender, EventArgs e)
-        {
-            _presenter.ViewResize();
-
-            // When the log file window (panel) is collapsed, get the split location
-            // changes based on the height of Panel1 - Issue 8
-            if (Visible && splitContainer1.Panel2Collapsed)
-            {
-                Debug.Assert(_presenter.Model.FormSplitterLocation == splitContainer1.Panel1.Height);
-                _presenter.Model.FormSplitterLocation = splitContainer1.Panel1.Height;
-            }
-        }
-
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = _presenter.ViewClosing();
-        }
-
-        #endregion
-
-        #region Other IMainView Interface Methods
-
-        public void SetNotifyIconVisible(bool visible)
-        {
-            if (_notifyIcon != null) _notifyIcon.Visible = visible;
-        }
-
-        private void DisableViewResizeEvent()
-        {
-            Resize -= MainFormResize;
-        }
-
-        private void EnableViewResizeEvent()
-        {
-            Resize += MainFormResize;
         }
 
         #endregion
@@ -665,23 +631,23 @@ namespace HFM.Forms.Views
             SetStatusLabelPPDText($"{totals.PPD.ToString(numberFormat)} PPD");
         }
 
-        private void SetNotifyIconText(string val)
+        private void SetNotifyIconText(string text)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new Action<string>(SetNotifyIconText), val);
+                BeginInvoke(new Action<string>(SetNotifyIconText), text);
                 return;
             }
 
             // make sure the object has been created
             if (_notifyIcon != null)
             {
-                if (val.Length > 64)
+                if (text.Length > 64)
                 {
-                    //if string is too long, remove the word Clients
-                    val = val.Replace("Slots", String.Empty);
+                    // if string is too long, remove the word Slots
+                    text = text.Replace("Slots", String.Empty);
                 }
-                _notifyIcon.Text = val;
+                _notifyIcon.Text = text;
             }
         }
 
