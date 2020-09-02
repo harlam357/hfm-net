@@ -1,5 +1,4 @@
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,7 +31,7 @@ namespace HFM.Core.Client
         public ClientConfiguration(ILogger logger, IPreferences preferences, ClientFactory clientFactory)
             : this(logger, preferences, clientFactory, ClientScheduledTasks.Factory)
         {
-            
+
         }
 
         internal ClientConfiguration(ILogger logger, IPreferences preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
@@ -85,19 +84,16 @@ namespace HFM.Core.Client
             }
         }
 
-        public IEnumerable<SlotModel> Slots
+        public ICollection<SlotModel> GetSlots()
         {
-            get
+            _syncLock.EnterReadLock();
+            try
             {
-                _syncLock.EnterReadLock();
-                try
-                {
-                    return _clientDictionary.Values.SelectMany(client => client.Slots).ToList();
-                }
-                finally
-                {
-                    _syncLock.ExitReadLock();
-                }
+                return _clientDictionary.Values.SelectMany(client => client.Slots).ToList();
+            }
+            finally
+            {
+                _syncLock.ExitReadLock();
             }
         }
 

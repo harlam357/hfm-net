@@ -14,14 +14,8 @@ namespace HFM.Forms.Models
 {
     public sealed class MainGridModel
     {
-        #region Events
-
         public event EventHandler AfterResetBindings;
         public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
-
-        #endregion
-
-        #region Properties
 
         private SlotModel _selectedSlot;
 
@@ -33,7 +27,7 @@ namespace HFM.Forms.Models
                 if (!ReferenceEquals(_selectedSlot, value))
                 {
                     _selectedSlot = value;
-                    OnSelectedSlotChanged(new IndexChangedEventArgs(_bindingSource.Position));
+                    OnSelectedSlotChanged(new IndexChangedEventArgs(BindingSource.Position));
                 }
             }
         }
@@ -56,8 +50,8 @@ namespace HFM.Forms.Models
             {
                 if (_sortColumnName != value)
                 {
-                    _sortColumnName = String.IsNullOrWhiteSpace(value) 
-                        ? DefaultSortColumnName 
+                    _sortColumnName = String.IsNullOrWhiteSpace(value)
+                        ? DefaultSortColumnName
                         : ValidateSortColumnNameOrDefault(value);
                 }
             }
@@ -67,7 +61,7 @@ namespace HFM.Forms.Models
         // this method guards against SlotModel property name changes
         private string ValidateSortColumnNameOrDefault(string name)
         {
-            var properties = _bindingSource.CurrencyManager.GetItemProperties();
+            var properties = BindingSource.CurrencyManager.GetItemProperties();
             var property = properties.Find(name, true);
             return property is null ? DefaultSortColumnName : name;
         }
@@ -79,38 +73,19 @@ namespace HFM.Forms.Models
         /// </summary>
         public ListSortDirection SortColumnOrder { get; set; }
 
-        #endregion
-
-        #region Fields
-
         private readonly ISynchronizeInvoke _syncObject;
         private readonly SlotModelSortableBindingList _slotList;
-        private readonly BindingSource _bindingSource;
-
         private readonly object _slotsListLock = new object();
 
-        #endregion
-
-        public ICollection<SlotModel> SlotCollection
+        public SlotTotals GetSlotTotals()
         {
-            // ToList() to make a "copy" of the current list.
-            // The value returned here is used by web generation
-            // and if the collection changes the web generation
-            // will not be able to enumerate the collection.
-            get
+            lock (_slotsListLock)
             {
-                lock (_slotsListLock)
-                {
-                    return _slotList.ToList().AsReadOnly();
-                }
+                return SlotTotals.Create(_slotList.ToList());
             }
         }
 
-        public SlotTotals SlotTotals =>
-            // use SlotCollection, it's provides synchronized access to the slot list
-            SlotTotals.Create(SlotCollection);
-
-        public BindingSource BindingSource => _bindingSource;
+        public BindingSource BindingSource { get; }
 
         public IPreferences Preferences { get; }
 
@@ -130,12 +105,12 @@ namespace HFM.Forms.Models
                                     SortColumnOrder = e.Direction;
                                     preferences.Set(Preference.FormSortOrder, SortColumnOrder);
                                 };
-            _bindingSource = new BindingSource();
-            _bindingSource.DataSource = _slotList;
-            _bindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)_bindingSource.Current;
+            BindingSource = new BindingSource();
+            BindingSource.DataSource = _slotList;
+            BindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)BindingSource.Current;
 #if DEBUG
             _slotList.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
-            _bindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
+            BindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
 #endif
             // subscribe to services raising events that require a view action
             Preferences = preferences;
@@ -193,15 +168,15 @@ namespace HFM.Forms.Models
             lock (_slotsListLock)
             {
                 // get slots from the dictionary
-                var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
+                var slots = ClientConfiguration.GetSlots();
 
                 // refresh the underlying binding list
-                _bindingSource.Clear();
+                BindingSource.Clear();
                 foreach (var slot in slots)
                 {
-                    _bindingSource.Add(slot);
+                    BindingSource.Add(slot);
                 }
-                Debug.WriteLine("Number of slots: {0}", _bindingSource.Count);
+                Debug.WriteLine("Number of slots: {0}", BindingSource.Count);
 
                 // sort the list
                 SortInternal();
@@ -210,7 +185,7 @@ namespace HFM.Forms.Models
                 // find duplicates
                 SlotModel.FindDuplicateProjects(slots);
 
-                _bindingSource.ResetBindings(false);
+                BindingSource.ResetBindings(false);
             }
             OnAfterResetBindings(EventArgs.Empty);
         }
@@ -229,7 +204,7 @@ namespace HFM.Forms.Models
 
         private void SortInternal()
         {
-            _bindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToBindingSourceSortString()}";
+            BindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToBindingSourceSortString()}";
             if (_slotList is IBindingList bindingList)
             {
                 bindingList.ApplySort(bindingList.SortProperty, bindingList.SortDirection);
@@ -240,10 +215,10 @@ namespace HFM.Forms.Models
         {
             if (SelectedSlot == null) return;
 
-            int row = _bindingSource.Find("Name", SelectedSlot.Name);
+            int row = BindingSource.Find("Name", SelectedSlot.Name);
             if (row > -1)
             {
-                _bindingSource.Position = row;
+                BindingSource.Position = row;
             }
         }
 

@@ -116,7 +116,9 @@ namespace HFM.Forms.Models
 
         private SlotModel FindRunningSlot(ProteinBenchmark benchmark)
         {
-            var slot = ClientConfiguration?.Slots.FirstOrDefault(x =>
+            if (ClientConfiguration is null) return null;
+
+            var slot = ClientConfiguration.GetSlots().FirstOrDefault(x =>
                 x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
                 x.WorkUnitModel.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
 

@@ -43,7 +43,7 @@ namespace HFM.Core.Client
 
             Preferences.PreferenceChanged += OnPreferenceChanged;
             ClientConfiguration.ClientConfigurationChanged += OnClientConfigurationChanged;
-            
+
             _clientRetrievalTask = new DelegateScheduledTask(ClientTaskKey, ClientRetrievalAction, ClientInterval);
             _clientRetrievalTask.Changed += TaskChanged;
             _webGenerationTask = new DelegateScheduledTask(WebTaskKey, WebGenerationAction, WebInterval);
@@ -172,8 +172,7 @@ namespace HFM.Core.Client
 
             ct.ThrowIfCancellationRequested();
 
-            var clientsEnumerable = ClientConfiguration.GetClients();
-            var clients = clientsEnumerable as IList<IClient> ?? clientsEnumerable.ToList();
+            var clients = ClientConfiguration.GetClients();
             if (mode == ProcessingMode.Serial)
             {
                 // do the individual retrieves on a single thread
@@ -207,7 +206,7 @@ namespace HFM.Core.Client
             string artifactPath = null;
             try
             {
-                var slots = ClientConfiguration.Slots as IList<SlotModel> ?? ClientConfiguration.Slots.ToList();
+                var slots = ClientConfiguration.GetSlots();
                 var artifactBuilder = new WebArtifactBuilder(Logger, Preferences);
                 artifactPath = artifactBuilder.Build(slots);
 

@@ -59,7 +59,7 @@ namespace HFM.Forms
                 Form.BeginInvoke(new Action(() =>
                 {
                     DisplaySelectedSlotData();
-                    _view.RefreshControlsWithTotalsData(GridModel.SlotTotals);
+                    _view.RefreshControlsWithTotalsData(GridModel.GetSlotTotals());
                 }), null);
             };
             GridModel.SelectedSlotChanged += (sender, e) =>
