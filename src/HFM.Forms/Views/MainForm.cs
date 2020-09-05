@@ -234,47 +234,7 @@ namespace HFM.Forms.Views
             if (selectedSlot != null)
             {
                 SetWorkUnitInfos(selectedSlot.WorkUnitInfos, selectedSlot.SlotType);
-
-                // if we've got a good queue read, let queueControl_QueueIndexChanged()
-                // handle populating the log lines.
-                if (selectedSlot.WorkUnitInfos != null) return;
-
-                // otherwise, load up the CurrentLogLines
                 SetLogLines(selectedSlot, selectedSlot.CurrentLogLines);
-            }
-            else
-            {
-                ClearLogAndQueueViewer();
-            }
-        }
-
-        private void QueueIndexChanged(int index)
-        {
-            if (index == -1)
-            {
-                txtLogFile.SetNoLogLines();
-                return;
-            }
-
-            var selectedSlot = _presenter.GridModel.SelectedSlot;
-            if (selectedSlot != null)
-            {
-                // Check the UnitLogLines array against the requested Queue Index - Issue 171
-                try
-                {
-                    var logLines = selectedSlot.GetLogLinesForQueueIndex(index);
-                    // show the current log even if not the current unit index - 2/17/12
-                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
-                    {
-                        logLines = selectedSlot.CurrentLogLines;
-                    }
-
-                    SetLogLines(selectedSlot, logLines);
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    txtLogFile.SetNoLogLines();
-                }
             }
             else
             {
@@ -290,17 +250,16 @@ namespace HFM.Forms.Views
             SetWorkUnitInfos(null, SlotType.Unknown);
         }
 
-        private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
+        private void SetLogLines(SlotModel selectedSlot, IList<LogLine> logLines)
         {
             var preferences = _presenter.Model.Preferences;
 
-            /*** Checked LogLine Count ***/
             if (logLines != null && logLines.Count > 0)
             {
                 // Different Client... Load LogLines
-                if (txtLogFile.LogOwnedByInstanceName.Equals(instance.Name) == false)
+                if (txtLogFile.LogOwnedByInstanceName.Equals(selectedSlot.Name) == false)
                 {
-                    txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                    txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
                 }
                 // Textbox has text lines
                 else if (txtLogFile.Lines.Length > 0)
@@ -320,13 +279,13 @@ namespace HFM.Forms.Views
                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
                     if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
-                        txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                        txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
                     }
                 }
                 // Nothing in the Textbox... Load LogLines
                 else
                 {
-                    txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                    txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
                 }
             }
             else
@@ -446,11 +405,6 @@ namespace HFM.Forms.Views
         #endregion
 
         #region Data Grid View Handlers
-
-        private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
-        {
-            QueueIndexChanged(e.Index);
-        }
 
         private void dataGridView1_Sorted(object sender, EventArgs e)
         {

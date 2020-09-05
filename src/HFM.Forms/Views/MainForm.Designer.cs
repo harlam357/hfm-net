@@ -980,7 +980,6 @@ namespace HFM.Forms.Views
             this.queueControl.Name = "queueControl";
             this.queueControl.Size = new System.Drawing.Size(258, 356);
             this.queueControl.TabIndex = 1;
-            this.queueControl.QueueIndexChanged += new System.EventHandler<HFM.Forms.Controls.QueueIndexChangedEventArgs>(this.queueControl_QueueIndexChanged);
             // 
             // btnQueue
             // 

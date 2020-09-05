@@ -317,7 +317,6 @@ namespace HFM.Core.Client
 
                     slotModel.WorkUnitInfos = result.WorkUnitInfos;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
-                    //slotModel.UnitLogLines = result.UnitLogLines;
 
                     var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
                     foreach (int key in result.WorkUnits.Keys)

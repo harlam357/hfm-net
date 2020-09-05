@@ -57,7 +57,7 @@ namespace HFM.Core.Client
         }
 
         private const int DefaultMachineID = 0;
-        
+
         public void Initialize()
         {
             Arguments = String.Empty;
@@ -217,7 +217,7 @@ namespace HFM.Core.Client
         /// <summary>
         /// Combined Folding ID and Team String
         /// </summary>
-        public string Username => 
+        public string Username =>
             String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID)
                 ? String.Empty
                 : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.WorkUnit.FoldingID, WorkUnitModel.WorkUnit.Team);
@@ -234,32 +234,6 @@ namespace HFM.Core.Client
         /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
         /// </summary>
         public IList<LogLine> CurrentLogLines { get; set; }
-
-        /// <summary>
-        /// Return LogLine List for Specified Queue Index
-        /// </summary>
-        /// <param name="queueIndex">Index in Queue</param>
-        /// <exception cref="ArgumentOutOfRangeException">If queueIndex is outside the bounds of the Log Lines Array</exception>
-        public IList<LogLine> GetLogLinesForQueueIndex(int queueIndex)
-        {
-            if (UnitLogLines == null) return null;
-
-            // Check the UnitLogLines array against the requested Queue Index - Issue 171
-            if (queueIndex < 0 || queueIndex > UnitLogLines.Length - 1)
-            {
-                throw new ArgumentOutOfRangeException("queueIndex", String.Format(CultureInfo.CurrentCulture,
-                   "Index is out of range.  Requested Index: {0}.  Array Length: {1}", queueIndex, UnitLogLines.Length));
-            }
-
-            if (UnitLogLines[queueIndex] != null)
-            {
-                return UnitLogLines[queueIndex];
-            }
-
-            return null;
-        }
-
-        public IList<LogLine>[] UnitLogLines { get; set; }
 
         public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
 
