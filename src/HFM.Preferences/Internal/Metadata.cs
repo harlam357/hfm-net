@@ -22,32 +22,6 @@ namespace HFM.Preferences.Internal
         new T Data { get; set; }
     }
 
-    // Original Metadata<T> class
-    //public class Metadata<T> : IMetadata<T>
-    //{
-    //   public Metadata()
-    //   {
-    //      Data = default(T);
-    //   }
-    //
-    //   public Metadata(T data)
-    //   {
-    //      Data = data;
-    //   }
-    //
-    //   public Type DataType
-    //   {
-    //      get { return typeof(T); }
-    //   }
-    //
-    //   object IMetadata.Data
-    //   {
-    //      get { return Data; }
-    //   }
-    //
-    //   public T Data { get; set; }
-    //}
-
     internal class ExpressionMetadata<T> : IMetadata<T>
     {
         private readonly PreferenceData _data;
@@ -70,20 +44,17 @@ namespace HFM.Preferences.Internal
             }
         }
 
-        public Type DataType
-        {
-            get { return typeof(T); }
-        }
+        public Type DataType => typeof(T);
 
         object IMetadata.Data
         {
-            get { return Data; }
-            set { Data = (T)value; }
+            get => Data;
+            set => Data = (T)value;
         }
 
         public virtual T Data
         {
-            get { return _getter(_data); }
+            get => _getter(_data);
             set
             {
                 if (_setter == null)
@@ -105,8 +76,8 @@ namespace HFM.Preferences.Internal
 
         public override string Data
         {
-            get { return Cryptography.DecryptValue(base.Data); }
-            set { base.Data = Cryptography.EncryptValue(value); }
+            get => Cryptography.DecryptValue(base.Data);
+            set => base.Data = Cryptography.EncryptValue(value);
         }
     }
 }
