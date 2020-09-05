@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Preferences;
@@ -49,7 +50,7 @@ namespace HFM.Forms.Models
             Preferences.Save();
         }
 
-        public void GridModelSelectedSlotChanged(object sender, IndexChangedEventArgs e)
+        public void GridModelSelectedSlotChanged(object sender, EventArgs e)
         {
             var selectedSlot = (sender as MainGridModel)?.SelectedSlot;
             if (selectedSlot != null)

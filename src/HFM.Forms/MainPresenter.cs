@@ -71,9 +71,24 @@ namespace HFM.Forms
                     {
                         _view.DataGridView.Rows[e.Index].Selected = true;
                         DisplaySelectedSlotData();
-                        Model.GridModelSelectedSlotChanged(sender, e);
                     }), null);
                 }
+            };
+            GridModel.AfterResetBindings += (sender, e) =>
+            {
+                // run asynchronously so binding operation can finish
+                Form.BeginInvoke(new Action(() =>
+                {
+                    Model.GridModelSelectedSlotChanged(sender, e);
+                }), null);
+            };
+            GridModel.SelectedSlotChanged += (sender, e) =>
+            {
+                // run asynchronously so binding operation can finish
+                Form.BeginInvoke(new Action(() =>
+                {
+                    Model.GridModelSelectedSlotChanged(sender, e);
+                }), null);
             };
 
             Logger = logger ?? NullLogger.Instance;
@@ -283,10 +298,6 @@ namespace HFM.Forms
         {
             if (GridModel.SelectedSlot != null)
             {
-                // TODO: Surface client arguments?
-                //_view.StatusLabelLeftText = $"{_gridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString()} {_gridModel.SelectedSlot.Arguments}";
-                _view.StatusLabelLeftText = GridModel.SelectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
-
                 _view.SetWorkUnitInfos(GridModel.SelectedSlot.WorkUnitInfos,
                                        GridModel.SelectedSlot.SlotType);
 

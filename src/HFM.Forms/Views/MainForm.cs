@@ -20,8 +20,6 @@ namespace HFM.Forms.Views
 {
     public interface IMainView : IWin32Form
     {
-        string StatusLabelLeftText { get; set; }
-
         LogFileViewer LogFileViewer { get; }
 
         DataGridView DataGridView { get; }
@@ -39,12 +37,6 @@ namespace HFM.Forms.Views
 
     public partial class MainForm : FormBase, IMainView
     {
-        public string StatusLabelLeftText
-        {
-            get { return statusLabelLeft.Text; }
-            set { statusLabelLeft.Text = value; }
-        }
-
         public bool WorkUnitHistoryMenuEnabled
         {
             get { return mnuToolsHistory.Enabled; }
@@ -113,6 +105,7 @@ namespace HFM.Forms.Views
             }
 
             ViewToggleFollowLogFileMenuItem.BindChecked(model, nameof(MainModel.FollowLog));
+            statusLabelLeft.BindText(model, nameof(MainModel.ClientDetails));
 
             model.PropertyChanged += ModelPropertyChanged;
 
