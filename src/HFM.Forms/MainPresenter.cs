@@ -5,9 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -35,7 +33,6 @@ namespace HFM.Forms
     public sealed class MainPresenter : FormPresenter<MainModel>
     {
         public MainModel Model { get; }
-        public MainGridModel GridModel { get; }
         public ILogger Logger { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
@@ -43,6 +40,7 @@ namespace HFM.Forms
         public IProteinService ProteinService { get; }
         public UserStatsDataModel UserStatsDataModel { get; }
         private IPreferences Preferences { get; }
+        public MainGridModel GridModel { get; }
 
         private readonly ClientSettingsManager _settingsManager;
 
@@ -51,7 +49,17 @@ namespace HFM.Forms
             : base(model)
         {
             Model = model;
+            Logger = logger ?? NullLogger.Instance;
+            ServiceScopeFactory = serviceScopeFactory;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            ClientConfiguration = clientConfiguration;
+            ProteinService = proteinService ?? NullProteinService.Instance;
+
+            UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
+            Preferences = Model.Preferences;
             GridModel = new MainGridModel(Model.Preferences, Form, clientConfiguration);
+            GridModel.Load();
+
             GridModel.AfterResetBindings += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
@@ -67,14 +75,6 @@ namespace HFM.Forms
                         break;
                 }
             };
-
-            Logger = logger ?? NullLogger.Instance;
-            ServiceScopeFactory = serviceScopeFactory;
-            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
-            ClientConfiguration = clientConfiguration;
-            ProteinService = proteinService ?? NullProteinService.Instance;
-            UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
-            Preferences = Model.Preferences;
 
             _settingsManager = new ClientSettingsManager();
 
@@ -116,9 +116,6 @@ namespace HFM.Forms
 
         public void RestoreViewPreferences()
         {
-            GridModel.SortColumnName = Preferences.Get<string>(Preference.FormSortColumn);
-            GridModel.SortColumnOrder = Preferences.Get<ListSortDirection>(Preference.FormSortOrder);
-
             try
             {
                 // Restore the columns' state

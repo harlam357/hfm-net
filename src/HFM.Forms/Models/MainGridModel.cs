@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -27,25 +26,30 @@ namespace HFM.Forms.Models
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             _synchronizeInvoke = synchronizeInvoke;
             ClientConfiguration = clientConfiguration;
+
             _slotList = new SlotModelSortableBindingList();
             _slotList.RaiseListChangedEvents = false;
+            BindingSource = new BindingSource();
+        }
+
+        public override void Load()
+        {
+            SortColumnName = Preferences.Get<string>(Preference.FormSortColumn);
+            SortColumnOrder = Preferences.Get<ListSortDirection>(Preference.FormSortOrder);
+
             _slotList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
             _slotList.Sorted += (sender, e) =>
-                                {
-                                    SortColumnName = e.Name;
-                                    Preferences.Set(Preference.FormSortColumn, SortColumnName);
-                                    SortColumnOrder = e.Direction;
-                                    Preferences.Set(Preference.FormSortOrder, SortColumnOrder);
-                                };
-            BindingSource = new BindingSource();
+            {
+                SortColumnName = e.Name;
+                Preferences.Set(Preference.FormSortColumn, SortColumnName);
+                SortColumnOrder = e.Direction;
+                Preferences.Set(Preference.FormSortOrder, SortColumnOrder);
+            };
             BindingSource.DataSource = _slotList;
             BindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)BindingSource.Current;
-#if DEBUG
-            _slotList.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
-            BindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
-#endif
+
             // subscribe to services raising events that require a view action
-            Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(preferences, e);
+            Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(e);
             ClientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
         }
 
@@ -76,7 +80,7 @@ namespace HFM.Forms.Models
         // this method guards against SlotModel property name changes
         private string ValidateSortColumnNameOrDefault(string name)
         {
-            var properties = BindingSource.CurrencyManager.GetItemProperties();
+            var properties = TypeDescriptor.GetProperties(typeof(SlotModel));
             var property = properties.Find(name, true);
             return property is null ? DefaultSortColumnName : name;
         }
@@ -101,12 +105,12 @@ namespace HFM.Forms.Models
             }
         }
 
-        private void OnPreferenceChanged(IPreferences preferences, PreferenceChangedEventArgs e)
+        private void OnPreferenceChanged(PreferenceChangedEventArgs e)
         {
             switch (e.Preference)
             {
                 case Preference.OfflineLast:
-                    _slotList.OfflineClientsLast = preferences.Get<bool>(Preference.OfflineLast);
+                    _slotList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
                     Sort();
                     break;
                 case Preference.PPDCalculation:
