@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -28,10 +30,21 @@ namespace HFM.Forms.Models
 
             Preferences.PreferenceChanged += (s, e) =>
             {
+                string toolTip;
                 switch (e.Preference)
                 {
                     case Preference.MinimizeTo:
                         MinimizeTo = Preferences.Get<MinimizeToOption>(e.Preference);
+                        break;
+                    case Preference.BonusCalculation:
+                        toolTip = ClientsModel.BonusCalculationList
+                            .FirstOrDefault(x => x.GetValue<BonusCalculation>() == Preferences.Get<BonusCalculation>(Preference.BonusCalculation)).DisplayMember;
+                        NotifyToolTip = toolTip;
+                        break;
+                    case Preference.PPDCalculation:
+                        toolTip = ClientsModel.PPDCalculationList
+                            .FirstOrDefault(x => x.GetValue<PPDCalculation>() == Preferences.Get<PPDCalculation>(Preference.PPDCalculation)).DisplayMember;
+                        NotifyToolTip = toolTip;
                         break;
                 }
             };
@@ -174,6 +187,18 @@ namespace HFM.Forms.Models
                     _clientDetails = value;
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        private string _notifyToolTip;
+
+        public string NotifyToolTip
+        {
+            get => _notifyToolTip;
+            set
+            {
+                _notifyToolTip = value;
+                OnPropertyChanged();
             }
         }
     }

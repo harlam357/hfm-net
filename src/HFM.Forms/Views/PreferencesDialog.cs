@@ -214,13 +214,13 @@ namespace HFM.Forms.Views
             clientsColorLogFileCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.ColorLogFile));
             clientsDuplicateProjectCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DuplicateProjectCheck));
 
-            clientsPPDCalculationComboBox.DataSource = ClientsModel.PpdCalculationList;
-            clientsPPDCalculationComboBox.DisplayMember = "DisplayMember";
-            clientsPPDCalculationComboBox.ValueMember = "ValueMember";
+            clientsPPDCalculationComboBox.DataSource = ClientsModel.PPDCalculationList;
+            clientsPPDCalculationComboBox.DisplayMember = nameof(ListItem.DisplayMember);
+            clientsPPDCalculationComboBox.ValueMember = nameof(ListItem.ValueMember);
             clientsPPDCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.PPDCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
             clientsBonusCalculationComboBox.DataSource = ClientsModel.BonusCalculationList;
-            clientsBonusCalculationComboBox.DisplayMember = "DisplayMember";
-            clientsBonusCalculationComboBox.ValueMember = "ValueMember";
+            clientsBonusCalculationComboBox.DisplayMember = nameof(ListItem.DisplayMember);
+            clientsBonusCalculationComboBox.ValueMember = nameof(ListItem.ValueMember);
             clientsBonusCalculationComboBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.BonusCalculation), false, DataSourceUpdateMode.OnPropertyChanged);
             clientsDecimalPlacesUpDown.DataBindings.Add(ValuePropertyName, _presenter.Model.ClientsModel, nameof(ClientsModel.DecimalPlaces), false, DataSourceUpdateMode.OnPropertyChanged);
             clientsDisplayETADateCheckBox.BindChecked(_presenter.Model.ClientsModel, nameof(ClientsModel.DisplayETADate));

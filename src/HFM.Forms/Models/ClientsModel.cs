@@ -309,7 +309,7 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        public static IReadOnlyCollection<ListItem> PpdCalculationList { get; } = new List<ListItem>
+        public static IReadOnlyCollection<ListItem> PPDCalculationList { get; } = new List<ListItem>
         {
             new ListItem("Last Frame", PPDCalculation.LastFrame),
             new ListItem("Last Three Frames", PPDCalculation.LastThreeFrames),

@@ -23,8 +23,6 @@ namespace HFM.Forms.Views
     public interface IMainView : IWin32Form
     {
         DataGridView DataGridView { get; }
-
-        void ShowNotifyToolTip(string text);
     }
 
     // ReSharper disable InconsistentNaming
@@ -227,6 +225,9 @@ namespace HFM.Forms.Views
                     {
                         _notifyIcon.Visible = model.NotifyIconVisible;
                     }
+                    break;
+                case nameof(MainModel.NotifyToolTip):
+                    toolTipNotify.Show(model.NotifyToolTip, this, Size.Width - 150, 8, 2000);
                     break;
             }
         }
@@ -603,11 +604,6 @@ namespace HFM.Forms.Views
         private void mnuViewCycleCalculation_Click(object sender, EventArgs e)
         {
             _presenter.ViewCycleCalculationClick();
-        }
-
-        public void ShowNotifyToolTip(string text)
-        {
-            toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
         }
 
         #endregion

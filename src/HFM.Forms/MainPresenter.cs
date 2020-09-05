@@ -792,10 +792,6 @@ namespace HFM.Forms
             Preferences.Set(Preference.BonusCalculation, calculationType);
             Preferences.Save();
 
-            string calculationTypeString = (from item in ClientsModel.BonusCalculationList
-                                            where ((BonusCalculation)item.ValueMember) == calculationType
-                                            select item.DisplayMember).First();
-            _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();
         }
 
@@ -814,10 +810,6 @@ namespace HFM.Forms
             Preferences.Set(Preference.PPDCalculation, calculationType);
             Preferences.Save();
 
-            string calculationTypeString = (from item in ClientsModel.PpdCalculationList
-                                            where ((PPDCalculation)item.ValueMember) == calculationType
-                                            select item.DisplayMember).First();
-            _view.ShowNotifyToolTip(calculationTypeString);
             _view.DataGridView.Invalidate();
         }
 
