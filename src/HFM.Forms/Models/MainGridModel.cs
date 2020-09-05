@@ -13,32 +13,8 @@ namespace HFM.Forms.Models
 {
     public sealed class MainGridModel
     {
-        private SlotModel _selectedSlot;
-
-        public SlotModel SelectedSlot
-        {
-            get => _selectedSlot;
-            set
-            {
-                if (!ReferenceEquals(_selectedSlot, value))
-                {
-                    _selectedSlot = value;
-                    OnSelectedSlotChanged(new IndexChangedEventArgs(BindingSource.Position));
-                }
-            }
-        }
-
-        private readonly ISynchronizeInvoke _syncObject;
+        private readonly ISynchronizeInvoke _synchronizeInvoke;
         private readonly SlotModelSortableBindingList _slotList;
-        private readonly object _slotsListLock = new object();
-
-        public SlotTotals GetSlotTotals()
-        {
-            lock (_slotsListLock)
-            {
-                return SlotTotals.Create(_slotList.ToList());
-            }
-        }
 
         public IPreferences Preferences { get; }
 
@@ -46,20 +22,20 @@ namespace HFM.Forms.Models
 
         public BindingSource BindingSource { get; }
 
-        public MainGridModel(IPreferences preferences, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
+        public MainGridModel(IPreferences preferences, ISynchronizeInvoke synchronizeInvoke, ClientConfiguration clientConfiguration)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
-            _syncObject = syncObject;
+            _synchronizeInvoke = synchronizeInvoke;
             ClientConfiguration = clientConfiguration;
             _slotList = new SlotModelSortableBindingList();
             _slotList.RaiseListChangedEvents = false;
-            _slotList.OfflineClientsLast = preferences.Get<bool>(Preference.OfflineLast);
+            _slotList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
             _slotList.Sorted += (sender, e) =>
                                 {
                                     SortColumnName = e.Name;
-                                    preferences.Set(Preference.FormSortColumn, SortColumnName);
+                                    Preferences.Set(Preference.FormSortColumn, SortColumnName);
                                     SortColumnOrder = e.Direction;
-                                    preferences.Set(Preference.FormSortOrder, SortColumnOrder);
+                                    Preferences.Set(Preference.FormSortOrder, SortColumnOrder);
                                 };
             BindingSource = new BindingSource();
             BindingSource.DataSource = _slotList;
@@ -109,6 +85,21 @@ namespace HFM.Forms.Models
 
         public ListSortDirection SortColumnOrder { get; set; }
 
+        private SlotModel _selectedSlot;
+
+        public SlotModel SelectedSlot
+        {
+            get => _selectedSlot;
+            set
+            {
+                if (!ReferenceEquals(_selectedSlot, value))
+                {
+                    _selectedSlot = value;
+                    OnSelectedSlotChanged(new IndexChangedEventArgs(BindingSource.Position));
+                }
+            }
+        }
+
         private void OnPreferenceChanged(IPreferences preferences, PreferenceChangedEventArgs e)
         {
             switch (e.Preference)
@@ -144,15 +135,25 @@ namespace HFM.Forms.Models
             }
         }
 
+        private readonly object _slotsListLock = new object();
+
+        public SlotTotals GetSlotTotals()
+        {
+            lock (_slotsListLock)
+            {
+                return SlotTotals.Create(_slotList.ToList());
+            }
+        }
+
         private void ResetBindingsInternal()
         {
-            if (_syncObject is Control control && control.IsDisposed)
+            if (_synchronizeInvoke is Control control && control.IsDisposed)
             {
                 return;
             }
-            if (_syncObject.InvokeRequired)
+            if (_synchronizeInvoke.InvokeRequired)
             {
-                _syncObject.Invoke(new Action(ResetBindingsInternal), null);
+                _synchronizeInvoke.Invoke(new Action(ResetBindingsInternal), null);
                 return;
             }
 
@@ -181,14 +182,10 @@ namespace HFM.Forms.Models
             OnAfterResetBindings(EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Sort the grid model
-        /// </summary>
         public void Sort()
         {
             lock (_slotsListLock)
             {
-                // sort the list
                 SortInternal();
             }
         }
