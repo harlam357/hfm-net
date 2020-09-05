@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -14,9 +13,6 @@ namespace HFM.Forms.Models
 {
     public sealed class MainGridModel
     {
-        public event EventHandler AfterResetBindings;
-        public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
-
         private SlotModel _selectedSlot;
 
         public SlotModel SelectedSlot
@@ -85,14 +81,15 @@ namespace HFM.Forms.Models
             }
         }
 
-        public BindingSource BindingSource { get; }
-
         public IPreferences Preferences { get; }
 
         public ClientConfiguration ClientConfiguration { get; }
 
+        public BindingSource BindingSource { get; }
+
         public MainGridModel(IPreferences preferences, ISynchronizeInvoke syncObject, ClientConfiguration clientConfiguration)
         {
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             _syncObject = syncObject;
             ClientConfiguration = clientConfiguration;
             _slotList = new SlotModelSortableBindingList();
@@ -113,7 +110,6 @@ namespace HFM.Forms.Models
             BindingSource.ListChanged += (s, e) => Debug.WriteLine($"{s.GetType()} {e.GetType()}: {e.ListChangedType}");
 #endif
             // subscribe to services raising events that require a view action
-            Preferences = preferences;
             Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(preferences, e);
             ClientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
         }
@@ -161,7 +157,7 @@ namespace HFM.Forms.Models
             }
             if (_syncObject.InvokeRequired)
             {
-                _syncObject.Invoke(new MethodInvoker(ResetBindingsInternal), null);
+                _syncObject.Invoke(new Action(ResetBindingsInternal), null);
                 return;
             }
 
@@ -215,14 +211,18 @@ namespace HFM.Forms.Models
         {
             if (SelectedSlot == null) return;
 
-            int row = BindingSource.Find("Name", SelectedSlot.Name);
+            int row = BindingSource.Find(nameof(SlotModel.Name), SelectedSlot.Name);
             if (row > -1)
             {
                 BindingSource.Position = row;
             }
         }
 
+        public event EventHandler AfterResetBindings;
+
         private void OnAfterResetBindings(EventArgs e) => AfterResetBindings?.Invoke(this, e);
+
+        public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
 
         private void OnSelectedSlotChanged(IndexChangedEventArgs e) => SelectedSlotChanged?.Invoke(this, e);
     }
