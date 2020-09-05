@@ -28,47 +28,6 @@ namespace HFM.Forms.Models
             }
         }
 
-        private string _sortColumnName;
-        /// <summary>
-        /// Holds current Sort Column Name
-        /// </summary>
-        public string SortColumnName
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(_sortColumnName))
-                {
-                    _sortColumnName = DefaultSortColumnName;
-                }
-                return _sortColumnName;
-            }
-            set
-            {
-                if (_sortColumnName != value)
-                {
-                    _sortColumnName = String.IsNullOrWhiteSpace(value)
-                        ? DefaultSortColumnName
-                        : ValidateSortColumnNameOrDefault(value);
-                }
-            }
-        }
-
-        // SortColumnName stores the actual SlotModel property name
-        // this method guards against SlotModel property name changes
-        private string ValidateSortColumnNameOrDefault(string name)
-        {
-            var properties = BindingSource.CurrencyManager.GetItemProperties();
-            var property = properties.Find(name, true);
-            return property is null ? DefaultSortColumnName : name;
-        }
-
-        private string DefaultSortColumnName { get; } = nameof(SlotModel.Name);
-
-        /// <summary>
-        /// Holds current Sort Column Order
-        /// </summary>
-        public ListSortDirection SortColumnOrder { get; set; }
-
         private readonly ISynchronizeInvoke _syncObject;
         private readonly SlotModelSortableBindingList _slotList;
         private readonly object _slotsListLock = new object();
@@ -113,6 +72,42 @@ namespace HFM.Forms.Models
             Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(preferences, e);
             ClientConfiguration.ClientConfigurationChanged += (s, e) => ResetBindings();
         }
+
+        private string _sortColumnName;
+
+        public string SortColumnName
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(_sortColumnName))
+                {
+                    _sortColumnName = DefaultSortColumnName;
+                }
+                return _sortColumnName;
+            }
+            set
+            {
+                if (_sortColumnName != value)
+                {
+                    _sortColumnName = String.IsNullOrWhiteSpace(value)
+                        ? DefaultSortColumnName
+                        : ValidateSortColumnNameOrDefault(value);
+                }
+            }
+        }
+
+        // SortColumnName stores the actual SlotModel property name
+        // this method guards against SlotModel property name changes
+        private string ValidateSortColumnNameOrDefault(string name)
+        {
+            var properties = BindingSource.CurrencyManager.GetItemProperties();
+            var property = properties.Find(name, true);
+            return property is null ? DefaultSortColumnName : name;
+        }
+
+        private string DefaultSortColumnName { get; } = nameof(SlotModel.Name);
+
+        public ListSortDirection SortColumnOrder { get; set; }
 
         private void OnPreferenceChanged(IPreferences preferences, PreferenceChangedEventArgs e)
         {
