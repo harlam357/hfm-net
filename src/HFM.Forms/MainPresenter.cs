@@ -52,14 +52,6 @@ namespace HFM.Forms
         {
             Model = model;
             GridModel = new MainGridModel(Model.Preferences, Form, clientConfiguration);
-            GridModel.AfterResetBindings += (s, e) =>
-            {
-                // run asynchronously so binding operation can finish
-                Form.BeginInvoke(new Action(() =>
-                {
-                    _view.RefreshControlsWithTotalsData(GridModel.GetSlotTotals());
-                }), null);
-            };
             GridModel.SelectedSlotChanged += (s, e) =>
             {
                 if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)

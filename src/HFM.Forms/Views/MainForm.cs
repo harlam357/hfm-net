@@ -27,8 +27,6 @@ namespace HFM.Forms.Views
         void ShowGridContextMenuStrip(Point screenLocation);
 
         void ShowNotifyToolTip(string text);
-
-        void RefreshControlsWithTotalsData(SlotTotals totals);
     }
 
     // ReSharper disable InconsistentNaming
@@ -160,6 +158,16 @@ namespace HFM.Forms.Views
 
         private void LoadGridData(MainGridModel gridModel)
         {
+            gridModel.AfterResetBindings += (s, e) =>
+            {
+                // run asynchronously so binding operation can finish
+                BeginInvoke(new Action(() =>
+                {
+                    DisplaySelectedSlot(gridModel.SelectedSlot);
+                    RefreshControlsWithTotalsData(gridModel.SlotTotals);
+                }));
+            };
+
             gridModel.PropertyChanged += (s, e) =>
             {
                 switch (e.PropertyName)
@@ -229,21 +237,14 @@ namespace HFM.Forms.Views
         {
             if (selectedSlot != null)
             {
-                SetWorkUnitInfos(selectedSlot.WorkUnitInfos, selectedSlot.SlotType);
+                queueControl.SetWorkUnitInfos(selectedSlot.WorkUnitInfos, selectedSlot.SlotType);
                 SetLogLines(selectedSlot, selectedSlot.CurrentLogLines);
             }
             else
             {
-                ClearLogAndQueueViewer();
+                txtLogFile.SetNoLogLines();
+                queueControl.SetWorkUnitInfos(null, SlotType.Unknown);
             }
-        }
-
-        private void ClearLogAndQueueViewer()
-        {
-            // clear the log text
-            txtLogFile.SetNoLogLines();
-            // clear the queue control
-            SetWorkUnitInfos(null, SlotType.Unknown);
         }
 
         private void SetLogLines(SlotModel selectedSlot, IList<LogLine> logLines)
@@ -605,17 +606,6 @@ namespace HFM.Forms.Views
             toolTipNotify.Show(text, this, Size.Width - 150, 8, 2000);
         }
 
-        public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<SlotWorkUnitDictionary, SlotType>(SetWorkUnitInfos), workUnitInfos, slotType);
-                return;
-            }
-
-            queueControl.SetWorkUnitInfos(workUnitInfos, slotType);
-        }
-
         #endregion
 
         #region Tools Menu Click Handlers
@@ -674,9 +664,7 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        #region Background Work Routines
-
-        public void RefreshControlsWithTotalsData(SlotTotals totals)
+        private void RefreshControlsWithTotalsData(SlotTotals totals)
         {
             var preferences = _presenter.Model.Preferences;
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
@@ -741,8 +729,6 @@ namespace HFM.Forms.Views
 
             statusLabelPPW.Text = val;
         }
-
-        #endregion
 
         #region System Tray Icon Click Handlers
 

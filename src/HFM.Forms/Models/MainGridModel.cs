@@ -138,11 +138,15 @@ namespace HFM.Forms.Models
 
         private readonly object _slotsListLock = new object();
 
-        public SlotTotals GetSlotTotals()
+        private SlotTotals _slotTotals;
+
+        public SlotTotals SlotTotals
         {
-            lock (_slotsListLock)
+            get => _slotTotals;
+            private set
             {
-                return SlotTotals.Create(_slotList.ToList());
+                _slotTotals = value;
+                OnPropertyChanged();
             }
         }
 
@@ -171,12 +175,10 @@ namespace HFM.Forms.Models
                 }
                 Debug.WriteLine("Number of slots: {0}", BindingSource.Count);
 
-                // sort the list
                 SortInternal();
-                // reset selected slot
                 ResetSelectedSlot();
-                // find duplicates
                 SlotModel.FindDuplicateProjects(slots);
+                SlotTotals = SlotTotals.Create(slots);
 
                 BindingSource.ResetBindings(false);
             }
