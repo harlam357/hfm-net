@@ -11,7 +11,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public sealed class MainGridModel
+    public sealed class MainGridModel : ViewModelBase
     {
         private readonly ISynchronizeInvoke _synchronizeInvoke;
         private readonly SlotModelSortableBindingList _slotList;
@@ -96,6 +96,7 @@ namespace HFM.Forms.Models
                 {
                     _selectedSlot = value;
                     OnSelectedSlotChanged(new IndexChangedEventArgs(BindingSource.Position));
+                    OnPropertyChanged();
                 }
             }
         }

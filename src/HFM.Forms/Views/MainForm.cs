@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -12,6 +13,7 @@ using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
+using HFM.Log;
 using HFM.Preferences;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +29,6 @@ namespace HFM.Forms.Views
         void ShowGridContextMenuStrip(Point screenLocation);
 
         void ShowNotifyToolTip(string text);
-
-        void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType slotType);
 
         void RefreshControlsWithTotalsData(SlotTotals totals);
     }
@@ -64,6 +64,7 @@ namespace HFM.Forms.Views
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadData(_presenter.Model);
+            LoadGridData(_presenter.GridModel);
         }
 
         private void LoadData(MainModel model)
@@ -161,6 +162,20 @@ namespace HFM.Forms.Views
             #endregion
         }
 
+        private void LoadGridData(MainGridModel gridModel)
+        {
+            gridModel.PropertyChanged += (s, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(MainGridModel.SelectedSlot):
+                        // run asynchronously so binding operation can finish
+                        BeginInvoke(new Action(() => DisplaySelectedSlot(gridModel.SelectedSlot)));
+                        break;
+                }
+            };
+        }
+
         private void ShowHideLogWindow(bool show)
         {
             if (!show)
@@ -211,6 +226,117 @@ namespace HFM.Forms.Views
                         _notifyIcon.Visible = model.NotifyIconVisible;
                     }
                     break;
+            }
+        }
+
+        private void DisplaySelectedSlot(SlotModel selectedSlot)
+        {
+            if (selectedSlot != null)
+            {
+                SetWorkUnitInfos(selectedSlot.WorkUnitInfos, selectedSlot.SlotType);
+
+                // if we've got a good queue read, let queueControl_QueueIndexChanged()
+                // handle populating the log lines.
+                if (selectedSlot.WorkUnitInfos != null) return;
+
+                // otherwise, load up the CurrentLogLines
+                SetLogLines(selectedSlot, selectedSlot.CurrentLogLines);
+            }
+            else
+            {
+                ClearLogAndQueueViewer();
+            }
+        }
+
+        private void QueueIndexChanged(int index)
+        {
+            if (index == -1)
+            {
+                txtLogFile.SetNoLogLines();
+                return;
+            }
+
+            var selectedSlot = _presenter.GridModel.SelectedSlot;
+            if (selectedSlot != null)
+            {
+                // Check the UnitLogLines array against the requested Queue Index - Issue 171
+                try
+                {
+                    var logLines = selectedSlot.GetLogLinesForQueueIndex(index);
+                    // show the current log even if not the current unit index - 2/17/12
+                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
+                    {
+                        logLines = selectedSlot.CurrentLogLines;
+                    }
+
+                    SetLogLines(selectedSlot, logLines);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    txtLogFile.SetNoLogLines();
+                }
+            }
+            else
+            {
+                ClearLogAndQueueViewer();
+            }
+        }
+
+        private void ClearLogAndQueueViewer()
+        {
+            // clear the log text
+            txtLogFile.SetNoLogLines();
+            // clear the queue control
+            SetWorkUnitInfos(null, SlotType.Unknown);
+        }
+
+        private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
+        {
+            var preferences = _presenter.Model.Preferences;
+
+            /*** Checked LogLine Count ***/
+            if (logLines != null && logLines.Count > 0)
+            {
+                // Different Client... Load LogLines
+                if (txtLogFile.LogOwnedByInstanceName.Equals(instance.Name) == false)
+                {
+                    txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                }
+                // Textbox has text lines
+                else if (txtLogFile.Lines.Length > 0)
+                {
+                    string lastLogLine = String.Empty;
+
+                    try // to get the last LogLine from the instance
+                    {
+                        lastLogLine = logLines[logLines.Count - 1].ToString();
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        // eat it
+                    }
+
+                    // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
+                    // Otherwise, the log has not changed, don't update and perform the log "flicker".
+                    if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
+                    {
+                        txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                    }
+                }
+                // Nothing in the Textbox... Load LogLines
+                else
+                {
+                    txtLogFile.SetLogLines(logLines, instance.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                }
+            }
+            else
+            {
+                txtLogFile.SetNoLogLines();
+            }
+
+            if (preferences.Get<bool>(Preference.FollowLog))
+            {
+                txtLogFile.ScrollToBottom();
             }
         }
 
@@ -323,7 +449,7 @@ namespace HFM.Forms.Views
 
         private void queueControl_QueueIndexChanged(object sender, QueueIndexChangedEventArgs e)
         {
-            _presenter.QueueIndexChanged(e.Index);
+            QueueIndexChanged(e.Index);
         }
 
         private void dataGridView1_Sorted(object sender, EventArgs e)

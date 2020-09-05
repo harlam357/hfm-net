@@ -25,7 +25,6 @@ using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
-using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -53,16 +52,15 @@ namespace HFM.Forms
         {
             Model = model;
             GridModel = new MainGridModel(Model.Preferences, Form, clientConfiguration);
-            GridModel.AfterResetBindings += (sender, e) =>
+            GridModel.AfterResetBindings += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
                 Form.BeginInvoke(new Action(() =>
                 {
-                    DisplaySelectedSlotData();
                     _view.RefreshControlsWithTotalsData(GridModel.GetSlotTotals());
                 }), null);
             };
-            GridModel.SelectedSlotChanged += (sender, e) =>
+            GridModel.SelectedSlotChanged += (s, e) =>
             {
                 if (e.Index >= 0 && e.Index < _view.DataGridView.Rows.Count)
                 {
@@ -70,25 +68,23 @@ namespace HFM.Forms
                     Form.BeginInvoke(new Action(() =>
                     {
                         _view.DataGridView.Rows[e.Index].Selected = true;
-                        DisplaySelectedSlotData();
                     }), null);
                 }
             };
-            GridModel.AfterResetBindings += (sender, e) =>
+            GridModel.AfterResetBindings += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
-                Form.BeginInvoke(new Action(() =>
-                {
-                    Model.GridModelSelectedSlotChanged(sender, e);
-                }), null);
+                Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(s, e)), null);
             };
-            GridModel.SelectedSlotChanged += (sender, e) =>
+            GridModel.PropertyChanged += (s, e) =>
             {
-                // run asynchronously so binding operation can finish
-                Form.BeginInvoke(new Action(() =>
+                switch (e.PropertyName)
                 {
-                    Model.GridModelSelectedSlotChanged(sender, e);
-                }), null);
+                    case nameof(MainGridModel.SelectedSlot):
+                        // run asynchronously so binding operation can finish
+                        Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(s, e)), null);
+                        break;
+                }
             };
 
             Logger = logger ?? NullLogger.Instance;
@@ -293,118 +289,6 @@ namespace HFM.Forms
         #endregion
 
         #region Data Grid View Handling Methods
-
-        private void DisplaySelectedSlotData()
-        {
-            if (GridModel.SelectedSlot != null)
-            {
-                _view.SetWorkUnitInfos(GridModel.SelectedSlot.WorkUnitInfos,
-                                       GridModel.SelectedSlot.SlotType);
-
-                // if we've got a good queue read, let queueControl_QueueIndexChanged()
-                // handle populating the log lines.
-                if (GridModel.SelectedSlot.WorkUnitInfos != null) return;
-
-                // otherwise, load up the CurrentLogLines
-                SetLogLines(GridModel.SelectedSlot, GridModel.SelectedSlot.CurrentLogLines);
-            }
-            else
-            {
-                ClearLogAndQueueViewer();
-            }
-        }
-
-        public void QueueIndexChanged(int index)
-        {
-            if (index == -1)
-            {
-                _view.LogFileViewer.SetNoLogLines();
-                return;
-            }
-
-            if (GridModel.SelectedSlot != null)
-            {
-                // Check the UnitLogLines array against the requested Queue Index - Issue 171
-                try
-                {
-                    var logLines = GridModel.SelectedSlot.GetLogLinesForQueueIndex(index);
-                    // show the current log even if not the current unit index - 2/17/12
-                    if (logLines == null) // && index == _gridModel.SelectedSlot.Queue.CurrentWorkUnitKey)
-                    {
-                        logLines = GridModel.SelectedSlot.CurrentLogLines;
-                    }
-
-                    SetLogLines(GridModel.SelectedSlot, logLines);
-                }
-                catch (ArgumentOutOfRangeException ex)
-                {
-                    Logger.Error(ex.Message, ex);
-                    _view.LogFileViewer.SetNoLogLines();
-                }
-            }
-            else
-            {
-                ClearLogAndQueueViewer();
-            }
-        }
-
-        private void ClearLogAndQueueViewer()
-        {
-            // clear the log text
-            _view.LogFileViewer.SetNoLogLines();
-            // clear the queue control
-            _view.SetWorkUnitInfos(null, SlotType.Unknown);
-        }
-
-        private void SetLogLines(SlotModel instance, IList<LogLine> logLines)
-        {
-            /*** Checked LogLine Count ***/
-            if (logLines != null && logLines.Count > 0)
-            {
-                // Different Client... Load LogLines
-                if (_view.LogFileViewer.LogOwnedByInstanceName.Equals(instance.Name) == false)
-                {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
-                }
-                // Textbox has text lines
-                else if (_view.LogFileViewer.Lines.Length > 0)
-                {
-                    string lastLogLine = String.Empty;
-
-                    try // to get the last LogLine from the instance
-                    {
-                        lastLogLine = logLines[logLines.Count - 1].ToString();
-                    }
-                    catch (ArgumentOutOfRangeException ex)
-                    {
-                        // even though i've checked the count above, it could have changed in between then
-                        // and now... and if the count is 0 it will yield this exception.  Log It!!!
-                        Logger.Warn(String.Format(Core.Logging.Logger.NameFormat, instance.Name, ex.Message), ex);
-                    }
-
-                    // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
-                    // Otherwise, the log has not changed, don't update and perform the log "flicker".
-                    if (_view.LogFileViewer.Lines[_view.LogFileViewer.Lines.Length - 1].Equals(lastLogLine) == false)
-                    {
-                        _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
-                    }
-                }
-                // Nothing in the Textbox... Load LogLines
-                else
-                {
-                    _view.LogFileViewer.SetLogLines(logLines, instance.Name, Preferences.Get<bool>(Preference.ColorLogFile));
-                }
-            }
-            else
-            {
-                _view.LogFileViewer.SetNoLogLines();
-            }
-
-            if (Preferences.Get<bool>(Preference.FollowLog))
-            {
-                _view.LogFileViewer.ScrollToBottom();
-            }
-        }
 
         private void DataGridViewColumnDisplayIndexChanged()
         {
