@@ -1048,11 +1048,6 @@ namespace HFM.Forms
 
         #region Other Handling Methods
 
-        public void ApplyColorLogFileSetting()
-        {
-            _view.LogFileViewer.HighlightLines(Preferences.Get<bool>(Preference.ColorLogFile));
-        }
-
         public void SetUserStatsDataViewStyle(bool showTeamStats)
         {
             UserStatsDataModel.SetViewStyle(showTeamStats);

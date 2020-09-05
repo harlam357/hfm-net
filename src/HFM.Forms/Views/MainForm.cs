@@ -22,8 +22,6 @@ namespace HFM.Forms.Views
 {
     public interface IMainView : IWin32Form
     {
-        LogFileViewer LogFileViewer { get; }
-
         DataGridView DataGridView { get; }
 
         void ShowGridContextMenuStrip(Point screenLocation);
@@ -42,8 +40,6 @@ namespace HFM.Forms.Views
             get { return mnuToolsHistory.Enabled; }
             set { mnuToolsHistory.Enabled = value; }
         }
-
-        public LogFileViewer LogFileViewer { get { return txtLogFile; } }
 
         public DataGridView DataGridView { get { return dataGridView1; } }
 
@@ -129,7 +125,7 @@ namespace HFM.Forms.Views
                 switch (e.Preference)
                 {
                     case Preference.ColorLogFile:
-                        _presenter.ApplyColorLogFileSetting();
+                        txtLogFile.HighlightLines(_presenter.Model.Preferences.Get<bool>(Preference.ColorLogFile));
                         break;
                     case Preference.EocUserId:
                         _presenter.UserStatsDataModel.Refresh();
