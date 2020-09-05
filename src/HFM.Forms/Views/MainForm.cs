@@ -47,7 +47,8 @@ namespace HFM.Forms.Views
             // This call is Required by the Windows Form Designer
             InitializeComponent();
 
-            // Set Main Form Text
+            SetupDataGridView();
+            queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
         }
 
@@ -99,14 +100,6 @@ namespace HFM.Forms.Views
             statusLabelLeft.BindText(model, nameof(MainModel.ClientDetails));
 
             model.PropertyChanged += ModelPropertyChanged;
-
-            // Manually Create the Columns - Issue 41
-            dataGridView1.AutoGenerateColumns = false;
-            SetupDataGridViewColumns(dataGridView1);
-            // Add Column Selector
-            new DataGridViewColumnSelector(dataGridView1);
-            // Give the Queue Control access to the Protein Collection
-            queueControl.SetProteinService(_presenter.ProteinService);
 
             // Initialize the Presenter
             // Restore View Preferences (must be done AFTER DataGridView columns are setup)
@@ -779,6 +772,14 @@ namespace HFM.Forms.Views
         }
 
         #endregion
+
+        private void SetupDataGridView()
+        {
+            dataGridView1.AutoGenerateColumns = false;
+            SetupDataGridViewColumns(dataGridView1);
+
+            new DataGridViewColumnSelector(dataGridView1);
+        }
     }
 
     // ReSharper restore InconsistentNaming
