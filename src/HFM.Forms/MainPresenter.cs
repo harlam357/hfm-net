@@ -328,36 +328,6 @@ namespace HFM.Forms
             GridModel.ResetSelectedSlot();
         }
 
-        public void DataGridViewMouseDown(int coordX, int coordY, MouseButtons button, int clicks)
-        {
-            DataGridView.HitTestInfo hti = _view.DataGridView.HitTest(coordX, coordY);
-            if (button == MouseButtons.Right)
-            {
-                if (hti.Type == DataGridViewHitTestType.Cell)
-                {
-                    if (_view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected == false)
-                    {
-                        _view.DataGridView.Rows[hti.RowIndex].Cells[hti.ColumnIndex].Selected = true;
-                    }
-
-                    // Check for SelectedSlot, and get out if not found
-                    if (GridModel.SelectedSlot == null) return;
-
-                    _view.ShowGridContextMenuStrip(_view.DataGridView.PointToScreen(new Point(coordX, coordY)));
-                }
-            }
-            if (button == MouseButtons.Left && clicks == 2)
-            {
-                if (hti.Type == DataGridViewHitTestType.Cell)
-                {
-                    // Check for SelectedSlot, and get out if not found
-                    if (GridModel.SelectedSlot == null) return;
-
-                    // TODO: What to do on double left click on v7 client?
-                }
-            }
-        }
-
         #endregion
 
         #region File Handling Methods

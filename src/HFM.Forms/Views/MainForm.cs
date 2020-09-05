@@ -24,8 +24,6 @@ namespace HFM.Forms.Views
     {
         DataGridView DataGridView { get; }
 
-        void ShowGridContextMenuStrip(Point screenLocation);
-
         void ShowNotifyToolTip(string text);
     }
 
@@ -410,12 +408,18 @@ namespace HFM.Forms.Views
 
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
-            _presenter.DataGridViewMouseDown(e.X, e.Y, e.Button, e.Clicks);
-        }
-
-        public void ShowGridContextMenuStrip(Point screenLocation)
-        {
-            gridContextMenuStrip.Show(screenLocation);
+            var hitTest = dataGridView1.HitTest(e.X, e.Y);
+            if (e.Button == MouseButtons.Right)
+            {
+                if (hitTest.Type == DataGridViewHitTestType.Cell)
+                {
+                    if (dataGridView1.Rows[hitTest.RowIndex].Cells[hitTest.ColumnIndex].Selected == false)
+                    {
+                        dataGridView1.Rows[hitTest.RowIndex].Cells[hitTest.ColumnIndex].Selected = true;
+                    }
+                    gridContextMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
+                }
+            }
         }
 
         #endregion
