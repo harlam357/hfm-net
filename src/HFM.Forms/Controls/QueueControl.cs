@@ -67,8 +67,8 @@ namespace HFM.Forms.Controls
 
                 cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
                 cboQueueIndex.DataSource = CreateEntryNameCollection(_slotWorkUnitInfos);
-                cboQueueIndex.DisplayMember = "DisplayMember";
-                cboQueueIndex.ValueMember = "ValueMember";
+                cboQueueIndex.DisplayMember = nameof(ListItem.DisplayMember);
+                cboQueueIndex.ValueMember = nameof(ListItem.ValueMember);
                 cboQueueIndex.SelectedIndex = -1;
                 cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
