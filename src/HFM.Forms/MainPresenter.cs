@@ -81,8 +81,6 @@ namespace HFM.Forms
             ClientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
         }
 
-        private IMainView _view;
-
         public override IWin32Form Form
         {
             get
@@ -93,8 +91,6 @@ namespace HFM.Forms
 
                     base.Form = OnCreateForm();
                     base.Form.Closed += OnClosed;
-
-                    _view = (IMainView)base.Form;
                 }
                 return base.Form;
             }
@@ -399,23 +395,6 @@ namespace HFM.Forms
 
         #endregion
 
-        #region Edit Menu Handling Methods
-
-        public void EditPreferencesClick()
-        {
-            using (var scope = ServiceScopeFactory.CreateScope())
-            {
-                using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
-                {
-                    presenter.ShowDialog(Form);
-                    // TODO: Invalidate View by mutating the Model
-                    _view.DataGridView.Invalidate();
-                }
-            }
-        }
-
-        #endregion
-
         #region Help Menu Handling Methods
 
         public void ShowHfmLogFile(LocalProcessService localProcess)
@@ -661,7 +640,6 @@ namespace HFM.Forms
                                     ? TimeFormatting.Format1
                                     : TimeFormatting.None);
             Preferences.Save();
-            _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleCompletedCountStyleClick()
@@ -671,14 +649,12 @@ namespace HFM.Forms
                                     ? UnitTotalsType.ClientStart
                                     : UnitTotalsType.All);
             Preferences.Save();
-            _view.DataGridView.Invalidate();
         }
 
         public void ViewToggleVersionInformationClick()
         {
             Preferences.Set(Preference.DisplayVersions, !Preferences.Get<bool>(Preference.DisplayVersions));
             Preferences.Save();
-            _view.DataGridView.Invalidate();
         }
 
         public void ViewCycleBonusCalculationClick()
@@ -695,8 +671,6 @@ namespace HFM.Forms
             calculationType = (BonusCalculation)typeIndex;
             Preferences.Set(Preference.BonusCalculation, calculationType);
             Preferences.Save();
-
-            _view.DataGridView.Invalidate();
         }
 
         public void ViewCycleCalculationClick()
@@ -713,8 +687,6 @@ namespace HFM.Forms
             calculationType = (PPDCalculation)typeIndex;
             Preferences.Set(Preference.PPDCalculation, calculationType);
             Preferences.Save();
-
-            _view.DataGridView.Invalidate();
         }
 
         #endregion

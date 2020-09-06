@@ -21,22 +21,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Views
 {
-    public interface IMainView : IWin32Form
-    {
-        DataGridView DataGridView { get; }
-    }
-
-    // ReSharper disable InconsistentNaming
-
-    public partial class MainForm : FormBase, IMainView
+    public partial class MainForm : FormBase, IWin32Form
     {
         public bool WorkUnitHistoryMenuEnabled
         {
             get { return mnuToolsHistory.Enabled; }
             set { mnuToolsHistory.Enabled = value; }
         }
-
-        public DataGridView DataGridView { get { return dataGridView1; } }
 
         private readonly MainPresenter _presenter;
         private NotifyIcon _notifyIcon;
@@ -523,7 +514,14 @@ namespace HFM.Forms.Views
 
         private void mnuEditPreferences_Click(object sender, EventArgs e)
         {
-            _presenter.EditPreferencesClick();
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
+                {
+                    presenter.ShowDialog(_presenter.Form);
+                    dataGridView1.Invalidate();
+                }
+            }
         }
 
         #endregion
@@ -643,26 +641,31 @@ namespace HFM.Forms.Views
         private void mnuViewToggleDateTime_Click(object sender, EventArgs e)
         {
             _presenter.ViewToggleDateTimeClick();
+            dataGridView1.Invalidate();
         }
 
         private void mnuViewToggleCompletedCountStyle_Click(object sender, EventArgs e)
         {
             _presenter.ViewToggleCompletedCountStyleClick();
+            dataGridView1.Invalidate();
         }
 
         private void mnuViewToggleVersionInformation_Click(object sender, EventArgs e)
         {
             _presenter.ViewToggleVersionInformationClick();
+            dataGridView1.Invalidate();
         }
 
         private void mnuViewToggleBonusCalculation_Click(object sender, EventArgs e)
         {
             _presenter.ViewCycleBonusCalculationClick();
+            dataGridView1.Invalidate();
         }
 
         private void mnuViewCycleCalculation_Click(object sender, EventArgs e)
         {
             _presenter.ViewCycleCalculationClick();
+            dataGridView1.Invalidate();
         }
 
         #endregion
@@ -847,6 +850,4 @@ namespace HFM.Forms.Views
             new DataGridViewColumnSelector(dataGridView1);
         }
     }
-
-    // ReSharper restore InconsistentNaming
 }
