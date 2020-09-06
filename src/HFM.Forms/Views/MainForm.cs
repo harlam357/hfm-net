@@ -403,7 +403,11 @@ namespace HFM.Forms.Views
             DataGridViewColumnDisplayIndexChanged();
 
             _presenter.ViewShown();
-            _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_presenter.Model.Preferences));
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
+                _presenter.CheckForUpdateOnStartup(updateService);
+            }
         }
 
         private void DataGridViewColumnDisplayIndexChanged()
@@ -530,7 +534,11 @@ namespace HFM.Forms.Views
 
         private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
         {
-            _presenter.CheckForUpdateClick(new ApplicationUpdateService(_presenter.Model.Preferences));
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
+                _presenter.CheckForUpdateClick(updateService);
+            }
         }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)

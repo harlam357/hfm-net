@@ -65,6 +65,9 @@ namespace HFM.Core
 
             // LocalProcessService - Singleton
             serviceRegistry.RegisterInstance(Services.LocalProcessService.Default);
+
+            // ApplicationUpdateService - Scoped
+            serviceRegistry.Register<ApplicationUpdateService>(new PerScopeLifetime());
         }
     }
 }
