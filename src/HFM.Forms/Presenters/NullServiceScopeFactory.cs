@@ -6,9 +6,6 @@ namespace HFM.Forms.Presenters
     {
         public static NullServiceScopeFactory Instance { get; } = new NullServiceScopeFactory();
 
-        public IServiceScope CreateScope()
-        {
-            return null;
-        }
+        public IServiceScope CreateScope() => null;
     }
 }

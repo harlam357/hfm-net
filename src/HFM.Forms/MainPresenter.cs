@@ -50,7 +50,7 @@ namespace HFM.Forms
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;
-            ServiceScopeFactory = serviceScopeFactory;
+            ServiceScopeFactory = serviceScopeFactory ?? NullServiceScopeFactory.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
             ClientConfiguration = clientConfiguration;
             ProteinService = proteinService ?? NullProteinService.Instance;
