@@ -680,7 +680,10 @@ namespace HFM.Forms.Views
 
         private void mnuToolsPointsCalculator_Click(object sender, EventArgs e)
         {
-            _presenter.ToolsPointsCalculatorClick();
+            var scope = _presenter.ServiceScopeFactory.CreateScope();
+            var calculatorForm = scope.ServiceProvider.GetRequiredService<ProteinCalculatorForm>();
+            calculatorForm.Closed += delegate { scope.Dispose(); };
+            calculatorForm.Show();
         }
 
         private void mnuToolsHistory_Click(object sender, EventArgs e)

@@ -775,14 +775,6 @@ namespace HFM.Forms
             }
         }
 
-        internal void ToolsPointsCalculatorClick()
-        {
-            var scope = ServiceScopeFactory.CreateScope();
-            IWin32Form calculatorForm = scope.ServiceProvider.GetRequiredService<ProteinCalculatorForm>();
-            calculatorForm.Closed += (s, e) => scope.Dispose();
-            calculatorForm.Show();
-        }
-
         #endregion
 
         #region Web Menu Handling Methods
