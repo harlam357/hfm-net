@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using HFM.Preferences.Data;
 
@@ -37,11 +38,41 @@ namespace HFM.Preferences.Internal
         public ExpressionMetadata(PreferenceData data, Expression<Func<PreferenceData, T>> propertyExpression, bool readOnly)
         {
             _data = data;
+            DefaultPreferenceDataPropertyIfNull(data, propertyExpression);
             _getter = propertyExpression.Compile();
             if (!readOnly)
             {
                 _setter = propertyExpression.ToSetter();
             }
+        }
+
+        private static void DefaultPreferenceDataPropertyIfNull(PreferenceData data, LambdaExpression propertyExpression)
+        {
+            var pi = GetPreferenceDataPropertyInfo(propertyExpression);
+            if (pi != null && pi.PropertyType != typeof(string))
+            {
+                var value = pi.GetValue(data);
+                if (value is null)
+                {
+                    pi.SetValue(data, Activator.CreateInstance(pi.PropertyType));
+                }
+            }
+        }
+
+        private static PropertyInfo GetPreferenceDataPropertyInfo(LambdaExpression propertyExpression)
+        {
+            if (propertyExpression.Body is MemberExpression memberExpression)
+            {
+                while (memberExpression != null)
+                {
+                    if (memberExpression.Member is PropertyInfo pi && pi.DeclaringType == typeof(PreferenceData))
+                    {
+                        return pi;
+                    }
+                    memberExpression = memberExpression.Expression as MemberExpression;
+                }
+            }
+            return null;
         }
 
         public Type DataType => typeof(T);

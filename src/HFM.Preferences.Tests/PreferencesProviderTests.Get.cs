@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -194,6 +194,23 @@ namespace HFM.Preferences
             }
             sw.Stop();
             Debug.WriteLine("Get Collection: {0}ms", sw.ElapsedMilliseconds);
+        }
+
+        [Test]
+        public void PreferencesProvider_Get_SetsDefaultPreferencesDataPropertyValueWhenItIsNull()
+        {
+            // Arrange
+            var data = new PreferenceData();
+            data.MainWindowGrid = null;
+            var preferences = new MockPreferencesProvider(data);
+            // Act
+            var columns = preferences.Get<ICollection<string>>(Preference.FormColumns);
+            var sortOrder = preferences.Get<ListSortDirection>(Preference.FormSortOrder);
+            var sortColumn = preferences.Get<string>(Preference.FormSortColumn);
+            // Assert
+            Assert.IsNull(columns);
+            Assert.AreEqual(ListSortDirection.Ascending, sortOrder);
+            Assert.AreEqual(String.Empty, sortColumn);
         }
     }
 }
