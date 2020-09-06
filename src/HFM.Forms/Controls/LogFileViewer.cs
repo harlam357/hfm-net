@@ -22,6 +22,21 @@ namespace HFM.Forms.Controls
 
         private const int MaxDisplayableLogLines = 500;
 
+        private bool _colorLogFile;
+
+        public bool ColorLogFile
+        {
+            get => _colorLogFile;
+            set
+            {
+                if (_colorLogFile != value)
+                {
+                    _colorLogFile = value;
+                    HighlightLines(_colorLogFile);
+                }
+            }
+        }
+
         public void SetLogLines(ICollection<LogLine> lines, string logOwnedByInstance, bool highlightLines)
         {
             if (InvokeRequired)
@@ -45,24 +60,20 @@ namespace HFM.Forms.Controls
 
         public void HighlightLines(bool value)
         {
-#if DEBUG
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-#endif
+            if (_logLines is null) return;
+
             if (value)
             {
-                Rtf = BuildRtfString();
+                Rtf = BuildRtfString(_logLines);
             }
             else
             {
                 Rtf = null;
                 Lines = _logLines.Select(line => line.Raw.Replace("\r", String.Empty)).ToArray();
             }
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("HighlightLines: {0:#,##0} ms", sw.ElapsedMilliseconds);
-#endif
         }
 
-        private string BuildRtfString()
+        private static string BuildRtfString(ICollection<LogLine> logLines)
         {
             // cf1 - Dark Green
             // cf2 - Dark Red
@@ -72,7 +83,7 @@ namespace HFM.Forms.Controls
 
             var sb = new StringBuilder();
             sb.Append(@"{\rtf1\ansi\deff0{\colortbl;\red0\green150\blue0;\red139\green0\blue0;\red255\green140\blue0;\red0\green0\blue255;\red120\green120\blue120;}");
-            foreach (var line in _logLines)
+            foreach (var line in logLines)
             {
                 sb.AppendFormat(CultureInfo.InvariantCulture, @"{0}{1}\line", GetLineColor(line), line);
             }

@@ -28,7 +28,10 @@ namespace HFM.Forms.Models
             QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
             FollowLog = Preferences.Get<bool>(Preference.FollowLog);
             FormColumns = Preferences.Get<ICollection<string>>(Preference.FormColumns);
+
+            // changed be preferences dialog
             MinimizeTo = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
+            ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
 
             Preferences.PreferenceChanged += (s, e) =>
             {
@@ -37,6 +40,9 @@ namespace HFM.Forms.Models
                 {
                     case Preference.MinimizeTo:
                         MinimizeTo = Preferences.Get<MinimizeToOption>(e.Preference);
+                        break;
+                    case Preference.ColorLogFile:
+                        ColorLogFile = Preferences.Get<bool>(e.Preference);
                         break;
                     case Preference.BonusCalculation:
                         toolTip = ClientsModel.BonusCalculationList
@@ -165,6 +171,21 @@ namespace HFM.Forms.Models
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(NotifyIconVisible));
                     OnPropertyChanged(nameof(ShowInTaskbar));
+                }
+            }
+        }
+
+        private bool _colorLogFile;
+
+        public bool ColorLogFile
+        {
+            get => _colorLogFile;
+            set
+            {
+                if (_colorLogFile != value)
+                {
+                    _colorLogFile = value;
+                    OnPropertyChanged();
                 }
             }
         }

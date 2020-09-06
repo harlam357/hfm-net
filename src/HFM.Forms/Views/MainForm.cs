@@ -90,22 +90,13 @@ namespace HFM.Forms.Views
 
             ViewToggleFollowLogFileMenuItem.BindChecked(model, nameof(MainModel.FollowLog));
             statusLabelLeft.BindText(model, nameof(MainModel.ClientDetails));
+            txtLogFile.DataBindings.Add(nameof(txtLogFile.ColorLogFile), model, nameof(MainModel.ColorLogFile), false, DataSourceUpdateMode.OnPropertyChanged);
 
             model.PropertyChanged += ModelPropertyChanged;
 
             RestoreViewPreferences(model);
             //
             dataGridView1.DataSource = _presenter.GridModel.BindingSource;
-            //
-            _presenter.Model.Preferences.PreferenceChanged += (s, e) =>
-            {
-                switch (e.Preference)
-                {
-                    case Preference.ColorLogFile:
-                        txtLogFile.HighlightLines(_presenter.Model.Preferences.Get<bool>(Preference.ColorLogFile));
-                        break;
-                }
-            };
 
             BindToUserStatsDataModel(_presenter.UserStatsDataModel);
             // Hook-up Status Label Event Handlers
