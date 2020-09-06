@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -26,6 +27,7 @@ namespace HFM.Forms.Models
             FormSplitterLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
             QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
             FollowLog = Preferences.Get<bool>(Preference.FollowLog);
+            FormColumns = Preferences.Get<ICollection<string>>(Preference.FormColumns);
             MinimizeTo = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
 
             Preferences.PreferenceChanged += (s, e) =>
@@ -58,6 +60,7 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.FormLogWindowHeight, FormLogWindowHeight);
             Preferences.Set(Preference.FormSplitterLocation, FormSplitterLocation);
             Preferences.Set(Preference.QueueWindowVisible, QueueWindowVisible);
+            Preferences.Set(Preference.FormColumns, FormColumns);
             Preferences.Set(Preference.FollowLog, FollowLog);
 
             Preferences.Save();
@@ -131,6 +134,8 @@ namespace HFM.Forms.Models
                 }
             }
         }
+
+        public ICollection<string> FormColumns { get; set; }
 
         private bool _followLog;
 

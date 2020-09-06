@@ -113,9 +113,9 @@ namespace HFM.Forms.Views
             return (SlotModel)dataGridView1.Rows[index].DataBoundItem;
         }
 
-        public const int NumberOfDisplayFields = 17;
-
         private static SlotsGridColumnCollection SlotsGridColumns { get; } = new SlotsGridColumnCollection();
+
+        public static int NumberOfDisplayFields => SlotsGridColumns.Count + 1;
 
         public static void SetupDataGridViewColumns(DataGridView dgv)
         {

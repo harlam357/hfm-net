@@ -105,8 +105,6 @@ namespace HFM.Forms
 
         protected override IWin32Form OnCreateForm() => new MainForm(this);
 
-        #region Initialize
-
         private string _openFile;
 
         public void Initialize(string openFile)
@@ -114,47 +112,10 @@ namespace HFM.Forms
             _openFile = openFile;
         }
 
-        public void RestoreViewPreferences()
-        {
-            try
-            {
-                // Restore the columns' state
-                var columns = Preferences.Get<ICollection<string>>(Preference.FormColumns);
-                if (columns != null)
-                {
-                    var colsList = columns.ToList();
-                    colsList.Sort();
-
-                    for (int i = 0; i < colsList.Count && i < MainForm.NumberOfDisplayFields; i++)
-                    {
-                        string[] tokens = colsList[i].Split(',');
-                        int index = Int32.Parse(tokens[3]);
-                        _view.DataGridView.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
-                        if (_view.DataGridView.Columns[index].AutoSizeMode.Equals(DataGridViewAutoSizeColumnMode.Fill) == false)
-                        {
-                            _view.DataGridView.Columns[index].Width = Int32.Parse(tokens[1]);
-                        }
-                        _view.DataGridView.Columns[index].Visible = Boolean.Parse(tokens[2]);
-                    }
-                }
-            }
-            catch (NullReferenceException)
-            {
-                // This happens when the FormColumns setting is empty
-            }
-        }
-
-        #endregion
-
         #region View Handling Methods
 
         public void ViewShown()
         {
-            // Add the Index Changed Handler here after everything is shown
-            _view.DataGridView.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
-            // Then run it once to ensure the last column is set to Fill
-            DataGridViewColumnDisplayIndexChanged();
-
             if (Preferences.Get<bool>(Preference.RunMinimized))
             {
                 Form.WindowState = FormWindowState.Minimized;
@@ -237,8 +198,6 @@ namespace HFM.Forms
                 return true;
             }
 
-            SaveColumnSettings();
-
             CheckForAndFireUpdateProcess(_applicationUpdateModel);
 
             return false;
@@ -267,47 +226,6 @@ namespace HFM.Forms
         #endregion
 
         #region Data Grid View Handling Methods
-
-        private void DataGridViewColumnDisplayIndexChanged()
-        {
-            if (_view.DataGridView.Columns.Count == MainForm.NumberOfDisplayFields)
-            {
-                foreach (DataGridViewColumn column in _view.DataGridView.Columns)
-                {
-                    if (column.DisplayIndex < _view.DataGridView.Columns.Count - 1)
-                    {
-                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    }
-                    else
-                    {
-                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    }
-                }
-
-                SaveColumnSettings(); // Save Column Settings - Issue 73
-                Preferences.Save();
-            }
-        }
-
-        private void SaveColumnSettings()
-        {
-            // Save column state data
-            // including order, column width and whether or not the column is visible
-            var columns = new List<string>();
-            int i = 0;
-
-            foreach (DataGridViewColumn column in _view.DataGridView.Columns)
-            {
-                columns.Add(String.Format(CultureInfo.InvariantCulture,
-                                        "{0},{1},{2},{3}",
-                                        column.DisplayIndex.ToString("D2"),
-                                        column.Width,
-                                        column.Visible,
-                                        i++));
-            }
-
-            Preferences.Set(Preference.FormColumns, columns);
-        }
 
         public void DataGridViewSorted()
         {

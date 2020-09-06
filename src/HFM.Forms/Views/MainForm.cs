@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core;
@@ -101,9 +102,7 @@ namespace HFM.Forms.Views
 
             model.PropertyChanged += ModelPropertyChanged;
 
-            // Initialize the Presenter
-            // Restore View Preferences (must be done AFTER DataGridView columns are setup)
-            _presenter.RestoreViewPreferences();
+            RestoreViewPreferences(model);
             //
             dataGridView1.DataSource = _presenter.GridModel.BindingSource;
             //
@@ -223,6 +222,46 @@ namespace HFM.Forms.Views
                     toolTipNotify.Show(model.NotifyToolTip, this, Size.Width - 150, 8, 2000);
                     break;
             }
+        }
+
+        private void RestoreViewPreferences(MainModel model)
+        {
+            var columns = model.FormColumns;
+            if (columns != null)
+            {
+                var columnsList = columns.ToList();
+                columnsList.Sort();
+
+                for (int i = 0; i < columnsList.Count && i < NumberOfDisplayFields; i++)
+                {
+                    string[] tokens = columnsList[i].Split(',');
+                    int index = Int32.Parse(tokens[3]);
+                    dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+                    if (dataGridView1.Columns[index].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    {
+                        dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
+                    }
+                    dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
+                }
+            }
+        }
+
+        private void SaveColumnSettings()
+        {
+            var columns = new List<string>();
+
+            int i = 0;
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                columns.Add(String.Format(CultureInfo.InvariantCulture,
+                    "{0},{1},{2},{3}",
+                    column.DisplayIndex.ToString("D2"),
+                    column.Width,
+                    column.Visible,
+                    i++));
+            }
+
+            _presenter.Model.FormColumns = columns;
         }
 
         private void DisplaySelectedSlot(SlotModel selectedSlot)
@@ -382,12 +421,39 @@ namespace HFM.Forms.Views
             _notifyIcon.DoubleClick += delegate { _presenter.NotifyIconDoubleClick(); };
             _notifyIcon.Visible = _presenter.Model.NotifyIconVisible;
 
+            // Add the Index Changed Handler here after everything is shown
+            dataGridView1.ColumnDisplayIndexChanged += delegate { DataGridViewColumnDisplayIndexChanged(); };
+            // Then run it once to ensure the last column is set to Fill
+            DataGridViewColumnDisplayIndexChanged();
+
             _presenter.ViewShown();
             _presenter.CheckForUpdateOnStartup(new ApplicationUpdateService(_presenter.Model.Preferences));
         }
 
+        private void DataGridViewColumnDisplayIndexChanged()
+        {
+            if (dataGridView1.Columns.Count == NumberOfDisplayFields)
+            {
+                foreach (DataGridViewColumn column in dataGridView1.Columns)
+                {
+                    if (column.DisplayIndex < dataGridView1.Columns.Count - 1)
+                    {
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    }
+                    else
+                    {
+                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    }
+                }
+
+                SaveColumnSettings();
+            }
+        }
+
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveColumnSettings();
+
             e.Cancel = _presenter.ViewClosing();
         }
 
