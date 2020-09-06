@@ -60,8 +60,8 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.FormLogWindowHeight, FormLogWindowHeight);
             Preferences.Set(Preference.FormSplitterLocation, FormSplitterLocation);
             Preferences.Set(Preference.QueueWindowVisible, QueueWindowVisible);
-            Preferences.Set(Preference.FormColumns, FormColumns);
             Preferences.Set(Preference.FollowLog, FollowLog);
+            Preferences.Set(Preference.FormColumns, FormColumns);
 
             Preferences.Save();
         }

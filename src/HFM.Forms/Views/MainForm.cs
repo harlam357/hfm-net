@@ -312,7 +312,7 @@ namespace HFM.Forms.Views
                 txtLogFile.SetNoLogLines();
             }
 
-            if (preferences.Get<bool>(Preference.FollowLog))
+            if (_presenter.Model.FollowLog)
             {
                 txtLogFile.ScrollToBottom();
             }
