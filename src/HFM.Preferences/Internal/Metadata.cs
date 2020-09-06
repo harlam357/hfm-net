@@ -59,7 +59,7 @@ namespace HFM.Preferences.Internal
             {
                 if (_setter == null)
                 {
-                    throw new InvalidOperationException("Data is read-only.");
+                    throw new InvalidOperationException("Preference is read-only.");
                 }
                 _setter(_data, value);
             }
