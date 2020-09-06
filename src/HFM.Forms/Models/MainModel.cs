@@ -190,6 +190,8 @@ namespace HFM.Forms.Models
             }
         }
 
+        public int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
+
         public bool NotifyIconVisible => MinimizeTo == MinimizeToOption.SystemTray || MinimizeTo == MinimizeToOption.Both;
 
         public bool ShowInTaskbar

@@ -15,7 +15,6 @@ using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Log;
-using HFM.Preferences;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -714,8 +713,7 @@ namespace HFM.Forms.Views
 
         private void RefreshControlsWithTotalsData(SlotTotals totals)
         {
-            var preferences = _presenter.Model.Preferences;
-            string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
+            string numberFormat = NumberFormat.Get(_presenter.Model.DecimalPlaces);
 
             SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
                 totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine));
