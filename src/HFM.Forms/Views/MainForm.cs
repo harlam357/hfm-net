@@ -259,14 +259,12 @@ namespace HFM.Forms.Views
 
         private void SetLogLines(SlotModel selectedSlot, IList<LogLine> logLines)
         {
-            var preferences = _presenter.Model.Preferences;
-
             if (logLines != null && logLines.Count > 0)
             {
                 // Different Client... Load LogLines
                 if (txtLogFile.LogOwnedByInstanceName.Equals(selectedSlot.Name) == false)
                 {
-                    txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                    txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                 }
                 // Textbox has text lines
                 else if (txtLogFile.Lines.Length > 0)
@@ -286,13 +284,13 @@ namespace HFM.Forms.Views
                     // Otherwise, the log has not changed, don't update and perform the log "flicker".
                     if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
                     {
-                        txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                        txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                     }
                 }
                 // Nothing in the Textbox... Load LogLines
                 else
                 {
-                    txtLogFile.SetLogLines(logLines, selectedSlot.Name, preferences.Get<bool>(Preference.ColorLogFile));
+                    txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                 }
             }
             else

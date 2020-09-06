@@ -32,16 +32,16 @@ namespace HFM.Forms.Controls
                 if (_colorLogFile != value)
                 {
                     _colorLogFile = value;
-                    HighlightLines(_colorLogFile);
+                    SetLogLinesInternal();
                 }
             }
         }
 
-        public void SetLogLines(ICollection<LogLine> lines, string logOwnedByInstance, bool highlightLines)
+        public void SetLogLines(ICollection<LogLine> lines, string logOwnedByInstance)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<ICollection<LogLine>, string, bool>(SetLogLines), lines, logOwnedByInstance, highlightLines);
+                Invoke(new Action<ICollection<LogLine>, string>(SetLogLines), lines, logOwnedByInstance);
                 return;
             }
 
@@ -55,14 +55,14 @@ namespace HFM.Forms.Controls
             }
 
             _logLines = lines;
-            HighlightLines(highlightLines);
+            SetLogLinesInternal();
         }
 
-        public void HighlightLines(bool value)
+        private void SetLogLinesInternal()
         {
             if (_logLines is null) return;
 
-            if (value)
+            if (ColorLogFile)
             {
                 Rtf = BuildRtfString(_logLines);
             }
