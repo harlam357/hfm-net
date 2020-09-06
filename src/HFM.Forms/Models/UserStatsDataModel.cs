@@ -31,13 +31,18 @@ namespace HFM.Forms.Models
 
             _preferences.PreferenceChanged += (s, e) =>
             {
-                if (e.Preference == Preference.EnableUserStats)
+                switch (e.Preference)
                 {
-                    ControlsVisible = _preferences.Get<bool>(Preference.EnableUserStats);
-                    if (ControlsVisible)
-                    {
-                        RefreshFromData();
-                    }
+                    case Preference.EnableUserStats:
+                        ControlsVisible = _preferences.Get<bool>(Preference.EnableUserStats);
+                        if (ControlsVisible)
+                        {
+                            RefreshFromData();
+                        }
+                        break;
+                    case Preference.EocUserId:
+                        Refresh();
+                        break;
                 }
             };
 

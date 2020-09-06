@@ -104,9 +104,6 @@ namespace HFM.Forms.Views
                     case Preference.ColorLogFile:
                         txtLogFile.HighlightLines(_presenter.Model.Preferences.Get<bool>(Preference.ColorLogFile));
                         break;
-                    case Preference.EocUserId:
-                        _presenter.UserStatsDataModel.Refresh();
-                        break;
                 }
             };
 
