@@ -94,10 +94,9 @@ namespace HFM.Forms
                 }
                 return base.Form;
             }
-            protected set => throw new InvalidOperationException("Use MainForm property.");
         }
 
-        public override void Show() => throw new InvalidOperationException("Use MainForm property.");
+        public override void Show() => throw new InvalidOperationException("Use Form property.");
 
         protected override IWin32Form OnCreateForm() => new MainForm(this);
 
