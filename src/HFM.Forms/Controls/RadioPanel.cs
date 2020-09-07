@@ -25,7 +25,7 @@ namespace HFM.Forms.Controls
 
         public RadioPanel()
         {
-            _propertyChangedEventHandler = RadioButtonPanel_PropertyChanged;
+            _propertyChangedEventHandler = OnDataSourcePropertyChanged;
         }
 
         protected override void OnControlAdded(ControlEventArgs e)
@@ -213,7 +213,7 @@ namespace HFM.Forms.Controls
         private bool _processPropertyChange = true;
 
         // Handle PropertyChanged notifications from the source.
-        protected void RadioButtonPanel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected void OnDataSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_processPropertyChange)
             {
