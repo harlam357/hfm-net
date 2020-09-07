@@ -56,9 +56,9 @@ namespace HFM.Core.Data
         /// </summary>
         public bool Connected { get; private set; }
 
-        public IProteinService ProteinService { get; }
-
         public ILogger Logger { get; }
+
+        public IProteinService ProteinService { get; }
 
         private readonly IMapper _mapper;
 
@@ -73,10 +73,10 @@ namespace HFM.Core.Data
 
         #region Constructor
 
-        public WorkUnitRepository(IProteinService proteinService, ILogger logger)
+        public WorkUnitRepository(ILogger logger, IProteinService proteinService)
         {
-            ProteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
             Logger = logger ?? NullLogger.Instance;
+            ProteinService = proteinService ?? NullProteinService.Instance;
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));

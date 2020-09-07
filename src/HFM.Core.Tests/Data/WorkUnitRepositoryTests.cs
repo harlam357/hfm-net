@@ -49,7 +49,7 @@ namespace HFM.Core.Data
                 File.Delete(TestScratchFile);
             }
 
-            _repository = new WorkUnitRepository(_proteinService, null);
+            _repository = new WorkUnitRepository(null, _proteinService);
         }
 
         private void SetupTestDataFileCopies()

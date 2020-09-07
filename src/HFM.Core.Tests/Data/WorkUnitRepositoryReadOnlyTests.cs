@@ -29,7 +29,7 @@ namespace HFM.Core.Data
         public void FixtureInit()
         {
             SetupTestDataFileCopies();
-            _database = new WorkUnitRepository(_proteinService, null);
+            _database = new WorkUnitRepository(null, _proteinService);
         }
 
         private void SetupTestDataFileCopies()
