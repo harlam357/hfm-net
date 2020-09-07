@@ -44,7 +44,7 @@ namespace HFM.Core.Data
                 transaction = connection.BeginTransaction();
                 newConnection = true;
             }
-            
+
             return (newConnection, connection, transaction);
         }
 
@@ -62,82 +62,82 @@ namespace HFM.Core.Data
                 {
                     case WorkUnitProteinUpdateScope.All:
                     case WorkUnitProteinUpdateScope.Unknown:
-                    {
-                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
-                        if (scope == WorkUnitProteinUpdateScope.Unknown)
                         {
-                            selectSql = selectSql.Where(workUnitNameUnknown);
-                        }
-                        selectSql = selectSql.GroupBy("ProjectID");
-
-                        using (var table = _repository.Select(connection, selectSql.SQL))
-                        {
-                            int count = 0;
-                            int lastProgress = 0;
-                            foreach (DataRow row in table.Rows)
+                            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
+                            if (scope == WorkUnitProteinUpdateScope.Unknown)
                             {
-                                cancellationToken.ThrowIfCancellationRequested();
+                                selectSql = selectSql.Where(workUnitNameUnknown);
+                            }
+                            selectSql = selectSql.GroupBy("ProjectID");
 
-                                var projectId = row.Field<int>("ProjectID");
-                                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                                if (updateSql != null)
+                            using (var table = _repository.Select(connection, selectSql.SQL))
+                            {
+                                int count = 0;
+                                int lastProgress = 0;
+                                foreach (DataRow row in table.Rows)
                                 {
-                                    if (scope == WorkUnitProteinUpdateScope.Unknown)
-                                    {
-                                        updateSql = updateSql.Where(workUnitNameUnknown);
-                                    }
-                                    using (var database = new PetaPoco.Database(connection))
-                                    {
-                                        database.Execute(updateSql);
-                                    }
-                                }
-                                count++;
+                                    cancellationToken.ThrowIfCancellationRequested();
 
-                                int progressPercentage = Convert.ToInt32((count / (double) table.Rows.Count) * 100);
-                                if (progressPercentage != lastProgress)
-                                {
-                                    string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                                    progress?.Report(new ProgressInfo(progressPercentage, message));
-                                    lastProgress = progressPercentage;
+                                    var projectId = row.Field<int>("ProjectID");
+                                    var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                                    if (updateSql != null)
+                                    {
+                                        if (scope == WorkUnitProteinUpdateScope.Unknown)
+                                        {
+                                            updateSql = updateSql.Where(workUnitNameUnknown);
+                                        }
+                                        using (var database = new PetaPoco.Database(connection))
+                                        {
+                                            database.Execute(updateSql);
+                                        }
+                                    }
+                                    count++;
+
+                                    int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                                    if (progressPercentage != lastProgress)
+                                    {
+                                        string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
+                                        progress?.Report(new ProgressInfo(progressPercentage, message));
+                                        lastProgress = progressPercentage;
+                                    }
                                 }
                             }
+                            break;
                         }
-                        break;
-                    }
                     case WorkUnitProteinUpdateScope.Project:
-                    {
-                        int projectId = (int)id;
-                        var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                        if (updateSql != null)
                         {
-                            using (var database = new PetaPoco.Database(connection))
+                            int projectId = (int)id;
+                            var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                            if (updateSql != null)
                             {
-                                database.Execute(updateSql);
-                            }
-                        }
-                        break;
-                    }
-                    case WorkUnitProteinUpdateScope.Id:
-                    {
-                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
-
-                        using (var table = _repository.Select(connection, selectSql.SQL, selectSql.Arguments))
-                        {
-                            if (table.Rows.Count != 0)
-                            {
-                                var projectId = table.Rows[0].Field<int>("ProjectID");
-                                var updateSql = GetUpdateSql(projectId, "ID", id);
-                                if (updateSql != null)
+                                using (var database = new PetaPoco.Database(connection))
                                 {
-                                    using (var database = new PetaPoco.Database(connection))
+                                    database.Execute(updateSql);
+                                }
+                            }
+                            break;
+                        }
+                    case WorkUnitProteinUpdateScope.Id:
+                        {
+                            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
+
+                            using (var table = _repository.Select(connection, selectSql.SQL, selectSql.Arguments))
+                            {
+                                if (table.Rows.Count != 0)
+                                {
+                                    var projectId = table.Rows[0].Field<int>("ProjectID");
+                                    var updateSql = GetUpdateSql(projectId, "ID", id);
+                                    if (updateSql != null)
                                     {
-                                        database.Execute(updateSql);
+                                        using (var database = new PetaPoco.Database(connection))
+                                        {
+                                            database.Execute(updateSql);
+                                        }
                                     }
                                 }
                             }
+                            break;
                         }
-                        break;
-                    }
                 }
 
                 transaction?.Commit();
