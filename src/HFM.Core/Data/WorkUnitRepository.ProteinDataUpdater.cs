@@ -1,9 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using System.Threading;
+
+using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
 {
@@ -18,16 +19,18 @@ namespace HFM.Core.Data
     public class ProteinDataUpdater
     {
         private readonly IWorkUnitRepository _repository;
+        private readonly IProteinService _proteinService;
         private readonly SQLiteConnection _connection;
 
-        public ProteinDataUpdater(IWorkUnitRepository repository) : this(repository, null)
+        public ProteinDataUpdater(IWorkUnitRepository repository, IProteinService proteinService) : this(repository, proteinService, null)
         {
 
         }
 
-        public ProteinDataUpdater(IWorkUnitRepository repository, SQLiteConnection connection)
+        public ProteinDataUpdater(IWorkUnitRepository repository, IProteinService proteinService, SQLiteConnection connection)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _proteinService = proteinService ?? NullProteinService.Instance;
             _connection = connection;
         }
 
@@ -160,7 +163,7 @@ namespace HFM.Core.Data
         private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
         {
             // get the correct protein
-            var protein = _repository.ProteinService?.Get(projectId);
+            var protein = _proteinService.Get(projectId);
             if (protein != null)
             {
                 var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")

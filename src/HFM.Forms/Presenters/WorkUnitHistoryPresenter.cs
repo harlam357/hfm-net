@@ -22,14 +22,17 @@ namespace HFM.Forms.Presenters
         public ILogger Logger { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public MessageBoxPresenter MessageBox { get; }
+        public IProteinService ProteinService { get; }
 
-        public WorkUnitHistoryPresenter(WorkUnitHistoryModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox)
+        public WorkUnitHistoryPresenter(WorkUnitHistoryModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox, 
+                                        IProteinService proteinService)
             : base(model)
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;
             ServiceScopeFactory = serviceScopeFactory ?? NullServiceScopeFactory.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            ProteinService = proteinService ?? NullProteinService.Instance;
         }
 
         public override void Show()
@@ -236,13 +239,12 @@ namespace HFM.Forms.Presenters
                 id = Model.SelectedWorkUnitRow.ID;
             }
 
-            var proteinDataUpdater = new ProteinDataUpdater(Model.Repository);
+            var proteinDataUpdater = new ProteinDataUpdater(Model.Repository, ProteinService);
 
             try
             {
                 using (var dialog = new ProgressDialog((progress, token) => proteinDataUpdater.Execute(progress, token, scope, id), true))
                 {
-                    dialog.Icon = Properties.Resources.hfm_48_48;
                     dialog.Text = Core.Application.NameAndVersion;
                     dialog.ShowDialog(Form);
                     if (dialog.Exception != null)

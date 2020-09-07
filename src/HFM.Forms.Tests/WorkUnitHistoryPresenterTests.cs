@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Serializers;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
@@ -323,7 +324,8 @@ namespace HFM.Forms
                         MockRepository.GenerateMock<IWorkUnitRepository>()),
                     null,
                     null,
-                    messageBox ?? new MockMessageBoxPresenter())
+                    messageBox ?? new MockMessageBoxPresenter(),
+                    NullProteinService.Instance)
             {
 
             }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -27,8 +26,6 @@ namespace HFM.Core.Data
         /// Flag that notes if the Database is safe to call.
         /// </summary>
         bool Connected { get; }
-
-        IProteinService ProteinService { get; }
 
         ILogger Logger { get; }
 
@@ -177,7 +174,7 @@ namespace HFM.Core.Data
                         // add columns to WuHistory table
                         AddProteinColumns(connection);
                         // update the WuHistory table with protein info
-                        var proteinDataUpdater = new ProteinDataUpdater(this, connection);
+                        var proteinDataUpdater = new ProteinDataUpdater(this, ProteinService, connection);
                         proteinDataUpdater.Execute(progress, CancellationToken.None, default, default);
                         // set database version
                         SetDatabaseVersion(connection, VersionString092);
