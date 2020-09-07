@@ -7,7 +7,7 @@ namespace HFM.Forms
     [DebuggerDisplay("{DisplayMember}, {ValueMember}")]
     public readonly struct ListItem : IEquatable<ListItem>
     {
-        public static ListItem Empty { get; } = new ListItem();
+        public static ListItem Empty => new ListItem();
 
         public bool IsEmpty => Equals(Empty);
 
