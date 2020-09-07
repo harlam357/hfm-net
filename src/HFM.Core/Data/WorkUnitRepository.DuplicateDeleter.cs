@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Data;
 using System.Data.SQLite;
@@ -10,11 +10,13 @@ namespace HFM.Core.Data
 {
     public class DuplicateDeleter
     {
+        private readonly ILogger _logger;
         private readonly IWorkUnitRepository _repository;
         private readonly SQLiteConnection _connection;
 
-        public DuplicateDeleter(IWorkUnitRepository repository, SQLiteConnection connection)
+        public DuplicateDeleter(ILogger logger, IWorkUnitRepository repository, SQLiteConnection connection)
         {
+            _logger = logger ?? NullLogger.Instance;
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
@@ -28,10 +30,9 @@ namespace HFM.Core.Data
 
             int count = 0;
             int totalCount = 0;
-            var logger = _repository.Logger ?? NullLogger.Instance;
 
             string message = "Checking for duplicate WU History entries...";
-            logger.Info(message);
+            _logger.Info(message);
             progress?.Report(new ProgressInfo(0, message));
 
             using (var table = _repository.Select(_connection, selectSql.SQL))
@@ -50,7 +51,7 @@ namespace HFM.Core.Data
                     }
                     if (result != 0)
                     {
-                        logger.Debug($"Deleted rows: {result}");
+                        _logger.Debug($"Deleted rows: {result}");
                         totalCount += result;
                     }
                     count++;
@@ -67,7 +68,7 @@ namespace HFM.Core.Data
 
             if (totalCount != 0)
             {
-                logger.Info($"Total number of duplicate WU History entries deleted: {totalCount}");
+                _logger.Info($"Total number of duplicate WU History entries deleted: {totalCount}");
             }
         }
     }

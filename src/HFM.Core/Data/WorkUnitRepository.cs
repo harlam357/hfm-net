@@ -27,8 +27,6 @@ namespace HFM.Core.Data
         /// </summary>
         bool Connected { get; }
 
-        ILogger Logger { get; }
-
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         bool Insert(WorkUnitModel workUnitModel);
 
@@ -60,8 +58,7 @@ namespace HFM.Core.Data
 
         public IProteinService ProteinService { get; }
 
-        private ILogger _logger;
-        public ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
+        public ILogger Logger { get; }
 
         private readonly IMapper _mapper;
 
@@ -79,7 +76,7 @@ namespace HFM.Core.Data
         public WorkUnitRepository(IProteinService proteinService, ILogger logger)
         {
             ProteinService = proteinService ?? throw new ArgumentNullException(nameof(proteinService));
-            _logger = logger;
+            Logger = logger ?? NullLogger.Instance;
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
@@ -169,7 +166,7 @@ namespace HFM.Core.Data
                     {
                         Logger.Info($"Performing WU History database upgrade to v{VersionString092}...");
                         // delete duplicates
-                        var duplicateDeleter = new DuplicateDeleter(this, connection);
+                        var duplicateDeleter = new DuplicateDeleter(Logger, this, connection);
                         duplicateDeleter.Execute(progress);
                         // add columns to WuHistory table
                         AddProteinColumns(connection);
