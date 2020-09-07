@@ -93,12 +93,12 @@ namespace HFM.Core.Client
         /// Updates the cached messages with a message received from the client.
         /// </summary>
         /// <param name="message">The message received from the client.</param>
-        public async Task<FahClientMessagesActions> UpdateMessageAsync(FahClientMessage message)
+        public async Task<(bool SlotsUpdated, bool ExecuteRetrieval)> UpdateMessageAsync(FahClientMessage message)
         {
             bool slotCollectionChanged = false;
             bool unitCollectionChanged = false;
             bool logIsRetrieved = LogIsRetrieved;
-            
+
             switch (message.Identifier.MessageType)
             {
                 case FahClientMessageType.Heartbeat:
@@ -127,7 +127,7 @@ namespace HFM.Core.Client
 
             bool executeRetrieval = logIsRetrieved != LogIsRetrieved ||
                                     LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged);
-            return new FahClientMessagesActions(slotCollectionChanged, executeRetrieval);
+            return (slotCollectionChanged, executeRetrieval);
         }
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
@@ -223,7 +223,7 @@ namespace HFM.Core.Client
                 await Log.ReadAsync(reader).ConfigureAwait(false);
             }
         }
-        
+
         private async Task WriteCachedLogFileFromStringBuilder(StringBuilder logUpdateValue, FileMode mode)
         {
             const int sleep = 100;
@@ -329,18 +329,5 @@ namespace HFM.Core.Client
                 }
             }
         }
-    }
-
-    public readonly struct FahClientMessagesActions
-    {
-        public FahClientMessagesActions(bool slotsUpdated, bool executeRetrieval)
-        {
-            SlotsUpdated = slotsUpdated;
-            ExecuteRetrieval = executeRetrieval;
-        }
-
-        public bool SlotsUpdated { get; }
-
-        public bool ExecuteRetrieval { get; }
     }
 }
