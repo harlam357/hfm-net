@@ -279,7 +279,6 @@ namespace HFM
                 {
                     using (var dialog = new ProgressDialog((progress, token) => repository.Upgrade(progress), false))
                     {
-                        dialog.Icon = Properties.Resources.hfm_48_48;
                         dialog.Text = Core.Application.NameAndVersion;
                         dialog.StartPosition = FormStartPosition.CenterScreen;
                         dialog.ShowDialog();
