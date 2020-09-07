@@ -731,7 +731,7 @@ namespace HFM.Forms
             }
         }
 
-        public void ToolsBenchmarksClick()
+        public void ToolsBenchmarksClick(BenchmarksPresenter presenter)
         {
             int projectID = 0;
 
@@ -741,9 +741,6 @@ namespace HFM.Forms
                 projectID = GridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
 
-            var scope = ServiceScopeFactory.CreateScope();
-            var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
-            presenter.Closed += (s, e) => scope.Dispose();
             presenter.Model.DefaultProjectID = projectID;
             presenter.Show();
         }
@@ -856,17 +853,6 @@ namespace HFM.Forms
         }
 
         #endregion
-
-        public void AboutClicked()
-        {
-            using (var scope = ServiceScopeFactory.CreateScope())
-            {
-                using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
-                {
-                    dialog.ShowDialog(Form);
-                }
-            }
-        }
 
         #region Other Handling Methods
 

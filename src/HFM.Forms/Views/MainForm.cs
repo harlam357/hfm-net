@@ -543,7 +543,13 @@ namespace HFM.Forms.Views
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            _presenter.AboutClicked();
+            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            {
+                using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
+                {
+                    dialog.ShowDialog(_presenter.Form);
+                }
+            }
         }
 
         #endregion
@@ -675,7 +681,10 @@ namespace HFM.Forms.Views
 
         private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
         {
-            _presenter.ToolsBenchmarksClick();
+            var scope = _presenter.ServiceScopeFactory.CreateScope();
+            var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
+            presenter.Closed += delegate { scope.Dispose(); };
+            _presenter.ToolsBenchmarksClick(presenter);
         }
 
         private void mnuToolsPointsCalculator_Click(object sender, EventArgs e)
