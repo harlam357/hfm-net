@@ -68,7 +68,7 @@ namespace HFM.Core.Data
 
         private readonly IMapper _mapper;
 
-        private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> SqlTableCommandDictionary =
+        private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> _SqlTableCommandDictionary =
             new Dictionary<WorkUnitRepositoryTable, SqlTableCommands>
             {
                 { WorkUnitRepositoryTable.WuHistory, new WuHistorySqlTableCommands() },
@@ -200,7 +200,7 @@ namespace HFM.Core.Data
 
         private static void AddProteinColumns(SQLiteConnection connection)
         {
-            using (var adder = new SQLiteAddColumnCommand(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].TableName, connection))
+            using (var adder = new SQLiteAddColumnCommand(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].TableName, connection))
             {
                 adder.AddColumn("WorkUnitName", "VARCHAR(30)");
                 adder.AddColumn("KFactor", "FLOAT");
@@ -345,7 +345,7 @@ namespace HFM.Core.Data
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = CreateConnection())
@@ -375,7 +375,7 @@ namespace HFM.Core.Data
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
-            var select = new PetaPoco.Sql(SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
+            var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
             select.Append(query);
             GetProduction.BonusCalculation = bonusCalculation;
             using (var connection = CreateConnection())
@@ -495,7 +495,7 @@ namespace HFM.Core.Data
 
         internal bool TableExists(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
-            using (DataTable table = connection.GetSchema("Tables", new[] { null, null, SqlTableCommandDictionary[databaseTable].TableName, null }))
+            using (DataTable table = connection.GetSchema("Tables", new[] { null, null, _SqlTableCommandDictionary[databaseTable].TableName, null }))
             {
                 return table.Rows.Count != 0;
             }
@@ -512,7 +512,7 @@ namespace HFM.Core.Data
 
         internal void CreateTable(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
-            using (var command = SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
+            using (var command = _SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
             {
                 command.ExecuteNonQuery();
             }
@@ -559,7 +559,7 @@ namespace HFM.Core.Data
 
             private const string WuHistoryTableName = "WuHistory";
 
-            private static readonly string WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
+            private static readonly string _WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
                                                            "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                                            "[ProjectID] INT  NOT NULL," +
                                                            "[ProjectRun] INT  NOT NULL," +
@@ -630,7 +630,7 @@ namespace HFM.Core.Data
                 return new SQLiteCommand(connection)
                 {
                     CommandText = String.Format(CultureInfo.InvariantCulture,
-                                               WuHistoryTableCreateSql, WuHistoryTableName)
+                                               _WuHistoryTableCreateSql, WuHistoryTableName)
                 };
             }
         }
