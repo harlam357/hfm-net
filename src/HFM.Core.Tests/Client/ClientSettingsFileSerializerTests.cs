@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +13,7 @@ namespace HFM.Core.Client
         public void ClientSettingsFileSerializer_Deserialize_FromFile()
         {
             // Arrange
-            var serializer = new ClientSettingsFileSerializer();
+            var serializer = new ClientSettingsFileSerializer(null);
             // Act
             var settings = serializer.Deserialize("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx");
             // Assert
@@ -43,7 +42,7 @@ namespace HFM.Core.Client
                 Password = "fizzbizz",
                 Guid = guid
             } };
-            var serializer = new ClientSettingsFileSerializer();
+            var serializer = new ClientSettingsFileSerializer(null);
             using (var artifacts = new ArtifactFolder())
             {
                 string path = artifacts.GetRandomFilePath();
@@ -68,7 +67,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var toFile = new List<ClientSettings> { new ClientSettings() };
-            var serializer = new ClientSettingsFileSerializer();
+            var serializer = new ClientSettingsFileSerializer(null);
             using (var artifacts = new ArtifactFolder())
             {
                 string path = artifacts.GetRandomFilePath();

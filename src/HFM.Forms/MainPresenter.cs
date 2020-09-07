@@ -76,7 +76,7 @@ namespace HFM.Forms
                 }
             };
 
-            _settingsManager = new ClientSettingsManager();
+            _settingsManager = new ClientSettingsManager(Logger);
 
             ClientConfiguration.ClientConfigurationChanged += (s, e) => AutoSaveConfig();
         }

@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.Serializers;
 
 namespace HFM.Forms
@@ -37,30 +37,18 @@ namespace HFM.Forms
             }
         }
 
-        public string FileTypeFilters
-        {
-            get
-            {
-                var sb = new System.Text.StringBuilder();
-                foreach (var serializer in _serializers)
-                {
-                    if (sb.Length > 0)
-                    {
-                        sb.Append("|");
-                    }
-                    sb.Append(serializer.FileTypeFilter);
-                }
-                return sb.ToString();
-            }
-        }
+        public string FileTypeFilters => _serializers.GetFileTypeFilters();
 
         private readonly List<IFileSerializer<List<ClientSettings>>> _serializers;
 
-        public ClientSettingsManager()
+        public ILogger Logger { get; }
+
+        public ClientSettingsManager(ILogger logger)
         {
+            Logger = logger ?? NullLogger.Instance;
             _serializers = new List<IFileSerializer<List<ClientSettings>>>
             {
-                new ClientSettingsFileSerializer()
+                new ClientSettingsFileSerializer(Logger)
             };
 
             ClearFileName();

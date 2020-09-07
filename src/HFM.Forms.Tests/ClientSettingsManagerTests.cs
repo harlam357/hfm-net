@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 
@@ -17,7 +16,7 @@ namespace HFM.Forms
         public void ClientSettingsManager_VerifyDefaultState()
         {
             // Act
-            var manager = new ClientSettingsManager();
+            var manager = new ClientSettingsManager(null);
             // Assert
             Assert.AreEqual(String.Empty, manager.FileName);
             Assert.AreEqual(1, manager.FilterIndex);
@@ -29,7 +28,7 @@ namespace HFM.Forms
         public void ClientSettingsManager_Read_ReturnsClientSettingsCollectionAndSetsManagerState()
         {
             // Arrange
-            var manager = new ClientSettingsManager();
+            var manager = new ClientSettingsManager(null);
             // Act
             var settings = manager.Read("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", 1);
             // Assert
@@ -48,7 +47,7 @@ namespace HFM.Forms
             client.Settings = new ClientSettings { Name = "test" };
             using (var artifacts = new ArtifactFolder())
             {
-                var manager = new ClientSettingsManager();
+                var manager = new ClientSettingsManager(null);
                 string path = Path.ChangeExtension(artifacts.GetRandomFilePath(), ".hfmx");
                 // Act
                 manager.Write(new[] { client.Settings }, path, 1);

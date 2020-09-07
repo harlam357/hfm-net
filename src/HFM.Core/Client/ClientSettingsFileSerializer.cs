@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,21 +14,16 @@ namespace HFM.Core.Client
 {
     public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>>
     {
-        #region Fields
+        public ILogger Logger { get; }
 
-        private ILogger _logger;
-
-        public ILogger Logger
+        public ClientSettingsFileSerializer(ILogger logger)
         {
-            get => _logger ?? (_logger = NullLogger.Instance);
-            set => _logger = value;
+            Logger = logger ?? NullLogger.Instance;
         }
 
         // Encryption Key and Initialization Vector
         private const string IV = "CH/&QE;NsT.2z+Me";
         private const string SymmetricKey = "usPP'/Cb5?NWC*60";
-
-        #endregion
 
         public const string DefaultFileExtension = "hfmx";
 
