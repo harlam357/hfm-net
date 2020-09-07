@@ -239,7 +239,7 @@ namespace HFM.Forms.Presenters
                 id = Model.SelectedWorkUnitRow.ID;
             }
 
-            var proteinDataUpdater = new ProteinDataUpdater(Model.Repository, ProteinService);
+            var proteinDataUpdater = new ProteinDataUpdater((IWorkUnitDatabase)Model.Repository, ProteinService);
 
             try
             {

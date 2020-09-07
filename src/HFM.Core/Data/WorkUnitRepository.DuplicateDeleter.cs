@@ -11,13 +11,13 @@ namespace HFM.Core.Data
     public class DuplicateDeleter
     {
         private readonly ILogger _logger;
-        private readonly IWorkUnitRepository _repository;
+        private readonly IWorkUnitDatabase _database;
         private readonly SQLiteConnection _connection;
 
-        public DuplicateDeleter(ILogger logger, IWorkUnitRepository repository, SQLiteConnection connection)
+        public DuplicateDeleter(ILogger logger, IWorkUnitDatabase database, SQLiteConnection connection)
         {
             _logger = logger ?? NullLogger.Instance;
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _database = database ?? throw new ArgumentNullException(nameof(database));
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
 
@@ -35,7 +35,7 @@ namespace HFM.Core.Data
             _logger.Info(message);
             progress?.Report(new ProgressInfo(0, message));
 
-            using (var table = _repository.Select(_connection, selectSql.SQL))
+            using (var table = _database.Select(_connection, selectSql.SQL))
             {
                 int lastProgress = 0;
                 foreach (DataRow row in table.Rows)
@@ -44,11 +44,7 @@ namespace HFM.Core.Data
                         .Where("ID < @0 AND ProjectID = @1 AND ProjectRun = @2 AND ProjectClone = @3 AND ProjectGen = @4 AND datetime(DownloadDateTime) = datetime(@5)",
                             row.ItemArray[0], row.ItemArray[1], row.ItemArray[2], row.ItemArray[3], row.ItemArray[4], row.ItemArray[5]);
 
-                    int result;
-                    using (var database = new PetaPoco.Database(_connection))
-                    {
-                        result = database.Execute(deleteSql);
-                    }
+                    int result = _database.Execute(_connection, deleteSql.SQL, deleteSql.Arguments);
                     if (result != 0)
                     {
                         _logger.Debug($"Deleted rows: {result}");

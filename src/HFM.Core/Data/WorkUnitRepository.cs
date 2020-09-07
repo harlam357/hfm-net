@@ -39,13 +39,23 @@ namespace HFM.Core.Data
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
         long CountFailed(string clientName, DateTime? clientStartTime);
-
-        SQLiteConnection CreateConnection();
-
-        DataTable Select(SQLiteConnection connection, string sql, params object[] args);
     }
 
-    public partial class WorkUnitRepository : IWorkUnitRepository
+    /// <summary>
+    /// Represents a general interface to the work unit history database capable of selecting and executing via ad hoc sql statements.
+    /// </summary>
+    public interface IWorkUnitDatabase
+    {
+        DataTable Select(string sql, params object[] args);
+
+        DataTable Select(SQLiteConnection connection, string sql, params object[] args);
+
+        int Execute(string sql, params object[] args);
+
+        int Execute(SQLiteConnection connection, string sql, params object[] args);
+    }
+
+    public partial class WorkUnitRepository : IWorkUnitRepository, IWorkUnitDatabase
     {
         private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
@@ -386,8 +396,7 @@ namespace HFM.Core.Data
 
         #region Select
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private DataTable Select(string sql, params object[] args)
+        public DataTable Select(string sql, params object[] args)
         {
             using (var connection = CreateConnection())
             {
@@ -398,14 +407,65 @@ namespace HFM.Core.Data
 
         public DataTable Select(SQLiteConnection connection, string sql, params object[] args)
         {
-            using (var database = new PetaPoco.Database(connection))
-            using (var cmd = database.CreateCommand(database.Connection, sql, args))
+            var operatingConnection = connection;
+            try
             {
-                using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
+                if (operatingConnection is null)
                 {
-                    var table = new DataTable();
-                    adapter.Fill(table);
-                    return table;
+                    operatingConnection = CreateConnection();
+                    operatingConnection.Open();
+                }
+
+                using (var database = new PetaPoco.Database(operatingConnection))
+                using (var cmd = database.CreateCommand(database.Connection, sql, args))
+                {
+                    using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
+                    {
+                        var table = new DataTable();
+                        adapter.Fill(table);
+                        return table;
+                    }
+                }
+            }
+            finally
+            {
+                if (connection is null)
+                {
+                    operatingConnection?.Dispose();
+                }
+            }
+        }
+
+        public int Execute(string sql, params object[] args)
+        {
+            using (var connection = CreateConnection())
+            {
+                connection.Open();
+                return Execute(connection, sql, args);
+            }
+        }
+
+        public int Execute(SQLiteConnection connection, string sql, params object[] args)
+        {
+            var operatingConnection = connection;
+            try
+            {
+                if (operatingConnection is null)
+                {
+                    operatingConnection = CreateConnection();
+                    operatingConnection.Open();
+                }
+
+                using (var database = new PetaPoco.Database(operatingConnection))
+                {
+                    return database.Execute(sql, args);
+                }
+            }
+            finally
+            {
+                if (connection is null)
+                {
+                    operatingConnection?.Dispose();
                 }
             }
         }

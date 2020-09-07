@@ -74,7 +74,7 @@ namespace HFM.Forms.Views
                 messageLabel.Text = progressInfo.Message;
             };
 
-            await RunAsyncProcessor(progress);
+            await RunProgressFunction(progress);
             Close();
         }
 
@@ -91,7 +91,7 @@ namespace HFM.Forms.Views
             return value;
         }
 
-        private async Task RunAsyncProcessor(IProgress<ProgressInfo> progress)
+        private async Task RunProgressFunction(IProgress<ProgressInfo> progress)
         {
             var token = CancellationToken.None;
             if (SupportsCancellation)

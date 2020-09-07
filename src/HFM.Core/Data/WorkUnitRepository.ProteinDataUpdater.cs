@@ -18,145 +18,97 @@ namespace HFM.Core.Data
 
     public class ProteinDataUpdater
     {
-        private readonly IWorkUnitRepository _repository;
+        private readonly IWorkUnitDatabase _database;
         private readonly IProteinService _proteinService;
         private readonly SQLiteConnection _connection;
 
-        public ProteinDataUpdater(IWorkUnitRepository repository, IProteinService proteinService) : this(repository, proteinService, null)
+        public ProteinDataUpdater(IWorkUnitDatabase database, IProteinService proteinService) : this(database, proteinService, null)
         {
 
         }
 
-        public ProteinDataUpdater(IWorkUnitRepository repository, IProteinService proteinService, SQLiteConnection connection)
+        public ProteinDataUpdater(IWorkUnitDatabase database, IProteinService proteinService, SQLiteConnection connection)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _database = database ?? throw new ArgumentNullException(nameof(database));
             _proteinService = proteinService ?? NullProteinService.Instance;
             _connection = connection;
-        }
-
-        private (bool NewConnection, SQLiteConnection Connection, SQLiteTransaction Transaction) GetOpenConnection()
-        {
-            var newConnection = false;
-            var connection = _connection;
-            SQLiteTransaction transaction = null;
-
-            if (connection is null)
-            {
-                connection = _repository.CreateConnection();
-                connection.Open();
-                transaction = connection.BeginTransaction();
-                newConnection = true;
-            }
-
-            return (newConnection, connection, transaction);
         }
 
         public void Execute(IProgress<ProgressInfo> progress, CancellationToken cancellationToken, WorkUnitProteinUpdateScope scope, long id)
         {
             const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
 
-            bool newConnection = false;
-            SQLiteConnection connection = null;
-            SQLiteTransaction transaction = null;
-            try
+            switch (scope)
             {
-                (newConnection, connection, transaction) = GetOpenConnection();
-                switch (scope)
-                {
-                    case WorkUnitProteinUpdateScope.All:
-                    case WorkUnitProteinUpdateScope.Unknown:
+                case WorkUnitProteinUpdateScope.All:
+                case WorkUnitProteinUpdateScope.Unknown:
+                    {
+                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
+                        if (scope == WorkUnitProteinUpdateScope.Unknown)
                         {
-                            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
-                            if (scope == WorkUnitProteinUpdateScope.Unknown)
-                            {
-                                selectSql = selectSql.Where(workUnitNameUnknown);
-                            }
-                            selectSql = selectSql.GroupBy("ProjectID");
+                            selectSql = selectSql.Where(workUnitNameUnknown);
+                        }
+                        selectSql = selectSql.GroupBy("ProjectID");
 
-                            using (var table = _repository.Select(connection, selectSql.SQL))
+                        using (var table = _database.Select(_connection, selectSql.SQL))
+                        {
+                            int count = 0;
+                            int lastProgress = 0;
+                            foreach (DataRow row in table.Rows)
                             {
-                                int count = 0;
-                                int lastProgress = 0;
-                                foreach (DataRow row in table.Rows)
+                                cancellationToken.ThrowIfCancellationRequested();
+
+                                var projectId = row.Field<int>("ProjectID");
+                                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                                if (updateSql != null)
                                 {
-                                    cancellationToken.ThrowIfCancellationRequested();
-
-                                    var projectId = row.Field<int>("ProjectID");
-                                    var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                                    if (updateSql != null)
+                                    if (scope == WorkUnitProteinUpdateScope.Unknown)
                                     {
-                                        if (scope == WorkUnitProteinUpdateScope.Unknown)
-                                        {
-                                            updateSql = updateSql.Where(workUnitNameUnknown);
-                                        }
-                                        using (var database = new PetaPoco.Database(connection))
-                                        {
-                                            database.Execute(updateSql);
-                                        }
+                                        updateSql = updateSql.Where(workUnitNameUnknown);
                                     }
-                                    count++;
+                                    _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
+                                }
+                                count++;
 
-                                    int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-                                    if (progressPercentage != lastProgress)
-                                    {
-                                        string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                                        progress?.Report(new ProgressInfo(progressPercentage, message));
-                                        lastProgress = progressPercentage;
-                                    }
+                                int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                                if (progressPercentage != lastProgress)
+                                {
+                                    string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
+                                    progress?.Report(new ProgressInfo(progressPercentage, message));
+                                    lastProgress = progressPercentage;
                                 }
                             }
-                            break;
                         }
-                    case WorkUnitProteinUpdateScope.Project:
+                        break;
+                    }
+                case WorkUnitProteinUpdateScope.Project:
+                    {
+                        int projectId = (int)id;
+                        var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                        if (updateSql != null)
                         {
-                            int projectId = (int)id;
-                            var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                            if (updateSql != null)
+                            _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
+                        }
+                        break;
+                    }
+                case WorkUnitProteinUpdateScope.Id:
+                    {
+                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
+
+                        using (var table = _database.Select(_connection, selectSql.SQL, selectSql.Arguments))
+                        {
+                            if (table.Rows.Count != 0)
                             {
-                                using (var database = new PetaPoco.Database(connection))
+                                var projectId = table.Rows[0].Field<int>("ProjectID");
+                                var updateSql = GetUpdateSql(projectId, "ID", id);
+                                if (updateSql != null)
                                 {
-                                    database.Execute(updateSql);
+                                    _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
                                 }
                             }
-                            break;
                         }
-                    case WorkUnitProteinUpdateScope.Id:
-                        {
-                            var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
-
-                            using (var table = _repository.Select(connection, selectSql.SQL, selectSql.Arguments))
-                            {
-                                if (table.Rows.Count != 0)
-                                {
-                                    var projectId = table.Rows[0].Field<int>("ProjectID");
-                                    var updateSql = GetUpdateSql(projectId, "ID", id);
-                                    if (updateSql != null)
-                                    {
-                                        using (var database = new PetaPoco.Database(connection))
-                                        {
-                                            database.Execute(updateSql);
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                }
-
-                transaction?.Commit();
-            }
-            catch (Exception)
-            {
-                transaction?.Rollback();
-                throw;
-            }
-            finally
-            {
-                if (newConnection)
-                {
-                    transaction?.Dispose();
-                    connection?.Dispose();
-                }
+                        break;
+                    }
             }
         }
 
