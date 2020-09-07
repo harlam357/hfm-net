@@ -1,5 +1,4 @@
-﻿
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
 namespace HFM.Forms.Controls
@@ -9,6 +8,7 @@ namespace HFM.Forms.Controls
     {
         private BindingContext _context;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Satisfy IBindableComponent")]
         public BindingContext BindingContext
         {
             get => _context ?? (_context = new BindingContext());
@@ -17,10 +17,6 @@ namespace HFM.Forms.Controls
 
         private ControlBindingsCollection _bindings;
 
-        public ControlBindingsCollection DataBindings
-        {
-            get => _bindings ?? (_bindings = new ControlBindingsCollection(this));
-            set => _bindings = value;
-        }
+        public ControlBindingsCollection DataBindings => _bindings ?? (_bindings = new ControlBindingsCollection(this));
     }
 }
