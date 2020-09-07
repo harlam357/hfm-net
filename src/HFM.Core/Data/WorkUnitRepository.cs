@@ -547,7 +547,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal bool TableExists(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        private static bool TableExists(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
             using (DataTable table = connection.GetSchema("Tables", new[] { null, null, _SqlTableCommandDictionary[databaseTable].TableName, null }))
             {
@@ -564,7 +564,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal void CreateTable(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        private static void CreateTable(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
             using (var command = _SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
             {
