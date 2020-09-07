@@ -624,7 +624,15 @@ namespace HFM.Forms.Views
 
         private void mnuViewMessages_Click(object sender, EventArgs e)
         {
-            _presenter.ViewMessagesClick();
+            var presenterFactory = new Func<MessagesPresenter>(() =>
+            {
+                var scope = _presenter.ServiceScopeFactory.CreateScope();
+                var presenter = scope.ServiceProvider.GetRequiredService<MessagesPresenter>();
+                presenter.Closed += delegate { scope.Dispose(); };
+                return presenter;
+            });
+
+            _presenter.ViewMessagesClick(presenterFactory);
         }
 
         private void mnuViewShowHideLog_Click(object sender, EventArgs e)
@@ -697,7 +705,15 @@ namespace HFM.Forms.Views
 
         private void mnuToolsHistory_Click(object sender, EventArgs e)
         {
-            _presenter.ToolsHistoryClick();
+            var presenterFactory = new Func<WorkUnitHistoryPresenter>(() =>
+            {
+                var scope = _presenter.ServiceScopeFactory.CreateScope();
+                var presenter = scope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
+                presenter.Closed += delegate { scope.Dispose(); };
+                return presenter;
+            });
+
+            _presenter.ToolsHistoryClick(presenterFactory);
         }
 
         #endregion

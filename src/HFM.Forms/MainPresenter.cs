@@ -598,28 +598,24 @@ namespace HFM.Forms
 
         private MessagesPresenter _messagesPresenter;
 
-        public void ViewMessagesClick()
+        public void ViewMessagesClick(Func<MessagesPresenter> presenterFactory)
         {
             try
             {
                 if (_messagesPresenter is null)
                 {
-                    var scope = ServiceScopeFactory.CreateScope();
-                    _messagesPresenter = scope.ServiceProvider.GetRequiredService<MessagesPresenter>();
-                    _messagesPresenter.Closed += (sender, args) =>
-                    {
-                        scope.Dispose();
-                        _messagesPresenter = null;
-                    };
+                    _messagesPresenter = presenterFactory();
+                    _messagesPresenter.Closed += (s, e) => _messagesPresenter = null;
                 }
-
                 _messagesPresenter?.Show();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
+                MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
+
                 _messagesPresenter?.Dispose();
                 _messagesPresenter = null;
-                throw;
             }
         }
 
@@ -747,28 +743,24 @@ namespace HFM.Forms
 
         private IFormPresenter _historyPresenter;
 
-        public void ToolsHistoryClick()
+        public void ToolsHistoryClick(Func<WorkUnitHistoryPresenter> presenterFactory)
         {
             try
             {
                 if (_historyPresenter is null)
                 {
-                    var scope = ServiceScopeFactory.CreateScope();
-                    _historyPresenter = scope.ServiceProvider.GetRequiredService<WorkUnitHistoryPresenter>();
-                    _historyPresenter.Closed += (sender, args) =>
-                    {
-                        scope.Dispose();
-                        _historyPresenter = null;
-                    };
+                    _historyPresenter = presenterFactory();
+                    _historyPresenter.Closed += (s, e) => _historyPresenter = null;
                 }
-
                 _historyPresenter?.Show();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
+                MessageBox.ShowError(Form, ex.Message, Core.Application.NameAndVersion);
+
                 _historyPresenter?.Dispose();
                 _historyPresenter = null;
-                throw;
             }
         }
 
