@@ -20,7 +20,7 @@ namespace HFM.Core.Data
         Version
     }
 
-    public interface IWorkUnitRepository : IDisposable
+    public interface IWorkUnitRepository
     {
         /// <summary>
         /// Flag that notes if the Database is safe to call.
@@ -55,7 +55,7 @@ namespace HFM.Core.Data
         int Execute(SQLiteConnection connection, string sql, params object[] args);
     }
 
-    public partial class WorkUnitRepository : IWorkUnitRepository, IWorkUnitDatabase
+    public partial class WorkUnitRepository : IWorkUnitRepository, IWorkUnitDatabase, IDisposable
     {
         private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
