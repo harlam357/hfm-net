@@ -19,12 +19,7 @@ namespace HFM.Forms.Controls
     internal class DataGridViewProgressCell : DataGridViewTextBoxCell
     {
         // Used to make custom cell consistent with a DataGridViewImageCell
-        private static readonly Image _EmptyImage;
-
-        static DataGridViewProgressCell()
-        {
-            _EmptyImage = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-        }
+        private static readonly Image _EmptyImage = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
         public DataGridViewProgressCell()
         {
