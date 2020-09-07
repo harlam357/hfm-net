@@ -141,8 +141,8 @@ namespace HFM.Core.Services
 
         public bool Equals(EocStatsData other)
         {
-            if (other == null) return false;
-
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
             return UserTwentyFourHourAverage == other.UserTwentyFourHourAverage &&
                    UserPointsToday == other.UserPointsToday &&
                    UserPointsWeek == other.UserPointsWeek &&
@@ -162,6 +162,43 @@ namespace HFM.Core.Services
                    TeamRank == other.TeamRank &&
                    TeamChangeRankTwentyFourHours == other.TeamChangeRankTwentyFourHours &&
                    TeamChangeRankSevenDays == other.TeamChangeRankSevenDays;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((EocStatsData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            // ReSharper disable NonReadonlyMemberInGetHashCode
+            unchecked
+            {
+                var hashCode = UserTwentyFourHourAverage.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserPointsToday.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserPointsWeek.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserPointsTotal.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserWorkUnitsTotal.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserPointsUpdate.GetHashCode();
+                hashCode = (hashCode * 397) ^ UserTeamRank;
+                hashCode = (hashCode * 397) ^ UserOverallRank;
+                hashCode = (hashCode * 397) ^ UserChangeRankTwentyFourHours;
+                hashCode = (hashCode * 397) ^ UserChangeRankSevenDays;
+                hashCode = (hashCode * 397) ^ TeamTwentyFourHourAverage.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamPointsToday.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamPointsWeek.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamPointsTotal.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamWorkUnitsTotal.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamPointsUpdate.GetHashCode();
+                hashCode = (hashCode * 397) ^ TeamRank;
+                hashCode = (hashCode * 397) ^ TeamChangeRankTwentyFourHours;
+                hashCode = (hashCode * 397) ^ TeamChangeRankSevenDays;
+                return hashCode;
+            }
+            // ReSharper restore NonReadonlyMemberInGetHashCode
         }
 
         /// <summary>
