@@ -107,7 +107,7 @@ namespace HFM.Core.Client
 
         protected virtual IEnumerable<SlotModel> OnEnumerateSlots()
         {
-            return new SlotModel[0];
+            return Array.Empty<SlotModel>();
         }
 
         public DateTime LastRetrievalTime { get; protected set; } = DateTime.MinValue;
