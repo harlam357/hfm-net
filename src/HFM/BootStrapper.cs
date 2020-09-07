@@ -257,11 +257,12 @@ namespace HFM
 
         private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
-            var mainPresenter = Container.GetInstance<MainPresenter>();
+            MainPresenter mainPresenter;
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
             try
             {
-                mainPresenter.Initialize(openFile);
+                mainPresenter = Container.GetInstance<MainPresenter>();
+                mainPresenter.ConfigFilePathFromArguments = openFile;
             }
             catch (Exception ex)
             {
@@ -269,7 +270,7 @@ namespace HFM
             }
 
             var mainForm = (MainForm)mainPresenter.Form;
-            mainForm.WorkUnitHistoryMenuEnabled = false;
+            mainForm.WorkUnitHistoryMenuItemEnabled = false;
             var repository = (WorkUnitRepository)Container.GetInstance<IWorkUnitRepository>();
             try
             {
@@ -289,7 +290,7 @@ namespace HFM
                     }
                 }
 
-                mainForm.WorkUnitHistoryMenuEnabled = repository.Connected;
+                mainForm.WorkUnitHistoryMenuItemEnabled = repository.Connected;
             }
             catch (Exception ex)
             {

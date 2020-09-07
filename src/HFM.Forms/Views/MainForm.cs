@@ -22,12 +22,6 @@ namespace HFM.Forms.Views
 {
     public partial class MainForm : FormBase, IWin32Form
     {
-        public bool WorkUnitHistoryMenuEnabled
-        {
-            get { return mnuToolsHistory.Enabled; }
-            set { mnuToolsHistory.Enabled = value; }
-        }
-
         private readonly MainPresenter _presenter;
         private NotifyIcon _notifyIcon;
 
@@ -701,6 +695,12 @@ namespace HFM.Forms.Views
             var calculatorForm = scope.ServiceProvider.GetRequiredService<ProteinCalculatorForm>();
             calculatorForm.Closed += delegate { scope.Dispose(); };
             calculatorForm.Show();
+        }
+
+        public bool WorkUnitHistoryMenuItemEnabled
+        {
+            get => mnuToolsHistory.Enabled;
+            set => mnuToolsHistory.Enabled = value;
         }
 
         private void mnuToolsHistory_Click(object sender, EventArgs e)

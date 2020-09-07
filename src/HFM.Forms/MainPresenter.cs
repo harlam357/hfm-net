@@ -100,12 +100,7 @@ namespace HFM.Forms
 
         protected override IWin32Form OnCreateForm() => new MainForm(this);
 
-        private string _openFile;
-
-        public void Initialize(string openFile)
-        {
-            _openFile = openFile;
-        }
+        public string ConfigFilePathFromArguments { get; set; }
 
         #region View Handling Methods
 
@@ -116,16 +111,16 @@ namespace HFM.Forms
                 Form.WindowState = FormWindowState.Minimized;
             }
 
-            if (!String.IsNullOrEmpty(_openFile))
+            if (!String.IsNullOrEmpty(ConfigFilePathFromArguments))
             {
-                LoadConfigFile(_openFile);
+                LoadConfigFile(ConfigFilePathFromArguments);
             }
             else if (Preferences.Get<bool>(Preference.UseDefaultConfigFile))
             {
-                var fileName = Preferences.Get<string>(Preference.DefaultConfigFile);
-                if (!String.IsNullOrEmpty(fileName))
+                var filePath = Preferences.Get<string>(Preference.DefaultConfigFile);
+                if (!String.IsNullOrEmpty(filePath))
                 {
-                    LoadConfigFile(fileName);
+                    LoadConfigFile(filePath);
                 }
             }
         }
