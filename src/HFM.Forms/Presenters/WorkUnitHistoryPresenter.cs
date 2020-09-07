@@ -243,7 +243,7 @@ namespace HFM.Forms.Presenters
 
             try
             {
-                using (var dialog = new ProgressDialog((progress, token) => proteinDataUpdater.Execute(progress, token, scope, id), true))
+                using (var dialog = new ProgressDialog((progress, token) => proteinDataUpdater.Execute(progress, scope, id, token), true))
                 {
                     dialog.Text = Core.Application.NameAndVersion;
                     dialog.ShowDialog(Form);

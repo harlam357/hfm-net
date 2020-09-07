@@ -34,7 +34,7 @@ namespace HFM.Core.Data
             _connection = connection;
         }
 
-        public void Execute(IProgress<ProgressInfo> progress, CancellationToken cancellationToken, WorkUnitProteinUpdateScope scope, long id)
+        public void Execute(IProgress<ProgressInfo> progress, WorkUnitProteinUpdateScope scope, long id, CancellationToken cancellationToken)
         {
             const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
 
