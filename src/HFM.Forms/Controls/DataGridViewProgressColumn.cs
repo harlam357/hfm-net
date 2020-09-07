@@ -47,29 +47,37 @@ namespace HFM.Forms.Controls
 
             var percentage = (float)value;
             var progressVal = Convert.ToInt32(percentage * 100);
-            Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);
-
-            // Draws the cell grid
-            base.Paint(g, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
-               cellStyle, advancedBorderStyle, (paintParts & ~DataGridViewPaintParts.ContentForeground));
-
-            if (percentage > 0.0)
+            using (var foreColorBrush = new SolidBrush(cellStyle.ForeColor))
             {
-                // Draw the progress bar and the text
-                Color progressBarColor = Color.FromArgb(163, 189, 242);
-                g.FillRectangle(new SolidBrush(progressBarColor), cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32((percentage * cellBounds.Width - 4)), cellBounds.Height - 4);
-                g.DrawString(progressVal + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
-            }
-            else
-            {
-                // draw the text
-                if (DataGridView.CurrentRow != null && DataGridView.CurrentRow.Index == rowIndex)
+
+                // Draws the cell grid
+                base.Paint(g, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
+                    cellStyle, advancedBorderStyle, paintParts & ~DataGridViewPaintParts.ContentForeground);
+
+                if (percentage > 0.0)
                 {
-                    g.DrawString(progressVal + "%", cellStyle.Font, new SolidBrush(cellStyle.SelectionForeColor), cellBounds.X + 6, cellBounds.Y + 2);
+                    // Draw the progress bar and the text
+                    var progressBarColor = Color.FromArgb(163, 189, 242);
+                    using (var progressBarBrush = new SolidBrush(progressBarColor))
+                    {
+                        g.FillRectangle(progressBarBrush, cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32((percentage * cellBounds.Width) - 4), cellBounds.Height - 4);
+                    }
+                    g.DrawString(progressVal + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
                 }
                 else
                 {
-                    g.DrawString(progressVal + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
+                    // draw the text
+                    if (DataGridView.CurrentRow != null && DataGridView.CurrentRow.Index == rowIndex)
+                    {
+                        using (var selectionForeColorBrush = new SolidBrush(cellStyle.SelectionForeColor))
+                        {
+                            g.DrawString(progressVal + "%", cellStyle.Font, selectionForeColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
+                        }
+                    }
+                    else
+                    {
+                        g.DrawString(progressVal + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
+                    }
                 }
             }
         }
