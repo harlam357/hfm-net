@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HFM.Core.Serializers
 {
@@ -7,15 +8,7 @@ namespace HFM.Core.Serializers
     {
         public static string GetFileTypeFilters<T>(this IEnumerable<IFileSerializer<T>> serializers) where T : class, new()
         {
-            var sb = new StringBuilder();
-            foreach (var s in serializers)
-            {
-                sb.Append(s.FileTypeFilter);
-                sb.Append("|");
-            }
-
-            sb.Length = sb.Length - 1;
-            return sb.ToString();
+            return String.Join("|", serializers.Select(x => x.FileTypeFilter));
         }
     }
 }
