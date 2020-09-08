@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Threading;
 
 using HFM.Core.Data;
@@ -11,31 +10,29 @@ namespace HFM.Core.ScheduledTasks
 {
     public class EocStatsScheduledTask : ScheduledTask
     {
-        private readonly IPreferences _prefs;
+        public IPreferences Preferences { get; }
 
-        private ILogger _logger;
+        public ILogger Logger { get; }
 
-        public ILogger Logger => _logger ?? (_logger = NullLogger.Instance);
-
-        private readonly IEocStatsService _statsService;
+        public IEocStatsService StatsService { get; }
 
         public EocStatsDataContainer DataContainer { get; }
 
-        public EocStatsScheduledTask(IPreferences prefs, ILogger logger, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
+        public EocStatsScheduledTask(IPreferences preferences, ILogger logger, IEocStatsService eocStatsService, EocStatsDataContainer dataContainer)
             : base("EOC stats")
         {
-            _prefs = prefs;
-            _logger = logger;
-            _statsService = eocStatsService;
-            DataContainer = dataContainer;
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
+            Logger = logger ?? NullLogger.Instance;
+            StatsService = eocStatsService ?? throw new ArgumentNullException(nameof(eocStatsService));
+            DataContainer = dataContainer ?? throw new ArgumentNullException(nameof(dataContainer));
             Interval = CalculateInterval(DataContainer.Data.LastUpdated);
             Changed += TaskChanged;
 
-            _prefs.PreferenceChanged += (s, e) =>
+            Preferences.PreferenceChanged += (s, e) =>
             {
                 if (e.Preference == Preference.EnableUserStats)
                 {
-                    bool enableUserStats = _prefs.Get<bool>(Preference.EnableUserStats);
+                    bool enableUserStats = Preferences.Get<bool>(Preference.EnableUserStats);
                     if (enableUserStats)
                     {
                         Start();
@@ -47,7 +44,7 @@ namespace HFM.Core.ScheduledTasks
                 }
             };
 
-            if (_prefs.Get<bool>(Preference.EnableUserStats))
+            if (Preferences.Get<bool>(Preference.EnableUserStats))
             {
                 if (TimeForNextUpdate(DataContainer.Data.LastUpdated))
                 {
@@ -83,7 +80,7 @@ namespace HFM.Core.ScheduledTasks
         {
             try
             {
-                var newStatsData = _statsService.GetStatsData();
+                var newStatsData = StatsService.GetStatsData();
 
                 // if the new data is not equal to the previous data, we updated... otherwise, if the update
                 // status is current we should assume the data is current but did not change
