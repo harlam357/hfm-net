@@ -550,5 +550,16 @@ namespace HFM.Forms.Views
                 e.Handled = true;
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _cssSampleBrowser?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

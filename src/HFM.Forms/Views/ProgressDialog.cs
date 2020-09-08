@@ -140,5 +140,16 @@ namespace HFM.Forms.Views
             ProcessCancelButton.Visible = SupportsCancellation;
             Size = SupportsCancellation ? _baseSize : new Size(_baseSize.Width, _baseSize.Height - 30);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _cancellationTokenSource?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

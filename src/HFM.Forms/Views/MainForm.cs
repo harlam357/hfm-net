@@ -869,5 +869,16 @@ namespace HFM.Forms.Views
 
             new DataGridViewColumnSelector(dataGridView1);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _notifyIcon?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
