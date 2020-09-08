@@ -117,6 +117,7 @@
     <Compile Include="Controls\BindableToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Internal\CollectionExtensions.cs" />
     <Compile Include="Internal\ListSortDirectionExtensions.cs" />
     <Compile Include="Internal\WrapString.cs" />
     <Compile Include="ListItemCollection.cs" />
