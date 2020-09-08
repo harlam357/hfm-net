@@ -1,9 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using HFM.Core.Logging;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -15,14 +15,14 @@ namespace HFM.Core.Data
 
         public override Serializers.IFileSerializer<List<Protein>> DefaultSerializer => new TabSerializer();
 
-        public ProteinDataContainer() : this(null)
+        public ProteinDataContainer() : this(null, null)
         {
-            
+
         }
 
-        public ProteinDataContainer(IPreferences prefs)
+        public ProteinDataContainer(ILogger logger, IPreferences preferences) : base(logger)
         {
-            var path = prefs?.Get<string>(Preference.ApplicationDataFolderPath);
+            var path = preferences?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))
             {
                 FilePath = Path.Combine(path, DefaultFileName);
