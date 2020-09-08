@@ -233,7 +233,7 @@ namespace HFM.Forms.Views
                     i++));
             }
 
-            _presenter.Model.FormColumns = columns;
+            _presenter.Model.FormColumns.Reset(columns);
         }
 
         private void DisplaySelectedSlot(SlotModel selectedSlot)

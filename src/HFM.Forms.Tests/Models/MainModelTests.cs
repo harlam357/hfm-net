@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Forms.Internal;
 using HFM.Preferences;
 
 using NUnit.Framework;
@@ -24,7 +25,9 @@ namespace HFM.Forms.Models
             preferences.Set(Preference.FormSplitterLocation, 31);
             preferences.Set(Preference.QueueWindowVisible, true);
             preferences.Set(Preference.FollowLog, true);
+            preferences.Set(Preference.FormColumns, new List<string> { "A", "B", "C" });
             preferences.Set(Preference.MinimizeTo, MinimizeToOption.Both);
+            preferences.Set(Preference.ColorLogFile, true);
             // Act
             model.Load();
             // Assert
@@ -35,7 +38,9 @@ namespace HFM.Forms.Models
             Assert.AreEqual(31, model.FormSplitterLocation);
             Assert.AreEqual(true, model.QueueWindowVisible);
             Assert.AreEqual(true, model.FollowLog);
+            CollectionAssert.AreEqual(new List<string> { "A", "B", "C" }, model.FormColumns);
             Assert.AreEqual(MinimizeToOption.Both, model.MinimizeTo);
+            Assert.AreEqual(true, model.ColorLogFile);
         }
 
         [Test]
@@ -51,6 +56,7 @@ namespace HFM.Forms.Models
             model.FormSplitterLocation = 31;
             model.QueueWindowVisible = true;
             model.FollowLog = true;
+            model.FormColumns.Reset(new List<string> { "A", "B", "C" });
             // Act
             model.Save();
             // Assert
@@ -61,6 +67,7 @@ namespace HFM.Forms.Models
             Assert.AreEqual(31, preferences.Get<int>(Preference.FormSplitterLocation));
             Assert.AreEqual(true, preferences.Get<bool>(Preference.QueueWindowVisible));
             Assert.AreEqual(true, preferences.Get<bool>(Preference.FollowLog));
+            CollectionAssert.AreEqual(new List<string> { "A", "B", "C" }, preferences.Get<ICollection<string>>(Preference.FormColumns));
         }
 
         [Test]

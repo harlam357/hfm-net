@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using HFM.Core.WorkUnits;
+using HFM.Forms.Internal;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -27,9 +28,9 @@ namespace HFM.Forms.Models
             FormSplitterLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
             QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
             FollowLog = Preferences.Get<bool>(Preference.FollowLog);
-            FormColumns = Preferences.Get<ICollection<string>>(Preference.FormColumns);
+            FormColumns.Reset(Preferences.Get<ICollection<string>>(Preference.FormColumns));
 
-            // changed be preferences dialog
+            // changed by preferences dialog
             MinimizeTo = Preferences.Get<MinimizeToOption>(Preference.MinimizeTo);
             ColorLogFile = Preferences.Get<bool>(Preference.ColorLogFile);
 
@@ -141,7 +142,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        public ICollection<string> FormColumns { get; set; }
+        public ICollection<string> FormColumns { get; } = new List<string>();
 
         private bool _followLog;
 
