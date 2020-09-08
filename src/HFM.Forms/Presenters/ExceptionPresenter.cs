@@ -113,7 +113,22 @@ namespace HFM.Forms.Presenters
 
         public void Dispose()
         {
-            Dialog?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Dialog?.Dispose();
+                }
+            }
+            _disposed = true;
         }
 
         public override string BuildExceptionText()

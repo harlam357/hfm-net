@@ -123,8 +123,23 @@ namespace HFM.Forms.Presenters
 
         public void Dispose()
         {
-            Dialog?.Dispose();
-            Connection?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Dialog?.Dispose();
+                    Connection?.Dispose();
+                }
+            }
+            _disposed = true;
         }
     }
 }
