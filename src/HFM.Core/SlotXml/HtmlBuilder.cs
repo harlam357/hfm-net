@@ -61,11 +61,16 @@ namespace HFM.Core.SlotXml
             return null;
         }
 
+        private XmlReaderSettings XmlReaderSettings { get; } = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore };
+
         private IEnumerable<string> EnumerateSlotSummaryFiles(string slotSummaryFile, string path, string cssFileName)
         {
             // Load the Overview XML
             var summaryXml = new XmlDocument();
-            summaryXml.Load(slotSummaryFile);
+            using (var reader = XmlReader.Create(slotSummaryFile, XmlReaderSettings))
+            {
+                summaryXml.Load(reader);
+            }
 
             StreamWriter sw;
             // Generate the index page
@@ -92,7 +97,10 @@ namespace HFM.Core.SlotXml
             foreach (var f in slotDetailFiles)
             {
                 var slotXml = new XmlDocument();
-                slotXml.Load(f);
+                using (var reader = XmlReader.Create(f, XmlReaderSettings))
+                {
+                    slotXml.Load(reader);
+                }
 
                 string filePath = Path.Combine(path, Path.ChangeExtension(f, ".html"));
                 using (var sw = new StreamWriter(filePath, false))
@@ -103,13 +111,13 @@ namespace HFM.Core.SlotXml
             }
         }
 
-        private static string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
+        private string Transform(XmlNode xmlDoc, string xsltFilePath, string cssFileName)
         {
             // Create the XslCompiledTransform and Load the XmlReader
             var xslt = new XslCompiledTransform();
-            using (var xmlReader = new XmlTextReader(xsltFilePath))
+            using (var reader = XmlReader.Create(xsltFilePath, XmlReaderSettings))
             {
-                xslt.Load(xmlReader, null, new XmlUrlResolver());
+                xslt.Load(reader, null, new XmlUrlResolver());
             }
 
             // Transform the XML data to an in memory stream
