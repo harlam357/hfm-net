@@ -29,6 +29,8 @@ dotnet_diagnostic.CA1303.severity = none
 dotnet_diagnostic.CA1307.severity = none
 # CA1305: Specify IFormatProvider (NOISE REDUCTION: TURN BACK ON LATER)
 dotnet_diagnostic.CA1305.severity = none
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none
 # CA1720: Identifiers should not contain type names
 dotnet_diagnostic.CA1720.severity = none
 # CA2007: Do not directly await a Task

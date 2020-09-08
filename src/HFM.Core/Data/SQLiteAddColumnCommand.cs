@@ -26,6 +26,7 @@ namespace HFM.Core.Data
         private readonly List<DbCommand> _commands = new List<DbCommand>();
         private EnumerableRowCollection<DataRow> _rows;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "No user input.")]
         public void AddColumn(string name, string dataType)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
