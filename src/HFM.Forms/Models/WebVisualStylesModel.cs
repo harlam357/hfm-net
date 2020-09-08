@@ -52,7 +52,7 @@ namespace HFM.Forms.Models
         {
             get
             {
-                var names = new string[0];
+                var names = Array.Empty<string>();
                 var errors = names.Select(x => this[x]).Where(x => x != null);
                 return String.Join(Environment.NewLine, errors);
             }
