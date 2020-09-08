@@ -46,6 +46,32 @@ namespace HFM.Forms.Models
         }
 
         [Test]
+        public void MainModel_PreferenceChanged_UpdatesMinimizeTo()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            model.Load();
+            // Act
+            preferences.Set(Preference.MinimizeTo, MinimizeToOption.TaskBar);
+            // Assert
+            Assert.AreEqual(MinimizeToOption.TaskBar, model.MinimizeTo);
+        }
+
+        [Test]
+        public void MainModel_PreferenceChanged_UpdatesColorLogFile()
+        {
+            // Arrange
+            var model = CreateModel();
+            var preferences = model.Preferences;
+            model.Load();
+            // Act
+            preferences.Set(Preference.ColorLogFile, false);
+            // Assert
+            Assert.AreEqual(false, model.ColorLogFile);
+        }
+
+        [Test]
         public void MainModel_Save_ToPreferences()
         {
             // Arrange
