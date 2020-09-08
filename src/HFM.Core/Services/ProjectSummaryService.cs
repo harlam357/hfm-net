@@ -25,7 +25,8 @@ namespace HFM.Core.Services
 
         public ICollection<Protein> GetProteins(IProgress<ProgressInfo> progress)
         {
-            var webOperation = WebOperation.Create(_preferences.Get<string>(Preference.ProjectDownloadUrl));
+            var requestUri = new Uri(_preferences.Get<string>(Preference.ProjectDownloadUrl));
+            var webOperation = WebOperation.Create(requestUri);
             if (progress != null)
             {
                 webOperation.ProgressChanged += (sender, e) =>
