@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -41,7 +40,7 @@ namespace HFM.Preferences
 
         public void Load()
         {
-            var data = Read() ?? Migrate() ?? new PreferenceData();
+            var data = Read() ?? new PreferenceData();
             Load(data);
         }
 
@@ -49,11 +48,6 @@ namespace HFM.Preferences
         {
             Upgrade(data);
             _prefs = CreateDictionary(data);
-        }
-
-        private PreferenceData Migrate()
-        {
-            return null;
         }
 
         private void Upgrade(PreferenceData data)
