@@ -262,12 +262,14 @@ namespace HFM.Forms.Views
 
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            var sf = new StringFormat { Alignment = StringAlignment.Center };
-            if (e.ColumnIndex < 0 && e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
+            using (var sf = new StringFormat { Alignment = StringAlignment.Center })
             {
-                e.PaintBackground(e.ClipBounds, true);
-                e.Graphics.DrawString((e.RowIndex + 1).ToString(), Font, Brushes.Black, e.CellBounds, sf);
-                e.Handled = true;
+                if (e.ColumnIndex < 0 && e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
+                {
+                    e.PaintBackground(e.ClipBounds, true);
+                    e.Graphics.DrawString((e.RowIndex + 1).ToString(), Font, Brushes.Black, e.CellBounds, sf);
+                    e.Handled = true;
+                }
             }
         }
 
