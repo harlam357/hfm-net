@@ -10,29 +10,29 @@ using System.Reflection.Emit;
 
 namespace HFM.Preferences.Internal
 {
-   // Based on http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
+    // Based on http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
 
-   internal static class ExpressionExtensions
-   {
-      internal static Action<T, TValue> ToSetter<T, TValue>(this Expression<Func<T, TValue>> getter)
-      {
-         ParameterExpression parameter;
-         Expression instance;
-         MemberExpression propertyOrField;
+    internal static class ExpressionExtensions
+    {
+        internal static Action<T, TValue> ToSetter<T, TValue>(this Expression<Func<T, TValue>> getter)
+        {
+            ParameterExpression parameter;
+            Expression instance;
+            MemberExpression propertyOrField;
 
-         GetMemberExpression(getter, out parameter, out instance, out propertyOrField);
+            GetMemberExpression(getter, out parameter, out instance, out propertyOrField);
 
-         // Very simple case: p => p.Property or p => p.Field
-         if (parameter == instance)
-         {
-            if (propertyOrField.Member.MemberType == MemberTypes.Property)
+            // Very simple case: p => p.Property or p => p.Field
+            if (parameter == instance)
             {
-               // This is FASTER than Expression trees! (5x on my benchmarks) but works only on properties
-               var property = (PropertyInfo)propertyOrField.Member;
-               MethodInfo setter = property.GetSetMethod();
-               var action = (Action<T, TValue>)Delegate.CreateDelegate(typeof(Action<T, TValue>), setter);
-               return action;
-            }
+                if (propertyOrField.Member.MemberType == MemberTypes.Property)
+                {
+                    // This is FASTER than Expression trees! (5x on my benchmarks) but works only on properties
+                    var property = (PropertyInfo)propertyOrField.Member;
+                    MethodInfo setter = property.GetSetMethod();
+                    var action = (Action<T, TValue>)Delegate.CreateDelegate(typeof(Action<T, TValue>), setter);
+                    return action;
+                }
 #if NET35
             else // if (propertyOrField.Member.MemberType == MemberTypes.Field)
             {
@@ -42,11 +42,11 @@ namespace HFM.Preferences.Internal
                return action;
             }
 #endif
-         }
+            }
 
-         ParameterExpression value = Expression.Parameter(typeof(TValue), "val");
+            ParameterExpression value = Expression.Parameter(typeof(TValue), "val");
 
-         Expression expr;
+            Expression expr;
 #if NET35
          if (propertyOrField.Member.MemberType == MemberTypes.Property)
          {
@@ -61,50 +61,50 @@ namespace HFM.Preferences.Internal
 #endif
 
 #if NET40
-         // For field access it's 5x faster than the 3.5 method and 1.2x than "simple" method. For property access nearly same speed (1.1x faster).
-         expr = Expression.Assign(propertyOrField, value);
+            // For field access it's 5x faster than the 3.5 method and 1.2x than "simple" method. For property access nearly same speed (1.1x faster).
+            expr = Expression.Assign(propertyOrField, value);
 #endif
 
-         return Expression.Lambda<Action<T, TValue>>(expr, parameter, value).Compile();
-      }
+            return Expression.Lambda<Action<T, TValue>>(expr, parameter, value).Compile();
+        }
 
-      private static void GetMemberExpression<T, TValue>(Expression<Func<T, TValue>> expression,
-          out ParameterExpression parameter, out Expression instance, out MemberExpression propertyOrField)
-      {
-         Expression current = expression.Body;
+        private static void GetMemberExpression<T, TValue>(Expression<Func<T, TValue>> expression,
+            out ParameterExpression parameter, out Expression instance, out MemberExpression propertyOrField)
+        {
+            Expression current = expression.Body;
 
-         while (current.NodeType == ExpressionType.Convert || current.NodeType == ExpressionType.TypeAs)
-         {
-            current = ((UnaryExpression)current).Operand;
-         }
-
-         if (current.NodeType != ExpressionType.MemberAccess)
-         {
-            throw new ArgumentException("Expression does not specify member access.", "expression");
-         }
-
-         propertyOrField = (MemberExpression)current;
-         current = propertyOrField.Expression;
-         instance = current;
-
-         while (current.NodeType != ExpressionType.Parameter)
-         {
-            if (current.NodeType == ExpressionType.Convert || current.NodeType == ExpressionType.TypeAs)
+            while (current.NodeType == ExpressionType.Convert || current.NodeType == ExpressionType.TypeAs)
             {
-               current = ((UnaryExpression)current).Operand;
+                current = ((UnaryExpression)current).Operand;
             }
-            else if (current.NodeType == ExpressionType.MemberAccess)
-            {
-               current = ((MemberExpression)current).Expression;
-            }
-            else
-            {
-               throw new ArgumentException("Expression does not specify member access.", "expression");
-            }
-         }
 
-         parameter = (ParameterExpression)current;
-      }
+            if (current.NodeType != ExpressionType.MemberAccess)
+            {
+                throw new ArgumentException("Expression does not specify member access.", "expression");
+            }
+
+            propertyOrField = (MemberExpression)current;
+            current = propertyOrField.Expression;
+            instance = current;
+
+            while (current.NodeType != ExpressionType.Parameter)
+            {
+                if (current.NodeType == ExpressionType.Convert || current.NodeType == ExpressionType.TypeAs)
+                {
+                    current = ((UnaryExpression)current).Operand;
+                }
+                else if (current.NodeType == ExpressionType.MemberAccess)
+                {
+                    current = ((MemberExpression)current).Expression;
+                }
+                else
+                {
+                    throw new ArgumentException("Expression does not specify member access.", "expression");
+                }
+            }
+
+            parameter = (ParameterExpression)current;
+        }
 
 #if NET35
       // Based on http://stackoverflow.com/questions/321650/how-do-i-set-a-field-value-in-an-c-expression-tree/321686#321686
@@ -142,5 +142,5 @@ namespace HFM.Preferences.Internal
          left = right;                                     // to value types!
       }
 #endif
-   }
+    }
 }
