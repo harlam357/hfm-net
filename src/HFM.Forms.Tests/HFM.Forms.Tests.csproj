@@ -111,6 +111,7 @@
       <Link>Mocks\MockLocalProcessService.cs</Link>
     </Compile>
     <Compile Include="ClientSettingsManagerTests.cs" />
+    <Compile Include="Controls\RadioPanelTests.cs" />
     <Compile Include="Models\BenchmarksModelTests.cs" />
     <Compile Include="Models\MainModelTests.cs" />
     <Compile Include="Models\MessagesModelTests.cs" />

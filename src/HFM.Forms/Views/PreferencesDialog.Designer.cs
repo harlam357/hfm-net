@@ -977,7 +977,6 @@ namespace HFM.Forms.Views
             this.webDeploymentTypeFtpRadioButton.Size = new System.Drawing.Size(45, 17);
             this.webDeploymentTypeFtpRadioButton.TabIndex = 2;
             this.webDeploymentTypeFtpRadioButton.TabStop = true;
-            this.webDeploymentTypeFtpRadioButton.Tag = "1";
             this.webDeploymentTypeFtpRadioButton.Text = "FTP";
             this.webDeploymentTypeFtpRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -989,7 +988,6 @@ namespace HFM.Forms.Views
             this.webDeploymentTypePathRadioButton.Size = new System.Drawing.Size(47, 17);
             this.webDeploymentTypePathRadioButton.TabIndex = 1;
             this.webDeploymentTypePathRadioButton.TabStop = true;
-            this.webDeploymentTypePathRadioButton.Tag = "0";
             this.webDeploymentTypePathRadioButton.Text = "Path";
             this.webDeploymentTypePathRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -1038,7 +1036,6 @@ namespace HFM.Forms.Views
             this.webDeploymentFtpActiveRadioButton.Name = "webDeploymentFtpActiveRadioButton";
             this.webDeploymentFtpActiveRadioButton.Size = new System.Drawing.Size(55, 17);
             this.webDeploymentFtpActiveRadioButton.TabIndex = 2;
-            this.webDeploymentFtpActiveRadioButton.Tag = "1";
             this.webDeploymentFtpActiveRadioButton.Text = "Active";
             this.webDeploymentFtpActiveRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -1051,7 +1048,6 @@ namespace HFM.Forms.Views
             this.webDeploymentFtpPassiveRadioButton.Size = new System.Drawing.Size(62, 17);
             this.webDeploymentFtpPassiveRadioButton.TabIndex = 1;
             this.webDeploymentFtpPassiveRadioButton.TabStop = true;
-            this.webDeploymentFtpPassiveRadioButton.Tag = "0";
             this.webDeploymentFtpPassiveRadioButton.Text = "Passive";
             this.webDeploymentFtpPassiveRadioButton.UseVisualStyleBackColor = true;
             // 

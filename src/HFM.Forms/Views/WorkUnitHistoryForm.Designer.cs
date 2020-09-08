@@ -333,7 +333,6 @@ namespace HFM.Forms.Views
             this.PpdCalculationStandardRadioButton.Size = new System.Drawing.Size(68, 17);
             this.PpdCalculationStandardRadioButton.TabIndex = 2;
             this.PpdCalculationStandardRadioButton.TabStop = true;
-            this.PpdCalculationStandardRadioButton.Tag = "2";
             this.PpdCalculationStandardRadioButton.Text = "Standard";
             this.PpdCalculationStandardRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -345,7 +344,6 @@ namespace HFM.Forms.Views
             this.PpdCalculationBonusFrameTimeRadioButton.Size = new System.Drawing.Size(119, 17);
             this.PpdCalculationBonusFrameTimeRadioButton.TabIndex = 1;
             this.PpdCalculationBonusFrameTimeRadioButton.TabStop = true;
-            this.PpdCalculationBonusFrameTimeRadioButton.Tag = "1";
             this.PpdCalculationBonusFrameTimeRadioButton.Text = "Bonus (Frame Time)";
             this.PpdCalculationBonusFrameTimeRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -357,7 +355,6 @@ namespace HFM.Forms.Views
             this.PpdCalculationBonusDownloadTimeRadioButton.Size = new System.Drawing.Size(138, 17);
             this.PpdCalculationBonusDownloadTimeRadioButton.TabIndex = 0;
             this.PpdCalculationBonusDownloadTimeRadioButton.TabStop = true;
-            this.PpdCalculationBonusDownloadTimeRadioButton.Tag = "0";
             this.PpdCalculationBonusDownloadTimeRadioButton.Text = "Bonus (Download Time)";
             this.PpdCalculationBonusDownloadTimeRadioButton.UseVisualStyleBackColor = true;
             // 

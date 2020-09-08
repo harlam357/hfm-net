@@ -5,7 +5,9 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using HFM.Core.Net;
 using HFM.Core.Services;
+using HFM.Core.SlotXml;
 using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
@@ -40,6 +42,11 @@ namespace HFM.Forms.Views
 
             InitializeComponent();
             EscapeKeyButton(cancelButton);
+
+            webDeploymentTypePathRadioButton.Tag = (int)WebDeploymentType.Path;
+            webDeploymentTypeFtpRadioButton.Tag = (int)WebDeploymentType.Ftp;
+            webDeploymentFtpPassiveRadioButton.Tag = (int)FtpMode.Passive;
+            webDeploymentFtpActiveRadioButton.Tag = (int)FtpMode.Active;
 
             clientsDecimalPlacesUpDown.Minimum = 0;
             clientsDecimalPlacesUpDown.Maximum = MaxDecimalPlaces;

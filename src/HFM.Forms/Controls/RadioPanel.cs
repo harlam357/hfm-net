@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows.Forms;
@@ -45,19 +44,22 @@ namespace HFM.Forms.Controls
             get => _valueMember;
             set
             {
-                if (value != null)
+                if (_valueMember != value)
                 {
                     _valueMember = value;
-                    if (_dataSource != null)
-                    {
-                        SetRadioButtonBinding();
-                    }
+                    OnValueMemberChanged();
                 }
             }
         }
 
+        protected virtual void OnValueMemberChanged()
+        {
+            SetRadioButtonBinding();
+        }
+
+        protected EventInfo DataSourcePropertyChangedEventInfo { get; private set; }
+
         private object _dataSource;
-        private EventInfo _eventInfo;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object DataSource
@@ -65,93 +67,73 @@ namespace HFM.Forms.Controls
             get => _dataSource;
             set
             {
-                if (value == null) { throw new ArgumentNullException("DataSource"); }
-
-                if (_eventInfo != null)
+                if (DataSourcePropertyChangedEventInfo != null && _dataSource != null)
                 {
-                    _eventInfo.RemoveEventHandler(_dataSource, _propertyChangedEventHandler);
+                    DataSourcePropertyChangedEventInfo.RemoveEventHandler(_dataSource, _propertyChangedEventHandler);
                 }
 
-                // Set new binding source.
+                DataSourcePropertyChangedEventInfo = null;
                 _dataSource = value;
 
-                // Does this property's object support INotifyPropertyChanged? If so, listen to property changes so that we can update our binding if the
-                // source changes.
-                Type propertyChangedInterface = _dataSource.GetType().GetInterface(nameof(INotifyPropertyChanged));
-                if (propertyChangedInterface != null)
+                if (_dataSource != null)
                 {
-                    _eventInfo = propertyChangedInterface.GetEvent(nameof(INotifyPropertyChanged.PropertyChanged));
-                    if (_eventInfo != null) // which would be weird if it did...
+                    var notifyPropertyChanged = _dataSource.GetType().GetInterface(nameof(INotifyPropertyChanged));
+                    if (notifyPropertyChanged != null)
                     {
-                        _eventInfo.AddEventHandler(_dataSource, _propertyChangedEventHandler);
+                        DataSourcePropertyChangedEventInfo = notifyPropertyChanged.GetEvent(nameof(INotifyPropertyChanged.PropertyChanged));
+                        if (DataSourcePropertyChangedEventInfo != null)
+                        {
+                            DataSourcePropertyChangedEventInfo.AddEventHandler(_dataSource, _propertyChangedEventHandler);
+                        }
                     }
                 }
 
-                if (!String.IsNullOrEmpty(_valueMember))
-                {
-                    SetRadioButtonBinding();
-                }
-
-                _dataSource = value;
+                OnDataSourceChanged();
             }
         }
 
-        private PropertyInfo _propertyInfo;
-
-        /// <summary>
-        /// Set up the binding to the property.
-        /// </summary>
-        private void SetRadioButtonBinding()
+        protected virtual void OnDataSourceChanged()
         {
-            if (_dataSource == null)
+            SetRadioButtonBinding();
+        }
+
+        protected PropertyInfo DataSourceValueMemberPropertyInfo { get; private set; }
+
+        protected void SetRadioButtonBinding()
+        {
+            if (DataSource is null || String.IsNullOrWhiteSpace(ValueMember))
             {
-                throw new InvalidOperationException("m_objDataSource is null. This shouldn't happen here.");
+                DataSourceValueMemberPropertyInfo = null;
+                return;
             }
 
-            _propertyInfo = _dataSource.GetType().GetProperty(_valueMember);
-            if (_propertyInfo == null)
+            var pi = DataSource.GetType().GetProperty(ValueMember);
+            if (pi != null && pi.PropertyType.IsEnum)
             {
-                throw new ArgumentException("Could not find " + _valueMember + " on binding object " + _dataSource.GetType().Name);
+                DataSourceValueMemberPropertyInfo = pi;
+                SetRadioButtonValue();
             }
+        }
 
-            SetRadioButtonValue();
+        private int GetDataSourceValueMemberPropertyValue()
+        {
+            var value = DataSourceValueMemberPropertyInfo.GetValue(DataSource);
+            return Convert.ToInt32(value);
         }
 
         private void SetRadioButtonValue()
         {
-            if (_propertyInfo == null)
+            if (DataSourceValueMemberPropertyInfo == null) return;
+
+            var propertyValue = GetDataSourceValueMemberPropertyValue();
+            foreach (Control c in Controls)
             {
-                throw new InvalidOperationException("_pi cannot be null.");
-            }
-
-            object o = _propertyInfo.GetValue(_dataSource, null);
-
-            string strInt = ((int)o).ToString();
-
-            if (Int32.TryParse(strInt, out var i))
-            {
-                // TODO: I'm not exactly thrilled about using Tag. There ought to be an easier, faster, more intuitive way to do this. 
-                // Until I figure it out, though, Tag will do.
-                foreach (Control c in Controls)
+                if (c is RadioButton rb)
                 {
-                    if (c is RadioButton rb)
+                    int? tagValue = GetTagValue(rb);
+                    if (tagValue.HasValue && tagValue.Value == propertyValue)
                     {
-                        if (rb.Tag == null)
-                        {
-                            throw new InvalidOperationException("RadioButton " + rb.Name +
-                                                                " does not have its Tag property set to a valid enum integer value.");
-                        }
-
-                        if (!Int32.TryParse(rb.Tag.ToString(), out var setting))
-                        {
-                            throw new InvalidOperationException("RadioButton " + rb.Name +
-                                                                " does not have its Tag property set to a valid enum integer value.");
-                        }
-
-                        if (setting == i)
-                        {
-                            rb.Checked = true;
-                        }
+                        rb.Checked = true;
                     }
                 }
             }
@@ -159,55 +141,45 @@ namespace HFM.Forms.Controls
 
         private void RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (_dataSource != null)
+            if (DataSource is null || DataSourceValueMemberPropertyInfo is null) return;
+
+            if (sender is RadioButton rb && rb.Checked)
             {
-                if (sender is RadioButton rbSender)
+                int? tagValue = GetTagValue(rb);
+                if (tagValue.HasValue)
                 {
-                    // Fire the RadioButtonChanged event.
-                    OnRadioSelectionChanged(rbSender);
+                    // Convert the int into its corresponding enum
+                    var value = Enum.ToObject(DataSourceValueMemberPropertyInfo.PropertyType, tagValue.Value);
 
-                    if (rbSender.Tag == null)
-                    {
-                        throw new InvalidOperationException("RadioButton " + rbSender.Name +
-                                                            " does not have its Tag property set to a valid enum integer value.");
-                    }
+                    // Stop listening to property changes while we change the property - otherwise, stack overflow.
+                    _processPropertyChange = false;
 
-                    if (!Int32.TryParse(rbSender.Tag.ToString(), out var setting))
-                    {
-                        throw new InvalidOperationException("RadioButton " + rbSender.Name +
-                                                            " does not have its Tag property set to a valid enum integer value.");
-                    }
+                    DataSourceValueMemberPropertyInfo.SetValue(DataSource, value, null);
 
-                    PropertyInfo pi = _dataSource.GetType().GetProperty(_valueMember);
-                    if (pi != null)
-                    {
-                        // Convert the int into its corresponding enum. pi.PropertyType represents the enum type.
-                        object parsedEnum;
-                        try
-                        {
-                            parsedEnum = Enum.Parse(pi.PropertyType, setting.ToString());
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new InvalidOperationException("Could not convert RadioButton.Tag value into an enum.", ex);
-                        }
-
-                        // Stop listening to property changes while we change the property - otherwise, stack overflow.
-                        _processPropertyChange = false;
-
-                        pi.SetValue(_dataSource, parsedEnum, null);
-
-                        _processPropertyChange = true;
-                    }
+                    _processPropertyChange = true;
                 }
             }
         }
 
-        public event EventHandler<RadioSelectionChangedEventArgs> RadioSelectionChanged;
-
-        protected void OnRadioSelectionChanged(RadioButton rbSender)
+        private static int? GetTagValue(RadioButton rb)
         {
-            RadioSelectionChanged?.Invoke(rbSender, new RadioSelectionChangedEventArgs(rbSender));
+            // not exactly thrilled about using Tag
+            if (rb.Tag == null)
+            {
+                return null;
+            }
+
+            int? value = null;
+            if (rb.Tag is int intTag)
+            {
+                value = intTag;
+            }
+            else if (Int32.TryParse(rb.Tag.ToString(), out var result))
+            {
+                value = result;
+            }
+
+            return value;
         }
 
         private bool _processPropertyChange = true;
@@ -215,26 +187,12 @@ namespace HFM.Forms.Controls
         // Handle PropertyChanged notifications from the source.
         protected void OnDataSourcePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_processPropertyChange)
+            if (!_processPropertyChange) return;
+
+            if (e.PropertyName.Equals(ValueMember))
             {
-                if (e.PropertyName.Equals(_valueMember))
-                {
-                    SetRadioButtonValue();
-                }
+                SetRadioButtonValue();
             }
         }
-    }
-
-    /// <summary>
-    /// An EventArgs class for radio button selection changed events. 
-    /// </summary>
-    public class RadioSelectionChangedEventArgs : EventArgs
-    {
-        public RadioSelectionChangedEventArgs(RadioButton rb)
-        {
-            RadioButtonClicked = rb;
-        }
-
-        public RadioButton RadioButtonClicked { get; }
     }
 }

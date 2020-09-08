@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
@@ -27,6 +28,10 @@ namespace HFM.Forms.Views
 
             InitializeComponent();
             EscapeKeyReturnsCancelDialogResult();
+
+            PpdCalculationBonusDownloadTimeRadioButton.Tag = (int)BonusCalculation.DownloadTime;
+            PpdCalculationBonusFrameTimeRadioButton.Tag = (int)BonusCalculation.FrameTime;
+            PpdCalculationStandardRadioButton.Tag = (int)BonusCalculation.None;
 
             // split container does not scale when
             // there is a fixed panel
