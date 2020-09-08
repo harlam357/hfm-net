@@ -17,6 +17,8 @@ dotnet_analyzer_diagnostic.severity = warning
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
+# CA1033: Interface methods should be callable by child types
+dotnet_diagnostic.CA1033.severity = none
 # CA1056: URI properties should not be strings
 dotnet_diagnostic.CA1056.severity = none
 # CA1062: Validate arguments of public methods (NOISE REDUCTION: TURN BACK ON LATER)
@@ -29,6 +31,8 @@ dotnet_diagnostic.CA1307.severity = none
 dotnet_diagnostic.CA1305.severity = none
 # CA1720: Identifiers should not contain type names
 dotnet_diagnostic.CA1720.severity = none
+# CA2007: Do not directly await a Task
+dotnet_code_quality.CA2007.exclude_async_void_methods = true
 
 indent_size = 4
 insert_final_newline = true
