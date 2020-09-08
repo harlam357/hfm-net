@@ -25,7 +25,7 @@ namespace HFM.Core
 
                 var service = new ApplicationUpdateService(null);
                 // Act
-                var result = service.GetApplicationUpdate(uri.AbsoluteUri);
+                var result = service.GetApplicationUpdate(uri);
                 // Assert
                 Assert.IsNotNull(result);
                 Assert.AreEqual("1.2.3.4", update.Version);

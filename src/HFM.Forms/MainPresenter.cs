@@ -154,8 +154,8 @@ namespace HFM.Forms
             }
             try
             {
-                string url = Properties.Settings.Default.UpdateUrl;
-                var update = service.GetApplicationUpdate(url);
+                var uri = new Uri(Properties.Settings.Default.UpdateUrl);
+                var update = service.GetApplicationUpdate(uri);
 
                 if (update is null) return false;
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;

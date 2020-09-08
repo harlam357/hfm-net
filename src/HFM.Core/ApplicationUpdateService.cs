@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Cache;
 
 using HFM.Core.Net;
@@ -8,7 +9,7 @@ namespace HFM.Core
 {
     public interface IApplicationUpdateService
     {
-        ApplicationUpdate GetApplicationUpdate(string url);
+        ApplicationUpdate GetApplicationUpdate(Uri requestUri);
     }
 
     public class ApplicationUpdateService : IApplicationUpdateService
@@ -20,11 +21,11 @@ namespace HFM.Core
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
-        public ApplicationUpdate GetApplicationUpdate(string url)
+        public ApplicationUpdate GetApplicationUpdate(Uri requestUri)
         {
             using (var stream = new MemoryStream())
             {
-                var webOperation = WebOperation.Create(url);
+                var webOperation = WebOperation.Create(requestUri);
                 webOperation.WebRequest.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
                 webOperation.WebRequest.Proxy = WebProxyFactory.Create(Preferences);
                 webOperation.Download(stream);
