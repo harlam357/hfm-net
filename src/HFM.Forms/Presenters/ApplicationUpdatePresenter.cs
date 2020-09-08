@@ -88,10 +88,10 @@ namespace HFM.Forms.Presenters
         private bool PerformDownload()
         {
             var selectedUpdateFile = Model.SelectedUpdateFile;
-            var url = selectedUpdateFile.HttpAddress;
+            var uri = new Uri(selectedUpdateFile.HttpAddress);
             var path = Model.SelectedUpdateFileLocalFilePath;
 
-            _webOperation = WebOperation.Create(url);
+            _webOperation = WebOperation.Create(uri);
             _webOperation.WebRequest.Proxy = WebProxyFactory.Create(Preferences);
 
             // execute the download
