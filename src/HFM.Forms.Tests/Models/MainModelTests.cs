@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Core.Client;
 using HFM.Forms.Internal;
 using HFM.Preferences;
 
@@ -68,6 +70,32 @@ namespace HFM.Forms.Models
             Assert.AreEqual(true, preferences.Get<bool>(Preference.QueueWindowVisible));
             Assert.AreEqual(true, preferences.Get<bool>(Preference.FollowLog));
             CollectionAssert.AreEqual(new List<string> { "A", "B", "C" }, preferences.Get<ICollection<string>>(Preference.FormColumns));
+        }
+
+        [Test]
+        public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsNullWhenSenderIsMainGridModelWithNullSelectedSlot()
+        {
+            // Arrange
+            var model = CreateModel();
+            model.ClientDetails = "foo";
+            var gridModel = new MainGridModel(null, null, null);
+            // Act
+            model.GridModelSelectedSlotChanged(gridModel, EventArgs.Empty);
+            // Assert
+            Assert.IsNull(model.ClientDetails);
+        }
+
+        [Test]
+        public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlot()
+        {
+            // Arrange
+            var model = CreateModel();
+            var gridModel = new MainGridModel(null, null, null);
+            gridModel.SelectedSlot = new SlotModel(new NullClient { Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort } });
+            // Act
+            model.GridModelSelectedSlotChanged(gridModel, EventArgs.Empty);
+            // Assert
+            Assert.IsNotNull(model.ClientDetails);
         }
 
         [Test]

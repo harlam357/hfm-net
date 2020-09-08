@@ -76,14 +76,11 @@ namespace HFM.Forms.Models
         public void GridModelSelectedSlotChanged(object sender, EventArgs e)
         {
             var selectedSlot = (sender as MainGridModel)?.SelectedSlot;
-            if (selectedSlot != null)
-            {
-                ClientDetails = selectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
-            }
+            ClientDetails = selectedSlot?.SlotIdentifier.ClientIdentifier.ToServerPortString();
         }
 
         /// <summary>
-        /// Holds the state of the window before it is hidden (minimize to tray behaviour)
+        /// Gets the previous state of the window.
         /// </summary>
         public FormWindowState OriginalWindowState { get; private set; }
 
