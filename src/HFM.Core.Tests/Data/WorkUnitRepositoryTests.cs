@@ -20,20 +20,19 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRepositoryTests
     {
-        private const string TestDataFilesFolder = "..\\..\\TestFiles";
-
         private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
-        private readonly string _testDataFileCopy = Path.ChangeExtension(TestDataFile, ".dbcopy");
+        private string _testDataFileCopy;
 
         private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
-        private readonly string _testData2FileCopy = Path.ChangeExtension(TestData2File, ".dbcopy");
+        private string _testData2FileCopy;
 
         // this file is the same as TestDataFile but has already had UpgradeWuHistory1() run on it
         private const string TestDataFileUpgraded = "..\\..\\TestFiles\\TestData_1.db3";
-        private readonly string _testDataFileUpgradedCopy = Path.ChangeExtension(TestDataFileUpgraded, ".dbcopy");
+        private string _testDataFileUpgradedCopy;
 
-        private const string TestScratchFile = "UnitInfoTest.db3";
+        private string _testScratchFile;
 
+        private ArtifactFolder _artifacts;
         private WorkUnitRepository _repository;
         private readonly IProteinService _proteinService = CreateProteinService();
 
@@ -44,52 +43,39 @@ namespace HFM.Core.Data
         {
             SetupTestDataFileCopies();
 
-            if (File.Exists(TestScratchFile))
-            {
-                File.Delete(TestScratchFile);
-            }
-
             _repository = new WorkUnitRepository(null, _proteinService);
         }
 
         private void SetupTestDataFileCopies()
         {
+            _artifacts = new ArtifactFolder();
+
             // sometimes the file is not finished
             // copying before we attempt to open
             // the copied file.  Halt the thread
             // for a bit to ensure the copy has
             // completed.
 
+            _testDataFileCopy = _artifacts.GetRandomFilePath();
             File.Copy(TestDataFile, _testDataFileCopy, true);
             Thread.Sleep(100);
 
+            _testData2FileCopy = _artifacts.GetRandomFilePath();
             File.Copy(TestData2File, _testData2FileCopy, true);
             Thread.Sleep(100);
 
+            _testDataFileUpgradedCopy = _artifacts.GetRandomFilePath();
             File.Copy(TestDataFileUpgraded, _testDataFileUpgradedCopy, true);
             Thread.Sleep(100);
+
+            _testScratchFile = _artifacts.GetRandomFilePath();
         }
 
         [TearDown]
         public void Destroy()
         {
-            if (_repository != null)
-            {
-                _repository.Dispose();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void FixtureDestroy()
-        {
-            foreach (var file in Directory.EnumerateFiles(TestDataFilesFolder, "*.dbcopy"))
-            {
-                File.Delete(file);
-            }
-            if (File.Exists(TestScratchFile))
-            {
-                File.Delete(TestScratchFile);
-            }
+            _artifacts?.Dispose();
+            _repository?.Dispose();
         }
 
         #endregion
@@ -97,7 +83,7 @@ namespace HFM.Core.Data
         [Test]
         public void MultiThread_Test()
         {
-            _repository.Initialize(TestScratchFile);
+            _repository.Initialize(_testScratchFile);
 
             Parallel.For(0, 100, i =>
                                  {
@@ -119,8 +105,8 @@ namespace HFM.Core.Data
         [Test]
         public void Connected_Test1()
         {
-            _repository.Initialize(TestScratchFile);
-            VerifyWuHistoryTableSchema(TestScratchFile);
+            _repository.Initialize(_testScratchFile);
+            VerifyWuHistoryTableSchema(_testScratchFile);
             Assert.AreEqual(Application.Version, _repository.GetDatabaseVersion());
             Assert.AreEqual(true, _repository.Connected);
         }
@@ -227,7 +213,7 @@ namespace HFM.Core.Data
 
         private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
         {
-            _repository.Initialize(TestScratchFile);
+            _repository.Initialize(_testScratchFile);
 
             var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
