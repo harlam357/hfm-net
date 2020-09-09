@@ -104,7 +104,7 @@ namespace HFM.Forms
 
         #region View Handling Methods
 
-        public void ViewShown()
+        public void FormShown()
         {
             if (Preferences.Get<bool>(Preference.RunMinimized))
             {
@@ -181,8 +181,10 @@ namespace HFM.Forms
             }
         }
 
-        public bool ViewClosing()
+        public bool FormClosing(ICollection<string> formColumns)
         {
+            Model.FormColumns.Reset(formColumns);
+
             if (!CheckForConfigurationChanges())
             {
                 return true;

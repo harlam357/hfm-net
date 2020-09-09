@@ -33,14 +33,16 @@ namespace HFM.Forms.Views
             InitializeComponent();
 
             SetupDataGridView();
+            SubscribeToStatsLabelEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
-            base.Text = String.Format("HFM.NET v{0}", Core.Application.Version);
+            base.Text = $@"HFM.NET v{Core.Application.Version}";
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadData(_presenter.Model);
             LoadGridData(_presenter.GridModel);
+            LoadUserStatsData(_presenter.UserStatsDataModel);
         }
 
         private void LoadData(MainModel model)
@@ -87,37 +89,13 @@ namespace HFM.Forms.Views
 
             model.PropertyChanged += ModelPropertyChanged;
 
-            RestoreViewPreferences(model);
-            //
-            dataGridView1.DataSource = _presenter.GridModel.BindingSource;
-
-            BindToUserStatsDataModel(_presenter.UserStatsDataModel);
-            // Hook-up Status Label Event Handlers
-            SubscribeToStatsLabelEvents();
-
-            #region Hook-up DataGridView Event Handlers for Mono
-
-            // If Mono, use the RowEnter Event (which was what 0.3.0 and prior used)
-            // to set the CurrentInstance selection.  Obviously Mono doesn't fire the
-            // DataGridView.SelectionChanged Event.
-            if (Core.Application.IsRunningOnMono)
-            {
-                //dataGridView1.RowEnter += delegate
-                //{
-                //   _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-                //};
-                //// Use RowLeave to clear data grid when selecting New file under Mono
-                //dataGridView1.RowLeave += delegate
-                //{
-                //   _presenter.SetSelectedInstance(GetSelectedRowInstanceName(dataGridView1.SelectedRows));
-                //};
-            }
-
-            #endregion
+            RestoreFormColumns(model.FormColumns);
         }
 
         private void LoadGridData(MainGridModel gridModel)
         {
+            dataGridView1.DataSource = gridModel.BindingSource;
+
             gridModel.AfterResetBindings += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
@@ -196,44 +174,47 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void RestoreViewPreferences(MainModel model)
+        private void RestoreFormColumns(ICollection<string> formColumns)
         {
-            var columns = model.FormColumns;
-            if (columns != null)
+            if (formColumns != null)
             {
-                var columnsList = columns.ToList();
+                var columnsList = formColumns.ToList();
                 columnsList.Sort();
 
                 for (int i = 0; i < columnsList.Count && i < NumberOfDisplayFields; i++)
                 {
-                    string[] tokens = columnsList[i].Split(',');
-                    int index = Int32.Parse(tokens[3]);
-                    dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
-                    if (dataGridView1.Columns[index].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    var columnSettings = GetColumnSettings(columnsList[i]);
+                    if (columnSettings.HasValue)
                     {
-                        dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
+                        int index = columnSettings.Value.Index;
+                        dataGridView1.Columns[index].DisplayIndex = columnSettings.Value.DisplayIndex;
+                        if (dataGridView1.Columns[index].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                        {
+                            dataGridView1.Columns[index].Width = columnSettings.Value.Width;
+                        }
+                        dataGridView1.Columns[index].Visible = columnSettings.Value.Visible;
                     }
-                    dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
                 }
+            }
+
+            (int DisplayIndex, int Width, bool Visible, int Index)? GetColumnSettings(string value)
+            {
+                string[] tokens = value.Split(',');
+                if (tokens.Length != 4) return null;
+                return (Int32.Parse(tokens[0]), Int32.Parse(tokens[1]), Boolean.Parse(tokens[2]), Int32.Parse(tokens[3]));
             }
         }
 
-        private void SaveColumnSettings()
+        private ICollection<string> GetFormColumns()
         {
-            var columns = new List<string>();
-
-            int i = 0;
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
-            {
-                columns.Add(String.Format(CultureInfo.InvariantCulture,
+            return dataGridView1.Columns.Cast<DataGridViewColumn>()
+                .Select((column, i) => String.Format(CultureInfo.InvariantCulture,
                     "{0},{1},{2},{3}",
                     column.DisplayIndex.ToString("D2"),
                     column.Width,
                     column.Visible,
-                    i++));
-            }
-
-            _presenter.Model.FormColumns.Reset(columns);
+                    i))
+                .ToList();
         }
 
         private void DisplaySelectedSlot(SlotModel selectedSlot)
@@ -297,7 +278,7 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void BindToUserStatsDataModel(UserStatsDataModel userStatsDataModel)
+        private void LoadUserStatsData(UserStatsDataModel userStatsDataModel)
         {
             statusUserTeamRank.DataBindings.Add("Text", userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
             statusUserProjectRank.DataBindings.Add("Text", userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -381,7 +362,7 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void frmMain_Shown(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             _notifyIcon = new NotifyIcon(components);
             _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
@@ -396,7 +377,7 @@ namespace HFM.Forms.Views
             // Then run it once to ensure the last column is set to Fill
             DataGridViewColumnDisplayIndexChanged();
 
-            _presenter.ViewShown();
+            _presenter.FormShown();
             using (var scope = _presenter.ServiceScopeFactory.CreateScope())
             {
                 var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
@@ -406,29 +387,21 @@ namespace HFM.Forms.Views
 
         private void DataGridViewColumnDisplayIndexChanged()
         {
-            if (dataGridView1.Columns.Count == NumberOfDisplayFields)
-            {
-                foreach (DataGridViewColumn column in dataGridView1.Columns)
-                {
-                    if (column.DisplayIndex < dataGridView1.Columns.Count - 1)
-                    {
-                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    }
-                    else
-                    {
-                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    }
-                }
+            // don't execute until all the columns are populated
+            if (dataGridView1.Columns.Count != NumberOfDisplayFields) return;
 
-                SaveColumnSettings();
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                column.AutoSizeMode = column.DisplayIndex < dataGridView1.Columns.Count - 1
+                    ? DataGridViewAutoSizeColumnMode.None
+                    : DataGridViewAutoSizeColumnMode.Fill;
             }
         }
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveColumnSettings();
-
-            e.Cancel = _presenter.ViewClosing();
+            var formColumns = GetFormColumns();
+            e.Cancel = _presenter.FormClosing(formColumns);
         }
 
         #endregion
