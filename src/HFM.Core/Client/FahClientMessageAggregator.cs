@@ -95,7 +95,7 @@ namespace HFM.Core.Client
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
                 wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
                 wui.SlotID = slotModel.SlotID;
-                
+
                 d.Add(unit.ID.GetValueOrDefault(), wui);
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
