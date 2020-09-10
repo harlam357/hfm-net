@@ -74,9 +74,9 @@ Function Test-Build
     Write-Host "---------------------------------------------------"
     
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
-    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --framework=net-4.5 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
 }
 
 Function Clean-Artifacts
