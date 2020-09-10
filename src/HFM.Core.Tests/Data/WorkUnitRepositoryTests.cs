@@ -81,7 +81,7 @@ namespace HFM.Core.Data
         #endregion
 
         [Test]
-        public void MultiThread_Test()
+        public void WorkUnitRepository_MultiThread_Test()
         {
             _repository.Initialize(_testScratchFile);
 
@@ -103,7 +103,7 @@ namespace HFM.Core.Data
         #region Connected
 
         [Test]
-        public void Connected_Test1()
+        public void WorkUnitRepository_Connected_Test1()
         {
             _repository.Initialize(_testScratchFile);
             VerifyWuHistoryTableSchema(_testScratchFile);
@@ -116,7 +116,7 @@ namespace HFM.Core.Data
         #region Upgrade
 
         [Test]
-        public void Upgrade_v092_Test1()
+        public void WorkUnitRepository_Upgrade_v092_Test1()
         {
             // Assert (pre-condition)
             Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
@@ -135,7 +135,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void Upgrade_v092_AlreadyUpgraded_Test()
+        public void WorkUnitRepository_Upgrade_v092_AlreadyUpgraded_Test()
         {
             // Assert (pre-condition)
             VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
@@ -152,7 +152,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void Upgrade_v092_Test2()
+        public void WorkUnitRepository_Upgrade_v092_Test2()
         {
             // Assert (pre-condition)
             Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
@@ -176,14 +176,14 @@ namespace HFM.Core.Data
         #region Insert
 
         [Test]
-        public void Insert_Test1()
+        public void WorkUnitRepository_Insert_Test1()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void Insert_Test1_CzechCulture()
+        public void WorkUnitRepository_Insert_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
@@ -191,21 +191,21 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void Insert_Test2()
+        public void WorkUnitRepository_Insert_Test2()
         {
             var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
             InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
-        public void Insert_Test3()
+        public void WorkUnitRepository_Insert_Test3()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
-        public void Insert_Test4()
+        public void WorkUnitRepository_Insert_Test4()
         {
             var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
             InsertTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
@@ -537,7 +537,7 @@ namespace HFM.Core.Data
         #region Delete
 
         [Test]
-        public void Delete_Test()
+        public void WorkUnitRepository_Delete_Test()
         {
             // Arrange
             _repository.Initialize(_testDataFileCopy);
@@ -553,7 +553,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void Delete_NotExist_Test()
+        public void WorkUnitRepository_Delete_NotExist_Test()
         {
             _repository.Initialize(_testDataFileCopy);
             Assert.AreEqual(0, _repository.Delete(new WorkUnitRow { ID = 100 }));
