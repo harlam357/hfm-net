@@ -221,13 +221,13 @@ namespace HFM.Forms.Views
         {
             if (selectedSlot != null)
             {
-                queueControl.SetWorkUnitInfos(selectedSlot.WorkUnitInfos, selectedSlot.SlotType);
+                queueControl.SetWorkUnitQueue(selectedSlot.WorkUnitQueue, selectedSlot.SlotType);
                 SetLogLines(selectedSlot, selectedSlot.CurrentLogLines);
             }
             else
             {
                 txtLogFile.SetNoLogLines();
-                queueControl.SetWorkUnitInfos(null, SlotType.Unknown);
+                queueControl.SetWorkUnitQueue(null, SlotType.Unknown);
             }
         }
 

@@ -50,7 +50,7 @@ namespace HFM.Core.Client
             var info = FahClient.Messages.Info;
 
             BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, SlotModel.SlotID);
-            result.WorkUnitInfos = BuildSlotWorkUnitInfos(unitCollection, info, SlotModel);
+            result.WorkUnitQueue = BuildWorkUnitQueue(unitCollection, info, SlotModel);
 
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
             {
@@ -68,17 +68,17 @@ namespace HFM.Core.Client
             return result;
         }
 
-        private static SlotWorkUnitDictionary BuildSlotWorkUnitInfos(IEnumerable<Unit> unitCollection, Info info, SlotModel slotModel)
+        private static WorkUnitQueue BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, SlotModel slotModel)
         {
-            SlotWorkUnitDictionary d = null;
+            WorkUnitQueue d = null;
             foreach (var unit in unitCollection.Where(unit => unit.Slot == slotModel.SlotID))
             {
                 if (d == null)
                 {
-                    d = new SlotWorkUnitDictionary { CurrentWorkUnitKey = -1 };
+                    d = new WorkUnitQueue();
                 }
 
-                var wui = new SlotWorkUnitInfo();
+                var wui = new WorkUnitQueueItem(unit.ID.GetValueOrDefault());
                 wui.ProjectID = unit.Project.GetValueOrDefault();
                 wui.ProjectRun = unit.Run.GetValueOrDefault();
                 wui.ProjectClone = unit.Clone.GetValueOrDefault();
@@ -96,20 +96,18 @@ namespace HFM.Core.Client
                 wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
                 wui.SlotID = slotModel.SlotID;
 
-                d.Add(unit.ID.GetValueOrDefault(), wui);
+                d.Add(wui);
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
-                    d.CurrentWorkUnitKey = unit.ID.GetValueOrDefault();
+                    d.CurrentQueueID = unit.ID.GetValueOrDefault();
                 }
             }
 
             if (d != null)
             {
-                // if no RUNNING index and at least something in the queue
-                if (d.CurrentWorkUnitKey == -1 && d.Count != 0)
+                if (d.CurrentQueueID == WorkUnitQueue.NoQueueID)
                 {
-                    // take the minimum queue id
-                    d.CurrentWorkUnitKey = d.Keys.First();
+                    d.CurrentQueueID = d.DefaultQueueID;
                 }
             }
 

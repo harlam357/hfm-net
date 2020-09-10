@@ -315,7 +315,7 @@ namespace HFM.Core.Client
                     var result = aggregator.AggregateData();
                     PopulateRunLevelData(result, Messages.Info, slotModel);
 
-                    slotModel.WorkUnitInfos = result.WorkUnitInfos;
+                    slotModel.WorkUnitQueue = result.WorkUnitQueue;
                     slotModel.CurrentLogLines = result.CurrentLogLines;
 
                     var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);

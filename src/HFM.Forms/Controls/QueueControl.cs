@@ -1,7 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,7 +9,7 @@ using HFM.Core.WorkUnits;
 
 namespace HFM.Forms.Controls
 {
-    // TODO: Rename to WorkUnitInfoControl
+    // TODO: Rename to WorkUnitQueueControl
     public sealed partial class QueueControl : UserControl
     {
         // ReSharper disable UnusedMember.Local
@@ -36,7 +34,7 @@ namespace HFM.Forms.Controls
 
         public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
 
-        private SlotWorkUnitDictionary _slotWorkUnitInfos;
+        private WorkUnitQueue _workUnitQueue;
         private IProteinService _proteinService;
 
         private SlotType _slotType = SlotType.Unknown;
@@ -58,64 +56,64 @@ namespace HFM.Forms.Controls
             QueueIndexChanged?.Invoke(this, e);
         }
 
-        public void SetWorkUnitInfos(SlotWorkUnitDictionary workUnitInfos, SlotType type)
+        public void SetWorkUnitQueue(WorkUnitQueue workUnitQueue, SlotType slotType)
         {
-            if (workUnitInfos != null)
+            if (workUnitQueue != null)
             {
-                _slotWorkUnitInfos = workUnitInfos;
-                _slotType = type;
+                _workUnitQueue = workUnitQueue;
+                _slotType = slotType;
 
                 cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
-                cboQueueIndex.DataSource = CreateEntryNameCollection(_slotWorkUnitInfos);
+                cboQueueIndex.DataSource = CreateEntryNameCollection(_workUnitQueue);
                 cboQueueIndex.DisplayMember = nameof(ListItem.DisplayMember);
                 cboQueueIndex.ValueMember = nameof(ListItem.ValueMember);
                 cboQueueIndex.SelectedIndex = -1;
                 cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
-                cboQueueIndex.SelectedValue = _slotWorkUnitInfos.CurrentWorkUnitKey;
+                cboQueueIndex.SelectedValue = _workUnitQueue.CurrentQueueID;
             }
             else
             {
-                _slotWorkUnitInfos = null;
+                _workUnitQueue = null;
                 _slotType = SlotType.Unknown;
                 SetControlsVisible(false);
             }
         }
 
-        private static ICollection<ListItem> CreateEntryNameCollection(SlotWorkUnitDictionary slotWorkUnit)
+        private static ICollection<ListItem> CreateEntryNameCollection(WorkUnitQueue workUnitQueue)
         {
-            return slotWorkUnit
-                .Select(kvp => new ListItem(FormatDisplay(kvp), kvp.Key))
+            return workUnitQueue
+                .Select(x => new ListItem(FormatDisplay(x), x.ID))
                 .ToList();
 
-            string FormatDisplay(KeyValuePair<int, SlotWorkUnitInfo> kvp)
+            string FormatDisplay(WorkUnitQueueItem workUnit)
             {
-                return String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", kvp.Key, kvp.Value.ToShortProjectString());
+                return String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", workUnit.ID, workUnit.ToShortProjectString());
             }
         }
 
         private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_slotWorkUnitInfos == null) return;
+            if (_workUnitQueue == null) return;
 
             if (cboQueueIndex.SelectedIndex > -1)
             {
                 SetControlsVisible(true);
 
-                SlotWorkUnitInfo info = _slotWorkUnitInfos[(int)cboQueueIndex.SelectedValue];
-                StatusTextBox.Text = info.State;
-                WaitingOnTextBox.Text = String.IsNullOrEmpty(info.WaitingOn) ? "(No Action)" : info.WaitingOn;
-                AttemptsTextBox.Text = info.Attempts.ToString();
-                NextAttemptTextBox.Text = info.NextAttempt.ToString();
-                var protein = _proteinService.Get(info.ProjectID);
+                WorkUnitQueueItem item = _workUnitQueue[(int)cboQueueIndex.SelectedValue];
+                StatusTextBox.Text = item.State;
+                WaitingOnTextBox.Text = String.IsNullOrEmpty(item.WaitingOn) ? "(No Action)" : item.WaitingOn;
+                AttemptsTextBox.Text = item.Attempts.ToString();
+                NextAttemptTextBox.Text = item.NextAttempt.ToString();
+                var protein = _proteinService.Get(item.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                AssignedTextBox.Text = FormatAssignedDateTimeUtc(info.AssignedDateTimeUtc);
-                WorkServerTextBox.Text = info.WorkServer;
-                CPUTypeTextBox.Text = info.CPU;
-                OSTextBox.Text = info.OperatingSystem;
-                MemoryTextBox.Text = info.Memory.ToString(CultureInfo.CurrentCulture);
-                CPUThreadsTextBox.Text = info.CPUThreads.ToString(CultureInfo.CurrentCulture);
-                MachineIDTextBox.Text = info.SlotID.ToString(CultureInfo.CurrentCulture);
+                AssignedTextBox.Text = FormatAssignedDateTimeUtc(item.AssignedDateTimeUtc);
+                WorkServerTextBox.Text = item.WorkServer;
+                CPUTypeTextBox.Text = item.CPU;
+                OSTextBox.Text = item.OperatingSystem;
+                MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
+                CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
+                MachineIDTextBox.Text = item.SlotID.ToString(CultureInfo.CurrentCulture);
 
                 OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
             }

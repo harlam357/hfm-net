@@ -170,7 +170,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Data\DataContainer.cs" />
     <Compile Include="Client\ClientSettings.cs" />
-    <Compile Include="Client\SlotWorkUnitDictionary.cs" />
+    <Compile Include="Client\WorkUnitQueue.cs" />
     <Compile Include="Data\WorkUnitRow.cs" />
     <Compile Include="WorkUnits\ProteinBenchmark.cs" />
     <Compile Include="WorkUnits\ProteinBenchmarkFrameTime.cs" />

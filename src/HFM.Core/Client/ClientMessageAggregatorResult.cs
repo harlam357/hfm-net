@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections.Generic;
 
@@ -28,8 +28,7 @@ namespace HFM.Core.Client
         // Queue Values
         public int CurrentUnitIndex { get; set; }
 
-        // TODO: Rename SlotWorkUnits
-        public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
+        public WorkUnitQueue WorkUnitQueue { get; set; }
 
         public IDictionary<int, WorkUnit> WorkUnits { get; set; }
     }

@@ -235,7 +235,7 @@ namespace HFM.Core.Client
         /// </summary>
         public IList<LogLine> CurrentLogLines { get; set; }
 
-        public SlotWorkUnitDictionary WorkUnitInfos { get; set; }
+        public WorkUnitQueue WorkUnitQueue { get; set; }
 
         #endregion
 
