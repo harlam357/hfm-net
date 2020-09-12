@@ -242,7 +242,7 @@
     <Compile Include="Views\WorkUnitHistoryForm.Designer.cs">
       <DependentUpon>WorkUnitHistoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainPresenter.cs" />
+    <Compile Include="Presenters\MainPresenter.cs" />
     <Compile Include="Views\MessagesForm.cs">
       <SubType>Form</SubType>
     </Compile>
