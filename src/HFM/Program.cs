@@ -23,7 +23,6 @@ namespace HFM
             // for manually testing different cultures
             //SetupCulture("de-DE");
 #endif
-            Core.Net.SecurityProtocol.Setup();
             Core.Application.SetPaths(
                 Application.StartupPath,
                 System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));

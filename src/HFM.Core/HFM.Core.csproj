@@ -110,7 +110,6 @@
     <Compile Include="Net\HostName.cs" />
     <Compile Include="Net\HttpUrl.cs" />
     <Compile Include="Net\NetworkCredentialFactory.cs" />
-    <Compile Include="Net\SecurityProtocol.cs" />
     <Compile Include="Net\WebProxyFactory.cs" />
     <Compile Include="ProgressInfo.cs" />
     <Compile Include="ApplicationUpdate.cs" />
