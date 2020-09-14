@@ -228,16 +228,9 @@ namespace HFM.Core.Client
 
         #endregion
 
-        #region Complex Interfaces
-
-        /// <summary>
-        /// Current Log Lines based on UnitLogLines Array and CurrentUnitIndex
-        /// </summary>
         public IList<LogLine> CurrentLogLines { get; set; }
 
         public WorkUnitQueue WorkUnitQueue { get; set; }
-
-        #endregion
 
         #region Grid Data Warnings
 

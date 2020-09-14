@@ -84,7 +84,9 @@ namespace HFM.Forms.Views
             }
 
             ViewToggleFollowLogFileMenuItem.BindChecked(model, nameof(MainModel.FollowLog));
-            statusLabelLeft.BindText(model, nameof(MainModel.ClientDetails));
+            clientDetailsStatusLabel.BindText(model, nameof(MainModel.ClientDetails));
+            workingSlotsStatusLabel.BindText(model, nameof(MainModel.WorkingSlotsText));
+            totalProductionStatusLabel.BindText(model, nameof(MainModel.TotalProductionText));
             txtLogFile.DataBindings.Add(nameof(txtLogFile.ColorLogFile), model, nameof(MainModel.ColorLogFile), false, DataSourceUpdateMode.OnPropertyChanged);
 
             model.PropertyChanged += ModelPropertyChanged;
@@ -99,11 +101,7 @@ namespace HFM.Forms.Views
             gridModel.AfterResetBindings += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
-                BeginInvoke(new Action(() =>
-                {
-                    DisplaySelectedSlot(gridModel.SelectedSlot);
-                    RefreshControlsWithTotalsData(gridModel.SlotTotals);
-                }));
+                BeginInvoke(new Action(() => LoadSelectedSlot(gridModel.SelectedSlot)));
             };
 
             gridModel.PropertyChanged += (s, e) =>
@@ -112,7 +110,7 @@ namespace HFM.Forms.Views
                 {
                     case nameof(MainGridModel.SelectedSlot):
                         // run asynchronously so binding operation can finish
-                        BeginInvoke(new Action(() => DisplaySelectedSlot(gridModel.SelectedSlot)));
+                        BeginInvoke(new Action(() => LoadSelectedSlot(gridModel.SelectedSlot)));
                         break;
                 }
             };
@@ -168,6 +166,9 @@ namespace HFM.Forms.Views
                         _notifyIcon.Visible = model.NotifyIconVisible;
                     }
                     break;
+                case nameof(MainModel.NotifyIconText):
+                    SetNotifyIconText(model.NotifyIconText);
+                    break;
                 case nameof(MainModel.NotifyToolTip):
                     toolTipNotify.Show(model.NotifyToolTip, this, Size.Width - 150, 8, 2000);
                     break;
@@ -217,7 +218,7 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void DisplaySelectedSlot(SlotModel selectedSlot)
+        private void LoadSelectedSlot(SlotModel selectedSlot)
         {
             if (selectedSlot != null)
             {
@@ -235,19 +236,18 @@ namespace HFM.Forms.Views
         {
             if (logLines != null && logLines.Count > 0)
             {
-                // Different Client... Load LogLines
+                // Different slot
                 if (txtLogFile.LogOwnedByInstanceName.Equals(selectedSlot.Name) == false)
                 {
                     txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                 }
-                // Textbox has text lines
                 else if (txtLogFile.Lines.Length > 0)
                 {
                     string lastLogLine = String.Empty;
 
                     try // to get the last LogLine from the instance
                     {
-                        lastLogLine = logLines[logLines.Count - 1].ToString();
+                        lastLogLine = logLines[logLines.Count - 1].Raw;
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -261,7 +261,6 @@ namespace HFM.Forms.Views
                         txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                     }
                 }
-                // Nothing in the Textbox... Load LogLines
                 else
                 {
                     txtLogFile.SetLogLines(logLines, selectedSlot.Name);
@@ -720,37 +719,8 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        private void RefreshControlsWithTotalsData(SlotTotals totals)
-        {
-            string numberFormat = NumberFormat.Get(_presenter.Model.DecimalPlaces);
-
-            SetNotifyIconText(String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
-                totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine));
-
-            string slots = "Slots";
-            if (totals.TotalSlots == 1)
-            {
-                slots = "Slot";
-            }
-
-            int percentWorking = 0;
-            if (totals.TotalSlots > 0)
-            {
-                percentWorking = ((totals.WorkingSlots * 200) + totals.TotalSlots) / (totals.TotalSlots * 2);
-            }
-
-            SetStatusLabelHostsText($"{totals.WorkingSlots} of {totals.TotalSlots} {slots} ({percentWorking}%)");
-            SetStatusLabelPPDText($"{totals.PPD.ToString(numberFormat)} PPD");
-        }
-
         private void SetNotifyIconText(string text)
         {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new Action<string>(SetNotifyIconText), text);
-                return;
-            }
-
             // make sure the object has been created
             if (_notifyIcon != null)
             {
@@ -761,28 +731,6 @@ namespace HFM.Forms.Views
                 }
                 _notifyIcon.Text = text;
             }
-        }
-
-        private void SetStatusLabelHostsText(string val)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new Action<string>(SetStatusLabelHostsText), val);
-                return;
-            }
-
-            statusLabelHosts.Text = val;
-        }
-
-        private void SetStatusLabelPPDText(string val)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new Action<string>(SetStatusLabelPPDText), val);
-                return;
-            }
-
-            statusLabelPPW.Text = val;
         }
 
         #region System Tray Icon Click Handlers

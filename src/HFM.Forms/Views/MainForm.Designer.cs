@@ -22,7 +22,7 @@ namespace HFM.Forms.Views
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.statusLabelLeft = new HFM.Forms.Controls.BindableToolStripStatusLabel();
+            this.clientDetailsStatusLabel = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserTeamRank = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserProjectRank = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUser24hr = new HFM.Forms.Controls.BindableToolStripStatusLabel();
@@ -31,8 +31,8 @@ namespace HFM.Forms.Views
             this.statusUserTotal = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusUserWUs = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusLabelMiddle = new HFM.Forms.Controls.BindableToolStripStatusLabel();
-            this.statusLabelHosts = new HFM.Forms.Controls.BindableToolStripStatusLabel();
-            this.statusLabelPPW = new HFM.Forms.Controls.BindableToolStripStatusLabel();
+            this.workingSlotsStatusLabel = new HFM.Forms.Controls.BindableToolStripStatusLabel();
+            this.totalProductionStatusLabel = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.statusLabelRight = new HFM.Forms.Controls.BindableToolStripStatusLabel();
             this.notifyMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuNotifyRst = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,7 +139,7 @@ namespace HFM.Forms.Views
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabelLeft,
+            this.clientDetailsStatusLabel,
             this.statusUserTeamRank,
             this.statusUserProjectRank,
             this.statusUser24hr,
@@ -148,8 +148,8 @@ namespace HFM.Forms.Views
             this.statusUserTotal,
             this.statusUserWUs,
             this.statusLabelMiddle,
-            this.statusLabelHosts,
-            this.statusLabelPPW,
+            this.workingSlotsStatusLabel,
+            this.totalProductionStatusLabel,
             this.statusLabelRight});
             this.statusStrip.Location = new System.Drawing.Point(0, 744);
             this.statusStrip.Name = "statusStrip";
@@ -158,15 +158,15 @@ namespace HFM.Forms.Views
             // 
             // statusLabelLeft
             // 
-            this.statusLabelLeft.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            this.clientDetailsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusLabelLeft.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.statusLabelLeft.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLabelLeft.Name = "statusLabelLeft";
-            this.statusLabelLeft.Size = new System.Drawing.Size(369, 24);
-            this.statusLabelLeft.Spring = true;
-            this.statusLabelLeft.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.clientDetailsStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.clientDetailsStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.clientDetailsStatusLabel.Name = "clientDetailsStatusLabel";
+            this.clientDetailsStatusLabel.Size = new System.Drawing.Size(369, 24);
+            this.clientDetailsStatusLabel.Spring = true;
+            this.clientDetailsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // statusUserTeamRank
             // 
@@ -257,27 +257,27 @@ namespace HFM.Forms.Views
             // 
             // statusLabelHosts
             // 
-            this.statusLabelHosts.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            this.workingSlotsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusLabelHosts.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.statusLabelHosts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLabelHosts.Name = "statusLabelHosts";
-            this.statusLabelHosts.Size = new System.Drawing.Size(17, 24);
-            this.statusLabelHosts.Text = "0";
-            this.statusLabelHosts.ToolTipText = "Number of Hosts";
+            this.workingSlotsStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.workingSlotsStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.workingSlotsStatusLabel.Name = "workingSlotsStatusLabel";
+            this.workingSlotsStatusLabel.Size = new System.Drawing.Size(17, 24);
+            this.workingSlotsStatusLabel.Text = "0";
+            this.workingSlotsStatusLabel.ToolTipText = "Number of Hosts";
             // 
             // statusLabelPPW
             // 
-            this.statusLabelPPW.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            this.totalProductionStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.statusLabelPPW.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.statusLabelPPW.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.statusLabelPPW.Name = "statusLabelPPW";
-            this.statusLabelPPW.Size = new System.Drawing.Size(17, 24);
-            this.statusLabelPPW.Text = "0";
-            this.statusLabelPPW.ToolTipText = "Points Per Week";
+            this.totalProductionStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.totalProductionStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.totalProductionStatusLabel.Name = "totalProductionStatusLabel";
+            this.totalProductionStatusLabel.Size = new System.Drawing.Size(17, 24);
+            this.totalProductionStatusLabel.Text = "0";
+            this.totalProductionStatusLabel.ToolTipText = "Points Per Week";
             // 
             // statusLabelRight
             // 
@@ -1070,9 +1070,9 @@ namespace HFM.Forms.Views
         #endregion
 
         private System.Windows.Forms.StatusStrip statusStrip;
-        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelLeft;
-        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelHosts;
-        private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelPPW;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel clientDetailsStatusLabel;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel workingSlotsStatusLabel;
+        private HFM.Forms.Controls.BindableToolStripStatusLabel totalProductionStatusLabel;
         private HFM.Forms.Controls.BindableToolStripStatusLabel statusLabelRight;
         private System.Windows.Forms.ContextMenuStrip notifyMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuNotifyRst;

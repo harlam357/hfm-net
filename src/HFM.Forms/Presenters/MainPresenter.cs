@@ -61,8 +61,16 @@ namespace HFM.Forms.Presenters
 
             GridModel.AfterResetBindings += (s, e) =>
             {
+                // Create a local reference before handing off to BeginInvoke.
+                // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
+                // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
+                var slotTotals = GridModel.SlotTotals;
                 // run asynchronously so binding operation can finish
-                Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(s, e)), null);
+                Form.BeginInvoke(new Action(() =>
+                {
+                    Model.GridModelSelectedSlotChanged(s, e);
+                    Model.GridModelSlotTotalsChanged(slotTotals);
+                }), null);
             };
             GridModel.PropertyChanged += (s, e) =>
             {

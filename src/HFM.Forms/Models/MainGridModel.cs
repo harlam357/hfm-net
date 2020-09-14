@@ -99,7 +99,6 @@ namespace HFM.Forms.Models
                 if (!ReferenceEquals(_selectedSlot, value))
                 {
                     _selectedSlot = value;
-                    OnSelectedSlotChanged(new IndexChangedEventArgs(BindingSource.Position));
                     OnPropertyChanged();
                 }
             }
@@ -220,19 +219,5 @@ namespace HFM.Forms.Models
         public event EventHandler AfterResetBindings;
 
         private void OnAfterResetBindings(EventArgs e) => AfterResetBindings?.Invoke(this, e);
-
-        public event EventHandler<IndexChangedEventArgs> SelectedSlotChanged;
-
-        private void OnSelectedSlotChanged(IndexChangedEventArgs e) => SelectedSlotChanged?.Invoke(this, e);
-    }
-
-    public sealed class IndexChangedEventArgs : EventArgs
-    {
-        public int Index { get; }
-
-        public IndexChangedEventArgs(int index)
-        {
-            Index = index;
-        }
     }
 }

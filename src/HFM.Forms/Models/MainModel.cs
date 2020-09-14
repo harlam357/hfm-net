@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
 using HFM.Preferences;
@@ -77,6 +78,29 @@ namespace HFM.Forms.Models
         {
             var selectedSlot = (sender as MainGridModel)?.SelectedSlot;
             ClientDetails = selectedSlot?.SlotIdentifier.ClientIdentifier.ToServerPortString();
+        }
+
+        public void GridModelSlotTotalsChanged(SlotTotals totals)
+        {
+            string numberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
+
+            NotifyIconText = String.Format("{0} Working Slots{3}{1} Idle Slots{3}{2} PPD",
+                totals.WorkingSlots, totals.NonWorkingSlots, totals.PPD.ToString(numberFormat), Environment.NewLine);
+
+            string slots = "Slots";
+            if (totals.TotalSlots == 1)
+            {
+                slots = "Slot";
+            }
+
+            int percentWorking = 0;
+            if (totals.TotalSlots > 0)
+            {
+                percentWorking = ((totals.WorkingSlots * 200) + totals.TotalSlots) / (totals.TotalSlots * 2);
+            }
+
+            WorkingSlotsText = $"{totals.WorkingSlots} of {totals.TotalSlots} {slots} ({percentWorking}%)";
+            TotalProductionText = $"{totals.PPD.ToString(numberFormat)} PPD";
         }
 
         /// <summary>
@@ -188,9 +212,19 @@ namespace HFM.Forms.Models
             }
         }
 
-        public int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
-
         public bool NotifyIconVisible => MinimizeTo == MinimizeToOption.SystemTray || MinimizeTo == MinimizeToOption.Both;
+
+        private string _notifyIconText;
+
+        public string NotifyIconText
+        {
+            get => _notifyIconText;
+            set
+            {
+                _notifyIconText = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool ShowInTaskbar
         {
@@ -213,6 +247,30 @@ namespace HFM.Forms.Models
                     _clientDetails = value;
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        private string _workingSlotsText;
+
+        public string WorkingSlotsText
+        {
+            get => _workingSlotsText;
+            set
+            {
+                _workingSlotsText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _totalProductionText;
+
+        public string TotalProductionText
+        {
+            get => _totalProductionText;
+            set
+            {
+                _totalProductionText = value;
+                OnPropertyChanged();
             }
         }
 
