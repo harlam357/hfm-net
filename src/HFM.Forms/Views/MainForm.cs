@@ -238,11 +238,6 @@ namespace HFM.Forms.Views
         private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueue workUnitQueue, SlotType slotType, IList<LogLine> logLines)
         {
             queueControl.SetWorkUnitQueue(workUnitQueue, slotType);
-            SetLogLines(selectedSlot, logLines);
-        }
-
-        private void SetLogLines(SlotModel selectedSlot, ICollection<LogLine> logLines)
-        {
             txtLogFile.SetLogLines(selectedSlot, logLines);
             if (_presenter.Model.FollowLog)
             {
