@@ -37,18 +37,50 @@ namespace HFM.Forms.Controls
             }
         }
 
-        public void SetLogLines(object owner, ICollection<LogLine> lines)
+        public void SetLogLines(object owner, ICollection<LogLine> logLines)
+        {
+            if (owner != null && logLines != null && logLines.Count > 0)
+            {
+                // Different slot
+                if (!ReferenceEquals(Owner, owner))
+                {
+                    SetLogLinesInternal(owner, logLines);
+                }
+                else if (Lines.Length > 0)
+                {
+                    // get the last text lines from the control and incoming LogLines collection
+                    string lastLine = Lines.Last();
+                    string lastLogLineText = logLines.LastOrDefault()?.Raw ?? String.Empty;
+
+                    // don't reload ("flicker") if the log appears the same
+                    if (lastLine != lastLogLineText)
+                    {
+                        SetLogLinesInternal(owner, logLines);
+                    }
+                }
+                else
+                {
+                    SetLogLinesInternal(owner, logLines);
+                }
+            }
+            else
+            {
+                SetNoLogLines();
+            }
+        }
+
+        private void SetLogLinesInternal(object owner, ICollection<LogLine> logLines)
         {
             Owner = owner;
 
             // limit the maximum number of log lines
-            int lineOffset = lines.Count - MaxDisplayableLogLines;
+            int lineOffset = logLines.Count - MaxDisplayableLogLines;
             if (lineOffset > 0)
             {
-                lines = lines.Where((x, i) => i > lineOffset).ToList();
+                logLines = logLines.Where((x, i) => i > lineOffset).ToList();
             }
 
-            _logLines = lines;
+            _logLines = logLines;
             ApplyColorLogFile();
         }
 
@@ -114,7 +146,7 @@ namespace HFM.Forms.Controls
             return @"\cf4 ";
         }
 
-        public void SetNoLogLines()
+        private void SetNoLogLines()
         {
             _logLines = null;
 

@@ -242,35 +242,7 @@ namespace HFM.Forms.Views
 
         private void SetLogLines(SlotModel selectedSlot, ICollection<LogLine> logLines)
         {
-            if (selectedSlot != null && logLines != null && logLines.Count > 0)
-            {
-                // Different slot
-                if (!ReferenceEquals(txtLogFile.Owner, selectedSlot))
-                {
-                    txtLogFile.SetLogLines(selectedSlot, logLines);
-                }
-                else if (txtLogFile.Lines.Length > 0)
-                {
-                    // get the last text lines from the control and incoming LogLines collection
-                    string lastLogViewerText = txtLogFile.Lines.Last();
-                    string lastLogLineText = logLines.LastOrDefault()?.Raw ?? String.Empty;
-
-                    // don't reload ("flicker") if the log appears the same
-                    if (lastLogViewerText != lastLogLineText)
-                    {
-                        txtLogFile.SetLogLines(selectedSlot, logLines);
-                    }
-                }
-                else
-                {
-                    txtLogFile.SetLogLines(selectedSlot, logLines);
-                }
-            }
-            else
-            {
-                txtLogFile.SetNoLogLines();
-            }
-
+            txtLogFile.SetLogLines(selectedSlot, logLines);
             if (_presenter.Model.FollowLog)
             {
                 txtLogFile.ScrollToBottom();
