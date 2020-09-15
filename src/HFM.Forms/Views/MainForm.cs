@@ -247,21 +247,21 @@ namespace HFM.Forms.Views
 
         private void LoadUserStatsData(UserStatsDataModel userStatsDataModel)
         {
-            statusUserTeamRank.DataBindings.Add("Text", userStatsDataModel, "Rank", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserProjectRank.DataBindings.Add("Text", userStatsDataModel, "OverallRank", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUser24hr.DataBindings.Add("Text", userStatsDataModel, "TwentyFourHourAverage", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserToday.DataBindings.Add("Text", userStatsDataModel, "PointsToday", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserWeek.DataBindings.Add("Text", userStatsDataModel, "PointsWeek", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserTotal.DataBindings.Add("Text", userStatsDataModel, "PointsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserWUs.DataBindings.Add("Text", userStatsDataModel, "WorkUnitsTotal", false, DataSourceUpdateMode.OnPropertyChanged);
+            statusUserTeamRank.BindText(userStatsDataModel, nameof(UserStatsDataModel.Rank));
+            statusUserProjectRank.BindText(userStatsDataModel, nameof(UserStatsDataModel.OverallRank));
+            statusUser24hr.BindText(userStatsDataModel, nameof(UserStatsDataModel.TwentyFourHourAverage));
+            statusUserToday.BindText(userStatsDataModel, nameof(UserStatsDataModel.PointsToday));
+            statusUserWeek.BindText(userStatsDataModel, nameof(UserStatsDataModel.PointsWeek));
+            statusUserTotal.BindText(userStatsDataModel, nameof(UserStatsDataModel.PointsTotal));
+            statusUserWUs.BindText(userStatsDataModel, nameof(UserStatsDataModel.WorkUnitsTotal));
 
-            statusUserTeamRank.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserProjectRank.DataBindings.Add("Visible", userStatsDataModel, "OverallRankVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUser24hr.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserToday.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserWeek.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserTotal.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
-            statusUserWUs.DataBindings.Add("Visible", userStatsDataModel, "ControlsVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+            statusUserTeamRank.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
+            statusUserProjectRank.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.OverallRankVisible));
+            statusUser24hr.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
+            statusUserToday.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
+            statusUserWeek.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
+            statusUserTotal.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
+            statusUserWUs.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
 
             if (Core.Application.IsRunningOnMono)
             {

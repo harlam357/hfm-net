@@ -24,6 +24,11 @@ namespace HFM.Forms.Internal
             control.DataBindings.Add(nameof(Control.Visible), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
+        internal static void BindVisible<T>(this T toolStripItem, object dataSource, string dataMember) where T : ToolStripItem, IBindableComponent
+        {
+            toolStripItem.DataBindings.Add(nameof(ToolStripItem.Visible), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
+        }
+
         internal static void BindChecked(this CheckBox control, object dataSource, string dataMember)
         {
             control.DataBindings.Add(nameof(CheckBox.Checked), dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
