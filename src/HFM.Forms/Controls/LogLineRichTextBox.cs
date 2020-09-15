@@ -11,16 +11,14 @@ namespace HFM.Forms.Controls
 {
     public partial class LogLineRichTextBox : RichTextBox
     {
-        private ICollection<LogLine> _logLines;
-
         public object Owner { get; private set; }
+
+        public ICollection<LogLine> LogLines { get; private set; }
 
         public LogLineRichTextBox()
         {
             InitializeComponent();
         }
-
-        private const int MaxDisplayableLogLines = 500;
 
         private bool _colorLogFile;
 
@@ -32,7 +30,7 @@ namespace HFM.Forms.Controls
                 if (_colorLogFile != value)
                 {
                     _colorLogFile = value;
-                    ApplyColorLogFile();
+                    SetTextFromLogLines();
                 }
             }
         }
@@ -41,7 +39,7 @@ namespace HFM.Forms.Controls
         {
             if (owner != null && logLines != null && logLines.Count > 0)
             {
-                // Different slot
+                // different owner
                 if (!ReferenceEquals(Owner, owner))
                 {
                     SetLogLinesInternal(owner, logLines);
@@ -65,46 +63,52 @@ namespace HFM.Forms.Controls
             }
             else
             {
-                SetNoLogLines();
+                SetLogLinesInternal(null, null);
             }
         }
 
         private void SetLogLinesInternal(object owner, ICollection<LogLine> logLines)
         {
             Owner = owner;
-
-            // limit the maximum number of log lines
-            int lineOffset = logLines.Count - MaxDisplayableLogLines;
-            if (lineOffset > 0)
-            {
-                logLines = logLines.Where((x, i) => i > lineOffset).ToList();
-            }
-
-            _logLines = logLines;
-            ApplyColorLogFile();
+            LogLines = FilterMaxDisplayableLogLines(logLines);
+            SetTextFromLogLines();
         }
 
-        private void ApplyColorLogFile()
-        {
-            if (_logLines is null) return;
+        private const int MaxDisplayableLogLines = 500;
 
-            if (ColorLogFile)
+        private static ICollection<LogLine> FilterMaxDisplayableLogLines(ICollection<LogLine> logLines)
+        {
+            if (logLines != null)
             {
-                Rtf = LogLineRtf.Build(_logLines);
+                // limit the maximum number of log lines
+                int lineOffset = logLines.Count - MaxDisplayableLogLines;
+                if (lineOffset > 0)
+                {
+                    logLines = logLines.Where((x, i) => i > lineOffset).ToList();
+                }
+            }
+            return logLines;
+        }
+
+        private void SetTextFromLogLines()
+        {
+            if (LogLines is null)
+            {
+                Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
+                Text = "No Log Available";
             }
             else
             {
-                Rtf = null;
-                Lines = _logLines.Select(line => line.Raw.Replace("\r", String.Empty)).ToArray();
+                if (ColorLogFile)
+                {
+                    Rtf = LogLineRtf.Build(LogLines);
+                }
+                else
+                {
+                    Rtf = null;
+                    Lines = LogLines.Select(line => line.Raw.Replace("\r", String.Empty)).ToArray();
+                }
             }
-        }
-
-        private void SetNoLogLines()
-        {
-            _logLines = null;
-
-            Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
-            Text = "No Log Available";
         }
 
         public void ScrollToBottom()
