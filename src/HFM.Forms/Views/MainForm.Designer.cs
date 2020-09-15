@@ -113,7 +113,7 @@ namespace HFM.Forms.Views
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.queueControl = new HFM.Forms.Controls.QueueControl();
             this.btnQueue = new System.Windows.Forms.Button();
-            this.txtLogFile = new HFM.Forms.Controls.LogFileViewer();
+            this.txtLogFile = new HFM.Forms.Controls.LogLineRichTextBox();
             this.statsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuContextShowUserStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContextShowTeamStats = new System.Windows.Forms.ToolStripMenuItem();
@@ -1101,7 +1101,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripSeparator mnuClientsSep2;
         private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshSelectedSlot;
         private System.Windows.Forms.ToolStripMenuItem appMenuClientsRefreshAllSlots;
-        private LogFileViewer txtLogFile;
+        private LogLineRichTextBox txtLogFile;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
         private System.Windows.Forms.ToolStripMenuItem mnuViewShowHideLog;
         private System.Windows.Forms.ToolStripMenuItem mnuTools;

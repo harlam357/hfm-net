@@ -9,13 +9,13 @@ using HFM.Log;
 
 namespace HFM.Forms.Controls
 {
-    public partial class LogFileViewer : RichTextBox
+    public partial class LogLineRichTextBox : RichTextBox
     {
         private ICollection<LogLine> _logLines;
 
         public object Owner { get; private set; }
 
-        public LogFileViewer()
+        public LogLineRichTextBox()
         {
             InitializeComponent();
         }

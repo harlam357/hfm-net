@@ -1,6 +1,6 @@
 namespace HFM.Forms.Controls
 {
-   partial class LogFileViewer
+   partial class LogLineRichTextBox
    {
       /// <summary> 
       /// Required designer variable.
