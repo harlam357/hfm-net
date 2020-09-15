@@ -193,6 +193,20 @@ namespace HFM.Forms.Views
                     toolTipNotify.Show(model.NotifyToolTip, this, Size.Width - 150, 8, 2000);
                     break;
             }
+
+            void SetNotifyIconText(string text)
+            {
+                // make sure the object has been created
+                if (_notifyIcon != null)
+                {
+                    if (text.Length > 64)
+                    {
+                        // if string is too long, remove the word Slots
+                        text = text.Replace("Slots", String.Empty);
+                    }
+                    _notifyIcon.Text = text;
+                }
+            }
         }
 
         private void RestoreFormColumns(ICollection<string> formColumns)
@@ -300,6 +314,23 @@ namespace HFM.Forms.Views
             statusUserWeek.MouseDown += StatsLabelMouseDown;
             statusUserTotal.MouseDown += StatsLabelMouseDown;
             statusUserWUs.MouseDown += StatsLabelMouseDown;
+
+            void StatsLabelMouseDown(object sender, MouseEventArgs e)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    var statusLabel = (ToolStripStatusLabel)sender;
+                    // Issue 235
+                    if (Core.Application.IsRunningOnMono)
+                    {
+                        statsContextMenuStrip.Show(statusStrip, e.X, e.Y);
+                    }
+                    else
+                    {
+                        statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
+                    }
+                }
+            }
         }
 
         #region Form Handlers
@@ -649,20 +680,6 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        private void SetNotifyIconText(string text)
-        {
-            // make sure the object has been created
-            if (_notifyIcon != null)
-            {
-                if (text.Length > 64)
-                {
-                    // if string is too long, remove the word Slots
-                    text = text.Replace("Slots", String.Empty);
-                }
-                _notifyIcon.Text = text;
-            }
-        }
-
         #region System Tray Icon Click Handlers
 
         private void mnuNotifyRestore_Click(object sender, EventArgs e)
@@ -683,23 +700,6 @@ namespace HFM.Forms.Views
         #endregion
 
         #region User Stats Data Methods
-
-        private void StatsLabelMouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                var statusLabel = (ToolStripStatusLabel)sender;
-                // Issue 235
-                if (Core.Application.IsRunningOnMono)
-                {
-                    statsContextMenuStrip.Show(statusStrip, e.X, e.Y);
-                }
-                else
-                {
-                    statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
-                }
-            }
-        }
 
         private void mnuContextShowUserStats_Click(object sender, EventArgs e)
         {
