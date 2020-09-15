@@ -33,7 +33,7 @@ namespace HFM.Forms.Views
             InitializeComponent();
 
             SetupDataGridView();
-            SubscribeToStatsLabelEvents();
+            SubscribeToUserStatsControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"HFM.NET v{Core.Application.Version}";
         }
@@ -288,7 +288,7 @@ namespace HFM.Forms.Views
             statusUserWUs.Visible = userStatsDataModel.ControlsVisible;
         }
 
-        private void SubscribeToStatsLabelEvents()
+        private void SubscribeToUserStatsControlEvents()
         {
             statusUserTeamRank.MouseDown += StatsLabelMouseDown;
             statusUserProjectRank.MouseDown += StatsLabelMouseDown;
