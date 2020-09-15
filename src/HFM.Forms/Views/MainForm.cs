@@ -100,8 +100,16 @@ namespace HFM.Forms.Views
 
             gridModel.AfterResetBindings += (s, e) =>
             {
+                // Create a local reference before handing off to BeginInvoke.
+                // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
+                // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
+                var selectedSlot = gridModel.SelectedSlot;
+                var workUnitQueue = selectedSlot?.WorkUnitQueue;
+                var slotType = selectedSlot?.SlotType ?? SlotType.Unknown;
+                var logLines = selectedSlot?.CurrentLogLines?.ToList();
+
                 // run asynchronously so binding operation can finish
-                BeginInvoke(new Action(() => LoadSelectedSlot(gridModel.SelectedSlot)));
+                BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, slotType, logLines)));
             };
 
             gridModel.PropertyChanged += (s, e) =>
@@ -109,8 +117,16 @@ namespace HFM.Forms.Views
                 switch (e.PropertyName)
                 {
                     case nameof(MainGridModel.SelectedSlot):
+                        // Create a local reference before handing off to BeginInvoke.
+                        // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
+                        // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
+                        var selectedSlot = gridModel.SelectedSlot;
+                        var workUnitQueue = selectedSlot?.WorkUnitQueue;
+                        var slotType = selectedSlot?.SlotType ?? SlotType.Unknown;
+                        var logLines = selectedSlot?.CurrentLogLines?.ToList();
+
                         // run asynchronously so binding operation can finish
-                        BeginInvoke(new Action(() => LoadSelectedSlot(gridModel.SelectedSlot)));
+                        BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, slotType, logLines)));
                         break;
                 }
             };
@@ -218,45 +234,29 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void LoadSelectedSlot(SlotModel selectedSlot)
+        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueue workUnitQueue, SlotType slotType, IList<LogLine> logLines)
         {
-            if (selectedSlot != null)
-            {
-                queueControl.SetWorkUnitQueue(selectedSlot.WorkUnitQueue, selectedSlot.SlotType);
-                SetLogLines(selectedSlot, selectedSlot.CurrentLogLines);
-            }
-            else
-            {
-                txtLogFile.SetNoLogLines();
-                queueControl.SetWorkUnitQueue(null, SlotType.Unknown);
-            }
+            queueControl.SetWorkUnitQueue(workUnitQueue, slotType);
+            SetLogLines(selectedSlot, logLines);
         }
 
-        private void SetLogLines(SlotModel selectedSlot, IList<LogLine> logLines)
+        private void SetLogLines(SlotModel selectedSlot, ICollection<LogLine> logLines)
         {
-            if (logLines != null && logLines.Count > 0)
+            if (selectedSlot != null && logLines != null && logLines.Count > 0)
             {
                 // Different slot
-                if (txtLogFile.LogOwnedByInstanceName.Equals(selectedSlot.Name) == false)
+                if (txtLogFile.LogOwnedByInstanceName != selectedSlot.Name)
                 {
                     txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                 }
                 else if (txtLogFile.Lines.Length > 0)
                 {
-                    string lastLogLine = String.Empty;
+                    // get the last text lines from the control and incoming LogLines collection
+                    string lastLogViewerText = txtLogFile.Lines.Last();
+                    string lastLogLineText = logLines.LastOrDefault()?.Raw ?? String.Empty;
 
-                    try // to get the last LogLine from the instance
-                    {
-                        lastLogLine = logLines[logLines.Count - 1].Raw;
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        // eat it
-                    }
-
-                    // If the last text line in the textbox DOES NOT equal the last LogLine Text... Load LogLines.
-                    // Otherwise, the log has not changed, don't update and perform the log "flicker".
-                    if (txtLogFile.Lines[txtLogFile.Lines.Length - 1].Equals(lastLogLine) == false)
+                    // don't reload ("flicker") if the log appears the same
+                    if (lastLogViewerText != lastLogLineText)
                     {
                         txtLogFile.SetLogLines(logLines, selectedSlot.Name);
                     }
