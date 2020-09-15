@@ -336,7 +336,6 @@ namespace HFM.Forms.Views
             this.mnuNotifyQuit.Name = "mnuNotifyQuit";
             this.mnuNotifyQuit.Size = new System.Drawing.Size(125, 22);
             this.mnuNotifyQuit.Text = "&Quit";
-            this.mnuNotifyQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
             // 
             // AppMenu
             // 
@@ -375,7 +374,6 @@ namespace HFM.Forms.Views
             this.mnuFileNew.Size = new System.Drawing.Size(263, 22);
             this.mnuFileNew.Text = "&New Configuration";
             this.mnuFileNew.ToolTipText = "Create a new configuration file";
-            this.mnuFileNew.Click += new System.EventHandler(this.mnuFileNew_Click);
             // 
             // mnuFileOpen
             // 
@@ -384,7 +382,6 @@ namespace HFM.Forms.Views
             this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.mnuFileOpen.Size = new System.Drawing.Size(263, 22);
             this.mnuFileOpen.Text = "&Open Configuration";
-            this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // mnuFileSave
             // 
@@ -393,7 +390,6 @@ namespace HFM.Forms.Views
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.mnuFileSave.Size = new System.Drawing.Size(263, 22);
             this.mnuFileSave.Text = "&Save Configuration";
-            this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
             // mnuFileSaveas
             // 
@@ -403,7 +399,6 @@ namespace HFM.Forms.Views
             | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveas.Size = new System.Drawing.Size(263, 22);
             this.mnuFileSaveas.Text = "Save Configuration &As";
-            this.mnuFileSaveas.Click += new System.EventHandler(this.mnuFileSaveAs_Click);
             // 
             // mnuFileSep1
             // 
@@ -416,7 +411,6 @@ namespace HFM.Forms.Views
             this.mnuFileQuit.Name = "mnuFileQuit";
             this.mnuFileQuit.Size = new System.Drawing.Size(263, 22);
             this.mnuFileQuit.Text = "&Exit";
-            this.mnuFileQuit.Click += new System.EventHandler(this.mnuFileQuit_Click);
             // 
             // mnuEdit
             // 
@@ -431,7 +425,6 @@ namespace HFM.Forms.Views
             this.mnuEditPreferences.Name = "mnuEditPreferences";
             this.mnuEditPreferences.Size = new System.Drawing.Size(135, 22);
             this.mnuEditPreferences.Text = "&Preferences";
-            this.mnuEditPreferences.Click += new System.EventHandler(this.mnuEditPreferences_Click);
             // 
             // mnuClients
             // 
@@ -735,14 +728,12 @@ namespace HFM.Forms.Views
             this.mnuHelpHfmLogFile.Name = "mnuHelpHfmLogFile";
             this.mnuHelpHfmLogFile.Size = new System.Drawing.Size(205, 22);
             this.mnuHelpHfmLogFile.Text = "View HFM.NET &Log File";
-            this.mnuHelpHfmLogFile.Click += new System.EventHandler(this.mnuHelpHfmLogFile_Click);
             // 
             // mnuHelpHfmDataFiles
             // 
             this.mnuHelpHfmDataFiles.Name = "mnuHelpHfmDataFiles";
             this.mnuHelpHfmDataFiles.Size = new System.Drawing.Size(205, 22);
             this.mnuHelpHfmDataFiles.Text = "View HFM.NET &Data Files";
-            this.mnuHelpHfmDataFiles.Click += new System.EventHandler(this.mnuHelpHfmDataFiles_Click);
             // 
             // mnuHelpSep1
             // 
@@ -755,14 +746,12 @@ namespace HFM.Forms.Views
             this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
             this.mnuHelpHfmGroup.Size = new System.Drawing.Size(205, 22);
             this.mnuHelpHfmGroup.Text = "HFM.NET &Google Group";
-            this.mnuHelpHfmGroup.Click += new System.EventHandler(this.mnuHelpHfmGroup_Click);
             // 
             // mnuHelpCheckForUpdate
             // 
             this.mnuHelpCheckForUpdate.Name = "mnuHelpCheckForUpdate";
             this.mnuHelpCheckForUpdate.Size = new System.Drawing.Size(205, 22);
             this.mnuHelpCheckForUpdate.Text = "Check for &Updates...";
-            this.mnuHelpCheckForUpdate.Click += new System.EventHandler(this.mnuHelpCheckForUpdate_Click);
             // 
             // mnuHelpSep3
             // 
@@ -775,7 +764,6 @@ namespace HFM.Forms.Views
             this.mnuHelpAbout.Name = "mnuHelpAbout";
             this.mnuHelpAbout.Size = new System.Drawing.Size(205, 22);
             this.mnuHelpAbout.Text = "&About";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
             // 
             // gridContextMenuStrip
             // 

@@ -34,6 +34,9 @@ namespace HFM.Forms.Views
 
             SetupDataGridView();
             SubscribeToUserStatsControlEvents();
+            SubscribeToFileMenuControlEvents();
+            SubscribeToEditMenuControlEvents();
+            SubscribeToHelpMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"HFM.NET v{Core.Application.Version}";
         }
@@ -390,95 +393,62 @@ namespace HFM.Forms.Views
             }
         }
 
-        #region File Menu Click Handlers
-
-        private void mnuFileNew_Click(object sender, EventArgs e)
+        private void SubscribeToFileMenuControlEvents()
         {
-            _presenter.FileNewClick();
-        }
-
-        private void mnuFileOpen_Click(object sender, EventArgs e)
-        {
-            using (var openFile = DefaultFileDialogPresenter.OpenFile())
+            mnuFileNew.Click += (s, e) => _presenter.FileNewClick();
+            mnuFileOpen.Click += (s, e) =>
             {
-                _presenter.FileOpenClick(openFile);
-            }
-        }
-
-        private void mnuFileSave_Click(object sender, EventArgs e)
-        {
-            _presenter.FileSaveClick();
-        }
-
-        private void mnuFileSaveAs_Click(object sender, EventArgs e)
-        {
-            using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+                using (var openFile = DefaultFileDialogPresenter.OpenFile())
+                {
+                    _presenter.FileOpenClick(openFile);
+                }
+            };
+            mnuFileSave.Click += (s, e) => _presenter.FileSaveClick();
+            mnuFileSaveas.Click += (s, e) =>
             {
-                _presenter.FileSaveAsClick(saveFile);
-            }
+                using (var saveFile = DefaultFileDialogPresenter.SaveFile())
+                {
+                    _presenter.FileSaveAsClick(saveFile);
+                }
+            };
+            mnuFileQuit.Click += (s, e) => Close();
         }
 
-        private void mnuFileQuit_Click(object sender, EventArgs e)
+        private void SubscribeToEditMenuControlEvents()
         {
-            Close();
-        }
-
-        #endregion
-
-        #region Edit Menu Click Handlers
-
-        private void mnuEditPreferences_Click(object sender, EventArgs e)
-        {
-            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            mnuEditPreferences.Click += (s, e) =>
             {
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
                 using (var presenter = scope.ServiceProvider.GetRequiredService<PreferencesPresenter>())
                 {
                     presenter.ShowDialog(_presenter.Form);
                     dataGridView1.Invalidate();
                 }
-            }
+            };
         }
 
-        #endregion
-
-        #region Help Menu Click Handlers
-
-        private void mnuHelpHfmLogFile_Click(object sender, EventArgs e)
+        private void SubscribeToHelpMenuControlEvents()
         {
-            _presenter.ShowHfmLogFile(LocalProcessService.Default);
-        }
-
-        private void mnuHelpHfmDataFiles_Click(object sender, EventArgs e)
-        {
-            _presenter.ShowHfmDataFiles(LocalProcessService.Default);
-        }
-
-        private void mnuHelpHfmGroup_Click(object sender, EventArgs e)
-        {
-            _presenter.ShowHfmGoogleGroup(LocalProcessService.Default);
-        }
-
-        private void mnuHelpCheckForUpdate_Click(object sender, EventArgs e)
-        {
-            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+            mnuHelpHfmLogFile.Click += (s, e) => _presenter.ShowHfmLogFile(LocalProcessService.Default);
+            mnuHelpHfmDataFiles.Click += (s, e) => _presenter.ShowHfmDataFiles(LocalProcessService.Default);
+            mnuHelpHfmGroup.Click += (s, e) => _presenter.ShowHfmGoogleGroup(LocalProcessService.Default);
+            mnuHelpCheckForUpdate.Click += (s, e) =>
             {
-                var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
-                _presenter.CheckForUpdateClick(updateService);
-            }
-        }
-
-        private void mnuHelpAbout_Click(object sender, EventArgs e)
-        {
-            using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+                {
+                    var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
+                    _presenter.CheckForUpdateClick(updateService);
+                }
+            };
+            mnuHelpAbout.Click += (s, e) =>
             {
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
                 using (var dialog = scope.ServiceProvider.GetRequiredService<AboutDialog>())
                 {
                     dialog.ShowDialog(_presenter.Form);
                 }
-            }
+            };
         }
-
-        #endregion
 
         #region Clients Menu Click Handlers
 
