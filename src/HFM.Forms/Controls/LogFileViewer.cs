@@ -13,7 +13,7 @@ namespace HFM.Forms.Controls
     {
         private ICollection<LogLine> _logLines;
 
-        public string LogOwnedByInstanceName { get; private set; } = String.Empty;
+        public object Owner { get; private set; }
 
         public LogFileViewer()
         {
@@ -32,20 +32,14 @@ namespace HFM.Forms.Controls
                 if (_colorLogFile != value)
                 {
                     _colorLogFile = value;
-                    SetLogLinesInternal();
+                    ApplyColorLogFile();
                 }
             }
         }
 
-        public void SetLogLines(ICollection<LogLine> lines, string logOwnedByInstance)
+        public void SetLogLines(object owner, ICollection<LogLine> lines)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<ICollection<LogLine>, string>(SetLogLines), lines, logOwnedByInstance);
-                return;
-            }
-
-            LogOwnedByInstanceName = logOwnedByInstance;
+            Owner = owner;
 
             // limit the maximum number of log lines
             int lineOffset = lines.Count - MaxDisplayableLogLines;
@@ -55,10 +49,10 @@ namespace HFM.Forms.Controls
             }
 
             _logLines = lines;
-            SetLogLinesInternal();
+            ApplyColorLogFile();
         }
 
-        private void SetLogLinesInternal()
+        private void ApplyColorLogFile()
         {
             if (_logLines is null) return;
 
@@ -122,28 +116,14 @@ namespace HFM.Forms.Controls
 
         public void SetNoLogLines()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(SetNoLogLines));
-                return;
-            }
-
             _logLines = null;
 
             Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
             Text = "No Log Available";
         }
 
-        #region Native Scroll Messages (don't call under Mono)
-
         public void ScrollToBottom()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(ScrollToBottom));
-                return;
-            }
-
             SelectionStart = TextLength;
 
             if (Core.Application.IsRunningOnMono)
@@ -155,47 +135,5 @@ namespace HFM.Forms.Controls
                 Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
             }
         }
-
-        public void ScrollToTop()
-        {
-            if (Core.Application.IsRunningOnMono)
-            {
-                throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
-            }
-
-            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_TOP), new IntPtr(0));
-        }
-
-        public void ScrollLineDown()
-        {
-            if (Core.Application.IsRunningOnMono)
-            {
-                throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
-            }
-
-            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_LINEDOWN), new IntPtr(0));
-        }
-
-        public void ScrollLineUp()
-        {
-            if (Core.Application.IsRunningOnMono)
-            {
-                throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
-            }
-
-            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_LINEUP), new IntPtr(0));
-        }
-
-        public void ScrollToLine(int lineNumber)
-        {
-            if (Core.Application.IsRunningOnMono)
-            {
-                throw new NotImplementedException("This function is not implemented when running under the Mono Runtime.");
-            }
-
-            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.EM_LINESCROLL, new IntPtr(0), new IntPtr(lineNumber));
-        }
-
-        #endregion
     }
 }

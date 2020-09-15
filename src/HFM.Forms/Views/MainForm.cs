@@ -245,9 +245,9 @@ namespace HFM.Forms.Views
             if (selectedSlot != null && logLines != null && logLines.Count > 0)
             {
                 // Different slot
-                if (txtLogFile.LogOwnedByInstanceName != selectedSlot.Name)
+                if (!ReferenceEquals(txtLogFile.Owner, selectedSlot))
                 {
-                    txtLogFile.SetLogLines(logLines, selectedSlot.Name);
+                    txtLogFile.SetLogLines(selectedSlot, logLines);
                 }
                 else if (txtLogFile.Lines.Length > 0)
                 {
@@ -258,12 +258,12 @@ namespace HFM.Forms.Views
                     // don't reload ("flicker") if the log appears the same
                     if (lastLogViewerText != lastLogLineText)
                     {
-                        txtLogFile.SetLogLines(logLines, selectedSlot.Name);
+                        txtLogFile.SetLogLines(selectedSlot, logLines);
                     }
                 }
                 else
                 {
-                    txtLogFile.SetLogLines(logLines, selectedSlot.Name);
+                    txtLogFile.SetLogLines(selectedSlot, logLines);
                 }
             }
             else
