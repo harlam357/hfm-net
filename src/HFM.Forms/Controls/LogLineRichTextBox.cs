@@ -90,7 +90,7 @@ namespace HFM.Forms.Controls
 
             if (ColorLogFile)
             {
-                Rtf = BuildRtfString(_logLines);
+                Rtf = LogLineRtf.Build(_logLines);
             }
             else
             {
@@ -99,7 +99,36 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private static string BuildRtfString(ICollection<LogLine> logLines)
+        private void SetNoLogLines()
+        {
+            _logLines = null;
+
+            Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
+            Text = "No Log Available";
+        }
+
+        public void ScrollToBottom()
+        {
+            SelectionStart = TextLength;
+
+            if (Core.Application.IsRunningOnMono)
+            {
+                ScrollToCaret();
+            }
+            else
+            {
+                Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
+            }
+        }
+    }
+
+    public static class LogLineRtf
+    {
+        public const string Definition = @"{\rtf1\ansi\deff0{\colortbl;\red0\green150\blue0;\red139\green0\blue0;\red255\green140\blue0;\red0\green0\blue255;\red120\green120\blue120;}";
+
+        public static string Build(LogLine line) => String.Format(CultureInfo.InvariantCulture, @"{0}{1}\line", GetLineColor(line), line);
+
+        public static string Build(IEnumerable<LogLine> logLines)
         {
             // cf1 - Dark Green
             // cf2 - Dark Red
@@ -108,10 +137,10 @@ namespace HFM.Forms.Controls
             // cf5 - Slate Gray
 
             var sb = new StringBuilder();
-            sb.Append(@"{\rtf1\ansi\deff0{\colortbl;\red0\green150\blue0;\red139\green0\blue0;\red255\green140\blue0;\red0\green0\blue255;\red120\green120\blue120;}");
+            sb.Append(Definition);
             foreach (var line in logLines)
             {
-                sb.AppendFormat(CultureInfo.InvariantCulture, @"{0}{1}\line", GetLineColor(line), line);
+                sb.Append(Build(line));
             }
             return sb.ToString();
         }
@@ -144,28 +173,6 @@ namespace HFM.Forms.Controls
             }
 
             return @"\cf4 ";
-        }
-
-        private void SetNoLogLines()
-        {
-            _logLines = null;
-
-            Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
-            Text = "No Log Available";
-        }
-
-        public void ScrollToBottom()
-        {
-            SelectionStart = TextLength;
-
-            if (Core.Application.IsRunningOnMono)
-            {
-                ScrollToCaret();
-            }
-            else
-            {
-                Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
-            }
         }
     }
 }
