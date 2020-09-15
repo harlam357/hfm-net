@@ -21,10 +21,10 @@ namespace HFM.Forms.Models
 
         public BindingSource BindingSource { get; }
 
-        public MainGridModel(IPreferences preferences, ISynchronizeInvoke synchronizeInvoke, ClientConfiguration clientConfiguration)
+        public MainGridModel(ISynchronizeInvoke synchronizeInvoke, IPreferences preferences, ClientConfiguration clientConfiguration)
         {
-            Preferences = preferences ?? new InMemoryPreferencesProvider();
             _synchronizeInvoke = synchronizeInvoke;
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
             ClientConfiguration = clientConfiguration;
 
             _slotList = new SlotModelSortableBindingList();
@@ -188,7 +188,7 @@ namespace HFM.Forms.Models
             OnAfterResetBindings(EventArgs.Empty);
         }
 
-        public void Sort()
+        private void Sort()
         {
             lock (_slotsListLock)
             {

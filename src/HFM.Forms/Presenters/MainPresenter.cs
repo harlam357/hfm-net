@@ -56,7 +56,7 @@ namespace HFM.Forms.Presenters
 
             UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
             Preferences = Model.Preferences;
-            GridModel = new MainGridModel(Model.Preferences, Form, clientConfiguration);
+            GridModel = new MainGridModel(Form, Model.Preferences, clientConfiguration);
             GridModel.Load();
 
             GridModel.AfterResetBindings += (s, e) =>
@@ -220,15 +220,6 @@ namespace HFM.Forms.Presenters
                     MessageBox.ShowError(Form, message, Core.Application.NameAndVersion);
                 }
             }
-        }
-
-        #endregion
-
-        #region Data Grid View Handling Methods
-
-        public void DataGridViewSorted()
-        {
-            GridModel.ResetSelectedSlot();
         }
 
         #endregion

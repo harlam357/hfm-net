@@ -97,6 +97,7 @@ namespace HFM.Forms.Views
         private void LoadGridData(MainGridModel gridModel)
         {
             dataGridView1.DataSource = gridModel.BindingSource;
+            dataGridView1.Sorted += (s, e) => gridModel.ResetSelectedSlot();
 
             gridModel.AfterResetBindings += (s, e) =>
             {
@@ -377,13 +378,7 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        #region Data Grid View Handlers
-
-        private void dataGridView1_Sorted(object sender, EventArgs e)
-        {
-            _presenter.DataGridViewSorted();
-        }
-
+        // Data Grid View Handlers
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
             var hitTest = dataGridView1.HitTest(e.X, e.Y);
@@ -399,8 +394,6 @@ namespace HFM.Forms.Views
                 }
             }
         }
-
-        #endregion
 
         #region File Menu Click Handlers
 
