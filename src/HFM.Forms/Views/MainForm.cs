@@ -40,6 +40,7 @@ namespace HFM.Forms.Views
             SubscribeToClientsMenuControlEvents();
             SubscribeToGridContextMenuControlEvents();
             SubscribeToWebMenuControlEvents();
+            SubscribeToNotifyIconMenuControlEvents();
             SubscribeToUserStatsContextMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"HFM.NET v{Core.Application.Version}";
@@ -337,8 +338,7 @@ namespace HFM.Forms.Views
             }
         }
 
-        #region Form Handlers
-
+        // Form Handlers
         public void SecondInstanceStarted(string[] args)
         {
             if (InvokeRequired)
@@ -408,8 +408,6 @@ namespace HFM.Forms.Views
             var formColumns = GetFormColumns();
             e.Cancel = _presenter.FormClosing(formColumns);
         }
-
-        #endregion
 
         // Data Grid View Handlers
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -622,24 +620,13 @@ namespace HFM.Forms.Views
             mnuWebHFMGoogleCode.Click += (s, e) => _presenter.ShowHfmGitHub(LocalProcessService.Default);
         }
 
-        #region System Tray Icon Click Handlers
-
-        private void mnuNotifyRestore_Click(object sender, EventArgs e)
+        private void SubscribeToNotifyIconMenuControlEvents()
         {
-            _presenter.NotifyIconRestoreClick();
+            mnuNotifyRst.Click += (s, e) => _presenter.NotifyIconRestoreClick();
+            mnuNotifyMin.Click += (s, e) => _presenter.NotifyIconMinimizeClick();
+            mnuNotifyMax.Click += (s, e) => _presenter.NotifyIconMaximizeClick();
+            mnuNotifyQuit.Click += (s, e) => Close();
         }
-
-        private void mnuNotifyMinimize_Click(object sender, EventArgs e)
-        {
-            _presenter.NotifyIconMinimizeClick();
-        }
-
-        private void mnuNotifyMaximize_Click(object sender, EventArgs e)
-        {
-            _presenter.NotifyIconMaximizeClick();
-        }
-
-        #endregion
 
         private void SubscribeToUserStatsContextMenuControlEvents()
         {
