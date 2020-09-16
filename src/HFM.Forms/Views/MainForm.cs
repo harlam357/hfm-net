@@ -39,6 +39,8 @@ namespace HFM.Forms.Views
             SubscribeToHelpMenuControlEvents();
             SubscribeToClientsMenuControlEvents();
             SubscribeToGridContextMenuControlEvents();
+            SubscribeToWebMenuControlEvents();
+            SubscribeToUserStatsContextMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"HFM.NET v{Core.Application.Version}";
         }
@@ -505,8 +507,7 @@ namespace HFM.Forms.Views
             gridContextMenuItemCopyPRCG.Click += (s, e) => _presenter.CopyPRCGToClipboardClicked();
         }
 
-        #region View Menu Click Handlers
-
+        // View Menu Click Handlers
         private void mnuViewAutoSizeGridColumns_Click(object sender, EventArgs e)
         {
             for (var i = 0; i < dataGridView1.Columns.Count; i++)
@@ -568,10 +569,7 @@ namespace HFM.Forms.Views
             dataGridView1.Invalidate();
         }
 
-        #endregion
-
-        #region Tools Menu Click Handlers
-
+        // Tools Menu Click Handlers
         private void mnuToolsDownloadProjects_Click(object sender, EventArgs e)
         {
             using (var scope = _presenter.ServiceScopeFactory.CreateScope())
@@ -615,36 +613,14 @@ namespace HFM.Forms.Views
             _presenter.ToolsHistoryClick(presenterFactory);
         }
 
-        #endregion
-
-        #region Web Menu Click Handlers
-
-        private void mnuWebEOCUser_Click(object sender, EventArgs e)
+        private void SubscribeToWebMenuControlEvents()
         {
-            _presenter.ShowEocUserPage(LocalProcessService.Default);
+            mnuWebEOCUser.Click += (s, e) => _presenter.ShowEocUserPage(LocalProcessService.Default);
+            mnuWebStanfordUser.Click += (s, e) => _presenter.ShowStanfordUserPage(LocalProcessService.Default);
+            mnuWebEOCTeam.Click += (s, e) => _presenter.ShowEocTeamPage(LocalProcessService.Default);
+            mnuWebRefreshUserStats.Click += (s, e) => _presenter.RefreshUserStatsData();
+            mnuWebHFMGoogleCode.Click += (s, e) => _presenter.ShowHfmGitHub(LocalProcessService.Default);
         }
-
-        private void mnuWebStanfordUser_Click(object sender, EventArgs e)
-        {
-            _presenter.ShowStanfordUserPage(LocalProcessService.Default);
-        }
-
-        private void mnuWebEOCTeam_Click(object sender, EventArgs e)
-        {
-            _presenter.ShowEocTeamPage(LocalProcessService.Default);
-        }
-
-        private void mnuWebRefreshUserStats_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshUserStatsData();
-        }
-
-        private void mnuWebHFMGoogleCode_Click(object sender, EventArgs e)
-        {
-            _presenter.ShowHfmGitHub(LocalProcessService.Default);
-        }
-
-        #endregion
 
         #region System Tray Icon Click Handlers
 
@@ -665,19 +641,12 @@ namespace HFM.Forms.Views
 
         #endregion
 
-        #region User Stats Data Methods
-
-        private void mnuContextShowUserStats_Click(object sender, EventArgs e)
+        private void SubscribeToUserStatsContextMenuControlEvents()
         {
-            _presenter.SetUserStatsDataViewStyle(false);
+            mnuContextShowUserStats.Click += (s, e) => _presenter.SetUserStatsDataViewStyle(false);
+            mnuContextShowTeamStats.Click += (s, e) => _presenter.SetUserStatsDataViewStyle(true);
+            mnuContextForceRefreshEocStats.Click += (s, e) => _presenter.RefreshUserStatsData();
         }
-
-        private void mnuContextShowTeamStats_Click(object sender, EventArgs e)
-        {
-            _presenter.SetUserStatsDataViewStyle(true);
-        }
-
-        #endregion
 
         private void SetupDataGridView()
         {

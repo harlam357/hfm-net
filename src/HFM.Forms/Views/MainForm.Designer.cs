@@ -661,7 +661,6 @@ namespace HFM.Forms.Views
             this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.mnuWebStanfordUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebStanfordUser.Text = "&FAH User Stats Page";
-            this.mnuWebStanfordUser.Click += new System.EventHandler(this.mnuWebStanfordUser_Click);
             // 
             // mnuWebEOCUser
             // 
@@ -669,7 +668,6 @@ namespace HFM.Forms.Views
             this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.mnuWebEOCUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebEOCUser.Text = "&EOC User Stats Page";
-            this.mnuWebEOCUser.Click += new System.EventHandler(this.mnuWebEOCUser_Click);
             // 
             // mnuWebEOCTeam
             // 
@@ -677,7 +675,6 @@ namespace HFM.Forms.Views
             this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
             this.mnuWebEOCTeam.Size = new System.Drawing.Size(204, 22);
             this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
-            this.mnuWebEOCTeam.Click += new System.EventHandler(this.mnuWebEOCTeam_Click);
             // 
             // mnuWebSep1
             // 
@@ -689,7 +686,6 @@ namespace HFM.Forms.Views
             this.mnuWebRefreshUserStats.Name = "mnuWebRefreshUserStats";
             this.mnuWebRefreshUserStats.Size = new System.Drawing.Size(204, 22);
             this.mnuWebRefreshUserStats.Text = "Force &Refresh EOC Stats";
-            this.mnuWebRefreshUserStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
             // 
             // mnuWebSep2
             // 
@@ -701,7 +697,6 @@ namespace HFM.Forms.Views
             this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
             this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(204, 22);
             this.mnuWebHFMGoogleCode.Text = "HFM.NET on &GitHub";
-            this.mnuWebHFMGoogleCode.Click += new System.EventHandler(this.mnuWebHFMGoogleCode_Click);
             // 
             // mnuHelp
             // 
@@ -983,14 +978,12 @@ namespace HFM.Forms.Views
             this.mnuContextShowUserStats.Name = "mnuContextShowUserStats";
             this.mnuContextShowUserStats.Size = new System.Drawing.Size(199, 22);
             this.mnuContextShowUserStats.Text = "Show User Stats";
-            this.mnuContextShowUserStats.Click += new System.EventHandler(this.mnuContextShowUserStats_Click);
             // 
             // mnuContextShowTeamStats
             // 
             this.mnuContextShowTeamStats.Name = "mnuContextShowTeamStats";
             this.mnuContextShowTeamStats.Size = new System.Drawing.Size(199, 22);
             this.mnuContextShowTeamStats.Text = "Show Team Stats";
-            this.mnuContextShowTeamStats.Click += new System.EventHandler(this.mnuContextShowTeamStats_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -1002,7 +995,6 @@ namespace HFM.Forms.Views
             this.mnuContextForceRefreshEocStats.Name = "mnuContextForceRefreshEocStats";
             this.mnuContextForceRefreshEocStats.Size = new System.Drawing.Size(199, 22);
             this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
-            this.mnuContextForceRefreshEocStats.Click += new System.EventHandler(this.mnuWebRefreshUserStats_Click);
             // 
             // MainForm
             // 
