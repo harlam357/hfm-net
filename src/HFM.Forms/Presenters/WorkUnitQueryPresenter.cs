@@ -1,12 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
-    public class WorkUnitQueryPresenter : IDialogPresenter
+    public class WorkUnitQueryPresenter : DialogPresenter
     {
         public WorkUnitQuery Query { get; set; }
 
@@ -15,33 +14,7 @@ namespace HFM.Forms.Presenters
             Query = query;
         }
 
-        public IWin32Dialog Dialog { get; protected set; }
-
-        public virtual DialogResult ShowDialog(IWin32Window owner)
-        {
-            Dialog = new WorkUnitQueryDialog(this);
-            return Dialog.ShowDialog(owner);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    Dialog?.Dispose();
-                }
-            }
-            _disposed = true;
-        }
+        protected override IWin32Dialog OnCreateDialog() => new WorkUnitQueryDialog(this);
 
         public void OKClicked()
         {
