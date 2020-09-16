@@ -56,17 +56,27 @@ namespace HFM.Forms.Presenters
 
         public override DialogResult ShowDialog(IWin32Window owner)
         {
-            ModelBase.Load();
+            OnLoadModel();
             return base.ShowDialog(owner);
         }
 
+        protected virtual void OnLoadModel()
+        {
+            ModelBase.Load();
+        }
+
         protected override void OnClosed(object sender, EventArgs e)
+        {
+            OnSaveModel();
+            base.OnClosed(sender, e);
+        }
+
+        protected virtual void OnSaveModel()
         {
             if (Dialog.DialogResult == DialogResult.OK)
             {
                 ModelBase.Save();
             }
-            base.OnClosed(sender, e);
         }
     }
 }
