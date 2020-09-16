@@ -9,12 +9,16 @@ namespace HFM.Forms.Models
     {
         public ApplicationUpdate Update { get; }
 
-        public ICollection<ListItem> UpdateFilesList { get; }
-
         public ApplicationUpdateModel(ApplicationUpdate update)
         {
             Update = update;
-            UpdateFilesList = BuildUpdateFilesList(update);
+        }
+
+        public ICollection<ListItem> UpdateFilesList { get; private set; }
+
+        public override void Load()
+        {
+            UpdateFilesList = BuildUpdateFilesList(Update);
             if (UpdateFilesList.Count > 0)
             {
                 SelectedUpdateFile = UpdateFilesList.First().GetValue<ApplicationUpdateFile>();

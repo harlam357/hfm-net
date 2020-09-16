@@ -11,6 +11,7 @@ using HFM.Core;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters.Mocks;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
@@ -38,16 +39,17 @@ namespace HFM.Forms.Presenters
         {
             // Arrange
             var model = CreateUpdateModel("foo", ApplicationUpdateFileType.Executable);
-            model.SelectedUpdateFile = null;
             using (var presenter = new MockDialogApplicationUpdatePresenter(model))
             {
                 presenter.ShowDialog(null);
+                model.SelectedUpdateFile = null;
                 Assert.IsTrue(presenter.MockDialog.Shown);
                 // Act
                 var saveFile = new MockFileDialogPresenterReturnsFileName(null, "bar");
                 await presenter.DownloadClick(saveFile);
                 // Assert
                 Assert.IsTrue(presenter.MockDialog.Shown);
+                Assert.AreEqual(0, saveFile.Invocations.Count);
             }
         }
 
@@ -71,6 +73,7 @@ namespace HFM.Forms.Presenters
                     // Assert
                     Assert.IsFalse(presenter.MockDialog.Shown);
                     Assert.AreEqual(DialogResult.OK, presenter.Dialog.DialogResult);
+                    Assert.AreEqual(1, saveFile.Invocations.Count);
                 }
             }
         }
@@ -94,6 +97,7 @@ namespace HFM.Forms.Presenters
                     // Assert
                     Assert.AreEqual(targetFile, model.SelectedUpdateFileLocalFilePath);
                     Assert.IsTrue(model.SelectedUpdateFileIsReadyToBeExecuted);
+                    Assert.AreEqual(1, saveFile.Invocations.Count);
                 }
             }
         }
@@ -117,6 +121,7 @@ namespace HFM.Forms.Presenters
                     // Assert
                     Assert.AreEqual(targetFile, model.SelectedUpdateFileLocalFilePath);
                     Assert.IsFalse(model.SelectedUpdateFileIsReadyToBeExecuted);
+                    Assert.AreEqual(1, saveFile.Invocations.Count);
                 }
             }
         }
@@ -146,6 +151,7 @@ namespace HFM.Forms.Presenters
                     // Assert
                     Assert.AreEqual(1, messageBox.Invocations.Count);
                     Assert.IsTrue(presenter.MockDialog.Shown);
+                    Assert.AreEqual(1, saveFile.Invocations.Count);
                 }
             }
         }
@@ -160,8 +166,7 @@ namespace HFM.Forms.Presenters
             {
                 UpdateFiles = new List<ApplicationUpdateFile> { updateFile }
             };
-            var model = new ApplicationUpdateModel(update);
-            return model;
+            return new ApplicationUpdateModel(update);
         }
 
         private class MockDialogApplicationUpdatePresenter : ApplicationUpdatePresenter
@@ -178,11 +183,7 @@ namespace HFM.Forms.Presenters
 
             public MockWin32Dialog MockDialog => Dialog as MockWin32Dialog;
 
-            public override DialogResult ShowDialog(IWin32Window owner)
-            {
-                Dialog = new MockWin32Dialog();
-                return Dialog.ShowDialog(owner);
-            }
+            protected override IWin32Dialog OnCreateDialog() => new MockWin32Dialog();
         }
 
         private class MockFileDialogPresenterReturnsFileName : MockFileDialogPresenter
@@ -196,7 +197,7 @@ namespace HFM.Forms.Presenters
 
             public override string FileName
             {
-                get { return _fileName; }
+                get => _fileName;
                 set { }
             }
         }

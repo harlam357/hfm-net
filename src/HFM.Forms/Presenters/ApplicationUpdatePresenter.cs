@@ -12,7 +12,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Presenters
 {
-    public class ApplicationUpdatePresenter : IDialogPresenter
+    public class ApplicationUpdatePresenter : DialogPresenter<ApplicationUpdateModel>
     {
         public ApplicationUpdateModel Model { get; }
         public ILogger Logger { get; }
@@ -20,6 +20,7 @@ namespace HFM.Forms.Presenters
         public MessageBoxPresenter MessageBox { get; }
 
         public ApplicationUpdatePresenter(ApplicationUpdateModel model, ILogger logger, IPreferences preferences, MessageBoxPresenter messageBox)
+            : base(model)
         {
             Model = model;
             Logger = logger ?? NullLogger.Instance;
@@ -27,33 +28,7 @@ namespace HFM.Forms.Presenters
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
-        public IWin32Dialog Dialog { get; protected set; }
-
-        public virtual DialogResult ShowDialog(IWin32Window owner)
-        {
-            Dialog = new ApplicationUpdateDialog(this);
-            return Dialog.ShowDialog(owner);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    Dialog?.Dispose();
-                }
-            }
-            _disposed = true;
-        }
+        protected override IWin32Dialog OnCreateDialog() => new ApplicationUpdateDialog(this);
 
         public async Task DownloadClick(FileDialogPresenter saveFile)
         {
@@ -89,7 +64,7 @@ namespace HFM.Forms.Presenters
             if (Model.SelectedUpdateFile is null) return false;
 
             saveFile.FileName = Model.SelectedUpdateFile.Name;
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            if (saveFile.ShowDialog(Dialog) == DialogResult.OK)
             {
                 Model.SelectedUpdateFileLocalFilePath = saveFile.FileName;
                 return true;
