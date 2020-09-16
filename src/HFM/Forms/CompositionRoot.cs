@@ -57,6 +57,7 @@ namespace HFM.Forms
             // Scope Views
             serviceRegistry
                 .Register<AboutDialog>(new PerScopeLifetime())
+                .Register<ApplicationUpdatePresenterFactory>(new PerScopeLifetime())
                 .Register<BenchmarksPresenter>(new PerScopeLifetime())
                 .Register<MessagesPresenter>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())

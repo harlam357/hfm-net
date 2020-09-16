@@ -131,17 +131,17 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public void CheckForUpdateOnStartup(IApplicationUpdateService service)
+        public void CheckForUpdateOnStartup(IApplicationUpdateService service, ApplicationUpdatePresenterFactory presenterFactory)
         {
             if (Preferences.Get<bool>(Preference.StartupCheckForUpdate))
             {
-                CheckForUpdateInternal(service);
+                CheckForUpdateInternal(service, presenterFactory);
             }
         }
 
-        private void CheckForUpdate(IApplicationUpdateService service)
+        private void CheckForUpdate(IApplicationUpdateService service, ApplicationUpdatePresenterFactory presenterFactory)
         {
-            var result = CheckForUpdateInternal(service);
+            var result = CheckForUpdateInternal(service, presenterFactory);
             if (result.HasValue && !result.Value)
             {
                 string text = $"{Core.Application.NameAndVersion} is already up-to-date.";
@@ -152,7 +152,7 @@ namespace HFM.Forms.Presenters
         private readonly object _checkForUpdateLock = new object();
         private ApplicationUpdateModel _applicationUpdateModel;
 
-        private bool? CheckForUpdateInternal(IApplicationUpdateService service)
+        private bool? CheckForUpdateInternal(IApplicationUpdateService service, ApplicationUpdatePresenterFactory presenterFactory)
         {
             if (!Monitor.TryEnter(_checkForUpdateLock))
             {
@@ -167,7 +167,7 @@ namespace HFM.Forms.Presenters
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
 
                 _applicationUpdateModel = new ApplicationUpdateModel(update);
-                using (var presenter = new ApplicationUpdatePresenter(_applicationUpdateModel, Logger, Preferences, MessageBox))
+                using (var presenter = presenterFactory.Create(_applicationUpdateModel))
                 {
                     if (presenter.ShowDialog(Form) == DialogResult.OK)
                     {
@@ -413,9 +413,9 @@ namespace HFM.Forms.Presenters
             localProcess.StartAndNotifyError(Core.Application.SupportForumUrl, errorMessage, Logger, MessageBox);
         }
 
-        public void CheckForUpdateClick(IApplicationUpdateService service)
+        public void CheckForUpdateClick(IApplicationUpdateService service, ApplicationUpdatePresenterFactory presenterFactory)
         {
-            CheckForUpdate(service);
+            CheckForUpdate(service, presenterFactory);
         }
 
         // Clients Menu Handling Methods

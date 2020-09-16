@@ -385,8 +385,9 @@ namespace HFM.Forms.Views
             _presenter.FormShown();
             using (var scope = _presenter.ServiceScopeFactory.CreateScope())
             {
-                var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
-                _presenter.CheckForUpdateOnStartup(updateService);
+                var service = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
+                var presenterFactory = scope.ServiceProvider.GetRequiredService<ApplicationUpdatePresenterFactory>();
+                _presenter.CheckForUpdateOnStartup(service, presenterFactory);
             }
         }
 
@@ -469,8 +470,9 @@ namespace HFM.Forms.Views
             {
                 using (var scope = _presenter.ServiceScopeFactory.CreateScope())
                 {
-                    var updateService = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
-                    _presenter.CheckForUpdateClick(updateService);
+                    var service = scope.ServiceProvider.GetRequiredService<ApplicationUpdateService>();
+                    var presenterFactory = scope.ServiceProvider.GetRequiredService<ApplicationUpdatePresenterFactory>();
+                    _presenter.CheckForUpdateClick(service, presenterFactory);
                 }
             };
             mnuHelpAbout.Click += (s, e) =>

@@ -135,4 +135,20 @@ namespace HFM.Forms.Presenters
             }
         }
     }
+
+    public class ApplicationUpdatePresenterFactory
+    {
+        public ILogger Logger { get; }
+        public IPreferences Preferences { get; }
+        public MessageBoxPresenter MessageBox { get; }
+
+        public ApplicationUpdatePresenterFactory(ILogger logger, IPreferences preferences, MessageBoxPresenter messageBox)
+        {
+            Logger = logger ?? NullLogger.Instance;
+            Preferences = preferences ?? new InMemoryPreferencesProvider();
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+        }
+
+        public virtual ApplicationUpdatePresenter Create(ApplicationUpdateModel model) => new ApplicationUpdatePresenter(model, Logger, Preferences, MessageBox);
+    }
 }
