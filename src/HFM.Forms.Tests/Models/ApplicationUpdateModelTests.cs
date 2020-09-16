@@ -10,29 +10,33 @@ namespace HFM.Forms.Models
     public class ApplicationUpdateModelTests
     {
         [Test]
-        public void ApplicationUpdateModel_UpdateFileList_IsEmptyWhenApplicationUpdateIsNull()
+        public void ApplicationUpdateModel_Load_UpdateFileList_IsEmptyWhenApplicationUpdateIsNull()
         {
-            // Act
+            // Arrange
             var model = new ApplicationUpdateModel(null);
+            // Act
+            model.Load();
             // Assert
             Assert.IsNotNull(model.UpdateFilesList);
             Assert.AreEqual(0, model.UpdateFilesList.Count);
         }
 
         [Test]
-        public void ApplicationUpdateModel_UpdateFileList_IsEmptyWhenUpdateFilesIsNull()
+        public void ApplicationUpdateModel_Load_UpdateFileList_IsEmptyWhenUpdateFilesIsNull()
         {
-            // Act
+            // Arrange
             var model = new ApplicationUpdateModel(new ApplicationUpdate());
+            // Act
+            model.Load();
             // Assert
             Assert.IsNotNull(model.UpdateFilesList);
             Assert.AreEqual(0, model.UpdateFilesList.Count);
         }
 
         [Test]
-        public void ApplicationUpdateModel_UpdateFileList_IsCreatedFromUpdateFiles()
+        public void ApplicationUpdateModel_Load_UpdateFileList_IsCreatedFromUpdateFiles()
         {
-            // Act
+            // Arrange
             var update = new ApplicationUpdate
             {
                 UpdateFiles = new List<ApplicationUpdateFile>
@@ -42,6 +46,8 @@ namespace HFM.Forms.Models
                 }
             };
             var model = new ApplicationUpdateModel(update);
+            // Act
+            model.Load();
             // Assert
             Assert.IsNotNull(model.UpdateFilesList);
             Assert.AreEqual(2, model.UpdateFilesList.Count);
