@@ -9,6 +9,7 @@ using HFM.Client;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters.Mocks;
+using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
@@ -161,13 +162,7 @@ namespace HFM.Forms.Presenters
 
             public MockWin32Dialog MockDialog => Dialog as MockWin32Dialog;
 
-            public override DialogResult ShowDialog(IWin32Window owner)
-            {
-                ConnectIfModelHasNoError();
-
-                Dialog = new MockWin32Dialog();
-                return Dialog.ShowDialog(owner);
-            }
+            protected override IWin32Dialog OnCreateDialog() => new MockWin32Dialog();
         }
 
         private class MockConnectionFahClientSettingsModel : FahClientSettingsModel
