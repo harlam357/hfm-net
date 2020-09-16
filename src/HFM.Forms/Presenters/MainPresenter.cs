@@ -64,11 +64,12 @@ namespace HFM.Forms.Presenters
                 // Create a local reference before handing off to BeginInvoke.
                 // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
                 // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
+                var selectedSlot = GridModel.SelectedSlot;
                 var slotTotals = GridModel.SlotTotals;
                 // run asynchronously so binding operation can finish
                 Form.BeginInvoke(new Action(() =>
                 {
-                    Model.GridModelSelectedSlotChanged(s, e);
+                    Model.GridModelSelectedSlotChanged(selectedSlot);
                     Model.GridModelSlotTotalsChanged(slotTotals);
                 }), null);
             };
@@ -77,8 +78,12 @@ namespace HFM.Forms.Presenters
                 switch (e.PropertyName)
                 {
                     case nameof(MainGridModel.SelectedSlot):
+                        // Create a local reference before handing off to BeginInvoke.
+                        // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
+                        // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
+                        var selectedSlot = GridModel.SelectedSlot;
                         // run asynchronously so binding operation can finish
-                        Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(s, e)), null);
+                        Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(selectedSlot)), null);
                         break;
                 }
             };

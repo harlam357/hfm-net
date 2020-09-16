@@ -74,9 +74,8 @@ namespace HFM.Forms.Models
             Preferences.Save();
         }
 
-        public void GridModelSelectedSlotChanged(object sender, EventArgs e)
+        public void GridModelSelectedSlotChanged(SlotModel selectedSlot)
         {
-            var selectedSlot = (sender as MainGridModel)?.SelectedSlot;
             ClientDetails = selectedSlot?.SlotIdentifier.ClientIdentifier.ToServerPortString();
         }
 

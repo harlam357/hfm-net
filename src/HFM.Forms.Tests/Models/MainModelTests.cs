@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -104,9 +103,10 @@ namespace HFM.Forms.Models
             // Arrange
             var model = CreateModel();
             model.ClientDetails = "foo";
-            var gridModel = new MainGridModel(null, null, null);
+            SlotModel selectedSlot = null;
             // Act
-            model.GridModelSelectedSlotChanged(gridModel, EventArgs.Empty);
+            // ReSharper disable once ExpressionIsAlwaysNull
+            model.GridModelSelectedSlotChanged(selectedSlot);
             // Assert
             Assert.IsNull(model.ClientDetails);
         }
@@ -116,10 +116,9 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var model = CreateModel();
-            var gridModel = new MainGridModel(null, null, null);
-            gridModel.SelectedSlot = new SlotModel(new NullClient { Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort } });
+            var selectedSlot = new SlotModel(new NullClient { Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort } });
             // Act
-            model.GridModelSelectedSlotChanged(gridModel, EventArgs.Empty);
+            model.GridModelSelectedSlotChanged(selectedSlot);
             // Assert
             Assert.IsNotNull(model.ClientDetails);
         }
