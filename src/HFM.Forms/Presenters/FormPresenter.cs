@@ -30,18 +30,24 @@ namespace HFM.Forms.Presenters
             Closed?.Invoke(this, e);
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Form?.Dispose();
-            }
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Form?.Dispose();
+                }
+            }
+            _disposed = true;
         }
     }
 
