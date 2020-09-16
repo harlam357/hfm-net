@@ -23,7 +23,7 @@ namespace HFM.Forms.Models
         public BindingSource HistoryBindingSource { get; }
 
         private readonly List<WorkUnitQuery> _queryList;
-        private readonly WorkUnitHistoryRowSortableBindingList _workUnitHistoryList;
+        private readonly WorkUnitRowSortableBindingList _workUnitList;
         private PetaPoco.Page<WorkUnitRow> _page;
 
         public WorkUnitHistoryModel(IPreferences preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
@@ -42,15 +42,15 @@ namespace HFM.Forms.Models
                 ResetBindings(true);
             };
 
-            _workUnitHistoryList = new WorkUnitHistoryRowSortableBindingList();
-            _workUnitHistoryList.RaiseListChangedEvents = false;
-            _workUnitHistoryList.Sorted += (s, e) =>
+            _workUnitList = new WorkUnitRowSortableBindingList();
+            _workUnitList.RaiseListChangedEvents = false;
+            _workUnitList.Sorted += (s, e) =>
             {
                 SortColumnName = e.Name;
                 SortOrder = e.Direction;
             };
             HistoryBindingSource = new BindingSource();
-            HistoryBindingSource.DataSource = _workUnitHistoryList;
+            HistoryBindingSource.DataSource = _workUnitList;
 
             _page = new PetaPoco.Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
@@ -190,7 +190,7 @@ namespace HFM.Forms.Models
             if (!String.IsNullOrEmpty(SortColumnName))
             {
                 HistoryBindingSource.Sort = SortColumnName + " " + SortOrder.ToBindingSourceSortString();
-                _workUnitHistoryList.ApplySort(_workUnitHistoryList.SortDescriptions);
+                _workUnitList.ApplySort(_workUnitList.SortDescriptions);
             }
 
             HistoryBindingSource.ResetBindings(false);

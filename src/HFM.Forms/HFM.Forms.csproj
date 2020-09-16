@@ -236,7 +236,7 @@
       <DependentUpon>PreferencesDialog.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WorkUnitHistoryRowSortableBindingList.cs" />
+    <Compile Include="WorkUnitRowSortableBindingList.cs" />
     <Compile Include="Views\WorkUnitHistoryForm.cs">
       <SubType>Form</SubType>
     </Compile>

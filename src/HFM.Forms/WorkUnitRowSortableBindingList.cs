@@ -1,14 +1,13 @@
-﻿
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 using HFM.Core;
 using HFM.Core.Data;
 
 namespace HFM.Forms
 {
-    internal class WorkUnitHistoryRowSortableBindingList : SortableBindingList<WorkUnitRow>
+    internal class WorkUnitRowSortableBindingList : SortableBindingList<WorkUnitRow>
     {
-        public WorkUnitHistoryRowSortableBindingList()
+        public WorkUnitRowSortableBindingList()
         {
             SortComparer = new WorkUnitHistoryRowSortComparer();
         }
