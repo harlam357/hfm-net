@@ -359,11 +359,7 @@ namespace HFM.Forms
                 _dialogResultProvider = dialogResultProvider;
             }
 
-            public override DialogResult ShowDialog(IWin32Window owner)
-            {
-                Dialog = new MockWin32Dialog<WorkUnitQueryPresenter>(this, _presenterAction, _dialogResultProvider);
-                return Dialog.ShowDialog(owner);
-            }
+            protected override IWin32Dialog OnCreateDialog() => new MockWin32Dialog<WorkUnitQueryPresenter>(this, _presenterAction, _dialogResultProvider);
         }
     }
 }
