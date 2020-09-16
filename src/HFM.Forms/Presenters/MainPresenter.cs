@@ -1,9 +1,4 @@
-﻿/*
- * View and DataGridView save state code based on code by Ron Dunant.
- * http://www.codeproject.com/KB/grid/PersistentDataGridView.aspx
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
