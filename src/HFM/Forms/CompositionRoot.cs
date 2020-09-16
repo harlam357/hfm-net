@@ -59,6 +59,7 @@ namespace HFM.Forms
                 .Register<AboutDialog>(new PerScopeLifetime())
                 .Register<ApplicationUpdatePresenterFactory>(new PerScopeLifetime())
                 .Register<BenchmarksPresenter>(new PerScopeLifetime())
+                .Register<FahClientSettingsPresenterFactory>(new PerScopeLifetime())
                 .Register<MessagesPresenter>(new PerScopeLifetime())
                 .Register<PreferencesPresenter>(new PerScopeLifetime())
                 .Register<ProteinCalculatorForm>(new PerScopeLifetime())

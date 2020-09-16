@@ -25,13 +25,13 @@ namespace HFM.Forms.Presenters
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
-        public override DialogResult ShowDialog(IWin32Window owner)
-        {
-            ConnectIfModelHasNoError();
-            return base.ShowDialog(owner);
-        }
-
         protected override IWin32Dialog OnCreateDialog() => new FahClientSettingsDialog(this);
+
+        protected override void OnLoadModel()
+        {
+            base.OnLoadModel();
+            ConnectIfModelHasNoError();
+        }
 
         protected void ConnectIfModelHasNoError()
         {
@@ -134,5 +134,19 @@ namespace HFM.Forms.Presenters
             }
             _disposed = true;
         }
+    }
+
+    public class FahClientSettingsPresenterFactory
+    {
+        public ILogger Logger { get; }
+        public MessageBoxPresenter MessageBox { get; }
+
+        public FahClientSettingsPresenterFactory(ILogger logger, MessageBoxPresenter messageBox)
+        {
+            Logger = logger ?? NullLogger.Instance;
+            MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+        }
+
+        public virtual FahClientSettingsPresenter Create(FahClientSettingsModel model) => new FahClientSettingsPresenter(model, Logger, MessageBox);
     }
 }

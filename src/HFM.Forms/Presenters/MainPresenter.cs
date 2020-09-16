@@ -419,9 +419,9 @@ namespace HFM.Forms.Presenters
         }
 
         // Clients Menu Handling Methods
-        public void ClientsAddClick()
+        public void ClientsAddClick(FahClientSettingsPresenterFactory presenterFactory)
         {
-            using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, MessageBox))
+            using (var dialog = presenterFactory.Create(new FahClientSettingsModel()))
             {
                 while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {
@@ -440,7 +440,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public void ClientsEditClick()
+        public void ClientsEditClick(FahClientSettingsPresenterFactory presenterFactory)
         {
             var selectedSlot = GridModel.SelectedSlot;
             if (selectedSlot == null) return;
@@ -450,7 +450,7 @@ namespace HFM.Forms.Presenters
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var model = new FahClientSettingsModel(originalSettings);
-            using (var dialog = new FahClientSettingsPresenter(model, Logger, MessageBox))
+            using (var dialog = presenterFactory.Create(model))
             {
                 while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {

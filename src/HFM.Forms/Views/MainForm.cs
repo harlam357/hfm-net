@@ -487,8 +487,22 @@ namespace HFM.Forms.Views
 
         private void SubscribeToClientsMenuControlEvents()
         {
-            appMenuClientsAddClient.Click += (s, e) => _presenter.ClientsAddClick();
-            appMenuClientsEditClient.Click += (s, e) => _presenter.ClientsEditClick();
+            appMenuClientsAddClient.Click += (s, e) =>
+            {
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+                {
+                    var presenterFactory = scope.ServiceProvider.GetRequiredService<FahClientSettingsPresenterFactory>();
+                    _presenter.ClientsAddClick(presenterFactory);
+                }
+            };
+            appMenuClientsEditClient.Click += (s, e) =>
+            {
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+                {
+                    var presenterFactory = scope.ServiceProvider.GetRequiredService<FahClientSettingsPresenterFactory>();
+                    _presenter.ClientsEditClick(presenterFactory);
+                }
+            };
             appMenuClientsDeleteClient.Click += (s, e) => _presenter.ClientsDeleteClick();
             appMenuClientsRefreshSelectedSlot.Click += (s, e) => _presenter.ClientsRefreshSelectedClick();
             appMenuClientsRefreshAllSlots.Click += (s, e) => _presenter.ClientsRefreshAllClick();
@@ -497,7 +511,14 @@ namespace HFM.Forms.Views
 
         private void SubscribeToGridContextMenuControlEvents()
         {
-            gridContextMenuItemEditClient.Click += (s, e) => _presenter.ClientsEditClick();
+            gridContextMenuItemEditClient.Click += (s, e) =>
+            {
+                using (var scope = _presenter.ServiceScopeFactory.CreateScope())
+                {
+                    var presenterFactory = scope.ServiceProvider.GetRequiredService<FahClientSettingsPresenterFactory>();
+                    _presenter.ClientsEditClick(presenterFactory);
+                }
+            };
             gridContextMenuItemDeleteClient.Click += (s, e) => _presenter.ClientsDeleteClick();
             gridContextMenuItemRefreshSelectedSlot.Click += (s, e) => _presenter.ClientsRefreshSelectedClick();
             gridContextMenuItemViewCachedLog.Click += (s, e) => _presenter.ClientsViewCachedLogClick(LocalProcessService.Default);
