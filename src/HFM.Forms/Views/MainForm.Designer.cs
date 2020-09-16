@@ -447,7 +447,6 @@ namespace HFM.Forms.Views
             this.appMenuClientsAddClient.Name = "appMenuClientsAddClient";
             this.appMenuClientsAddClient.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsAddClient.Text = "&Add Client";
-            this.appMenuClientsAddClient.Click += new System.EventHandler(this.AddClient_Click);
             // 
             // mnuClientsSep1
             // 
@@ -459,14 +458,12 @@ namespace HFM.Forms.Views
             this.appMenuClientsEditClient.Name = "appMenuClientsEditClient";
             this.appMenuClientsEditClient.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsEditClient.Text = "&Edit Client";
-            this.appMenuClientsEditClient.Click += new System.EventHandler(this.EditClient_Click);
             // 
             // appMenuClientsDeleteClient
             // 
             this.appMenuClientsDeleteClient.Name = "appMenuClientsDeleteClient";
             this.appMenuClientsDeleteClient.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsDeleteClient.Text = "&Delete Client";
-            this.appMenuClientsDeleteClient.Click += new System.EventHandler(this.DeleteClient_Click);
             // 
             // mnuClientsSep2
             // 
@@ -478,7 +475,6 @@ namespace HFM.Forms.Views
             this.appMenuClientsViewCachedLog.Name = "appMenuClientsViewCachedLog";
             this.appMenuClientsViewCachedLog.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsViewCachedLog.Text = "View Cached &Log File";
-            this.appMenuClientsViewCachedLog.Click += new System.EventHandler(this.ViewCachedLog_Click);
             // 
             // mnuClientsSep4
             // 
@@ -491,7 +487,6 @@ namespace HFM.Forms.Views
             this.appMenuClientsRefreshSelectedSlot.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.appMenuClientsRefreshSelectedSlot.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsRefreshSelectedSlot.Text = "Refresh &Selected";
-            this.appMenuClientsRefreshSelectedSlot.Click += new System.EventHandler(this.RefreshSelectedSlot_Click);
             // 
             // appMenuClientsRefreshAllSlots
             // 
@@ -499,7 +494,6 @@ namespace HFM.Forms.Views
             this.appMenuClientsRefreshAllSlots.ShortcutKeys = System.Windows.Forms.Keys.F6;
             this.appMenuClientsRefreshAllSlots.Size = new System.Drawing.Size(186, 22);
             this.appMenuClientsRefreshAllSlots.Text = "&Refresh All";
-            this.appMenuClientsRefreshAllSlots.Click += new System.EventHandler(this.RefreshAllSlots_Click);
             // 
             // mnuView
             // 
@@ -788,7 +782,6 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemRefreshSelectedSlot.Name = "gridContextMenuItemRefreshSelectedSlot";
             this.gridContextMenuItemRefreshSelectedSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemRefreshSelectedSlot.Text = "Refresh Selected";
-            this.gridContextMenuItemRefreshSelectedSlot.Click += new System.EventHandler(this.RefreshSelectedSlot_Click);
             // 
             // gridContextMenuSep1
             // 
@@ -800,14 +793,12 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemEditClient.Name = "gridContextMenuItemEditClient";
             this.gridContextMenuItemEditClient.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemEditClient.Text = "Edit Client";
-            this.gridContextMenuItemEditClient.Click += new System.EventHandler(this.EditClient_Click);
             // 
             // gridContextMenuItemDeleteClient
             // 
             this.gridContextMenuItemDeleteClient.Name = "gridContextMenuItemDeleteClient";
             this.gridContextMenuItemDeleteClient.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemDeleteClient.Text = "Delete Client";
-            this.gridContextMenuItemDeleteClient.Click += new System.EventHandler(this.DeleteClient_Click);
             // 
             // gridContextMenuSep2
             // 
@@ -819,7 +810,6 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemViewCachedLog.Name = "gridContextMenuItemViewCachedLog";
             this.gridContextMenuItemViewCachedLog.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemViewCachedLog.Text = "View Cached Log File";
-            this.gridContextMenuItemViewCachedLog.Click += new System.EventHandler(this.ViewCachedLog_Click);
             // 
             // gridContextMenuSep3
             // 
@@ -831,21 +821,18 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemFoldSlot.Name = "gridContextMenuItemFoldSlot";
             this.gridContextMenuItemFoldSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemFoldSlot.Text = "Fold Slot";
-            this.gridContextMenuItemFoldSlot.Click += new System.EventHandler(this.FoldSlot_Click);
             // 
             // gridContextMenuItemPauseSlot
             // 
             this.gridContextMenuItemPauseSlot.Name = "gridContextMenuItemPauseSlot";
             this.gridContextMenuItemPauseSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemPauseSlot.Text = "Pause Slot";
-            this.gridContextMenuItemPauseSlot.Click += new System.EventHandler(this.PauseSlot_Click);
             // 
             // gridContextMenuItemFinishSlot
             // 
             this.gridContextMenuItemFinishSlot.Name = "gridContextMenuItemFinishSlot";
             this.gridContextMenuItemFinishSlot.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemFinishSlot.Text = "Finish Slot";
-            this.gridContextMenuItemFinishSlot.Click += new System.EventHandler(this.FinishSlot_Click);
             // 
             // gridContextMenuSep4
             // 
@@ -857,7 +844,6 @@ namespace HFM.Forms.Views
             this.gridContextMenuItemCopyPRCG.Name = "gridContextMenuItemCopyPRCG";
             this.gridContextMenuItemCopyPRCG.Size = new System.Drawing.Size(204, 22);
             this.gridContextMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
-            this.gridContextMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
             // 
             // splitContainer1
             // 

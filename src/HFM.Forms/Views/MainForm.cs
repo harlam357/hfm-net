@@ -37,6 +37,8 @@ namespace HFM.Forms.Views
             SubscribeToFileMenuControlEvents();
             SubscribeToEditMenuControlEvents();
             SubscribeToHelpMenuControlEvents();
+            SubscribeToClientsMenuControlEvents();
+            SubscribeToGridContextMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"HFM.NET v{Core.Application.Version}";
         }
@@ -481,63 +483,27 @@ namespace HFM.Forms.Views
             };
         }
 
-        #region Clients Menu Click Handlers
-
-        private void AddClient_Click(object sender, EventArgs e)
+        private void SubscribeToClientsMenuControlEvents()
         {
-            _presenter.ClientsAddClick();
+            appMenuClientsAddClient.Click += (s, e) => _presenter.ClientsAddClick();
+            appMenuClientsEditClient.Click += (s, e) => _presenter.ClientsEditClick();
+            appMenuClientsDeleteClient.Click += (s, e) => _presenter.ClientsDeleteClick();
+            appMenuClientsRefreshSelectedSlot.Click += (s, e) => _presenter.ClientsRefreshSelectedClick();
+            appMenuClientsRefreshAllSlots.Click += (s, e) => _presenter.ClientsRefreshAllClick();
+            appMenuClientsViewCachedLog.Click += (s, e) => _presenter.ClientsViewCachedLogClick(LocalProcessService.Default);
         }
 
-        private void EditClient_Click(object sender, EventArgs e)
+        private void SubscribeToGridContextMenuControlEvents()
         {
-            _presenter.ClientsEditClick();
+            gridContextMenuItemEditClient.Click += (s, e) => _presenter.ClientsEditClick();
+            gridContextMenuItemDeleteClient.Click += (s, e) => _presenter.ClientsDeleteClick();
+            gridContextMenuItemRefreshSelectedSlot.Click += (s, e) => _presenter.ClientsRefreshSelectedClick();
+            gridContextMenuItemViewCachedLog.Click += (s, e) => _presenter.ClientsViewCachedLogClick(LocalProcessService.Default);
+            gridContextMenuItemFoldSlot.Click += (s, e) => _presenter.ClientsFoldSlotClick();
+            gridContextMenuItemPauseSlot.Click += (s, e) => _presenter.ClientsPauseSlotClick();
+            gridContextMenuItemFinishSlot.Click += (s, e) => _presenter.ClientsFinishSlotClick();
+            gridContextMenuItemCopyPRCG.Click += (s, e) => _presenter.CopyPRCGToClipboardClicked();
         }
-
-        private void DeleteClient_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsDeleteClick();
-        }
-
-        private void RefreshSelectedSlot_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsRefreshSelectedClick();
-        }
-
-        private void RefreshAllSlots_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsRefreshAllClick();
-        }
-
-        private void ViewCachedLog_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsViewCachedLogClick(LocalProcessService.Default);
-        }
-
-        #endregion
-
-        #region Grid Context Menu Handlers
-
-        private void FoldSlot_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsFoldSlotClick();
-        }
-
-        private void PauseSlot_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsPauseSlotClick();
-        }
-
-        private void FinishSlot_Click(object sender, EventArgs e)
-        {
-            _presenter.ClientsFinishSlotClick();
-        }
-
-        private void CopyPRCGToClipboard_Click(object sender, EventArgs e)
-        {
-            _presenter.CopyPRCGToClipboardClicked();
-        }
-
-        #endregion
 
         #region View Menu Click Handlers
 
