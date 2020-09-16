@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HFM.Forms.Presenters.Mocks
@@ -13,7 +13,7 @@ namespace HFM.Forms.Presenters.Mocks
             _dialogResultProvider = dialogResultProvider;
         }
 
-        public override DialogResult ShowDialog() => OnProvideDialogResult(null);
+        public override Color Color { get; set; }
 
         public override DialogResult ShowDialog(IWin32Window owner) => OnProvideDialogResult(owner);
 

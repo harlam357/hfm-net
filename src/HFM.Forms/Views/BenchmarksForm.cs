@@ -182,7 +182,7 @@ namespace HFM.Forms.Views
 
         private void btnAddColor_Click(object sender, EventArgs e)
         {
-            using (var dialog = new DefaultColorDialogPresenter(new ColorDialog()))
+            using (var dialog = new ColorDialogPresenter())
             {
                 _presenter.AddGraphColorClicked(dialog);
             }

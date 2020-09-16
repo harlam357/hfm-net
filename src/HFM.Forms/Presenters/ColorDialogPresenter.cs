@@ -2,55 +2,56 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Forms.Views;
+
 namespace HFM.Forms.Presenters
 {
-    public abstract class ColorDialogPresenter
+    public class ColorDialogPresenter : DialogPresenter
     {
-        public virtual Color Color { get; set; }
+        public virtual Color Color
+        {
+            get => ColorDialog?.Color ?? Color.Empty;
+            set
+            {
+                if (ColorDialog is null) return;
+                ColorDialog.Color = value;
+            }
+        }
 
-        public abstract DialogResult ShowDialog();
+        public Win32ColorDialog ColorDialog => Dialog as Win32ColorDialog;
 
-        public abstract DialogResult ShowDialog(IWin32Window owner);
+        protected override IWin32Dialog OnCreateDialog() => new Win32ColorDialog();
     }
 
-    public class DefaultColorDialogPresenter : ColorDialogPresenter, IDisposable
+    public sealed class Win32ColorDialog : IWin32Dialog
     {
         private readonly ColorDialog _dialog;
 
-        public DefaultColorDialogPresenter(ColorDialog dialog)
+        public Win32ColorDialog()
         {
-            _dialog = dialog;
+            _dialog = new ColorDialog();
         }
 
-        public override Color Color
+        public Color Color
         {
             get => _dialog.Color;
             set => _dialog.Color = value;
         }
 
-        public override DialogResult ShowDialog() => _dialog.ShowDialog();
+        public IntPtr Handle => IntPtr.Zero;
 
-        public override DialogResult ShowDialog(IWin32Window owner) => _dialog.ShowDialog(owner);
+        public void Dispose() => _dialog.Dispose();
 
-        protected virtual void Dispose(bool disposing)
+        public DialogResult DialogResult
         {
-            if (disposing)
-            {
-                _dialog?.Dispose();
-            }
+            get => DialogResult.None;
+            set => throw new NotImplementedException();
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-    }
+        public DialogResult ShowDialog(IWin32Window owner) => _dialog.ShowDialog(owner);
 
-    public class NullColorDialogPresenter : ColorDialogPresenter
-    {
-        public override DialogResult ShowDialog() => default;
+        public void Close() => throw new NotImplementedException();
 
-        public override DialogResult ShowDialog(IWin32Window owner) => default;
+        public event EventHandler Closed;
     }
 }
