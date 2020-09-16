@@ -14,6 +14,7 @@ using HFM.Core.SlotXml;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters.Mocks;
+using HFM.Forms.Views;
 using HFM.Preferences;
 
 namespace HFM.Forms.Presenters
@@ -27,8 +28,8 @@ namespace HFM.Forms.Presenters
             // Arrange
             using (var presenter = new MockDialogPreferencesPresenter(new PreferencesModel(new InMemoryPreferencesProvider(), new InMemoryAutoRunConfiguration())))
             {
-                presenter.Model.WebProxyModel.Enabled = true;
                 presenter.ShowDialog(null);
+                presenter.Model.WebProxyModel.Enabled = true;
                 Assert.IsTrue(presenter.MockDialog.Shown);
                 // Act
                 presenter.OKClicked();
@@ -442,11 +443,7 @@ namespace HFM.Forms.Presenters
 
             public MockWin32Dialog MockDialog => Dialog as MockWin32Dialog;
 
-            public override DialogResult ShowDialog(IWin32Window owner)
-            {
-                Dialog = new MockWin32Dialog();
-                return Dialog.ShowDialog(owner);
-            }
+            protected override IWin32Dialog OnCreateDialog() => new MockWin32Dialog();
         }
 
         private class PreferencesModelThrowsOnSave : PreferencesModel

@@ -10,5 +10,7 @@ namespace HFM.Forms.Views
         DialogResult ShowDialog(IWin32Window owner);
 
         void Close();
+
+        event EventHandler Closed;
     }
 }

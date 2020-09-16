@@ -13,7 +13,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Presenters
 {
-    public class PreferencesPresenter : IDialogPresenter
+    public class PreferencesPresenter : DialogPresenter<PreferencesModel>
     {
         public ILogger Logger { get; }
         public PreferencesModel Model { get; }
@@ -21,6 +21,7 @@ namespace HFM.Forms.Presenters
         public ExceptionPresenterFactory ExceptionPresenter { get; }
 
         public PreferencesPresenter(PreferencesModel model, ILogger logger, MessageBoxPresenter messageBox, ExceptionPresenterFactory exceptionPresenter)
+            : base(model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
@@ -28,50 +29,21 @@ namespace HFM.Forms.Presenters
             ExceptionPresenter = exceptionPresenter ?? NullExceptionPresenterFactory.Instance;
         }
 
-        public IWin32Dialog Dialog { get; protected set; }
-
-        public virtual DialogResult ShowDialog(IWin32Window owner)
-        {
-            Model.Load();
-
-            Dialog = new PreferencesDialog(this);
-            return Dialog.ShowDialog(owner);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private bool _disposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    Dialog?.Dispose();
-                }
-            }
-            _disposed = true;
-        }
+        protected override IWin32Dialog OnCreateDialog() => new PreferencesDialog(this);
 
         public void OKClicked()
         {
             if (Model.ValidateAcceptance())
             {
+                Dialog.DialogResult = DialogResult.OK;
                 try
                 {
-                    Model.Save();
-                    Dialog.DialogResult = DialogResult.OK;
+                    Dialog.Close();
                 }
                 catch (Exception ex)
                 {
                     Dialog.DialogResult = ExceptionPresenter.ShowDialog(Dialog, ex, false);
                 }
-                Dialog.Close();
             }
         }
 

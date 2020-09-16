@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 using HFM.Forms.Views;
@@ -39,6 +38,14 @@ namespace HFM.Forms.Mocks
         public void Close()
         {
             Shown = false;
+            OnClosed(this, EventArgs.Empty);
+        }
+
+        public event EventHandler Closed;
+
+        protected virtual void OnClosed(object sender, EventArgs e)
+        {
+            Closed?.Invoke(this, e);
         }
 
         public IntPtr Handle { get; }

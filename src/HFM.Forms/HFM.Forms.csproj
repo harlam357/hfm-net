@@ -131,6 +131,7 @@
     <Compile Include="Models\ZedGraphBenchmarksReport.cs" />
     <Compile Include="Presenters\BenchmarksPresenter.cs" />
     <Compile Include="Presenters\ColorDialogPresenter.cs" />
+    <Compile Include="Presenters\DialogPresenter.cs" />
     <Compile Include="Presenters\FormPresenter.cs" />
     <Compile Include="Presenters\IDialogPresenter.cs" />
     <Compile Include="Presenters\IFormPresenter.cs" />
