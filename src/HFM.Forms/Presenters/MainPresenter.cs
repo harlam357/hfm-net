@@ -109,8 +109,7 @@ namespace HFM.Forms.Presenters
 
         public string ConfigFilePathFromArguments { get; set; }
 
-        #region View Handling Methods
-
+        // View Handling Methods
         public void FormShown()
         {
             if (Preferences.Get<bool>(Preference.RunMinimized))
@@ -222,10 +221,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        #endregion
-
-        #region File Handling Methods
-
+        // File Handling Methods
         public void FileNewClick()
         {
             if (CheckForConfigurationChanges())
@@ -281,8 +277,7 @@ namespace HFM.Forms.Presenters
 
         private void AutoSaveConfig()
         {
-            if (Preferences.Get<bool>(Preference.AutoSaveConfig) &&
-                ClientConfiguration.IsDirty)
+            if (Preferences.Get<bool>(Preference.AutoSaveConfig) && ClientConfiguration.IsDirty)
             {
                 FileSaveClick();
             }
@@ -387,10 +382,7 @@ namespace HFM.Forms.Presenters
             return true;
         }
 
-        #endregion
-
-        #region Help Menu Handling Methods
-
+        // Help Menu Handling Methods
         public void ShowHfmLogFile(LocalProcessService localProcess)
         {
             string path = Path.Combine(Preferences.Get<string>(Preference.ApplicationDataFolderPath), Core.Logging.Logger.LogFileName);
@@ -426,11 +418,8 @@ namespace HFM.Forms.Presenters
             CheckForUpdate(service);
         }
 
-        #endregion
-
-        #region Clients Menu Handling Methods
-
-        internal void ClientsAddClick()
+        // Clients Menu Handling Methods
+        public void ClientsAddClick()
         {
             using (var dialog = new FahClientSettingsPresenter(new FahClientSettingsModel(), Logger, MessageBox))
             {
@@ -542,11 +531,8 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        #endregion
-
-        #region Grid Context Menu Handling Methods
-
-        internal void ClientsFoldSlotClick()
+        // Grid Context Menu Handling Methods
+        public void ClientsFoldSlotClick()
         {
             if (GridModel.SelectedSlot == null) return;
 
@@ -556,7 +542,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        internal void ClientsPauseSlotClick()
+        public void ClientsPauseSlotClick()
         {
             if (GridModel.SelectedSlot == null) return;
 
@@ -566,7 +552,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        internal void ClientsFinishSlotClick()
+        public void ClientsFinishSlotClick()
         {
             if (GridModel.SelectedSlot == null) return;
 
@@ -586,10 +572,7 @@ namespace HFM.Forms.Presenters
             ClipboardWrapper.SetText(projectString);
         }
 
-        #endregion
-
-        #region View Menu Handling Methods
-
+        // View Menu Handling Methods
         private MessagesPresenter _messagesPresenter;
 
         public void ViewMessagesClick(Func<MessagesPresenter> presenterFactory)
@@ -679,10 +662,7 @@ namespace HFM.Forms.Presenters
             Preferences.Save();
         }
 
-        #endregion
-
-        #region Tools Menu Handling Methods
-
+        // Tools Menu Handling Methods
         public void ToolsDownloadProjectsClick(IProteinService proteinService)
         {
             try
@@ -758,10 +738,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        #endregion
-
-        #region Web Menu Handling Methods
-
+        // Web Menu Handling Methods
         public void ShowEocUserPage(LocalProcessService localProcess)
         {
             string fileName = new Uri(String.Concat(EocStatsService.UserBaseUrl, Preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
@@ -794,10 +771,7 @@ namespace HFM.Forms.Presenters
             localProcess.StartAndNotifyError(Core.Application.ProjectSiteUrl, errorMessage, Logger, MessageBox);
         }
 
-        #endregion
-
-        #region System Tray Icon Handling Methods
-
+        // System Tray Icon Handling Methods
         public void NotifyIconDoubleClick()
         {
             if (Form.WindowState == FormWindowState.Minimized)
@@ -838,15 +812,10 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        #endregion
-
-        #region Other Handling Methods
-
+        // User Stats
         public void SetUserStatsDataViewStyle(bool showTeamStats)
         {
             UserStatsDataModel.SetViewStyle(showTeamStats);
         }
-
-        #endregion
     }
 }
