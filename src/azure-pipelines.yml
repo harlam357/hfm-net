@@ -24,19 +24,22 @@ stages:
     steps:
     - task: NuGetToolInstaller@1
       inputs:
-        versionSpec: >= 5.5.1
+        versionSpec: '>= 5.5.1'
 
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
 
-    - powershell: |
-. .\HFM.Build.ps1
-Configure-Version -CommitCount
-Update-AssemblyVersion -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $Global:Version -AssemblyFileVersion $Global:Version
-Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $Global:Version
-      workingDirectory: '.\src'
+    - task: PowerShell@2
       displayName: 'HFM.Build - Update-AssemblyVersion'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-Version -CommitCount
+          Update-AssemblyVersion -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $Global:Version -AssemblyFileVersion $Global:Version
+          Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $Global:Version
+        workingDirectory: '.\src'
 
     - task: VSBuild@1
       inputs:
@@ -53,25 +56,30 @@ Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -As
           !**\*TestAdapter.dll
           !**\obj\**
         searchFolder: '$(System.DefaultWorkingDirectory)'
-        testFiltercriteria: 'Category!=Integration'
         codeCoverageEnabled: true
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
         diagnosticsEnabled: true
 
-    - powershell: |
-. .\HFM.Build.ps1
-Clean-Artifacts
-Deploy-Build
-      workingDirectory: '.\src'
+    - task: PowerShell@2
       displayName: 'HFM.Build - Deploy-Build'
-
-    - powershell: |
-. .\HFM.Build.ps1
-Configure-Version -CommitCount
-Build-Zip
-      workingDirectory: '.\src'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Clean-Artifacts
+          Deploy-Build
+        workingDirectory: '.\src'
+        
+    - task: PowerShell@2
       displayName: 'HFM.Build - Build-Zip'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-Version -CommitCount
+          Build-Zip
+        workingDirectory: '.\src'
 
     - task: VSBuild@1
       inputs:
@@ -79,12 +87,15 @@ Build-Zip
         platform: x86
         configuration: '$(buildConfiguration)'
 
-    - powershell: |
-. .\HFM.Build.ps1
-Configure-Version -CommitCount
-Deploy-Msi
-      workingDirectory: '.\src'
+    - task: PowerShell@2
       displayName: 'HFM.Build - Deploy-Msi'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-Version -CommitCount
+          Deploy-Msi
+        workingDirectory: '.\src'
 
     - task: CopyFiles@2
       inputs:
