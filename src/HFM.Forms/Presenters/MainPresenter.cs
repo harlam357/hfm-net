@@ -425,15 +425,7 @@ namespace HFM.Forms.Presenters
             {
                 while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {
-                    dialog.Model.Save();
                     var settings = dialog.Model.ClientSettings;
-                    //if (_clientDictionary.ContainsKey(settings.Name))
-                    //{
-                    //   string message = String.Format(CultureInfo.CurrentCulture, "Client name '{0}' already exists.", settings.Name);
-                    //   _messageBoxView.ShowError(_view, Core.Application.NameAndVersion, message);
-                    //   continue;
-                    //}
-                    // perform the add
                     try
                     {
                         ClientConfiguration.Add(settings);
@@ -450,26 +442,18 @@ namespace HFM.Forms.Presenters
 
         public void ClientsEditClick()
         {
-            // Check for SelectedSlot, and get out if not found
-            if (GridModel.SelectedSlot == null) return;
+            var selectedSlot = GridModel.SelectedSlot;
+            if (selectedSlot == null) return;
 
-            EditFahClient();
-        }
-
-        private void EditFahClient()
-        {
-            Debug.Assert(GridModel.SelectedSlot != null);
-            IClient client = ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
-            ClientSettings originalSettings = client.Settings;
+            var client = ClientConfiguration.Get(selectedSlot.Settings.Name);
+            var originalSettings = client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var model = new FahClientSettingsModel(originalSettings);
-            model.Load();
             using (var dialog = new FahClientSettingsPresenter(model, Logger, MessageBox))
             {
                 while (dialog.ShowDialog(Form) == DialogResult.OK)
                 {
-                    dialog.Model.Save();
                     var newSettings = dialog.Model.ClientSettings;
                     // perform the edit
                     try

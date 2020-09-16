@@ -11,28 +11,27 @@ using HFM.Forms.Views;
 
 namespace HFM.Forms.Presenters
 {
-    public class FahClientSettingsPresenter : IDialogPresenter
+    public class FahClientSettingsPresenter : DialogPresenter<FahClientSettingsModel>
     {
         public ILogger Logger { get; }
         public FahClientSettingsModel Model { get; }
         public MessageBoxPresenter MessageBox { get; }
 
         public FahClientSettingsPresenter(FahClientSettingsModel model, ILogger logger, MessageBoxPresenter messageBox)
+            : base(model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
         }
 
-        public IWin32Dialog Dialog { get; protected set; }
-
-        public virtual DialogResult ShowDialog(IWin32Window owner)
+        public override DialogResult ShowDialog(IWin32Window owner)
         {
             ConnectIfModelHasNoError();
-
-            Dialog = new FahClientSettingsDialog(this);
-            return Dialog.ShowDialog(owner);
+            return base.ShowDialog(owner);
         }
+
+        protected override IWin32Dialog OnCreateDialog() => new FahClientSettingsDialog(this);
 
         protected void ConnectIfModelHasNoError()
         {
@@ -121,23 +120,17 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         private bool _disposed;
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!_disposed)
             {
                 if (disposing)
                 {
-                    Dialog?.Dispose();
                     Connection?.Dispose();
                 }
+                base.Dispose(disposing);
             }
             _disposed = true;
         }
