@@ -286,14 +286,14 @@ namespace HFM.Forms.Presenters
             {
                 if (_connection.LastCommand.CommandText == "slot-info")
                 {
-                    var text = File.ReadAllText(@"..\..\..\TestFiles\Client_v7_12\slots.txt");
+                    var text = File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_12\slots.txt");
                     Message = FahClientMessageExtractor.Default.Extract(new StringBuilder(text));
                     return true;
                 }
 
                 if (_connection.LastCommand.CommandText.StartsWith("slot-options"))
                 {
-                    var text = File.ReadAllText(@"..\..\..\TestFiles\Client_v7_12\slot-options1.txt");
+                    var text = File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_12\slot-options1.txt");
                     Message = FahClientMessageExtractor.Default.Extract(new StringBuilder(text));
                     return true;
                 }

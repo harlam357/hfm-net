@@ -30,11 +30,11 @@ namespace HFM.Forms
             // Arrange
             var manager = new ClientSettingsManager(null);
             // Act
-            var settings = manager.Read("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", 1);
+            var settings = manager.Read("..\\..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", 1);
             // Assert
             Assert.IsNotNull(settings);
             Assert.AreEqual(1, settings.Count());
-            Assert.AreEqual("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", manager.FileName);
+            Assert.AreEqual("..\\..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", manager.FileName);
             Assert.AreEqual(1, manager.FilterIndex);
             Assert.AreEqual(".hfmx", manager.FileExtension);
         }
