@@ -99,7 +99,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(ClientConfigurationChangedAction.Add, eventArgs.Action);
             Assert.IsNotNull(eventArgs.Client);
         }
-        
+
         [Test]
         public void ClientConfiguration_Add_SubscribesToClientEvents()
         {
@@ -322,17 +322,17 @@ namespace HFM.Core.Client
             public ClientScheduledTasksWithoutEvents(ILogger logger, IPreferences preferences, ClientConfiguration clientConfiguration)
                 : base(logger, preferences, clientConfiguration)
             {
-                
+
             }
 
             protected override void OnPreferenceChanged(object sender, PreferenceChangedEventArgs e)
             {
-                
+
             }
 
             protected override void OnClientConfigurationChanged(object sender, ClientConfigurationChangedEventArgs e)
             {
-                
+
             }
         }
     }
