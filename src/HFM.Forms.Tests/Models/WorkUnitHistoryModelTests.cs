@@ -4,24 +4,24 @@ using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
-using NUnit.Framework;
+using Moq;
 
-using Rhino.Mocks;
+using NUnit.Framework;
 
 namespace HFM.Forms.Models
 {
     [TestFixture]
     public class WorkUnitHistoryModelTests
     {
-        private IWorkUnitRepository _repository;
+        private Mock<IWorkUnitRepository> _mockRepository;
         private WorkUnitHistoryModel _model;
 
         [SetUp]
         public void Init()
         {
-            _repository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            _repository.Stub(x => x.Connected).Return(true);
-            _model = new WorkUnitHistoryModel(new InMemoryPreferencesProvider(), new WorkUnitQueryDataContainer(), _repository);
+            _mockRepository = new Mock<IWorkUnitRepository>();
+            _mockRepository.SetupGet(x => x.Connected).Returns(true);
+            _model = new WorkUnitHistoryModel(new InMemoryPreferencesProvider(), new WorkUnitQueryDataContainer(), _mockRepository.Object);
         }
 
         [Test]
@@ -144,11 +144,11 @@ namespace HFM.Forms.Models
                 .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
             Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-            _repository.Expect(x => x.Page(1, 1, null, BonusCalculation.DownloadTime)).IgnoreArguments().Return(new PetaPoco.Page<WorkUnitRow>());
+            _mockRepository.Setup(x => x.Page(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new PetaPoco.Page<WorkUnitRow>());
             // Act
             _model.ResetBindings(true);
             // Assert
-            _repository.VerifyAllExpectations();
+            _mockRepository.Verify();
         }
     }
 }

@@ -14,9 +14,9 @@ using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
 using HFM.Preferences;
 
-using NUnit.Framework;
+using Moq;
 
-using Rhino.Mocks;
+using NUnit.Framework;
 
 namespace HFM.Forms
 {
@@ -219,12 +219,13 @@ namespace HFM.Forms
             presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
-            presenter.Model.Repository.Expect(x => x.Delete(null)).IgnoreArguments().Return(1);
+            var mockRepository = Mock.Get(presenter.Model.Repository);
+            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitRow>())).Returns(1);
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
             Assert.AreEqual(1, messageBox.Invocations.Count);
-            presenter.Model.Repository.VerifyAllExpectations();
+            mockRepository.Verify();
         }
 
         [Test]
@@ -245,7 +246,8 @@ namespace HFM.Forms
             // Arrange
             var presenter = CreatePresenter();
             var workUnitRows = new[] { new WorkUnitRow() };
-            presenter.Model.Repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(workUnitRows);
+            var mockRepository = Mock.Get(presenter.Model.Repository);
+            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(workUnitRows);
             var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
@@ -281,7 +283,8 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.Model.Repository.Stub(x => x.Fetch(null, 0)).IgnoreArguments().Return(new WorkUnitRow[0]);
+            var mockRepository = Mock.Get(presenter.Model.Repository);
+            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new WorkUnitRow[0]);
             var saveFile = CreateSaveFileDialogView();
             // Act
             presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
@@ -321,7 +324,7 @@ namespace HFM.Forms
                     new WorkUnitHistoryModel(
                         new InMemoryPreferencesProvider(),
                         new WorkUnitQueryDataContainer(),
-                        MockRepository.GenerateMock<IWorkUnitRepository>()),
+                        Mock.Of<IWorkUnitRepository>()),
                     null,
                     null,
                     messageBox ?? new MockMessageBoxPresenter(),
