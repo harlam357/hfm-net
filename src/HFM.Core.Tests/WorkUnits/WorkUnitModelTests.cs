@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NUnit.Framework;
-using Rhino.Mocks;
-
 using HFM.Core.Client;
 using HFM.Log;
 using HFM.Proteins;
+
+using Moq;
+
+using NUnit.Framework;
 
 namespace HFM.Core.WorkUnits
 {
@@ -487,11 +488,11 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_TimePerSectionTest5()
         {
-            var benchmarkService = MockRepository.GenerateStub<IProteinBenchmarkService>();
+            var mockBenchmarkService = new Mock<IProteinBenchmarkService>();
             var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
-            benchmarkService.Stub(x => x.GetBenchmark(new SlotIdentifier(), new ProteinBenchmarkIdentifier())).IgnoreArguments().Return(benchmark);
-            var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), benchmarkService);
-            
+            mockBenchmarkService.Setup(x => x.GetBenchmark(It.IsAny<SlotIdentifier>(), It.IsAny<ProteinBenchmarkIdentifier>())).Returns(benchmark);
+            var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), mockBenchmarkService.Object);
+
             Assert.AreEqual(TimeSpan.FromMinutes(10), workUnitModel.GetFrameTime(PPDCalculation.LastFrame));
         }
 

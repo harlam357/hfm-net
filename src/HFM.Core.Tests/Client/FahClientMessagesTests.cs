@@ -1,17 +1,17 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-using Rhino.Mocks;
-
 using HFM.Client;
 using HFM.Core.Logging;
 using HFM.Preferences;
+
+using Moq;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Client
 {
@@ -386,23 +386,24 @@ namespace HFM.Core.Client
 
         private static IFahClient SetupFahClientForSendingMockCommands()
         {
-            var fahClient = MockRepository.GenerateStub<IFahClient>();
+            var mockClient = new Mock<IFahClient>();
             var connection = new MockFahClientConnection();
-            fahClient.Stub(x => x.Connection).Return(connection);
-            return fahClient;
+            mockClient.SetupGet(x => x.Connection).Returns(connection);
+            return mockClient.Object;
         }
 
         private static IFahClient SetupFahClientForHandlingLogMessages(string path)
         {
-            var fahClient = MockRepository.GenerateStub<IFahClient>();
-            fahClient.Stub(x => x.Logger).Return(NullLogger.Instance);
+            var mockClient = new Mock<IFahClient>();
+            mockClient.SetupGet(x => x.Logger).Returns(NullLogger.Instance);
             var preferences = new InMemoryPreferencesProvider(null, path, null);
-            fahClient.Stub(x => x.Preferences).Return(preferences);
+            mockClient.SetupGet(x => x.Preferences).Returns(preferences);
             var settings = new ClientSettings { Name = "test" };
-            fahClient.Settings = settings;
+            mockClient.SetupProperty(x => x.Settings);
+            mockClient.Object.Settings = settings;
             var connection = new MockFahClientConnection();
-            fahClient.Stub(x => x.Connection).Return(connection);
-            return fahClient;
+            mockClient.SetupGet(x => x.Connection).Returns(connection);
+            return mockClient.Object;
         }
 
         private class MockFahClientConnection : FahClientConnection

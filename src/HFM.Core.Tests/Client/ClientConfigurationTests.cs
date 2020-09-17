@@ -1,11 +1,11 @@
-﻿
-using System;
-
-using NUnit.Framework;
-using Rhino.Mocks;
+﻿using System;
 
 using HFM.Core.Logging;
 using HFM.Preferences;
+
+using Moq;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Client
 {
@@ -105,12 +105,14 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            var client = MockRepository.GenerateMock<IClient>();
+            var mockClient = new Mock<IClient>();
+            mockClient.SetupAdd(x => x.SlotsChanged += It.IsAny<EventHandler>());
+            mockClient.SetupAdd(x => x.RetrievalFinished += It.IsAny<EventHandler>());
             // Act
-            configuration.Add("test", client);
+            configuration.Add("test", mockClient.Object);
             // Assert
-            client.AssertWasCalled(x => x.SlotsChanged += Arg<EventHandler>.Is.Anything);
-            client.AssertWasCalled(x => x.RetrievalFinished += Arg<EventHandler>.Is.Anything);
+            mockClient.VerifyAdd(x => x.SlotsChanged += It.IsAny<EventHandler>());
+            mockClient.VerifyAdd(x => x.RetrievalFinished += It.IsAny<EventHandler>());
         }
 
         [Test]
@@ -118,15 +120,15 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            var client = MockRepository.GenerateMock<IClient>();
+            var mockClient = new Mock<IClient>();
             bool clientInvalidateFired = false;
             configuration.ClientConfigurationChanged += (sender, args) =>
             {
                 if (args.Action == ClientConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
             };
-            configuration.Add("test", client);
+            configuration.Add("test", mockClient.Object);
             // Act
-            client.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
+            mockClient.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
             // Assert
             Assert.IsTrue(clientInvalidateFired);
         }
@@ -136,15 +138,15 @@ namespace HFM.Core.Client
         {
             // Arrange
             var configuration = CreateConfiguration();
-            var client = MockRepository.GenerateMock<IClient>();
+            var mockClient = new Mock<IClient>();
             bool clientDataInvalidatedFired = false;
             configuration.ClientConfigurationChanged += (sender, args) =>
             {
                 if (args.Action == ClientConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
             };
-            configuration.Add("test", client);
+            configuration.Add("test", mockClient.Object);
             // Act
-            client.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
+            mockClient.Raise(x => x.RetrievalFinished += null, this, EventArgs.Empty);
             // Assert
             Assert.IsTrue(clientDataInvalidatedFired);
         }
@@ -238,14 +240,13 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Remove_CallsClientAbortAndFactoryRelease()
         {
             // Arrange
-            var client = MockRepository.GenerateMock<IFahClient>();
-            client.Expect(x => x.Abort());
+            var mockClient = new Mock<IFahClient>();
             var configuration = CreateConfiguration();
-            configuration.Add("test", client);
+            configuration.Add("test", mockClient.Object);
             // Act
             configuration.Remove("test");
             // Assert
-            client.VerifyAllExpectations();
+            mockClient.Verify(x => x.Abort());
         }
 
         [Test]
@@ -298,14 +299,13 @@ namespace HFM.Core.Client
         public void ClientConfiguration_Clear_CallsClientAbortAndFactoryRelease()
         {
             // Arrange
-            var client = MockRepository.GenerateMock<IFahClient>();
-            client.Expect(x => x.Abort());
+            var mockClient = new Mock<IFahClient>();
             var configuration = CreateConfiguration();
-            configuration.Add("test", client);
+            configuration.Add("test", mockClient.Object);
             // Act
             configuration.Clear();
             // Assert
-            client.VerifyAllExpectations();
+            mockClient.Verify(x => x.Abort());
         }
 
         private static ClientConfiguration CreateConfiguration()

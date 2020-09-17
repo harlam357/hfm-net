@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-using Rhino.Mocks;
-
 using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Preferences;
+
+using Moq;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Client
 {
@@ -24,8 +25,8 @@ namespace HFM.Core.Client
         {
             // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
-            var workUnitRepository = MockRepository.GenerateMock<IWorkUnitRepository>();
-            var fahClient = new FahClient(null, new InMemoryPreferencesProvider(), benchmarkService, null, workUnitRepository);
+            var mockWorkUnitRepository = new Mock<IWorkUnitRepository>();
+            var fahClient = new FahClient(null, new InMemoryPreferencesProvider(), benchmarkService, null, mockWorkUnitRepository.Object);
 
             var workUnit = new WorkUnit();
             workUnit.ProjectID = 2669;
@@ -50,8 +51,7 @@ namespace HFM.Core.Client
 
             var parsedUnits = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
 
-            workUnitRepository.Stub(x => x.Connected).Return(true);
-            workUnitRepository.Expect(x => x.Insert(null)).IgnoreArguments().Repeat.Times(1);
+            mockWorkUnitRepository.SetupGet(x => x.Connected).Returns(true);
 
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(2669);
 
@@ -68,7 +68,7 @@ namespace HFM.Core.Client
             Assert.IsTrue(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
             Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier).AverageFrameTime);
 
-            workUnitRepository.VerifyAllExpectations();
+            mockWorkUnitRepository.Verify(x => x.Insert(It.IsAny<WorkUnitModel>()), Times.Once);
         }
 
         [Test]
