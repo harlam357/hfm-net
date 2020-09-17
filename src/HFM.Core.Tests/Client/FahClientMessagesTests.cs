@@ -412,7 +412,7 @@ namespace HFM.Core.Client
             {
 
             }
-            
+
             public IList<MockFahClientCommand> Commands { get; } = new List<MockFahClientCommand>();
 
             protected override FahClientCommand OnCreateCommand()
