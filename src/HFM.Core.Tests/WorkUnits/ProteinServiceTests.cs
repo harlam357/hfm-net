@@ -188,7 +188,7 @@ namespace HFM.Core.WorkUnits
         private static IProjectSummaryService CreateProjectSummaryService()
         {
             var mockSummaryService = new Mock<IProjectSummaryService>();
-            var proteins = new ProjectSummaryJsonDeserializer().Deserialize(File.OpenRead("..\\..\\..\\TestFiles\\summary.json"));
+            var proteins = new ProjectSummaryJsonDeserializer().Deserialize(File.OpenRead(@"..\..\..\..\TestFiles\summary.json"));
             mockSummaryService.Setup(x => x.GetProteins(It.IsAny<IProgress<ProgressInfo>>())).Returns(proteins);
             return mockSummaryService.Object;
         }

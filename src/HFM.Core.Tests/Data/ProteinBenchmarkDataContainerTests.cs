@@ -1,13 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-using NUnit.Framework;
-
 using HFM.Core.Serializers;
 using HFM.Core.WorkUnits;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Data
 {
@@ -20,7 +19,7 @@ namespace HFM.Core.Data
             // Arrange
             var container = new ProteinBenchmarkDataContainer
             {
-                FilePath = Path.Combine("..\\..\\TestFiles", ProteinBenchmarkDataContainer.DefaultFileName)
+                FilePath = Path.Combine("TestFiles", ProteinBenchmarkDataContainer.DefaultFileName)
             };
             // Act
             container.Read();

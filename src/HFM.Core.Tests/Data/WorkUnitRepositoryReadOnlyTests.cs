@@ -11,10 +11,10 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRepositoryReadOnlyTests
     {
-        private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
+        private const string TestDataFile = "TestFiles\\TestData.db3";
         private string _testDataFileCopy;
 
-        private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
+        private const string TestData2File = "TestFiles\\TestData2.db3";
         private string _testData2FileCopy;
 
         private ArtifactFolder _artifacts;

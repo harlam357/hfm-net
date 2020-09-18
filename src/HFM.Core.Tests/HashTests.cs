@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -30,7 +29,7 @@ namespace HFM.Core
             string hashHex;
 
             using (var h2 = new Hash(HashProvider.MD5))
-            using (var stream = File.OpenRead(Path.Combine(Environment.CurrentDirectory, @"..\..\TestFiles\sample.doc")))
+            using (var stream = File.OpenRead(Path.Combine(Environment.CurrentDirectory, @"TestFiles\sample.doc")))
             {
                 hashHex = h2.Calculate(stream).ToHex();
             }
@@ -67,7 +66,7 @@ namespace HFM.Core
             var progressRaised = false;
             var progress = new CurrentThreadProgress<int>(value => progressRaised = true);
             using (var h2 = new Hash(HashProvider.MD5))
-            using (var stream = File.OpenRead(Path.Combine(Environment.CurrentDirectory, @"..\..\TestFiles\sample.doc")))
+            using (var stream = File.OpenRead(Path.Combine(Environment.CurrentDirectory, @"TestFiles\sample.doc")))
             {
                 hashHex = h2.Calculate(stream, progress).ToHex();
             }

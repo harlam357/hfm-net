@@ -15,7 +15,7 @@ namespace HFM.Core.Client
             // Arrange
             var serializer = new ClientSettingsFileSerializer(null);
             // Act
-            var settings = serializer.Deserialize("..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx");
+            var settings = serializer.Deserialize("TestFiles\\ClientSettings_0_9_11.hfmx");
             // Assert
             Assert.IsNotNull(settings);
             Assert.AreEqual(1, settings.Count);

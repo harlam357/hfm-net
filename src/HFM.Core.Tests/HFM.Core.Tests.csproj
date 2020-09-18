@@ -1,212 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit3TestAdapter.3.17.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.3.17.0\build\net35\NUnit3TestAdapter.props')" />
-  <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D55EB454-0637-4E3A-A80B-76ACF739BE6D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net47</TargetFramework>
     <RootNamespace>HFM.Core</RootNamespace>
-    <AssemblyName>HFM.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
+    <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Client, Version=0.4.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Client.0.4.1\lib\net47\HFM.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Log, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Log.0.2.0\lib\net45\HFM.Log.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Proteins, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Proteins.0.1.2\lib\net45\HFM.Proteins.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.14.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.14.5\lib\net45\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Compile Include="..\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>
-    <Compile Include="ApplicationUpdateServiceTests.cs" />
-    <Compile Include="ApplicationUpdateTests.cs" />
-    <Compile Include="ArtifactFolder.cs" />
-    <Compile Include="Client\ClientFactoryTests.cs" />
-    <Compile Include="Client\ClientIdentifierTests.cs" />
-    <Compile Include="Client\FahClientMessagesTests.cs" />
-    <Compile Include="Client\SlotIdentifierTests.cs" />
-    <Compile Include="Client\SlotModelTests.cs" />
-    <Compile Include="Client\ClientSettingsTests.cs" />
-    <Compile Include="Data\ProteinBenchmarkDataContainerTests.cs" />
-    <Compile Include="Data\WorkUnitRowProfileTests.cs" />
-    <Compile Include="HashTests.cs" />
-    <Compile Include="Logging\ConsoleLogger.cs" />
-    <Compile Include="Logging\TestLogger.cs" />
-    <Compile Include="Mocks\MockLocalProcessService.cs" />
-    <Compile Include="Net\HostNameTests.cs" />
-    <Compile Include="Net\HttpUrlTests.cs" />
-    <Compile Include="Net\NetworkCredentialFactoryTests.cs" />
-    <Compile Include="Services\EocStatsDataTests.cs" />
-    <Compile Include="Services\SendMailServiceTests.cs" />
-    <Compile Include="SlotXml\XmlBuilderProfileTests.cs" />
-    <Compile Include="SlotXml\XmlBuilderTests.cs" />
-    <Compile Include="WorkUnits\ProjectInfoExtensionsTests.cs" />
-    <Compile Include="Client\ClientSettingsFileSerializerTests.cs" />
-    <Compile Include="Data\WorkUnitQueryTests.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkIdentifierTests.cs" />
-    <Compile Include="WorkUnits\WorkUnitTests.cs" />
-    <Compile Include="Client\ClientConfigurationTests.cs" />
-    <Compile Include="Client\FahClientMessageAggregatorTests.cs" />
-    <Compile Include="Client\FahClientTests.cs" />
-    <Compile Include="Logging\DebugLogger.cs" />
-    <Compile Include="SlotXml\WebArtifactTests.cs" />
-    <Compile Include="SetUpFixture.cs" />
-    <Compile Include="Internal\FileSystemTests.cs" />
-    <Compile Include="ApplicationTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\WorkUnitRowCsvFileSerializerTests.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkServiceTests.cs" />
-    <Compile Include="WorkUnits\ProteinServiceTests.cs" />
-    <Compile Include="Data\WorkUnitQueryDataContainerTests.cs" />
-    <Compile Include="ScheduledTasks\ScheduledTaskTests.cs" />
-    <Compile Include="Data\WorkUnitRepositoryReadOnlyTests.cs" />
-    <Compile Include="Data\WorkUnitRepositoryTests.cs" />
-    <Compile Include="UnitInfoExtensions.cs" />
-    <Compile Include="WorkUnits\WorkUnitModelTests.cs" />
-    <Compile Include="FileSystemPathTests.cs" />
-    <Compile Include="Data\EocStatsDataContainerTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj">
-      <Project>{360034D2-9F6A-4377-B5B9-D82712171223}</Project>
-      <Name>HFM.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
-      <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
-      <Name>HFM.Preferences</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\harlam357.snk">
-      <Link>Properties\harlam357.snk</Link>
+    <None Include="TestFiles\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
-    <None Include="TestFiles\BenchmarkCache.dat" />
-    <None Include="TestFiles\BenchmarkCache_0_9_13.dat" />
-    <None Include="TestFiles\ClientSettings_0_9_11.hfmx" />
-    <None Include="TestFiles\sample.doc" />
-    <None Include="TestFiles\TestData.db3" />
-    <None Include="TestFiles\TestData2.db3" />
-    <None Include="TestFiles\TestData_1.db3" />
-    <None Include="TestFiles\UnitInfoCache.dat" />
-    <None Include="TestFiles\UserStatsCache.dat" />
-    <None Include="TestFiles\WuHistoryQuery.dat" />
   </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <PackageReference Include="AutoMapper" Version="5.1.1" />
+    <PackageReference Include="HFM.Client" Version="0.4.1" />
+    <PackageReference Include="HFM.Log" Version="0.2.0" />
+    <PackageReference Include="HFM.Proteins" Version="0.1.2" />
+    <PackageReference Include="Moq" Version="4.14.5" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Folder Include="Configuration\" />
-    <Folder Include="Serializers\" />
+    <ProjectReference Include="..\HFM.Core\HFM.Core.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.17.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.17.0\build\net35\NUnit3TestAdapter.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

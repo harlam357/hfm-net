@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,36 +31,36 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_10\log.txt"))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
-            
+
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
@@ -127,44 +126,44 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
-            string filteredLogText = String.Join(Environment.NewLine, File.ReadLines("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt").Where(x => x.Length != 0).Take(82));
+            string filteredLogText = String.Join(Environment.NewLine, File.ReadLines(@"..\..\..\..\TestFiles\Client_v7_10\log.txt").Where(x => x.Length != 0).Take(82));
             using (var textReader = new StringReader(filteredLogText))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
-            
+
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
             var result = aggregator.AggregateData();
-            
+
             // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
@@ -219,36 +218,36 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_10\\log.txt"))
+            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_10\log.txt"))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
-            
+
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\units.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\info.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\options.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options1.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slot-options2.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 1 };
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
@@ -314,32 +313,32 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_11" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader("..\\..\\..\\TestFiles\\Client_v7_11\\log.txt"))
+            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_11\log.txt"))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
-            
+
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\units.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\units.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\info.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\info.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\options.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\options.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\slots.txt"))));
 
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_11\\slot-options1.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\slot-options1.txt"))));
 
             var slotModel = new SlotModel(fahClient) { SlotID = 0 };
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);

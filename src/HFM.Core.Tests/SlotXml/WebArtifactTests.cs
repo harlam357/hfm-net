@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -145,7 +144,8 @@ namespace HFM.Core.SlotXml
 
         private static IPreferences CreatePreferences(string applicationDataFolderPath)
         {
-            var preferences = new InMemoryPreferencesProvider(@"..\..\..\HFM", applicationDataFolderPath, null);
+            string applicationPath = Path.GetFullPath(@"..\..\..\..\HFM");
+            var preferences = new InMemoryPreferencesProvider(applicationPath, applicationDataFolderPath, null);
             preferences.Set(Preference.DecimalPlaces, 0);
             preferences.Set(Preference.WebOverview, "WebOverview.xslt");
             preferences.Set(Preference.WebSummary, "WebSummary.xslt");

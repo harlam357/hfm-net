@@ -104,7 +104,7 @@ namespace HFM.Core.Client
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_10\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
             // Act
             fahClient.RefreshSlots();
             // Assert
@@ -127,7 +127,7 @@ namespace HFM.Core.Client
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
-                    File.ReadAllText("..\\..\\..\\TestFiles\\Client_v7_12\\slots.txt"))));
+                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_12\slots.txt"))));
             // Act
             fahClient.RefreshSlots();
             // Assert

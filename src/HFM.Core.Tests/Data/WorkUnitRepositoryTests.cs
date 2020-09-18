@@ -20,14 +20,14 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRepositoryTests
     {
-        private const string TestDataFile = "..\\..\\TestFiles\\TestData.db3";
+        private const string TestDataFile = "TestFiles\\TestData.db3";
         private string _testDataFileCopy;
 
-        private const string TestData2File = "..\\..\\TestFiles\\TestData2.db3";
+        private const string TestData2File = "TestFiles\\TestData2.db3";
         private string _testData2FileCopy;
 
         // this file is the same as TestDataFile but has already had UpgradeWuHistory1() run on it
-        private const string TestDataFileUpgraded = "..\\..\\TestFiles\\TestData_1.db3";
+        private const string TestDataFileUpgraded = "TestFiles\\TestData_1.db3";
         private string _testDataFileUpgradedCopy;
 
         private string _testScratchFile;

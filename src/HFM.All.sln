@@ -14,20 +14,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM", "HFM\HFM.csproj", "{A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Preferences", "HFM.Preferences\HFM.Preferences.csproj", "{0CAF91A3-D5F1-44C9-BAEB-FB81DFBF9C47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Forms.Tests", "HFM.Forms.Tests\HFM.Forms.Tests.csproj", "{F4A40781-C6FD-46F9-B594-5EB4F9867BA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Forms.Tests", "HFM.Forms.Tests\HFM.Forms.Tests.csproj", "{F4A40781-C6FD-46F9-B594-5EB4F9867BA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Forms", "HFM.Forms\HFM.Forms.csproj", "{C0B126D1-C495-4062-A8C8-4AAA69F35C9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core", "HFM.Core\HFM.Core.csproj", "{360034D2-9F6A-4377-B5B9-D82712171223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.Tests", "HFM.Core.Tests\HFM.Core.Tests.csproj", "{D55EB454-0637-4E3A-A80B-76ACF739BE6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Core.Tests", "HFM.Core.Tests\HFM.Core.Tests.csproj", "{D55EB454-0637-4E3A-A80B-76ACF739BE6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B2F0D880-2FCA-43BF-9907-6194D90A609B}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Preferences.Tests", "HFM.Preferences.Tests\HFM.Preferences.Tests.csproj", "{C4F6A423-FEBA-4D24-B726-ECDA91223C93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Preferences.Tests", "HFM.Preferences.Tests\HFM.Preferences.Tests.csproj", "{C4F6A423-FEBA-4D24-B726-ECDA91223C93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,8 +79,8 @@ Global
 		{360034D2-9F6A-4377-B5B9-D82712171223}.Release|x86.Build.0 = Release|Any CPU
 		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|x86.ActiveCfg = Debug|x86
-		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|x86.Build.0 = Debug|x86
+		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Debug|x86.Build.0 = Debug|Any CPU
 		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D55EB454-0637-4E3A-A80B-76ACF739BE6D}.Release|x86.ActiveCfg = Release|x86

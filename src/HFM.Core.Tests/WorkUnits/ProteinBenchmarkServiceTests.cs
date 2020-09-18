@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -657,7 +656,7 @@ namespace HFM.Core.WorkUnits
 
         private static ProteinBenchmarkDataContainer CreateTestDataContainer(string path, string fileName = ProteinBenchmarkDataContainer.DefaultFileName)
         {
-            var source = Path.Combine("..\\..\\TestFiles", fileName);
+            var source = Path.GetFullPath(Path.Combine("TestFiles", fileName));
             File.Copy(source, path, true);
 
             var dataContainer = new ProteinBenchmarkDataContainer { FilePath = path };
