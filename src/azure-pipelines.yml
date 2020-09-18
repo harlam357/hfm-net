@@ -68,7 +68,7 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Clean-Artifacts
-          Deploy-Build
+          Deploy-Build -Verbose
         workingDirectory: '.\src'
         
     - task: PowerShell@2
@@ -78,7 +78,7 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          Build-Zip
+          Build-Zip -Verbose
         workingDirectory: '.\src'
 
     - task: VSBuild@1
@@ -94,7 +94,7 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          Deploy-Msi
+          Deploy-Msi -Verbose
         workingDirectory: '.\src'
 
     - task: CopyFiles@2
