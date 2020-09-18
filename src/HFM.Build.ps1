@@ -46,7 +46,7 @@ Function Update-AssemblyVersion
 Function Build-Solution
 {
     param([string]$Target='Rebuild',
-          [string]$Configuration='Release',
+          [string]$Configuration=$Global:Configuration,
           [string]$Platform=$Global:Platform,
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
@@ -57,6 +57,7 @@ Function Build-Solution
     Write-Host "---------------------------------------------------"
     Write-Host "Building Solution"
     Write-Host " Target: $Target"
+    Write-Host " Configuration: $Configuration"
     Write-Host " Platform: $Platform"
     Write-Host "---------------------------------------------------"
 
@@ -66,17 +67,21 @@ Function Build-Solution
 
 Function Test-Build
 {
-    param([string]$ArtifactsPath=$Global:ArtifactsPath)
+    param([string]$TargetFramework=$Global:TargetFramework,
+          [string]$Configuration=$Global:Configuration,
+          [string]$ArtifactsPath=$Global:ArtifactsPath)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Testing Build"
+    Write-Host " TargetFramework: $TargetFramework"
+    Write-Host " Configuration: $Configuration"
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
-    Exec { & $NUnitPath .\HFM.Core.Tests\bin\Release\HFM.Core.Tests.dll --x86 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\Release\HFM.Forms.Tests.dll --x86 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\Release\HFM.Preferences.Tests.dll --x86 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Core.Tests\bin\$Configuration\$TargetFramework\HFM.Core.Tests.dll --x86 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\$Configuration\$TargetFramework\HFM.Forms.Tests.dll --x86 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\$Configuration\$TargetFramework\HFM.Preferences.Tests.dll --x86 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
 }
 
 Function Clean-Artifacts
@@ -114,10 +119,12 @@ Function Clean-Artifacts
 Function Deploy-Build
 {
     [CmdletBinding()]
-    param([string]$ArtifactsBin=$Global:ArtifactsBin)
+    param([string]$Configuration=$Global:Configuration,
+          [string]$ArtifactsBin=$Global:ArtifactsBin)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Deploying Build"
+    Write-Host " Configuration: $Configuration"
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host "---------------------------------------------------"
 
@@ -142,7 +149,7 @@ Function Deploy-Build
         "AutoMapper.dll",
         "Newtonsoft.Json.dll"
         )
-    $AssemblyFiles = Get-ChildItem -Path 'HFM\bin\Release\*' -Include $Assemblies
+    $AssemblyFiles = Get-ChildItem -Path "HFM\bin\$Configuration\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
     # SQLite Assemblies
     Copy-Item -Path '..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\x86" -ErrorAction Stop -Verbose:$localVerbose
@@ -160,64 +167,72 @@ Function Deploy-Build
     Copy-Item -Path '..\doc\AutoMapper License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\Json.NET License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     # CSS & XSL
-    Copy-Item -Path 'HFM\bin\Release\CSS\*' -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path 'HFM\bin\Release\XSL\*' -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM\bin\$Configuration\CSS\*" -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM\bin\$Configuration\XSL\*" -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Build-Zip
 {
-    param([string]$ArtifactsBin=$Global:ArtifactsBin,
-          [string]$ArtifactsPackages=$Global:ArtifactsPackages,
-          [string]$Version=$Global:Version)
+    [CmdletBinding()]
+    param([string]$Version=$Global:Version,
+          [string]$ArtifactsBin=$Global:ArtifactsBin,
+          [string]$ArtifactsPackages=$Global:ArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Building Zip Package"
+    Write-Host " Version: $Version"
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host " ArtifactsPackages: $ArtifactsPackages"
-    Write-Host " Platform: $Platform"
-    Write-Host " Version: $Version"
     Write-Host "---------------------------------------------------"
 
+    $zipName = "$ArtifactsPackages\HFM $Version.zip"
+
+    $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
+    if ($localVerbose) {
+        Write-Verbose "Packing as $zipName"
+        Get-ChildItem $ArtifactsBin -File -Recurse | Select FullName
+    }
+
     Add-Type -assembly "System.IO.Compression.FileSystem"
-    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, "$ArtifactsPackages\HFM $Version.zip") 
+    [IO.Compression.ZipFile]::CreateFromDirectory($ArtifactsBin, $zipName) 
 }
 
 Function Build-Msi
 {
     [CmdletBinding()]
     param([string]$Target='Rebuild',
-          [string]$Configuration='Release',
-          [string]$ArtifactsPackages=$Global:ArtifactsPackages,
+          [string]$Configuration=$Global:Configuration,
           [string]$Platform=$Global:Platform,
-          [string]$Version=$Global:Version)
+          [string]$Version=$Global:Version,
+          [string]$ArtifactsPackages=$Global:ArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Building Msi Package"
     Write-Host " Target: $Target"
     Write-Host " Configuration: $Configuration"
-    Write-Host " ArtifactsPackages: $ArtifactsPackages"
     Write-Host " Platform: $Platform"
     Write-Host " Version: $Version"
+    Write-Host " ArtifactsPackages: $ArtifactsPackages"
     Write-Host "---------------------------------------------------"
 
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
 
     Exec { & $MSBuild $SetupSolutionFileName /t:$Target /p:Configuration=$Configuration }
-    Deploy-Msi -Configuration $Configuration -ArtifactsPackages $ArtifactsPackages -Version $Version
+    Deploy-Msi -Configuration $Configuration -ArtifactsPackages $ArtifactsPackages -Version $Version -Verbose:$localVerbose
 }
 
 Function Deploy-Msi
 {
     [CmdletBinding()]
-    param([string]$Configuration='Release',
-          [string]$ArtifactsPackages=$Global:ArtifactsPackages,
-          [string]$Version=$Global:Version)
+    param([string]$Configuration=$Global:Configuration,
+          [string]$Version=$Global:Version,
+          [string]$ArtifactsPackages=$Global:ArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Deploying Msi Package"
     Write-Host " Configuration: $Configuration"
-    Write-Host " ArtifactsPackages: $ArtifactsPackages"
     Write-Host " Version: $Version"
+    Write-Host " ArtifactsPackages: $ArtifactsPackages"
     Write-Host "---------------------------------------------------"
 
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
@@ -255,8 +270,29 @@ Function Configure-Version
     $Global:Version = $Version
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Version"
-    Write-Host " Version: $Version"
+    Write-Host "Configuring Version: $Version"
+    Write-Host "---------------------------------------------------"
+}
+
+Function Configure-TargetFramework
+{
+    param([string]$TargetFramework)
+
+    $Global:TargetFramework = $TargetFramework
+
+    Write-Host "---------------------------------------------------"
+    Write-Host "Configuring TargetFramework: $TargetFramework"
+    Write-Host "---------------------------------------------------"
+}
+
+Function Configure-Configuration
+{
+    param([string]$Configuration)
+
+    $Global:Configuration = $Configuration
+
+    Write-Host "---------------------------------------------------"
+    Write-Host "Configuring Configuration: $Configuration"
     Write-Host "---------------------------------------------------"
 }
 
@@ -267,11 +303,12 @@ Function Configure-Platform
     $Global:Platform = $Platform
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Platform"
-    Write-Host " Platform: $Platform"
+    Write-Host "Configuring Platform: $Platform"
     Write-Host "---------------------------------------------------"
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 Configure-Version -Version '0.9.22.0'
+Configure-TargetFramework -TargetFramework 'net47'
+Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
