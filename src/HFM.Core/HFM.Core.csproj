@@ -1,243 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.3.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.3.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.3.3.0\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.3.3.0\build\Microsoft.NetFramework.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetCore.Analyzers.3.3.0\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.3.3.0\build\Microsoft.NetCore.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\build\Microsoft.CodeQuality.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{360034D2-9F6A-4377-B5B9-D82712171223}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HFM.Core</RootNamespace>
-    <AssemblyName>HFM.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;HFMCORE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;HFMCORE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="HFM.Client, Version=0.4.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Client.0.4.1\lib\net47\HFM.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Log, Version=0.2.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Log.0.2.0\lib\net45\HFM.Log.dll</HintPath>
-    </Reference>
-    <Reference Include="HFM.Proteins, Version=0.1.0.0, Culture=neutral, PublicKeyToken=7ebdbc730b03d55d, processorArchitecture=MSIL">
-      <HintPath>..\packages\HFM.Proteins.0.1.2\lib\net45\HFM.Proteins.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
+    <Compile Include="..\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="5.1.1" />
+    <PackageReference Include="HFM.Client" Version="0.4.1" />
+    <PackageReference Include="HFM.Log" Version="0.2.0" />
+    <PackageReference Include="HFM.Proteins" Version="0.1.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
+    <PackageReference Include="protobuf-net" Version="2.0.0.668" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>
-    <Compile Include="ApplicationUpdateSerializer.cs" />
-    <Compile Include="ApplicationUpdateService.cs" />
-    <Compile Include="Client\ClientIdentifier.cs" />
-    <Compile Include="Client\FahClientMessages.cs" />
-    <Compile Include="Client\NullClient.cs" />
-    <Compile Include="Client\NumberFormat.cs" />
-    <Compile Include="Client\StringBuilderReader.cs" />
-    <Compile Include="Data\WorkUnitRowProfile.cs" />
-    <Compile Include="FahUrl.cs" />
-    <Compile Include="Hash.cs" />
-    <Compile Include="Internal\Cryptography.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\ILoggerEvents.cs" />
-    <Compile Include="Logging\LoggerBase.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
-    <Compile Include="Models\PetaPoco.cs" />
-    <Compile Include="Net\HostName.cs" />
-    <Compile Include="Net\HttpUrl.cs" />
-    <Compile Include="Net\NetworkCredentialFactory.cs" />
-    <Compile Include="Net\WebProxyFactory.cs" />
-    <Compile Include="ProgressInfo.cs" />
-    <Compile Include="ApplicationUpdate.cs" />
-    <Compile Include="Services\LocalProcessService.cs" />
-    <Compile Include="Services\SendMailService.cs" />
-    <Compile Include="SlotXml\HtmlBuilder.cs" />
-    <Compile Include="SlotXml\WebArtifactDeployment.cs" />
-    <Compile Include="SlotXml\XmlBuilder.cs" />
-    <Compile Include="SlotXml\XmlBuilderProfile.cs" />
-    <Compile Include="SortComparer.cs" />
-    <Compile Include="Unknown.cs" />
-    <Compile Include="WorkUnits\BonusCalculation.cs" />
-    <Compile Include="Client\SlotIdentifier.cs" />
-    <Compile Include="SlotXml\LogLine.cs" />
-    <Compile Include="SlotXml\Protein.cs" />
-    <Compile Include="Data\ProteinBenchmarkDataContainer.cs" />
-    <Compile Include="Data\ProteinDataContainer.cs" />
-    <Compile Include="Data\SQLiteAddColumnCommand.cs" />
-    <Compile Include="Data\WorkUnitRepository.DuplicateDeleter.cs" />
-    <Compile Include="Data\WorkUnitRepository.ProteinDataUpdater.cs" />
-    <Compile Include="Data\WorkUnitRepository.SQLiteFunctions.cs" />
-    <Compile Include="Net\FtpMode.cs" />
-    <Compile Include="Logging\StopwatchExtensions.cs" />
-    <Compile Include="Net\TcpPort.cs" />
-    <Compile Include="Client\SlotType.cs" />
-    <Compile Include="ScheduledTasks\EocStatsScheduledTask.cs" />
-    <Compile Include="ScheduledTasks\ScheduledTask.cs" />
-    <Compile Include="Services\EocStatsService.cs" />
-    <Compile Include="WorkUnits\ProjectInfoExtensions.cs" />
-    <Compile Include="WorkUnits\ProjectInfo.cs" />
-    <Compile Include="WorkUnits\PPDCalculation.cs" />
-    <Compile Include="Client\ClientScheduledTasks.cs" />
-    <Compile Include="Serializers\IFileSerializer.cs" />
-    <Compile Include="Serializers\IFileSerializerExtensions.cs" />
-    <Compile Include="Serializers\ISerializer.cs" />
-    <Compile Include="Client\ClientMessageAggregatorResult.cs" />
-    <Compile Include="Client\SlotStatus.cs" />
-    <Compile Include="Internal\FileSystem.cs" />
-    <Compile Include="Client\Client.cs" />
-    <Compile Include="Client\ClientFactory.cs" />
-    <Compile Include="SlotXml\WebArtifactBuilder.cs" />
-    <Compile Include="Client\SlotTotals.cs" />
-    <Compile Include="Client\FahClient.cs" />
-    <Compile Include="Client\FahClientMessageAggregator.cs" />
-    <Compile Include="Client\ClientConfiguration.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Services\ProjectSummaryService.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkIdentifier.cs" />
-    <Compile Include="WorkUnits\ProteinService.cs" />
-    <Compile Include="Client\ClientSettingsFileSerializer.cs" />
-    <Compile Include="Data\WorkUnitRowCsvFileSerializer.cs" />
-    <Compile Include="Serializers\ProtoBufFileSerializer.cs" />
-    <Compile Include="Serializers\DataContractFileSerializer.cs" />
-    <Compile Include="SlotXml\SlotData.cs" />
-    <Compile Include="SlotXml\SlotDetail.cs" />
-    <Compile Include="Client\SlotModel.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="Data\DataContainer.cs" />
-    <Compile Include="Client\ClientSettings.cs" />
-    <Compile Include="Client\WorkUnitQueue.cs" />
-    <Compile Include="Data\WorkUnitRow.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmark.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkFrameTime.cs" />
-    <Compile Include="Data\WorkUnitQuery.cs" />
-    <Compile Include="WorkUnits\WorkUnit.cs" />
-    <Compile Include="Services\EocStatsData.cs" />
-    <Compile Include="WorkUnits\DateTimeExtensions.cs" />
-    <Compile Include="Services\FtpService.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkUnits\ProteinBenchmarkService.cs" />
-    <Compile Include="Data\WorkUnitQueryDataContainer.cs" />
-    <Compile Include="SlotXml\SlotSummary.cs" />
-    <Compile Include="Client\SlotModelSortComparer.cs" />
-    <Compile Include="Data\WorkUnitRepository.cs" />
-    <Compile Include="WorkUnits\WorkUnitModel.cs" />
-    <Compile Include="Client\StringBuilderExtensions.cs" />
-    <Compile Include="FileSystemPath.cs" />
-    <Compile Include="Data\EocStatsDataContainer.cs" />
-    <Compile Include="Net\WebOperation.cs" />
-    <Compile Include="WorkUnits\WorkUnitResult.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj">
-      <Project>{0caf91a3-d5f1-44c9-baeb-fb81dfbf9c47}</Project>
-      <Name>HFM.Preferences</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\harlam357.snk">
-      <Link>Properties\harlam357.snk</Link>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
-      <Link>Properties\CustomDictionary.xml</Link>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\analyzers\dotnet\cs\Humanizer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.0\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\build\Microsoft.CodeQuality.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.3.3.0\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.3.3.0\build\Microsoft.NetCore.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.3.3.0\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.3.3.0\build\Microsoft.NetFramework.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.3.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.3.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
