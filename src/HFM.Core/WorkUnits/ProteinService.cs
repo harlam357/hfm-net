@@ -134,7 +134,7 @@ namespace HFM.Core.WorkUnits
             var now = DateTime.UtcNow;
             foreach (var key in LastProjectRefresh.Keys.ToList())
             {
-                if (_collection.ContainsKey(key))
+                if (_collection.Contains(key))
                 {
                     LastProjectRefresh.Remove(key);
                 }
