@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <RootNamespace>HFM.Preferences</RootNamespace>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
