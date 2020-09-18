@@ -119,11 +119,13 @@ Function Clean-Artifacts
 Function Deploy-Build
 {
     [CmdletBinding()]
-    param([string]$Configuration=$Global:Configuration,
+    param([string]$TargetFramework=$Global:TargetFramework,
+          [string]$Configuration=$Global:Configuration,
           [string]$ArtifactsBin=$Global:ArtifactsBin)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Deploying Build"
+    Write-Host " TargetFramework: $TargetFramework"
     Write-Host " Configuration: $Configuration"
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host "---------------------------------------------------"
@@ -132,24 +134,23 @@ Function Deploy-Build
 
     # Primary Assemblies
     [string[]]$Assemblies = @(
-        "HFM.exe", 
-        "HFM.exe.config",
+        "AutoMapper.dll",
         "HFM.Client.dll",
         "HFM.Core.dll",
+        "HFM.exe", 
+        "HFM.exe.config",
         "HFM.Forms.dll",
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
-        "ZedGraph.dll",
         "LightInject.dll",
         "LightInject.Microsoft.DependencyInjection.dll",
         "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "Newtonsoft.Json.dll",
         "protobuf-net.dll",
-        "System.Linq.Dynamic.dll",
-        "AutoMapper.dll",
-        "Newtonsoft.Json.dll"
+        "ZedGraph.dll"
         )
-    $AssemblyFiles = Get-ChildItem -Path "HFM\bin\$Configuration\*" -Include $Assemblies
+    $AssemblyFiles = Get-ChildItem -Path "HFM\bin\$Configuration\$TargetFramework\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
     # SQLite Assemblies
     Copy-Item -Path '..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\x86" -ErrorAction Stop -Verbose:$localVerbose
@@ -159,16 +160,16 @@ Function Deploy-Build
     #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     #Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     # Documentation & Licenses
+    Copy-Item -Path '..\doc\AutoMapper License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\GPLv2.TXT' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path '..\doc\Json.NET License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\LightInject License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protobuf-net Licence.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\protoc-license.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\doc\AutoMapper License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\doc\Json.NET License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     # CSS & XSL
-    Copy-Item -Path "HFM\bin\$Configuration\CSS\*" -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path "HFM\bin\$Configuration\XSL\*" -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\CSS\*" -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\XSL\*" -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Build-Zip

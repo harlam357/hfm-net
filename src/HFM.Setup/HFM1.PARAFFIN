@@ -34,7 +34,6 @@
       <ComponentRef Id="comp_347A1829F91B4991B4CEBE4D46AF4C83" />
       <ComponentRef Id="comp_1A538E03366D42D5A290527F938DD55D" />
       <ComponentRef Id="comp_7F086DD4D9F346FDA51AA4095E287466" />
-      <ComponentRef Id="comp_5A2651031D1B44D085E1AD62B99D6E5E" />
       <ComponentRef Id="comp_E887C82986294D7E82EB5C731D6A0DEB" />
       <ComponentRef Id="comp_F9316B94D4734B88AFE53E5D10406D77" />
       <ComponentRef Id="comp_D3BA0551792349C8B50A34A79B6D7769" />
@@ -105,9 +104,6 @@
       </Component>
       <Component Id="comp_7F086DD4D9F346FDA51AA4095E287466" DiskId="1" Guid="27712DD2-7EB7-417C-B948-8E58E1D8168D">
         <File Id="file_3BB200BAC01548049263DA0623507A16" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\protobuf-net.dll" KeyPath="yes" />
-      </Component>
-      <Component Id="comp_5A2651031D1B44D085E1AD62B99D6E5E" DiskId="1" Guid="C4FD0E26-5BBC-49B0-9E45-A71FEF9458F9">
-        <File Id="file_3954D9EE839A419AACB3C26C54AE81BA" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\System.Linq.Dynamic.dll" KeyPath="yes" />
       </Component>
       <Component Id="comp_E887C82986294D7E82EB5C731D6A0DEB" DiskId="1" Guid="708608D1-92D7-447D-8F75-60EE59DE0C5F">
         <File Id="file_D3DE31D94F3347C9BCEE49892840CE66" Checksum="yes" Source="..\..\..\Artifacts\HFM.NET\ZedGraph.dll" KeyPath="yes" />
