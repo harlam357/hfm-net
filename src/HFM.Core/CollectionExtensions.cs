@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace HFM.Forms.Internal
+namespace HFM.Core
 {
-    internal static class CollectionExtensions
+    public static class CollectionExtensions
     {
         /// <summary>
         /// Removes all existing items from the <see cref="ICollection{T}" /> and adds the <paramref name="items" />.
         /// </summary>
-        internal static void Reset<T>(this ICollection<T> source, IEnumerable<T> items)
+        public static void Reset<T>(this ICollection<T> source, IEnumerable<T> items)
         {
             source.Clear();
             if (items != null)

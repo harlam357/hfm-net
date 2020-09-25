@@ -127,9 +127,9 @@ namespace HFM.Core.WorkUnits
             }
         }
 
-        private IList<LogLine> _logLines;
+        private ICollection<LogLine> _logLines;
 
-        public IList<LogLine> LogLines
+        public ICollection<LogLine> LogLines
         {
             get { return _logLines; }
             set

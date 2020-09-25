@@ -62,7 +62,8 @@ namespace HFM.Core.Client
                 extractor.Extract(new StringBuilder(
                     File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
-            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            fahClient.RefreshSlots();
+            var slotModel = fahClient.Slots.First();
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
@@ -76,17 +77,11 @@ namespace HFM.Core.Client
 
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-            Assert.AreEqual(null, result.Arguments);
-            Assert.AreEqual(null, result.ClientVersion);
-            Assert.AreEqual(null, result.UserID);
-            Assert.AreEqual(0, result.MachineID);
-            Assert.AreEqual(SlotStatus.Unknown, result.Status);
-            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
             {
-                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+                Assert.AreEqual(39, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
             #endregion
@@ -156,7 +151,8 @@ namespace HFM.Core.Client
                 extractor.Extract(new StringBuilder(
                     File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
-            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            fahClient.RefreshSlots();
+            var slotModel = fahClient.Slots.First();
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
@@ -170,17 +166,11 @@ namespace HFM.Core.Client
 
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-            Assert.AreEqual(null, result.Arguments);
-            Assert.AreEqual(null, result.ClientVersion);
-            Assert.AreEqual(null, result.UserID);
-            Assert.AreEqual(0, result.MachineID);
-            Assert.AreEqual(SlotStatus.Unknown, result.Status);
-            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
             {
-                Assert.AreEqual(result.CurrentLogLines, LogLineEnumerable.Create(fahClient.Messages.Log.ClientRuns.Last()));
+                Assert.AreEqual(82, LogLineEnumerable.Create(fahClient.Messages.Log.ClientRuns.Last()).Count());
             }
 
             #endregion
@@ -245,7 +235,8 @@ namespace HFM.Core.Client
                 extractor.Extract(new StringBuilder(
                     File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
-            var slotModel = new SlotModel(fahClient) { SlotID = 1 };
+            fahClient.RefreshSlots();
+            var slotModel = fahClient.Slots.Last();
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
@@ -259,17 +250,11 @@ namespace HFM.Core.Client
 
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(2, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), result.StartTime);
-            Assert.AreEqual(null, result.Arguments);
-            Assert.AreEqual(null, result.ClientVersion);
-            Assert.AreEqual(null, result.UserID);
-            Assert.AreEqual(0, result.MachineID);
-            Assert.AreEqual(SlotStatus.Unknown, result.Status);
-            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
             {
-                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+                Assert.AreEqual(98, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
             #endregion
@@ -334,7 +319,8 @@ namespace HFM.Core.Client
                 extractor.Extract(new StringBuilder(
                     File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\slot-options1.txt"))));
 
-            var slotModel = new SlotModel(fahClient) { SlotID = 0 };
+            fahClient.RefreshSlots();
+            var slotModel = fahClient.Slots.First();
             var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
 
             // Act
@@ -348,17 +334,11 @@ namespace HFM.Core.Client
 
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), result.StartTime);
-            Assert.AreEqual(null, result.Arguments);
-            Assert.AreEqual(null, result.ClientVersion);
-            Assert.AreEqual(null, result.UserID);
-            Assert.AreEqual(0, result.MachineID);
-            Assert.AreEqual(SlotStatus.Unknown, result.Status);
-            Assert.IsNotNull(result.CurrentLogLines);
+            Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
             if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
             {
-                Assert.AreEqual(result.CurrentLogLines, result.WorkUnits[result.CurrentUnitIndex].LogLines);
+                Assert.AreEqual(32, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
             #endregion

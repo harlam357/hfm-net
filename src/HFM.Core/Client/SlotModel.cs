@@ -62,9 +62,6 @@ namespace HFM.Core.Client
             MachineID = DefaultMachineID;
             // Status = 
             ClientVersion = String.Empty;
-            TotalRunCompletedUnits = 0;
-            TotalCompletedUnits = 0;
-            TotalRunFailedUnits = 0;
         }
 
         #region Display Meta Data
@@ -226,7 +223,7 @@ namespace HFM.Core.Client
 
         #endregion
 
-        public IList<LogLine> CurrentLogLines { get; set; }
+        public ICollection<LogLine> CurrentLogLines { get; } = new List<LogLine>();
 
         public WorkUnitQueue WorkUnitQueue { get; set; }
 

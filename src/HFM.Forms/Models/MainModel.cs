@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
-using HFM.Forms.Internal;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models

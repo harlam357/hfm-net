@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -13,6 +12,7 @@ using HFM.Client.ObjectModel;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
+using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -95,7 +95,8 @@ namespace HFM.Core.Client
         private readonly ReaderWriterLockSlim _slotsLock;
 
         public FahClient(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService,
-            IProteinService proteinService, IWorkUnitRepository workUnitRepository) : base(logger, preferences, benchmarkService)
+                         IProteinService proteinService, IWorkUnitRepository workUnitRepository)
+            : base(logger, preferences, benchmarkService)
         {
             ProteinService = proteinService;
             WorkUnitRepository = workUnitRepository;
@@ -313,10 +314,10 @@ namespace HFM.Core.Client
 
                     var aggregator = new FahClientMessageAggregator(this, slotModel);
                     var result = aggregator.AggregateData();
-                    PopulateRunLevelData(result, Messages.Info, slotModel);
+                    PopulateRunLevelData(Messages.Info, slotModel);
 
                     slotModel.WorkUnitQueue = result.WorkUnitQueue;
-                    slotModel.CurrentLogLines = result.CurrentLogLines;
+                    slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, result));
 
                     var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
                     foreach (int key in result.WorkUnits.Keys)
@@ -355,6 +356,28 @@ namespace HFM.Core.Client
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
+        private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, ClientMessageAggregatorResult result)
+        {
+            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
+            {
+                return result.WorkUnits[result.CurrentUnitIndex].LogLines;
+            }
+
+            var slotRun = Messages.GetSlotRun(slotID);
+            if (slotRun != null)
+            {
+                return LogLineEnumerable.Create(slotRun);
+            }
+
+            var clientRun = Messages.GetClientRun();
+            if (clientRun != null)
+            {
+                return LogLineEnumerable.Create(clientRun);
+            }
+
+            return Array.Empty<LogLine>();
+        }
+
         private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
         {
             Debug.Assert(slotModel != null);
@@ -378,7 +401,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(ClientMessageAggregatorResult result, Info info, SlotModel slotModel)
+        private void PopulateRunLevelData(Info info, SlotModel slotModel)
         {
             Debug.Assert(slotModel != null);
 
@@ -389,11 +412,13 @@ namespace HFM.Core.Client
                 slotModel.ClientVersion = info.Client.Version;
                 slotModel.SlotProcessor = FahClientMessageAggregator.GetCPUString(info, slotModel);
             }
-            if (WorkUnitRepository.Connected)
+
+            var clientRun = Messages.GetClientRun();
+            if (WorkUnitRepository.Connected && clientRun != null)
             {
-                slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, result.StartTime);
+                slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
-                slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, result.StartTime);
+                slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, null);
             }
         }

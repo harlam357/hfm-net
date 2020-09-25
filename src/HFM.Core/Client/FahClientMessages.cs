@@ -43,7 +43,15 @@ namespace HFM.Core.Client
         /// <summary>
         /// Gets a value indicating when the full log has been retrieved.
         /// </summary>
-        public bool LogIsRetrieved => LogBuffer is null;
+        public bool LogIsRetrieved => Log.ClientRuns.Count > 0;
+
+        public ClientRun GetClientRun() => Log.ClientRuns.LastOrDefault();
+
+        public SlotRun GetSlotRun(int slotID)
+        {
+            var clientRun = GetClientRun();
+            return clientRun != null && clientRun.SlotRuns.TryGetValue(slotID, out var slotRun) ? slotRun : null;
+        }
 
         public void Clear()
         {
@@ -126,7 +134,7 @@ namespace HFM.Core.Client
             }
 
             bool executeRetrieval = logIsRetrieved != LogIsRetrieved ||
-                                    LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged);
+                                    (LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged));
             return (slotCollectionChanged, executeRetrieval);
         }
 

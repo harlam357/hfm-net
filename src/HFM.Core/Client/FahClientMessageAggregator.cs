@@ -28,17 +28,11 @@ namespace HFM.Core.Client
             var result = new ClientMessageAggregatorResult();
             result.CurrentUnitIndex = -1;
 
-            ClientRun clientRun = FahClient.Messages.Log.ClientRuns.Last();
-            SlotRun slotRun = null;
-            if (clientRun.SlotRuns.ContainsKey(SlotModel.SlotID))
-            {
-                slotRun = clientRun.SlotRuns[SlotModel.SlotID];
-            }
-            result.StartTime = clientRun.Data.StartTime;
+            SlotRun slotRun = FahClient.Messages.GetSlotRun(SlotModel.SlotID);
 
             if (FahClient.Logger.IsDebugEnabled)
             {
-                foreach (var s in LogLineEnumerable.Create(clientRun).Where(x => x.Data is LogLineDataParserError))
+                foreach (var s in LogLineEnumerable.Create(slotRun).Where(x => x.Data is LogLineDataParserError))
                 {
                     FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, $"Failed to parse log line: {s}"));
                 }
@@ -51,19 +45,6 @@ namespace HFM.Core.Client
 
             BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, SlotModel.SlotID);
             result.WorkUnitQueue = BuildWorkUnitQueue(unitCollection, info, SlotModel);
-
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
-            {
-                result.CurrentLogLines = result.WorkUnits[result.CurrentUnitIndex].LogLines;
-            }
-            else if (slotRun != null)
-            {
-                result.CurrentLogLines = LogLineEnumerable.Create(slotRun).ToList();
-            }
-            else
-            {
-                result.CurrentLogLines = LogLineEnumerable.Create(clientRun).ToList();
-            }
 
             return result;
         }

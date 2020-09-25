@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+using HFM.Core;
 using HFM.Core.Client;
-using HFM.Forms.Internal;
 using HFM.Preferences;
 
 using NUnit.Framework;
