@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -24,7 +23,7 @@ namespace HFM.Core.Client
         event EventHandler RetrievalFinished;
 
         ILogger Logger { get; }
-        
+
         IPreferences Preferences { get; }
 
         IProteinBenchmarkService BenchmarkService { get; }
@@ -74,7 +73,7 @@ namespace HFM.Core.Client
         public ILogger Logger { get; }
         public IPreferences Preferences { get; }
         public IProteinBenchmarkService BenchmarkService { get; }
-        
+
         protected Client(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService)
         {
             Logger = logger ?? NullLogger.Instance;
