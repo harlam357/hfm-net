@@ -1,5 +1,4 @@
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
@@ -26,7 +25,7 @@ namespace HFM.Core.Client
         }
 
         public ClientIdentifier ClientIdentifier => new ClientIdentifier(Name, Server, Port, Guid);
-        
+
         /// <summary>
         /// Gets or sets the client type.
         /// </summary>

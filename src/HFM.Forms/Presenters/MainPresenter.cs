@@ -445,8 +445,7 @@ namespace HFM.Forms.Presenters
             var selectedSlot = GridModel.SelectedSlot;
             if (selectedSlot == null) return;
 
-            var client = ClientConfiguration.Get(selectedSlot.Settings.Name);
-            var originalSettings = client.Settings;
+            var originalSettings = selectedSlot.Client.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var model = new FahClientSettingsModel(originalSettings);
@@ -475,7 +474,7 @@ namespace HFM.Forms.Presenters
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            ClientConfiguration.Remove(GridModel.SelectedSlot.Settings.Name);
+            ClientConfiguration.Remove(GridModel.SelectedSlot.Client.Settings.Name);
         }
 
         public void ClientsRefreshSelectedClick()
@@ -483,8 +482,7 @@ namespace HFM.Forms.Presenters
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            var client = ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name);
-            Task.Run(client.Retrieve);
+            Task.Run(GridModel.SelectedSlot.Client.Retrieve);
         }
 
         public void ClientsRefreshAllClick()
@@ -497,7 +495,7 @@ namespace HFM.Forms.Presenters
             // Check for SelectedSlot, and get out if not found
             if (GridModel.SelectedSlot == null) return;
 
-            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Settings.ClientLogFileName);
+            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Client.Settings.ClientLogFileName);
             if (File.Exists(path))
             {
                 string errorMessage = String.Format(CultureInfo.CurrentCulture,
@@ -510,7 +508,7 @@ namespace HFM.Forms.Presenters
             }
             else
             {
-                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", GridModel.SelectedSlot.Settings.Name);
+                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", GridModel.SelectedSlot.Client.Settings.Name);
                 MessageBox.ShowInformation(Form, message, Core.Application.NameAndVersion);
             }
         }
@@ -520,7 +518,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClient client)
             {
                 client.Fold(GridModel.SelectedSlot.SlotID);
             }
@@ -530,7 +528,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClient client)
             {
                 client.Pause(GridModel.SelectedSlot.SlotID);
             }
@@ -540,7 +538,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (ClientConfiguration.Get(GridModel.SelectedSlot.Settings.Name) is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClient client)
             {
                 client.Finish(GridModel.SelectedSlot.SlotID);
             }

@@ -57,7 +57,7 @@ namespace HFM.Core.SlotXml
         private void CopyLogs(IEnumerable<SlotModel> slots)
         {
             var logCache = Preferences.Get<string>(Preference.CacheDirectory);
-            var logPaths = slots.Select(x => System.IO.Path.Combine(logCache, x.Settings.ClientLogFileName)).Distinct();
+            var logPaths = slots.Select(x => System.IO.Path.Combine(logCache, x.Client.Settings.ClientLogFileName)).Distinct();
             int maximumLength = Preferences.Get<bool>(Preference.WebGenLimitLogSize)
                 ? Preferences.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                 : -1;

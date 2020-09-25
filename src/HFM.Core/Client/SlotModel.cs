@@ -44,8 +44,6 @@ namespace HFM.Core.Client
 
         public WorkUnitModel WorkUnitModel { get; set; }
 
-        public ClientSettings Settings => Client.Settings;
-
         public IClient Client { get; }
 
         public SlotModel(IClient client)
@@ -103,7 +101,7 @@ namespace HFM.Core.Client
         /// </summary>
         public int PercentComplete => Status.IsRunning() || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Settings.ClientIdentifier, SlotID);
+        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotID);
 
         public string Name => SlotIdentifier.Name;
 
