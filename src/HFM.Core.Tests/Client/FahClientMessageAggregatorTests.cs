@@ -106,8 +106,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(null, unitInfoData.ProteinName);
-            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(10, unitInfoData.FramesObserved);
             Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
@@ -202,8 +200,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(null, unitInfoData.ProteinName);
-            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(0, unitInfoData.FramesObserved);
             Assert.IsNull(unitInfoData.CurrentFrame);
@@ -293,8 +289,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(7, unitInfoData.ProjectRun);
             Assert.AreEqual(364, unitInfoData.ProjectClone);
             Assert.AreEqual(252, unitInfoData.ProjectGen);
-            Assert.AreEqual(null, unitInfoData.ProteinName);
-            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(53, unitInfoData.FramesObserved);
             Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
@@ -384,8 +378,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(192, unitInfoData.ProjectRun);
             Assert.AreEqual(0, unitInfoData.ProjectClone);
             Assert.AreEqual(58, unitInfoData.ProjectGen);
-            Assert.AreEqual(null, unitInfoData.ProteinName);
-            Assert.AreEqual(null, unitInfoData.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
             Assert.AreEqual(3, unitInfoData.FramesObserved);
             Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);

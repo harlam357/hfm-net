@@ -26,8 +26,6 @@ namespace HFM.Core.WorkUnits
             Assert.AreEqual(0, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
             Assert.AreEqual(0, workUnit.ProjectGen);
-            Assert.IsNull(workUnit.ProteinName);
-            Assert.IsNull(workUnit.ProteinTag);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(0, workUnit.FramesObserved);
             Assert.IsNull(workUnit.CurrentFrame);

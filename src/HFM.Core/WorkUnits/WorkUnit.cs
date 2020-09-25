@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,9 +12,8 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Returns a shallow copy of this <see cref="WorkUnit"/>.
         /// </summary>
-        public WorkUnit Copy()
-        {
-            var u = new WorkUnit
+        public WorkUnit Copy() =>
+            new WorkUnit
             {
                 UnitRetrievalTime = UnitRetrievalTime,
                 FoldingID = FoldingID,
@@ -29,18 +27,12 @@ namespace HFM.Core.WorkUnits
                 ProjectRun = ProjectRun,
                 ProjectClone = ProjectClone,
                 ProjectGen = ProjectGen,
-                ProteinName = ProteinName,
-                ProteinTag = ProteinTag,
                 UnitResult = UnitResult,
                 FramesObserved = FramesObserved,
                 LogLines = LogLines,
                 CoreID = CoreID,
                 QueueIndex = QueueIndex
             };
-            return u;
-        }
-
-        #region Properties
 
         /// <summary>
         /// Local time the logs used to generate this WorkUnit were retrieved
@@ -101,16 +93,6 @@ namespace HFM.Core.WorkUnits
         /// Project ID (Gen)
         /// </summary>
         public int ProjectGen { get; set; }
-
-        /// <summary>
-        /// Name of the unit
-        /// </summary>
-        public string ProteinName { get; set; }
-
-        /// <summary>
-        /// Tag string as read from the UnitInfo.txt file
-        /// </summary>
-        public string ProteinTag { get; set; }
 
         /// <summary>
         /// The Result of this Work Unit
@@ -174,8 +156,6 @@ namespace HFM.Core.WorkUnits
         /// Unit Queue Index
         /// </summary>
         public int QueueIndex { get; set; } = -1;
-
-        #endregion
 
         #region Methods
 
