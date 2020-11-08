@@ -307,7 +307,7 @@ namespace HFM.Core.Client
             _slotsLock.EnterReadLock();
             try
             {
-                var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun());
+                var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrievalTime);
                 var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info?.System);
 
                 foreach (var slotModel in _slots)
@@ -388,7 +388,6 @@ namespace HFM.Core.Client
             Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
-            workUnit.UnitRetrievalTime = LastRetrievalTime;
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
             return workUnitModel;

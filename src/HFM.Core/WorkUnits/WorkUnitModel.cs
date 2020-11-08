@@ -35,19 +35,19 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Gets the work unit assigned date and time (Local).
         /// </summary>
-        public DateTime Assigned => GetTime(WorkUnit.Assigned);
+        public DateTime Assigned => ToLocalTime(WorkUnit.Assigned);
 
         /// <summary>
         /// Gets the work unit timeout date and time (Local).
         /// </summary>
-        public DateTime Timeout => GetTime(WorkUnit.Timeout);
+        public DateTime Timeout => ToLocalTime(WorkUnit.Timeout);
 
         /// <summary>
         /// Gets the work unit finished date and time (Local).
         /// </summary>
-        public DateTime Finished => GetTime(WorkUnit.Finished);
+        public DateTime Finished => ToLocalTime(WorkUnit.Finished);
 
-        private static DateTime GetTime(DateTime dateTime)
+        private static DateTime ToLocalTime(DateTime dateTime)
         {
             if (dateTime.IsMinValue()) { return dateTime; }
 

@@ -16,12 +16,14 @@ namespace HFM.Core.Client
     [TestFixture]
     public class WorkUnitCollectionBuilderTests
     {
+        private static readonly DateTime _UnitRetrievalTime = new DateTime(2020, 1, 1);
+
         [Test]
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -36,7 +38,7 @@ namespace HFM.Core.Client
             // Assert - Work Unit
             var workUnit = workUnits.Current;
 
-            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
             Assert.AreEqual(32, workUnit.Team);
             Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), workUnit.Assigned);
@@ -67,7 +69,7 @@ namespace HFM.Core.Client
             // clear the log data so this test operates only on data provided by FahClient
             fahClient.Messages.Log.Clear();
 
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -82,7 +84,7 @@ namespace HFM.Core.Client
             // Assert - Work Unit
             var workUnit = workUnits.Current;
 
-            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
             Assert.AreEqual(32, workUnit.Team);
             Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), workUnit.Assigned);
@@ -106,7 +108,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit());
@@ -121,7 +123,7 @@ namespace HFM.Core.Client
             // Assert - Work Unit
             var workUnit = workUnits.Current;
 
-            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
             Assert.AreEqual(32, workUnit.Team);
             Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), workUnit.Assigned);
@@ -149,7 +151,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
@@ -164,7 +166,7 @@ namespace HFM.Core.Client
             // Assert - Work Unit
             var workUnit = workUnits[0];
 
-            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
             Assert.AreEqual(null, workUnit.FoldingID);
             Assert.AreEqual(0, workUnit.Team);
             Assert.AreEqual(DateTime.MinValue, workUnit.Assigned);
@@ -192,7 +194,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_11", @"..\..\..\..\TestFiles\Client_v7_11");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -207,7 +209,7 @@ namespace HFM.Core.Client
             // Assert - Work Unit
             var workUnit = workUnits.Current;
 
-            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
             Assert.AreEqual(32, workUnit.Team);
             Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), workUnit.Assigned);
@@ -239,7 +241,7 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 0, State = "READY" },
                 new Unit { Slot = 0, ID = 1, State = "RUNNING" }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null);
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
             // Assert
@@ -255,7 +257,7 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 2, State = "READY" },
                 new Unit { Slot = 0, ID = 1, State = "READY" }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null);
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
             // Assert

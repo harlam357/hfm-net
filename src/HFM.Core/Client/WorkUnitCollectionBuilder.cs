@@ -17,14 +17,16 @@ namespace HFM.Core.Client
         private readonly UnitCollection _units;
         private readonly Options _options;
         private readonly ClientRun _clientRun;
+        private readonly DateTime _unitRetrievalTime;
 
-        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, ClientRun clientRun)
+        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, ClientRun clientRun, DateTime unitRetrievalTime)
         {
             Logger = logger ?? NullLogger.Instance;
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _units = units ?? throw new ArgumentNullException(nameof(units));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _clientRun = clientRun;
+            _unitRetrievalTime = unitRetrievalTime;
         }
 
         public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
@@ -62,6 +64,7 @@ namespace HFM.Core.Client
                 {
                     // create a copy of the previous WorkUnit so we're not mutating a given instance
                     var workUnitCopy = previousWorkUnit.Copy();
+                    workUnitCopy.UnitRetrievalTime = _unitRetrievalTime;
 
                     PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
                     workUnits.Add(workUnitCopy);
@@ -85,7 +88,7 @@ namespace HFM.Core.Client
         {
             Debug.Assert(unit != null);
 
-            var workUnit = new WorkUnit();
+            var workUnit = new WorkUnit { UnitRetrievalTime = _unitRetrievalTime };
             PopulateWorkUnitFromClientData(workUnit, unit, _options);
 
             var projectInfo = unit.ToProjectInfo();
