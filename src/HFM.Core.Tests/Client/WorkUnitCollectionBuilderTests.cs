@@ -264,6 +264,38 @@ namespace HFM.Core.Client
             Assert.AreEqual(2, workUnits.CurrentID);
         }
 
+        [Test]
+        public void WorkUnitCollectionBuilder_BuildForSlot_BuildsWorkUnitFromUnitCollection_PreviousUnitExistsInUnitCollection()
+        {
+            // Arrange
+            var units = new UnitCollection
+            {
+                new Unit { Slot = 0, ID = 0, State = "READY", Project = 1 },
+                new Unit { Slot = 0, ID = 1, State = "RUNNING", Project = 2 }
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            // Act
+            var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 2 });
+            // Assert
+            Assert.AreEqual(2, workUnits.Count);
+        }
+
+        [Test]
+        public void WorkUnitCollectionBuilder_BuildForSlot_BuildsWorkUnitFromUnitCollection_PreviousUnitIDExistsInUnitCollection()
+        {
+            // Arrange
+            var units = new UnitCollection
+            {
+                new Unit { Slot = 0, ID = 0, State = "READY", Project = 1 },
+                new Unit { Slot = 0, ID = 1, State = "RUNNING", Project = 2 }
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            // Act
+            var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 3 });
+            // Assert
+            Assert.AreEqual(2, workUnits.Count);
+        }
+
         private static async Task<FahClient> CreateClientWithMessagesLoadedFrom(string clientName, string path)
         {
             var fahClient = CreateClient(clientName);

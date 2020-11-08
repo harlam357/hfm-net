@@ -154,8 +154,6 @@ namespace HFM.Core.WorkUnits
 
         public int ID { get; set; } = WorkUnitCollection.NoID;
 
-        #region Methods
-
         /// <summary>
         /// Gets the frame by frame ID.
         /// </summary>
@@ -168,8 +166,6 @@ namespace HFM.Core.WorkUnits
         {
             return other != null && this.HasProject() && other.HasProject() && this.EqualsProject(other) && Assigned.Equals(other.Assigned);
         }
-
-        #endregion
     }
 
     public class WorkUnitCollection : QueueItemCollection<WorkUnit>

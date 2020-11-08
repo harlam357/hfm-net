@@ -28,6 +28,8 @@ namespace HFM.Core
 
         public T this[int id] => (T)(_inner.Contains(id) ? _inner[id] : null);
 
+        public bool ContainsID(int id) => _inner.Contains(id);
+
         public IEnumerator<T> GetEnumerator() => _inner.Cast<T>().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

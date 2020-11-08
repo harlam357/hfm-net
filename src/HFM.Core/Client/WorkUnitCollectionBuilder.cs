@@ -57,21 +57,30 @@ namespace HFM.Core.Client
             }
 
             // if the previous unit has already left the UnitCollection then find the log section and update here
-            if (!workUnits.HasWorkUnit(previousWorkUnit))
+            if (PreviousWorkUnitShouldBeCompleted(workUnits, previousWorkUnit))
             {
-                var unitRun = GetUnitRun(GetSlotRun(slotID), previousWorkUnit.ID, previousWorkUnit);
+                var unitRun = GetUnitRun(slotID, previousWorkUnit.ID, previousWorkUnit);
                 if (unitRun != null)
                 {
-                    // create a copy of the previous WorkUnit so we're not mutating a given instance
-                    var workUnitCopy = previousWorkUnit.Copy();
-                    workUnitCopy.UnitRetrievalTime = _unitRetrievalTime;
-
-                    PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
-                    workUnits.Add(workUnitCopy);
+                    workUnits.Add(CompleteWorkUnitWithLogData(previousWorkUnit, unitRun));
                 }
             }
 
             return workUnits;
+        }
+
+        private static bool PreviousWorkUnitShouldBeCompleted(WorkUnitCollection workUnits, WorkUnit previousWorkUnit) =>
+            !workUnits.HasWorkUnit(previousWorkUnit) &&
+            !workUnits.ContainsID(previousWorkUnit.ID);
+
+        private WorkUnit CompleteWorkUnitWithLogData(WorkUnit previousWorkUnit, UnitRun unitRun)
+        {
+            // create a copy of the previous WorkUnit so we're not mutating a given instance
+            var workUnitCopy = previousWorkUnit.Copy();
+            workUnitCopy.UnitRetrievalTime = _unitRetrievalTime;
+
+            PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
+            return workUnitCopy;
         }
 
         private SlotRun GetSlotRun(int slotID) =>
@@ -79,8 +88,8 @@ namespace HFM.Core.Client
                 ? slotRun
                 : null;
 
-        private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo) =>
-            slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(ToProjectInfo(x.Data)));
+        private UnitRun GetUnitRun(int slotID, int queueIndex, IProjectInfo projectInfo) =>
+            GetSlotRun(slotID)?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(ToProjectInfo(x.Data)));
 
         private WorkUnit BuildWorkUnit(int slotID, Unit unit)
         {
@@ -90,7 +99,7 @@ namespace HFM.Core.Client
             PopulateWorkUnitFromClientData(workUnit, unit, _options);
 
             var projectInfo = ToProjectInfo(unit);
-            var unitRun = GetUnitRun(GetSlotRun(slotID), unit.ID.GetValueOrDefault(), projectInfo);
+            var unitRun = GetUnitRun(slotID, unit.ID.GetValueOrDefault(), projectInfo);
             if (unitRun == null)
             {
                 string message = $"Could not find log section for Slot {slotID} {projectInfo}.";
