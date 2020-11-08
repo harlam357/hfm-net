@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -11,51 +10,47 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
-    internal class FahClientMessageAggregator
+    internal class WorkUnitCollectionBuilder
     {
-        public IFahClient FahClient { get; }
+        public ILogger Logger { get; }
+        public ClientSettings Settings { get; }
 
-        public FahClientMessageAggregator(IFahClient fahClient)
+        private readonly UnitCollection _units;
+        private readonly Options _options;
+        private readonly SlotRun _slotRun;
+
+        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, SlotRun slotRun)
         {
-            FahClient = fahClient;
+            Logger = logger ?? NullLogger.Instance;
+            Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _units = units ?? throw new ArgumentNullException(nameof(units));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _slotRun = slotRun;
         }
 
-        public WorkUnitCollection AggregateData(int slotID, WorkUnit currentWorkUnit)
+        public WorkUnitCollection BuildForSlot(int slotID, WorkUnit currentWorkUnit)
         {
-            var workUnits = new WorkUnitCollection();
+            if (currentWorkUnit == null) throw new ArgumentNullException(nameof(currentWorkUnit));
 
-            SlotRun slotRun = FahClient.Messages.GetSlotRun(slotID);
-
-            if (FahClient.Logger.IsDebugEnabled && slotRun != null)
+            if (Logger.IsDebugEnabled && _slotRun != null)
             {
-                foreach (var s in LogLineEnumerable.Create(slotRun).Where(x => x.Data is LogLineDataParserError))
+                foreach (var s in LogLineEnumerable.Create(_slotRun).Where(x => x.Data is LogLineDataParserError))
                 {
-                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, $"Failed to parse log line: {s}"));
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"Failed to parse log line: {s}"));
                 }
             }
 
-            var unitCollection = FahClient.Messages.UnitCollection;
-            var options = FahClient.Messages.Options;
-
-            BuildWorkUnits(workUnits, slotRun, unitCollection, options, currentWorkUnit, slotID);
-
-            return workUnits;
+            return BuildWorkUnits(slotID, currentWorkUnit);
         }
 
-        private void BuildWorkUnits(WorkUnitCollection workUnits,
-                                    SlotRun slotRun,
-                                    ICollection<Unit> unitCollection,
-                                    Options options,
-                                    WorkUnit currentWorkUnit,
-                                    int slotId)
+        private WorkUnitCollection BuildWorkUnits(int slotID, WorkUnit currentWorkUnit)
         {
-            Debug.Assert(unitCollection != null);
-            Debug.Assert(options != null);
             Debug.Assert(currentWorkUnit != null);
 
             bool foundCurrentUnitInfo = false;
+            var workUnits = new WorkUnitCollection();
 
-            foreach (var unit in unitCollection.Where(x => x.Slot == slotId))
+            foreach (var unit in _units.Where(x => x.Slot == slotID))
             {
                 var projectInfo = unit.ToProjectInfo();
                 if (projectInfo.EqualsProject(currentWorkUnit) &&
@@ -65,14 +60,14 @@ namespace HFM.Core.Client
                 }
 
                 // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(slotRun, unit.ID.GetValueOrDefault(), projectInfo);
+                var unitRun = GetUnitRun(_slotRun, unit.ID.GetValueOrDefault(), projectInfo);
                 if (unitRun == null)
                 {
-                    string message = $"Could not find log section for Slot {slotId} {projectInfo}.";
-                    FahClient.Logger.Debug(String.Format(Logger.NameFormat, FahClient.Settings.Name, message));
+                    string message = $"Could not find log section for Slot {slotID} {projectInfo}.";
+                    Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
                 }
 
-                WorkUnit workUnit = BuildWorkUnit(unit, options, unitRun);
+                WorkUnit workUnit = BuildWorkUnit(unit, _options, unitRun);
                 if (workUnit != null)
                 {
                     workUnits.Add(workUnit);
@@ -87,7 +82,7 @@ namespace HFM.Core.Client
             if (workUnits.CurrentID == WorkUnitCollection.NoID)
             {
                 // look for a WU with READY state
-                var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase));
+                var unit = _units.FirstOrDefault(x => x.Slot == slotID && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase));
                 if (unit != null)
                 {
                     workUnits.CurrentID = unit.ID.GetValueOrDefault();
@@ -98,7 +93,7 @@ namespace HFM.Core.Client
             if (!foundCurrentUnitInfo)
             {
                 // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(slotRun, currentWorkUnit.ID, currentWorkUnit);
+                var unitRun = GetUnitRun(_slotRun, currentWorkUnit.ID, currentWorkUnit);
                 if (unitRun != null)
                 {
                     // create a copy of the current WorkUnit object so we're not working with an
@@ -109,6 +104,8 @@ namespace HFM.Core.Client
                     workUnits.Add(workUnitCopy);
                 }
             }
+
+            return workUnits;
         }
 
         private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)

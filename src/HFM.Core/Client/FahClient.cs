@@ -307,16 +307,16 @@ namespace HFM.Core.Client
             _slotsLock.EnterReadLock();
             try
             {
-                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info?.System);
+                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info.System);
 
                 foreach (var slotModel in _slots)
                 {
                     // Re-Init Slot Level Members Before Processing
                     slotModel.Initialize();
 
-                    var aggregator = new FahClientMessageAggregator(this);
+                    var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetSlotRun(slotModel.SlotID));
                     var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
-                    var workUnits = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
+                    var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
                     PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);
 
                     slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);

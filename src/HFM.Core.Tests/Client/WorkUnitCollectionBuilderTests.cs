@@ -13,19 +13,19 @@ using NUnit.Framework;
 namespace HFM.Core.Client
 {
     [TestFixture]
-    public class FahClientMessageAggregatorTests
+    public class WorkUnitCollectionBuilderTests
     {
         // ReSharper disable InconsistentNaming
 
         [Test]
-        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0()
+        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var aggregator = new FahClientMessageAggregator(fahClient);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
 
             // Act
-            var workUnits = aggregator.AggregateData(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -61,7 +61,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0_UnitDataOnly()
+        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0_UnitDataOnly()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
@@ -74,10 +74,10 @@ namespace HFM.Core.Client
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
 
-            var aggregator = new FahClientMessageAggregator(fahClient);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
 
             // Act
-            var workUnits = aggregator.AggregateData(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -109,14 +109,14 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientMessageAggregator_Client_v7_10_SlotID_1()
+        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_1()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var aggregator = new FahClientMessageAggregator(fahClient);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(1));
 
             // Act
-            var workUnits = aggregator.AggregateData(1, new WorkUnit());
+            var workUnits = builder.BuildForSlot(1, new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -152,14 +152,14 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientMessageAggregator_Client_v7_11_SlotID_0()
+        public async Task WorkUnitCollectionBuilder_Client_v7_11_SlotID_0()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_11", @"..\..\..\..\TestFiles\Client_v7_11");
-            var aggregator = new FahClientMessageAggregator(fahClient);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
 
             // Act
-            var workUnits = aggregator.AggregateData(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
 
             // Assert
             Assert.IsNotNull(workUnits);
