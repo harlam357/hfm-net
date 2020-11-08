@@ -312,9 +312,10 @@ namespace HFM.Core.Client
                     // Re-Init Slot Level Members Before Processing
                     slotModel.Initialize();
 
-                    var aggregator = new FahClientMessageAggregator(this, slotModel);
-                    var result = aggregator.AggregateData();
-                    PopulateRunLevelData(Messages.Info, slotModel);
+                    var aggregator = new FahClientMessageAggregator(this);
+                    var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
+                    var result = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit, slotProcessor);
+                    PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);
 
                     slotModel.WorkUnitQueue = result.WorkUnitQueue;
                     slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, result));
@@ -355,6 +356,11 @@ namespace HFM.Core.Client
             string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
+
+        private static string GetSlotProcessor(Info info, SlotModel slotModel) =>
+            slotModel.SlotType == SlotType.GPU
+                ? slotModel.SlotProcessor
+                : info.System.CPU;
 
         private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, ClientMessageAggregatorResult result)
         {
@@ -401,17 +407,16 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(Info info, SlotModel slotModel)
+        private void PopulateRunLevelData(Info info, SlotModel slotModel, string slotProcessor)
         {
             Debug.Assert(slotModel != null);
 
             if (info != null)
             {
-                // TODO: Surface client arguments?
-                //slotModel.Arguments = info.Client.Args;
                 slotModel.ClientVersion = info.Client.Version;
-                slotModel.SlotProcessor = FahClientMessageAggregator.GetCPUString(info, slotModel);
             }
+
+            slotModel.SlotProcessor = slotProcessor;
 
             var clientRun = Messages.GetClientRun();
             if (WorkUnitRepository.Connected && clientRun != null)

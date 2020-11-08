@@ -58,18 +58,12 @@ namespace HFM.Core.Client
 
         public void Initialize()
         {
-            Arguments = String.Empty;
             MachineID = DefaultMachineID;
             // Status = 
             ClientVersion = String.Empty;
         }
 
         #region Display Meta Data
-
-        /// <summary>
-        /// Client Startup Arguments
-        /// </summary>
-        public string Arguments { get; set; }
 
         private int _machineId;
         /// <summary>

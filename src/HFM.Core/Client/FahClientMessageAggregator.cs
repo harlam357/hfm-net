@@ -15,20 +15,18 @@ namespace HFM.Core.Client
     internal class FahClientMessageAggregator
     {
         public IFahClient FahClient { get; }
-        public SlotModel SlotModel { get; }
 
-        public FahClientMessageAggregator(IFahClient fahClient, SlotModel slotModel)
+        public FahClientMessageAggregator(IFahClient fahClient)
         {
             FahClient = fahClient;
-            SlotModel = slotModel;
         }
 
-        public ClientMessageAggregatorResult AggregateData()
+        public ClientMessageAggregatorResult AggregateData(int slotID, WorkUnit currentWorkUnit, string slotProcessor)
         {
             var result = new ClientMessageAggregatorResult();
             result.CurrentUnitIndex = -1;
 
-            SlotRun slotRun = FahClient.Messages.GetSlotRun(SlotModel.SlotID);
+            SlotRun slotRun = FahClient.Messages.GetSlotRun(slotID);
 
             if (FahClient.Logger.IsDebugEnabled)
             {
@@ -40,19 +38,18 @@ namespace HFM.Core.Client
 
             var unitCollection = FahClient.Messages.UnitCollection;
             var options = FahClient.Messages.Options;
-            var currentWorkUnit = SlotModel.WorkUnitModel.WorkUnit;
             var info = FahClient.Messages.Info;
 
-            BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, SlotModel.SlotID);
-            result.WorkUnitQueue = BuildWorkUnitQueue(unitCollection, info, SlotModel);
+            BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, slotID);
+            result.WorkUnitQueue = BuildWorkUnitQueue(unitCollection, info, slotID, slotProcessor);
 
             return result;
         }
 
-        private static WorkUnitQueue BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, SlotModel slotModel)
+        private static WorkUnitQueue BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, int slotID, string slotProcessor)
         {
             WorkUnitQueue d = null;
-            foreach (var unit in unitCollection.Where(unit => unit.Slot == slotModel.SlotID))
+            foreach (var unit in unitCollection.Where(unit => unit.Slot == slotID))
             {
                 if (d == null)
                 {
@@ -70,12 +67,12 @@ namespace HFM.Core.Client
                 wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
                 wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
-                wui.CPU = GetCPUString(info, slotModel);
+                wui.CPU = slotProcessor;
                 wui.OperatingSystem = info.System.OS;
                 // Memory Value is in Gigabytes - turn into Megabytes and truncate
                 wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
                 wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
-                wui.SlotID = slotModel.SlotID;
+                wui.SlotID = slotID;
 
                 d.Add(wui);
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
@@ -93,13 +90,6 @@ namespace HFM.Core.Client
             }
 
             return d;
-        }
-
-        internal static string GetCPUString(Info info, SlotModel slotModel)
-        {
-            return slotModel.SlotType == SlotType.GPU
-                ? slotModel.SlotProcessor
-                : info.System.CPU;
         }
 
         private void BuildWorkUnits(ClientMessageAggregatorResult result,

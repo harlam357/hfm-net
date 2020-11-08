@@ -33,12 +33,10 @@ namespace HFM.Core.Client
 
             await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
 
-            fahClient.RefreshSlots();
-            var slotModel = fahClient.Slots.First();
-            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData();
+            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -96,12 +94,10 @@ namespace HFM.Core.Client
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
 
-            fahClient.RefreshSlots();
-            var slotModel = fahClient.Slots.First();
-            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData();
+            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -147,12 +143,10 @@ namespace HFM.Core.Client
 
             await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
 
-            fahClient.RefreshSlots();
-            var slotModel = fahClient.Slots.Last();
-            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData();
+            var result = aggregator.AggregateData(1, new WorkUnit(), "foo");
 
             // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -202,12 +196,10 @@ namespace HFM.Core.Client
 
             await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_11");
 
-            fahClient.RefreshSlots();
-            var slotModel = fahClient.Slots.First();
-            var aggregator = new FahClientMessageAggregator(fahClient, slotModel);
+            var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData();
+            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert
             Assert.AreEqual(1, result.WorkUnits.Count);
