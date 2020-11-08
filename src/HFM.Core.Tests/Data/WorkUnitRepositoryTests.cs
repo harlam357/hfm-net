@@ -246,7 +246,7 @@ namespace HFM.Core.Data
             workUnit.ProjectGen = 3;
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
-            workUnit.CoreVersion = 2.09f;
+            workUnit.CoreVersion = new Version(0, 2, 9);
             workUnit.UnitResult = WorkUnitResult.FinishedUnit;
 
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
@@ -292,7 +292,7 @@ namespace HFM.Core.Data
                 Assert.AreEqual("Path", row.Path);
                 Assert.AreEqual("harlam357", row.Username);
                 Assert.AreEqual(32, row.Team);
-                Assert.AreEqual(2.09f, row.CoreVersion);
+                Assert.AreEqual(2.9f, row.CoreVersion);
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(600), row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
@@ -320,7 +320,7 @@ namespace HFM.Core.Data
             workUnit.ProjectGen = 6;
             workUnit.FoldingID = "harlam357's";
             workUnit.Team = 100;
-            workUnit.CoreVersion = 2.27f;
+            workUnit.CoreVersion = new Version(2, 27);
             workUnit.UnitResult = WorkUnitResult.EarlyUnitEnd;
 
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
@@ -394,7 +394,7 @@ namespace HFM.Core.Data
             workUnit.ProjectGen = 4;
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
-            workUnit.CoreVersion = 2.09f;
+            workUnit.CoreVersion = new Version(0, 2, 9);
             workUnit.UnitResult = WorkUnitResult.EarlyUnitEnd;
 
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind
@@ -440,7 +440,7 @@ namespace HFM.Core.Data
                 Assert.AreEqual("Path", row.Path);
                 Assert.AreEqual("harlam357", row.Username);
                 Assert.AreEqual(32, row.Team);
-                Assert.AreEqual(2.09f, row.CoreVersion);
+                Assert.AreEqual(2.9f, row.CoreVersion);
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
                 Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
@@ -468,7 +468,7 @@ namespace HFM.Core.Data
             workUnit.ProjectGen = 4;
             workUnit.FoldingID = "harlam357";
             workUnit.Team = 32;
-            workUnit.CoreVersion = 2.27f;
+            workUnit.CoreVersion = new Version(2, 27);
             workUnit.UnitResult = WorkUnitResult.FinishedUnit;
 
             // These values can be either Utc or Unspecified. Setting SQLite's DateTimeKind

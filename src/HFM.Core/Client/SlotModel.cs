@@ -158,9 +158,9 @@ namespace HFM.Core.Client
         {
             get
             {
-                if (ShowVersions && Math.Abs(WorkUnitModel.WorkUnit.CoreVersion) > Single.Epsilon)
+                if (ShowVersions && WorkUnitModel.WorkUnit.CoreVersion != null)
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1:0.##})", WorkUnitModel.CurrentProtein.Core, WorkUnitModel.WorkUnit.CoreVersion);
+                    return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.CurrentProtein.Core, WorkUnitModel.WorkUnit.CoreVersion);
                 }
                 return WorkUnitModel.CurrentProtein.Core;
             }

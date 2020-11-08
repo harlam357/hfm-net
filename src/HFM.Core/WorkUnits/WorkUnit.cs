@@ -72,7 +72,7 @@ namespace HFM.Core.WorkUnits
         /// <summary>
         /// Core Version Number
         /// </summary>
-        public float CoreVersion { get; set; }
+        public Version CoreVersion { get; set; }
 
         /// <summary>
         /// Project ID Number

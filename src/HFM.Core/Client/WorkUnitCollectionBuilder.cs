@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 using HFM.Client.ObjectModel;
@@ -165,24 +164,7 @@ namespace HFM.Core.Client
             workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
             workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
 
-        private static float ParseCoreVersion(string coreVer)
-        {
-            if (coreVer is null) return 0.0f;
-
-            if (Single.TryParse(coreVer, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
-            {
-                return value;
-            }
-            // Try to parse Core Versions in the 0.#.## format
-            if (coreVer.StartsWith("0."))
-            {
-                if (Single.TryParse(coreVer.Substring(2), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-                {
-                    return value;
-                }
-            }
-            return 0.0f;
-        }
+        private static Version ParseCoreVersion(string value) => value is null ? null : Version.TryParse(value, out var version) ? version : null;
 
         private static int? ToNullableInt32(string value) => Int32.TryParse(value, out var result) ? (int?)result : null;
     }

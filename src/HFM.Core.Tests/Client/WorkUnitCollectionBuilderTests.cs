@@ -43,7 +43,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), workUnit.Timeout);
             Assert.AreEqual(new TimeSpan(3, 25, 32), workUnit.UnitStartTimeStamp);
             Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(2.27f, workUnit.CoreVersion);
+            Assert.AreEqual(new Version(2, 27), workUnit.CoreVersion);
             Assert.AreEqual(7610, workUnit.ProjectID);
             Assert.AreEqual(630, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
@@ -89,7 +89,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), workUnit.Timeout);
             Assert.AreEqual(TimeSpan.Zero, workUnit.UnitStartTimeStamp);
             Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(0, workUnit.CoreVersion);
+            Assert.AreEqual(null, workUnit.CoreVersion);
             Assert.AreEqual(7610, workUnit.ProjectID);
             Assert.AreEqual(630, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
@@ -128,7 +128,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
             Assert.AreEqual(new TimeSpan(4, 21, 52), workUnit.UnitStartTimeStamp);
             Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(1.31f, workUnit.CoreVersion);
+            Assert.AreEqual(new Version(1, 31), workUnit.CoreVersion);
             Assert.AreEqual(5772, workUnit.ProjectID);
             Assert.AreEqual(7, workUnit.ProjectRun);
             Assert.AreEqual(364, workUnit.ProjectClone);
@@ -171,7 +171,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
             Assert.AreEqual(new TimeSpan(3, 25, 36), workUnit.UnitStartTimeStamp);
             Assert.AreNotEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(1.31f, workUnit.CoreVersion);
+            Assert.AreEqual(new Version(1, 31), workUnit.CoreVersion);
             Assert.AreEqual(5767, workUnit.ProjectID);
             Assert.AreEqual(3, workUnit.ProjectRun);
             Assert.AreEqual(138, workUnit.ProjectClone);
@@ -214,7 +214,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), workUnit.Timeout);
             Assert.AreEqual(new TimeSpan(6, 34, 38), workUnit.UnitStartTimeStamp);
             Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(2.27f, workUnit.CoreVersion);
+            Assert.AreEqual(new Version(2, 27), workUnit.CoreVersion);
             Assert.AreEqual(7610, workUnit.ProjectID);
             Assert.AreEqual(192, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);

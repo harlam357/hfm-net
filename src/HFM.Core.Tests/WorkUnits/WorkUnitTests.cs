@@ -21,7 +21,7 @@ namespace HFM.Core.WorkUnits
             Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
             Assert.AreEqual(TimeSpan.Zero, workUnit.UnitStartTimeStamp);
             Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
-            Assert.AreEqual(0.0f, workUnit.CoreVersion);
+            Assert.AreEqual(null, workUnit.CoreVersion);
             Assert.AreEqual(0, workUnit.ProjectID);
             Assert.AreEqual(0, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
