@@ -31,36 +31,7 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_10\log.txt"))
-            using (var reader = new FahClientLogTextReader(textReader))
-            {
-                await fahClient.Messages.Log.ReadAsync(reader);
-            }
-
-            var extractor = new FahClientJsonMessageExtractor();
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
+            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
 
             fahClient.RefreshSlots();
             var slotModel = fahClient.Slots.First();
@@ -73,8 +44,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-            #region Check Data Aggregator
-
+            // Assert - AggregatorResult
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
             Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
@@ -84,32 +54,29 @@ namespace HFM.Core.Client
                 Assert.AreEqual(39, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
-            #endregion
+            // Assert - Work Unit
+            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
 
-            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
-
-            #region Check Unit Info Data Values
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-            Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.Assigned);
-            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.Timeout);
-            Assert.AreEqual(new TimeSpan(3, 25, 32), unitInfoData.UnitStartTimeStamp);
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.Finished);
-            Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
-            Assert.AreEqual(7610, unitInfoData.ProjectID);
-            Assert.AreEqual(630, unitInfoData.ProjectRun);
-            Assert.AreEqual(0, unitInfoData.ProjectClone);
-            Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-            Assert.AreEqual(10, unitInfoData.FramesObserved);
-            Assert.AreEqual(33, unitInfoData.CurrentFrame.ID);
-            Assert.AreEqual(660000, unitInfoData.CurrentFrame.RawFramesComplete);
-            Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
-            Assert.AreEqual(new TimeSpan(4, 46, 8), unitInfoData.CurrentFrame.TimeStamp);
-            Assert.AreEqual(new TimeSpan(0, 8, 31), unitInfoData.CurrentFrame.Duration);
-            Assert.AreEqual("A4", unitInfoData.CoreID);
-            #endregion
+            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", workUnit.FoldingID);
+            Assert.AreEqual(32, workUnit.Team);
+            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), workUnit.Assigned);
+            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), workUnit.Timeout);
+            Assert.AreEqual(new TimeSpan(3, 25, 32), workUnit.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(2.27f, workUnit.CoreVersion);
+            Assert.AreEqual(7610, workUnit.ProjectID);
+            Assert.AreEqual(630, workUnit.ProjectRun);
+            Assert.AreEqual(0, workUnit.ProjectClone);
+            Assert.AreEqual(59, workUnit.ProjectGen);
+            Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
+            Assert.AreEqual(10, workUnit.FramesObserved);
+            Assert.AreEqual(33, workUnit.CurrentFrame.ID);
+            Assert.AreEqual(660000, workUnit.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(2000000, workUnit.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(4, 46, 8), workUnit.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 8, 31), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual("A4", workUnit.CoreID);
         }
 
         [Test]
@@ -119,37 +86,15 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
+            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
+            fahClient.Messages.Log.Clear();
+
             string filteredLogText = String.Join(Environment.NewLine, File.ReadLines(@"..\..\..\..\TestFiles\Client_v7_10\log.txt").Where(x => x.Length != 0).Take(82));
             using (var textReader = new StringReader(filteredLogText))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await fahClient.Messages.Log.ReadAsync(reader);
             }
-
-            var extractor = new FahClientJsonMessageExtractor();
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
 
             fahClient.RefreshSlots();
             var slotModel = fahClient.Slots.First();
@@ -162,8 +107,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-            #region Check Data Aggregator
-
+            // Assert - AggregatorResult
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
             Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
@@ -173,28 +117,25 @@ namespace HFM.Core.Client
                 Assert.AreEqual(82, LogLineEnumerable.Create(fahClient.Messages.Log.ClientRuns.Last()).Count());
             }
 
-            #endregion
+            // Assert - Work Unit
+            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
 
-            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
-
-            #region Check Unit Info Data Values
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-            Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), unitInfoData.Assigned);
-            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), unitInfoData.Timeout);
-            Assert.AreEqual(TimeSpan.Zero, unitInfoData.UnitStartTimeStamp);
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.Finished);
-            Assert.AreEqual(0, unitInfoData.CoreVersion);
-            Assert.AreEqual(7610, unitInfoData.ProjectID);
-            Assert.AreEqual(630, unitInfoData.ProjectRun);
-            Assert.AreEqual(0, unitInfoData.ProjectClone);
-            Assert.AreEqual(59, unitInfoData.ProjectGen);
-            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-            Assert.AreEqual(0, unitInfoData.FramesObserved);
-            Assert.IsNull(unitInfoData.CurrentFrame);
-            Assert.AreEqual("A4", unitInfoData.CoreID);
-            #endregion
+            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", workUnit.FoldingID);
+            Assert.AreEqual(32, workUnit.Team);
+            Assert.AreEqual(new DateTime(2012, 1, 10, 23, 20, 27), workUnit.Assigned);
+            Assert.AreEqual(new DateTime(2012, 1, 22, 16, 22, 51), workUnit.Timeout);
+            Assert.AreEqual(TimeSpan.Zero, workUnit.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(0, workUnit.CoreVersion);
+            Assert.AreEqual(7610, workUnit.ProjectID);
+            Assert.AreEqual(630, workUnit.ProjectRun);
+            Assert.AreEqual(0, workUnit.ProjectClone);
+            Assert.AreEqual(59, workUnit.ProjectGen);
+            Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
+            Assert.AreEqual(0, workUnit.FramesObserved);
+            Assert.IsNull(workUnit.CurrentFrame);
+            Assert.AreEqual("A4", workUnit.CoreID);
         }
 
         [Test]
@@ -204,36 +145,7 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_10" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_10\log.txt"))
-            using (var reader = new FahClientLogTextReader(textReader))
-            {
-                await fahClient.Messages.Log.ReadAsync(reader);
-            }
-
-            var extractor = new FahClientJsonMessageExtractor();
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\units.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\info.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\options.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slots.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options1.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_10\slot-options2.txt"))));
+            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
 
             fahClient.RefreshSlots();
             var slotModel = fahClient.Slots.Last();
@@ -246,8 +158,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-            #region Check Data Aggregator
-
+            // Assert - AggregatorResult
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(2, result.CurrentUnitIndex);
             Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
@@ -257,32 +168,29 @@ namespace HFM.Core.Client
                 Assert.AreEqual(98, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
-            #endregion
+            // Assert - Work Unit
+            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
 
-            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
-
-            #region Check Unit Info Data Values
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-            Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), unitInfoData.Assigned);
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.Timeout);
-            Assert.AreEqual(new TimeSpan(4, 21, 52), unitInfoData.UnitStartTimeStamp);
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.Finished);
-            Assert.AreEqual(1.31f, unitInfoData.CoreVersion);
-            Assert.AreEqual(5772, unitInfoData.ProjectID);
-            Assert.AreEqual(7, unitInfoData.ProjectRun);
-            Assert.AreEqual(364, unitInfoData.ProjectClone);
-            Assert.AreEqual(252, unitInfoData.ProjectGen);
-            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-            Assert.AreEqual(53, unitInfoData.FramesObserved);
-            Assert.AreEqual(53, unitInfoData.CurrentFrame.ID);
-            Assert.AreEqual(53, unitInfoData.CurrentFrame.RawFramesComplete);
-            Assert.AreEqual(100, unitInfoData.CurrentFrame.RawFramesTotal);
-            Assert.AreEqual(new TimeSpan(4, 51, 53), unitInfoData.CurrentFrame.TimeStamp);
-            Assert.AreEqual(new TimeSpan(0, 0, 42), unitInfoData.CurrentFrame.Duration);
-            Assert.AreEqual("11", unitInfoData.CoreID);
-            #endregion
+            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", workUnit.FoldingID);
+            Assert.AreEqual(32, workUnit.Team);
+            Assert.AreEqual(new DateTime(2012, 1, 11, 4, 21, 14), workUnit.Assigned);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
+            Assert.AreEqual(new TimeSpan(4, 21, 52), workUnit.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(1.31f, workUnit.CoreVersion);
+            Assert.AreEqual(5772, workUnit.ProjectID);
+            Assert.AreEqual(7, workUnit.ProjectRun);
+            Assert.AreEqual(364, workUnit.ProjectClone);
+            Assert.AreEqual(252, workUnit.ProjectGen);
+            Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
+            Assert.AreEqual(53, workUnit.FramesObserved);
+            Assert.AreEqual(53, workUnit.CurrentFrame.ID);
+            Assert.AreEqual(53, workUnit.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(100, workUnit.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(4, 51, 53), workUnit.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 0, 42), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual("11", workUnit.CoreID);
         }
 
         [Test]
@@ -292,32 +200,7 @@ namespace HFM.Core.Client
             var settings = new ClientSettings { Name = "Client_v7_11" };
             var fahClient = CreateClient(settings);
 
-            using (var textReader = new StreamReader(@"..\..\..\..\TestFiles\Client_v7_11\log.txt"))
-            using (var reader = new FahClientLogTextReader(textReader))
-            {
-                await fahClient.Messages.Log.ReadAsync(reader);
-            }
-
-            var extractor = new FahClientJsonMessageExtractor();
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\units.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\info.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\options.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\slots.txt"))));
-
-            await fahClient.Messages.UpdateMessageAsync(
-                extractor.Extract(new StringBuilder(
-                    File.ReadAllText(@"..\..\..\..\TestFiles\Client_v7_11\slot-options1.txt"))));
+            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_11");
 
             fahClient.RefreshSlots();
             var slotModel = fahClient.Slots.First();
@@ -330,8 +213,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
 
-            #region Check Data Aggregator
-
+            // Assert - AggregatorResult
             Assert.IsNotNull(result.WorkUnitQueue);
             Assert.AreEqual(1, result.CurrentUnitIndex);
             Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), fahClient.Messages.GetClientRun().Data.StartTime);
@@ -341,34 +223,52 @@ namespace HFM.Core.Client
                 Assert.AreEqual(32, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
             }
 
-            #endregion
+            // Assert - Work Unit
+            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
 
-            var unitInfoData = result.WorkUnits[result.CurrentUnitIndex];
-
-            #region Check Unit Info Data Values
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.UnitRetrievalTime);
-            Assert.AreEqual("harlam357", unitInfoData.FoldingID);
-            Assert.AreEqual(32, unitInfoData.Team);
-            Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), unitInfoData.Assigned);
-            Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), unitInfoData.Timeout);
-            Assert.AreEqual(new TimeSpan(6, 34, 38), unitInfoData.UnitStartTimeStamp);
-            Assert.AreEqual(DateTime.MinValue, unitInfoData.Finished);
-            Assert.AreEqual(2.27f, unitInfoData.CoreVersion);
-            Assert.AreEqual(7610, unitInfoData.ProjectID);
-            Assert.AreEqual(192, unitInfoData.ProjectRun);
-            Assert.AreEqual(0, unitInfoData.ProjectClone);
-            Assert.AreEqual(58, unitInfoData.ProjectGen);
-            Assert.AreEqual(WorkUnitResult.Unknown, unitInfoData.UnitResult);
-            Assert.AreEqual(3, unitInfoData.FramesObserved);
-            Assert.AreEqual(95, unitInfoData.CurrentFrame.ID);
-            Assert.AreEqual(1900000, unitInfoData.CurrentFrame.RawFramesComplete);
-            Assert.AreEqual(2000000, unitInfoData.CurrentFrame.RawFramesTotal);
-            Assert.AreEqual(new TimeSpan(6, 46, 16), unitInfoData.CurrentFrame.TimeStamp);
-            Assert.AreEqual(new TimeSpan(0, 4, 50), unitInfoData.CurrentFrame.Duration);
-            Assert.AreEqual("A4", unitInfoData.CoreID);
-            #endregion
+            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", workUnit.FoldingID);
+            Assert.AreEqual(32, workUnit.Team);
+            Assert.AreEqual(new DateTime(2012, 2, 17, 21, 48, 22), workUnit.Assigned);
+            Assert.AreEqual(new DateTime(2012, 2, 29, 14, 50, 46), workUnit.Timeout);
+            Assert.AreEqual(new TimeSpan(6, 34, 38), workUnit.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(2.27f, workUnit.CoreVersion);
+            Assert.AreEqual(7610, workUnit.ProjectID);
+            Assert.AreEqual(192, workUnit.ProjectRun);
+            Assert.AreEqual(0, workUnit.ProjectClone);
+            Assert.AreEqual(58, workUnit.ProjectGen);
+            Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
+            Assert.AreEqual(3, workUnit.FramesObserved);
+            Assert.AreEqual(95, workUnit.CurrentFrame.ID);
+            Assert.AreEqual(1900000, workUnit.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(2000000, workUnit.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(6, 46, 16), workUnit.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 4, 50), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual("A4", workUnit.CoreID);
         }
 
         // ReSharper restore InconsistentNaming
+
+        private static async Task LoadMessagesFrom(FahClient fahClient, string path)
+        {
+            var extractor = new FahClientJsonMessageExtractor();
+
+            foreach (var file in Directory.EnumerateFiles(path))
+            {
+                if (Path.GetFileName(file) == "log.txt")
+                {
+                    using (var textReader = new StreamReader(file))
+                    using (var reader = new FahClientLogTextReader(textReader))
+                    {
+                        await fahClient.Messages.Log.ReadAsync(reader);
+                    }
+                }
+                else
+                {
+                    await fahClient.Messages.UpdateMessageAsync(extractor.Extract(new StringBuilder(File.ReadAllText(file))));
+                }
+            }
+        }
     }
 }
