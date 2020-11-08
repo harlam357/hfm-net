@@ -17,22 +17,11 @@ namespace HFM.Core.Client
     {
         // ReSharper disable InconsistentNaming
 
-        private static FahClient CreateClient(ClientSettings settings)
-        {
-            var client = new FahClient(null, null, null, null, null);
-            client.Settings = settings;
-            return client;
-        }
-
         [Test]
         public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_10" };
-            var fahClient = CreateClient(settings);
-
-            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
-
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
@@ -81,12 +70,9 @@ namespace HFM.Core.Client
         public async Task FahClientMessageAggregator_Client_v7_10_SlotID_0_UnitDataOnly()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_10" };
-            var fahClient = CreateClient(settings);
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
 
-            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
             fahClient.Messages.Log.Clear();
-
             string filteredLogText = String.Join(Environment.NewLine, File.ReadLines(@"..\..\..\..\TestFiles\Client_v7_10\log.txt").Where(x => x.Length != 0).Take(82));
             using (var textReader = new StringReader(filteredLogText))
             using (var reader = new FahClientLogTextReader(textReader))
@@ -138,11 +124,7 @@ namespace HFM.Core.Client
         public async Task FahClientMessageAggregator_Client_v7_10_SlotID_1()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_10" };
-            var fahClient = CreateClient(settings);
-
-            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_10");
-
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
@@ -191,11 +173,7 @@ namespace HFM.Core.Client
         public async Task FahClientMessageAggregator_Client_v7_11_SlotID_0()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_11" };
-            var fahClient = CreateClient(settings);
-
-            await LoadMessagesFrom(fahClient, @"..\..\..\..\TestFiles\Client_v7_11");
-
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_11", @"..\..\..\..\TestFiles\Client_v7_11");
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
@@ -241,6 +219,20 @@ namespace HFM.Core.Client
         }
 
         // ReSharper restore InconsistentNaming
+
+        private static async Task<FahClient> CreateClientWithMessagesLoadedFrom(string clientName, string path)
+        {
+            var fahClient = CreateClient(clientName);
+            await LoadMessagesFrom(fahClient, path);
+            return fahClient;
+        }
+
+        private static FahClient CreateClient(string clientName)
+        {
+            var client = new FahClient(null, null, null, null, null);
+            client.Settings = new ClientSettings { Name = clientName };
+            return client;
+        }
 
         private static async Task LoadMessagesFrom(FahClient fahClient, string path)
         {
