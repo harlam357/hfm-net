@@ -316,14 +316,14 @@ namespace HFM.Core.Client
 
                     var aggregator = new FahClientMessageAggregator(this);
                     var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
-                    var result = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
+                    var workUnits = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
                     PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);
 
                     slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
-                    slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, result));
+                    slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
 
-                    var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
-                    foreach (var workUnit in result.WorkUnits)
+                    var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(workUnits.Count);
+                    foreach (var workUnit in workUnits)
                     {
                         newWorkUnitModels[workUnit.ID] = BuildWorkUnitModel(slotModel, workUnit);
                     }
@@ -332,9 +332,9 @@ namespace HFM.Core.Client
                     UpdateWorkUnitBenchmarkAndRepository(slotModel.WorkUnitModel, newWorkUnitModels.Values);
 
                     // Update the WorkUnitModel if we have a current unit index
-                    if (result.WorkUnits.CurrentID != WorkUnitCollection.NoID && newWorkUnitModels.ContainsKey(result.WorkUnits.CurrentID))
+                    if (workUnits.CurrentID != WorkUnitCollection.NoID && newWorkUnitModels.ContainsKey(workUnits.CurrentID))
                     {
-                        slotModel.WorkUnitModel = newWorkUnitModels[result.WorkUnits.CurrentID];
+                        slotModel.WorkUnitModel = newWorkUnitModels[workUnits.CurrentID];
                     }
 
                     SetSlotStatus(slotModel);
@@ -361,11 +361,11 @@ namespace HFM.Core.Client
                 ? slotModel.SlotProcessor
                 : info.System.CPU;
 
-        private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, ClientMessageAggregatorResult result)
+        private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
         {
-            if (result.WorkUnits.Current?.LogLines != null)
+            if (workUnits.Current?.LogLines != null)
             {
-                return result.WorkUnits.Current.LogLines;
+                return workUnits.Current.LogLines;
             }
 
             var slotRun = Messages.GetSlotRun(slotID);
