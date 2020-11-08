@@ -127,6 +127,27 @@ namespace HFM.Core.Client
             return workUnit;
         }
 
+        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit unit, Options options)
+        {
+            Debug.Assert(workUnit != null);
+            Debug.Assert(unit != null);
+            Debug.Assert(options != null);
+
+            workUnit.ID = unit.ID.GetValueOrDefault();
+            workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
+            workUnit.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
+
+            workUnit.ProjectID = unit.Project.GetValueOrDefault();
+            workUnit.ProjectRun = unit.Run.GetValueOrDefault();
+            workUnit.ProjectClone = unit.Clone.GetValueOrDefault();
+            workUnit.ProjectGen = unit.Gen.GetValueOrDefault();
+
+            workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
+            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault();
+
+            workUnit.CoreID = unit.Core.Replace("0x", String.Empty).ToUpperInvariant();
+        }
+
         private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)
         {
             Debug.Assert(workUnit != null);
@@ -150,17 +171,12 @@ namespace HFM.Core.Client
             }
         }
 
-        private static bool IsTerminating(WorkUnit workUnit)
-        {
-            return workUnit.UnitResult.IsTerminating() ||
-                   IsUnknownEnumTerminating(workUnit);
-        }
+        private static bool IsTerminating(WorkUnit workUnit) =>
+            workUnit.UnitResult.IsTerminating() || IsUnknownEnumTerminating(workUnit);
 
-        private static bool IsUnknownEnumTerminating(WorkUnit workUnit)
-        {
-            return workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
-                   workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
-        }
+        private static bool IsUnknownEnumTerminating(WorkUnit workUnit) =>
+            workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
+            workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
 
         private static float ParseCoreVersion(string coreVer)
         {
@@ -181,35 +197,6 @@ namespace HFM.Core.Client
             return 0.0f;
         }
 
-        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit unit, Options options)
-        {
-            Debug.Assert(workUnit != null);
-            Debug.Assert(unit != null);
-            Debug.Assert(options != null);
-
-            workUnit.ID = unit.ID.GetValueOrDefault();
-
-            workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
-
-            workUnit.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
-
-            /* Project (R/C/G) */
-            workUnit.ProjectID = unit.Project.GetValueOrDefault();
-            workUnit.ProjectRun = unit.Run.GetValueOrDefault();
-            workUnit.ProjectClone = unit.Clone.GetValueOrDefault();
-            workUnit.ProjectGen = unit.Gen.GetValueOrDefault();
-
-            /* FoldingID and Team from Queue Entry */
-            workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
-            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault();
-
-            /* Core ID */
-            workUnit.CoreID = unit.Core.Replace("0x", String.Empty).ToUpperInvariant();
-        }
-
-        private static int? ToNullableInt32(string value)
-        {
-            return Int32.TryParse(value, out var result) ? (int?)result : null;
-        }
+        private static int? ToNullableInt32(string value) => Int32.TryParse(value, out var result) ? (int?)result : null;
     }
 }
