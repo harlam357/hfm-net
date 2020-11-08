@@ -20,13 +20,13 @@ namespace HFM.Core.Client
             FahClient = fahClient;
         }
 
-        public ClientMessageAggregatorResult AggregateData(int slotID, WorkUnit currentWorkUnit, string slotProcessor)
+        public ClientMessageAggregatorResult AggregateData(int slotID, WorkUnit currentWorkUnit)
         {
             var result = new ClientMessageAggregatorResult();
 
             SlotRun slotRun = FahClient.Messages.GetSlotRun(slotID);
 
-            if (FahClient.Logger.IsDebugEnabled)
+            if (FahClient.Logger.IsDebugEnabled && slotRun != null)
             {
                 foreach (var s in LogLineEnumerable.Create(slotRun).Where(x => x.Data is LogLineDataParserError))
                 {
@@ -36,58 +36,10 @@ namespace HFM.Core.Client
 
             var unitCollection = FahClient.Messages.UnitCollection;
             var options = FahClient.Messages.Options;
-            var info = FahClient.Messages.Info;
 
             BuildWorkUnits(result, slotRun, unitCollection, options, currentWorkUnit, slotID);
-            result.WorkUnitQueue = BuildWorkUnitQueue(unitCollection, info, slotID, slotProcessor);
 
             return result;
-        }
-
-        private static WorkUnitQueueItemCollection BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, int slotID, string slotProcessor)
-        {
-            WorkUnitQueueItemCollection d = null;
-            foreach (var unit in unitCollection.Where(unit => unit.Slot == slotID))
-            {
-                if (d == null)
-                {
-                    d = new WorkUnitQueueItemCollection();
-                }
-
-                var wui = new WorkUnitQueueItem(unit.ID.GetValueOrDefault());
-                wui.ProjectID = unit.Project.GetValueOrDefault();
-                wui.ProjectRun = unit.Run.GetValueOrDefault();
-                wui.ProjectClone = unit.Clone.GetValueOrDefault();
-                wui.ProjectGen = unit.Gen.GetValueOrDefault();
-                wui.State = unit.State;
-                wui.WaitingOn = unit.WaitingOn;
-                wui.Attempts = unit.Attempts.GetValueOrDefault();
-                wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                wui.Assigned = unit.AssignedDateTime.GetValueOrDefault();
-                wui.WorkServer = unit.WorkServer;
-                wui.CPU = slotProcessor;
-                wui.OperatingSystem = info.System.OS;
-                // Memory Value is in Gigabytes - turn into Megabytes and truncate
-                wui.Memory = (int)(info.System.MemoryValue.GetValueOrDefault() * 1024);
-                wui.CPUThreads = info.System.CPUs.GetValueOrDefault();
-                wui.SlotID = slotID;
-
-                d.Add(wui);
-                if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
-                {
-                    d.CurrentID = wui.ID;
-                }
-            }
-
-            if (d != null)
-            {
-                if (d.CurrentID == WorkUnitQueueItemCollection.NoID)
-                {
-                    d.CurrentID = d.DefaultID;
-                }
-            }
-
-            return d;
         }
 
         private void BuildWorkUnits(ClientMessageAggregatorResult result,

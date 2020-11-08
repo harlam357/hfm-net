@@ -25,12 +25,9 @@ namespace HFM.Core.Client
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
+            var result = aggregator.AggregateData(0, new WorkUnit());
 
             // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
-
             Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -80,12 +77,9 @@ namespace HFM.Core.Client
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
+            var result = aggregator.AggregateData(0, new WorkUnit());
 
             // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
-
             Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -122,12 +116,9 @@ namespace HFM.Core.Client
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData(1, new WorkUnit(), "foo");
+            var result = aggregator.AggregateData(1, new WorkUnit());
 
             // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(2, result.WorkUnitQueue.CurrentID);
-
             Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(2, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
@@ -168,12 +159,9 @@ namespace HFM.Core.Client
             var aggregator = new FahClientMessageAggregator(fahClient);
 
             // Act
-            var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
+            var result = aggregator.AggregateData(0, new WorkUnit());
 
             // Assert
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
-
             Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);

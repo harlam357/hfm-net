@@ -307,6 +307,8 @@ namespace HFM.Core.Client
             _slotsLock.EnterReadLock();
             try
             {
+                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info?.System);
+
                 foreach (var slotModel in _slots)
                 {
                     // Re-Init Slot Level Members Before Processing
@@ -314,10 +316,10 @@ namespace HFM.Core.Client
 
                     var aggregator = new FahClientMessageAggregator(this);
                     var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
-                    var result = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit, slotProcessor);
+                    var result = aggregator.AggregateData(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
                     PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);
 
-                    slotModel.WorkUnitQueue = result.WorkUnitQueue;
+                    slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
                     slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, result));
 
                     var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
