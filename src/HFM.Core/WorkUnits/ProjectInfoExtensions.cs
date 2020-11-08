@@ -5,24 +5,6 @@ namespace HFM.Core.WorkUnits
 {
     public static class ProjectInfoExtensions
     {
-        internal static ProjectInfo ToProjectInfo(this HFM.Client.ObjectModel.Unit value) =>
-            new ProjectInfo
-            {
-                ProjectID = value.Project.GetValueOrDefault(),
-                ProjectRun = value.Run.GetValueOrDefault(),
-                ProjectClone = value.Clone.GetValueOrDefault(),
-                ProjectGen = value.Gen.GetValueOrDefault()
-            };
-
-        internal static ProjectInfo ToProjectInfo(this Log.UnitRunData value) =>
-            new ProjectInfo
-            {
-                ProjectID = value.ProjectID,
-                ProjectRun = value.ProjectRun,
-                ProjectClone = value.ProjectClone,
-                ProjectGen = value.ProjectGen
-            };
-
         /// <summary>
         /// Is the project information populated?
         /// </summary>

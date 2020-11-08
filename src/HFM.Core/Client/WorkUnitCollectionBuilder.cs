@@ -74,15 +74,13 @@ namespace HFM.Core.Client
             return workUnits;
         }
 
-        private SlotRun GetSlotRun(int slotID)
-        {
-            return _clientRun != null && _clientRun.SlotRuns.TryGetValue(slotID, out var slotRun) ? slotRun : null;
-        }
+        private SlotRun GetSlotRun(int slotID) =>
+            _clientRun != null && _clientRun.SlotRuns.TryGetValue(slotID, out var slotRun)
+                ? slotRun
+                : null;
 
-        private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
-        {
-            return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
-        }
+        private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo) =>
+            slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(ToProjectInfo(x.Data)));
 
         private WorkUnit BuildWorkUnit(int slotID, Unit unit)
         {
@@ -91,7 +89,7 @@ namespace HFM.Core.Client
             var workUnit = new WorkUnit { UnitRetrievalTime = _unitRetrievalTime };
             PopulateWorkUnitFromClientData(workUnit, unit, _options);
 
-            var projectInfo = unit.ToProjectInfo();
+            var projectInfo = ToProjectInfo(unit);
             var unitRun = GetUnitRun(GetSlotRun(slotID), unit.ID.GetValueOrDefault(), projectInfo);
             if (unitRun == null)
             {
@@ -173,8 +171,34 @@ namespace HFM.Core.Client
             workUnit.UnitResult == WorkUnitResult.UnknownEnum &&
             workUnit.LogLines.Any(x => x.LineType == LogLineType.WorkUnitTooManyErrors);
 
-        private static Version ParseCoreVersion(string value) => value is null ? null : Version.TryParse(value, out var version) ? version : null;
+        private static Version ParseCoreVersion(string value) =>
+            value is null
+                ? null
+                : Version.TryParse(value, out var version)
+                    ? version
+                    : null;
 
-        private static int? ToNullableInt32(string value) => Int32.TryParse(value, out var result) ? (int?)result : null;
+        private static int? ToNullableInt32(string value) =>
+            Int32.TryParse(value, out var result)
+                ? (int?)result
+                : null;
+
+        private static ProjectInfo ToProjectInfo(Unit unit) =>
+            new ProjectInfo
+            {
+                ProjectID = unit.Project.GetValueOrDefault(),
+                ProjectRun = unit.Run.GetValueOrDefault(),
+                ProjectClone = unit.Clone.GetValueOrDefault(),
+                ProjectGen = unit.Gen.GetValueOrDefault()
+            };
+
+        private static ProjectInfo ToProjectInfo(UnitRunData data) =>
+            new ProjectInfo
+            {
+                ProjectID = data.ProjectID,
+                ProjectRun = data.ProjectRun,
+                ProjectClone = data.ProjectClone,
+                ProjectGen = data.ProjectGen
+            };
     }
 }
