@@ -308,16 +308,13 @@ namespace HFM.Core.Client
             try
             {
                 var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun());
-                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info.System);
+                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info?.System);
 
                 foreach (var slotModel in _slots)
                 {
-                    // Re-Init Slot Level Members Before Processing
-                    slotModel.Initialize();
-
-                    var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
+                    var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
                     var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
-                    PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);
+                    PopulateRunLevelData(Messages.Info?.Client, slotModel, slotProcessor);
 
                     slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
                     slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
@@ -356,10 +353,10 @@ namespace HFM.Core.Client
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
-        private static string GetSlotProcessor(Info info, SlotModel slotModel) =>
+        private static string GetSlotProcessor(SystemInfo systemInfo, SlotModel slotModel) =>
             slotModel.SlotType == SlotType.GPU
                 ? slotModel.SlotProcessor
-                : info.System.CPU;
+                : systemInfo.CPU;
 
         private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
         {
@@ -406,15 +403,11 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(Info info, SlotModel slotModel, string slotProcessor)
+        private void PopulateRunLevelData(ClientInfo clientInfo, SlotModel slotModel, string slotProcessor)
         {
             Debug.Assert(slotModel != null);
 
-            if (info != null)
-            {
-                slotModel.ClientVersion = info.Client.Version;
-            }
-
+            slotModel.ClientVersion = clientInfo?.Version;
             slotModel.SlotProcessor = slotProcessor;
 
             var clientRun = Messages.GetClientRun();

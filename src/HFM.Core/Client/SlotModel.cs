@@ -49,33 +49,7 @@ namespace HFM.Core.Client
         {
             Client = client ?? throw new ArgumentNullException(nameof(client));
             WorkUnitModel = new WorkUnitModel(this);
-
-            Initialize();
         }
-
-        private const int DefaultMachineID = 0;
-
-        public void Initialize()
-        {
-            MachineID = DefaultMachineID;
-            // Status = 
-            ClientVersion = String.Empty;
-        }
-
-        #region Display Meta Data
-
-        private int _machineId;
-        /// <summary>
-        /// Machine ID associated with this client
-        /// </summary>
-        public int MachineID
-        {
-            // if SlotId is populated by a v7 client then also use it for the MachineId value
-            get => SlotID > -1 ? SlotID : _machineId;
-            set => _machineId = value;
-        }
-
-        #endregion
 
         #region Grid Properties
 
