@@ -16,24 +16,25 @@ namespace HFM.Core.Client
 
         private readonly UnitCollection _units;
         private readonly Options _options;
-        private readonly SlotRun _slotRun;
+        private readonly ClientRun _clientRun;
 
-        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, SlotRun slotRun)
+        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, ClientRun clientRun)
         {
             Logger = logger ?? NullLogger.Instance;
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _units = units ?? throw new ArgumentNullException(nameof(units));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _slotRun = slotRun;
+            _clientRun = clientRun;
         }
 
         public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
         {
             if (previousWorkUnit == null) throw new ArgumentNullException(nameof(previousWorkUnit));
 
-            if (Logger.IsDebugEnabled && _slotRun != null)
+            var slotRun = GetSlotRun(slotID);
+            if (Logger.IsDebugEnabled && slotRun != null)
             {
-                foreach (var s in LogLineEnumerable.Create(_slotRun).Where(x => x.Data is LogLineDataParserError))
+                foreach (var s in LogLineEnumerable.Create(slotRun).Where(x => x.Data is LogLineDataParserError))
                 {
                     Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"Failed to parse log line: {s}"));
                 }
@@ -56,7 +57,7 @@ namespace HFM.Core.Client
             // if the previous unit has already left the UnitCollection then find the log section and update here
             if (!workUnits.HasWorkUnit(previousWorkUnit))
             {
-                var unitRun = GetUnitRun(_slotRun, previousWorkUnit.ID, previousWorkUnit);
+                var unitRun = GetUnitRun(GetSlotRun(slotID), previousWorkUnit.ID, previousWorkUnit);
                 if (unitRun != null)
                 {
                     // create a copy of the previous WorkUnit so we're not mutating a given instance
@@ -68,6 +69,11 @@ namespace HFM.Core.Client
             }
 
             return workUnits;
+        }
+
+        private SlotRun GetSlotRun(int slotID)
+        {
+            return _clientRun != null && _clientRun.SlotRuns.TryGetValue(slotID, out var slotRun) ? slotRun : null;
         }
 
         private static UnitRun GetUnitRun(SlotRun slotRun, int queueIndex, IProjectInfo projectInfo)
@@ -83,7 +89,7 @@ namespace HFM.Core.Client
             PopulateWorkUnitFromClientData(workUnit, unit, _options);
 
             var projectInfo = unit.ToProjectInfo();
-            var unitRun = GetUnitRun(_slotRun, unit.ID.GetValueOrDefault(), projectInfo);
+            var unitRun = GetUnitRun(GetSlotRun(slotID), unit.ID.GetValueOrDefault(), projectInfo);
             if (unitRun == null)
             {
                 string message = $"Could not find log section for Slot {slotID} {projectInfo}.";

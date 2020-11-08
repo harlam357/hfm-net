@@ -307,6 +307,7 @@ namespace HFM.Core.Client
             _slotsLock.EnterReadLock();
             try
             {
+                var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun());
                 var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info.System);
 
                 foreach (var slotModel in _slots)
@@ -314,7 +315,6 @@ namespace HFM.Core.Client
                     // Re-Init Slot Level Members Before Processing
                     slotModel.Initialize();
 
-                    var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetSlotRun(slotModel.SlotID));
                     var slotProcessor = GetSlotProcessor(Messages.Info, slotModel);
                     var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
                     PopulateRunLevelData(Messages.Info, slotModel, slotProcessor);

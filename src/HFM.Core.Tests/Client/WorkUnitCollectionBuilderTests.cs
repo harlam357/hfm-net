@@ -21,7 +21,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -67,7 +67,7 @@ namespace HFM.Core.Client
             // clear the log data so this test operates only on data provided by FahClient
             fahClient.Messages.Log.Clear();
 
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -106,7 +106,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(1));
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit());
@@ -149,7 +149,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(1));
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
@@ -192,7 +192,7 @@ namespace HFM.Core.Client
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_11", @"..\..\..\..\TestFiles\Client_v7_11");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun());
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
