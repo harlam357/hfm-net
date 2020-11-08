@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
@@ -34,7 +33,7 @@ namespace HFM.Core.Client
             workUnit.ProjectClone = 2;
             workUnit.ProjectGen = 3;
             workUnit.Finished = new DateTime(2010, 1, 1);
-            workUnit.QueueIndex = 0;
+            workUnit.ID = 0;
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             var currentWorkUnit = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
             var slotIdentifier = currentWorkUnit.SlotModel.SlotIdentifier;

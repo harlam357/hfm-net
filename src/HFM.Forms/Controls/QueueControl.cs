@@ -34,7 +34,7 @@ namespace HFM.Forms.Controls
 
         public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
 
-        private WorkUnitQueue _workUnitQueue;
+        private WorkUnitQueueItemCollection _workUnitQueue;
         private IProteinService _proteinService;
 
         private SlotType _slotType = SlotType.Unknown;
@@ -56,7 +56,7 @@ namespace HFM.Forms.Controls
             QueueIndexChanged?.Invoke(this, e);
         }
 
-        public void SetWorkUnitQueue(WorkUnitQueue workUnitQueue, SlotType slotType)
+        public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
         {
             if (workUnitQueue != null)
             {
@@ -70,7 +70,7 @@ namespace HFM.Forms.Controls
                 cboQueueIndex.SelectedIndex = -1;
                 cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
-                cboQueueIndex.SelectedValue = _workUnitQueue.CurrentQueueID;
+                cboQueueIndex.SelectedValue = _workUnitQueue.CurrentID;
             }
             else
             {
@@ -80,7 +80,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private static ICollection<ListItem> CreateEntryNameCollection(WorkUnitQueue workUnitQueue)
+        private static ICollection<ListItem> CreateEntryNameCollection(WorkUnitQueueItemCollection workUnitQueue)
         {
             return workUnitQueue
                 .Select(x => new ListItem(FormatDisplay(x), x.ID))

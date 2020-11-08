@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -219,7 +218,7 @@ namespace HFM.Core.Client
 
         public ICollection<LogLine> CurrentLogLines { get; } = new List<LogLine>();
 
-        public WorkUnitQueue WorkUnitQueue { get; set; }
+        public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
 
         #region Grid Data Warnings
 

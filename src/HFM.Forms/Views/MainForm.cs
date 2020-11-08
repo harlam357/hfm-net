@@ -257,7 +257,7 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueue workUnitQueue, SlotType slotType, IList<LogLine> logLines)
+        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, SlotType slotType, IList<LogLine> logLines)
         {
             queueControl.SetWorkUnitQueue(workUnitQueue, slotType);
             txtLogFile.SetLogLines(selectedSlot, logLines);

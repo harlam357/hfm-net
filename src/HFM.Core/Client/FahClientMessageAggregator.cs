@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -24,7 +23,6 @@ namespace HFM.Core.Client
         public ClientMessageAggregatorResult AggregateData(int slotID, WorkUnit currentWorkUnit, string slotProcessor)
         {
             var result = new ClientMessageAggregatorResult();
-            result.CurrentUnitIndex = -1;
 
             SlotRun slotRun = FahClient.Messages.GetSlotRun(slotID);
 
@@ -46,14 +44,14 @@ namespace HFM.Core.Client
             return result;
         }
 
-        private static WorkUnitQueue BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, int slotID, string slotProcessor)
+        private static WorkUnitQueueItemCollection BuildWorkUnitQueue(IEnumerable<Unit> unitCollection, Info info, int slotID, string slotProcessor)
         {
-            WorkUnitQueue d = null;
+            WorkUnitQueueItemCollection d = null;
             foreach (var unit in unitCollection.Where(unit => unit.Slot == slotID))
             {
                 if (d == null)
                 {
-                    d = new WorkUnitQueue();
+                    d = new WorkUnitQueueItemCollection();
                 }
 
                 var wui = new WorkUnitQueueItem(unit.ID.GetValueOrDefault());
@@ -77,15 +75,15 @@ namespace HFM.Core.Client
                 d.Add(wui);
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
-                    d.CurrentQueueID = wui.ID;
+                    d.CurrentID = wui.ID;
                 }
             }
 
             if (d != null)
             {
-                if (d.CurrentQueueID == WorkUnitQueue.NoQueueID)
+                if (d.CurrentID == WorkUnitQueueItemCollection.NoID)
                 {
-                    d.CurrentQueueID = d.DefaultQueueID;
+                    d.CurrentID = d.DefaultID;
                 }
             }
 
@@ -103,7 +101,7 @@ namespace HFM.Core.Client
             Debug.Assert(options != null);
             Debug.Assert(currentWorkUnit != null);
 
-            result.WorkUnits = new Dictionary<int, WorkUnit>();
+            result.WorkUnits = new WorkUnitCollection();
 
             bool foundCurrentUnitInfo = false;
 
@@ -127,22 +125,22 @@ namespace HFM.Core.Client
                 WorkUnit workUnit = BuildWorkUnit(unit, options, unitRun);
                 if (workUnit != null)
                 {
-                    result.WorkUnits.Add(workUnit.QueueIndex, workUnit);
+                    result.WorkUnits.Add(workUnit);
                     if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                     {
-                        result.CurrentUnitIndex = workUnit.QueueIndex;
+                        result.WorkUnits.CurrentID = workUnit.ID;
                     }
                 }
             }
 
             // if no RUNNING WU found
-            if (result.CurrentUnitIndex == -1)
+            if (result.WorkUnits.CurrentID == WorkUnitCollection.NoID)
             {
                 // look for a WU with READY state
                 var unit = unitCollection.FirstOrDefault(x => x.Slot == slotId && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase));
                 if (unit != null)
                 {
-                    result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
+                    result.WorkUnits.CurrentID = unit.ID.GetValueOrDefault();
                 }
             }
 
@@ -150,7 +148,7 @@ namespace HFM.Core.Client
             if (!foundCurrentUnitInfo)
             {
                 // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(slotRun, currentWorkUnit.QueueIndex, currentWorkUnit);
+                var unitRun = GetUnitRun(slotRun, currentWorkUnit.ID, currentWorkUnit);
                 if (unitRun != null)
                 {
                     // create a copy of the current WorkUnit object so we're not working with an
@@ -158,7 +156,7 @@ namespace HFM.Core.Client
                     var workUnitCopy = currentWorkUnit.Copy();
 
                     PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
-                    result.WorkUnits.Add(workUnitCopy.QueueIndex, workUnitCopy);
+                    result.WorkUnits.Add(workUnitCopy);
                 }
             }
         }
@@ -242,7 +240,7 @@ namespace HFM.Core.Client
             Debug.Assert(unit != null);
             Debug.Assert(options != null);
 
-            workUnit.QueueIndex = unit.ID.GetValueOrDefault();
+            workUnit.ID = unit.ID.GetValueOrDefault();
 
             workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
 

@@ -7,7 +7,7 @@ using HFM.Log;
 
 namespace HFM.Core.WorkUnits
 {
-    public class WorkUnit : IProjectInfo
+    public class WorkUnit : IQueueItem, IProjectInfo
     {
         /// <summary>
         /// Returns a shallow copy of this <see cref="WorkUnit"/>.
@@ -31,7 +31,7 @@ namespace HFM.Core.WorkUnits
                 FramesObserved = FramesObserved,
                 LogLines = LogLines,
                 CoreID = CoreID,
-                QueueIndex = QueueIndex
+                ID = ID
             };
 
         /// <summary>
@@ -152,10 +152,7 @@ namespace HFM.Core.WorkUnits
         /// </summary>
         public string CoreID { get; set; }
 
-        /// <summary>
-        /// Unit Queue Index
-        /// </summary>
-        public int QueueIndex { get; set; } = -1;
+        public int ID { get; set; } = WorkUnitCollection.NoID;
 
         #region Methods
 
@@ -188,5 +185,10 @@ namespace HFM.Core.WorkUnits
         }
 
         #endregion
+    }
+
+    public class WorkUnitCollection : QueueItemCollection<WorkUnit>
+    {
+
     }
 }

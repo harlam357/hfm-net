@@ -321,21 +321,18 @@ namespace HFM.Core.Client
                     slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, result));
 
                     var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(result.WorkUnits.Count);
-                    foreach (int key in result.WorkUnits.Keys)
+                    foreach (var workUnit in result.WorkUnits)
                     {
-                        if (result.WorkUnits[key] != null)
-                        {
-                            newWorkUnitModels[key] = BuildWorkUnitModel(slotModel, result.WorkUnits[key]);
-                        }
+                        newWorkUnitModels[workUnit.ID] = BuildWorkUnitModel(slotModel, workUnit);
                     }
 
                     // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
                     UpdateWorkUnitBenchmarkAndRepository(slotModel.WorkUnitModel, newWorkUnitModels.Values);
 
                     // Update the WorkUnitModel if we have a current unit index
-                    if (result.CurrentUnitIndex != -1 && newWorkUnitModels.ContainsKey(result.CurrentUnitIndex))
+                    if (result.WorkUnits.CurrentID != WorkUnitCollection.NoID && newWorkUnitModels.ContainsKey(result.WorkUnits.CurrentID))
                     {
-                        slotModel.WorkUnitModel = newWorkUnitModels[result.CurrentUnitIndex];
+                        slotModel.WorkUnitModel = newWorkUnitModels[result.WorkUnits.CurrentID];
                     }
 
                     SetSlotStatus(slotModel);
@@ -364,9 +361,9 @@ namespace HFM.Core.Client
 
         private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, ClientMessageAggregatorResult result)
         {
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex) && result.WorkUnits[result.CurrentUnitIndex].LogLines != null)
+            if (result.WorkUnits.Current?.LogLines != null)
             {
-                return result.WorkUnits[result.CurrentUnitIndex].LogLines;
+                return result.WorkUnits.Current.LogLines;
             }
 
             var slotRun = Messages.GetSlotRun(slotID);

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-
 using HFM.Client;
 using HFM.Core.WorkUnits;
 using HFM.Log;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Client
 {
@@ -28,19 +28,17 @@ namespace HFM.Core.Client
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert - AggregatorResult
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-
             Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
 
             Assert.IsNotNull(result.WorkUnits);
+            Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
+            Assert.IsFalse(result.WorkUnits.Any(x => x == null));
+            Assert.IsFalse(result.WorkUnits.Any(x => x.LogLines == null));
 
             // Assert - Work Unit
-            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
+            var workUnit = result.WorkUnits.Current;
 
             Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
@@ -85,19 +83,17 @@ namespace HFM.Core.Client
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert - AggregatorResult
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-
             Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
 
             Assert.IsNotNull(result.WorkUnits);
+            Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-            Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
-            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
+            Assert.IsFalse(result.WorkUnits.Any(x => x == null));
+            Assert.IsTrue(result.WorkUnits.All(x => x.LogLines == null));
 
             // Assert - Work Unit
-            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
+            var workUnit = result.WorkUnits.Current;
 
             Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
@@ -129,19 +125,17 @@ namespace HFM.Core.Client
             var result = aggregator.AggregateData(1, new WorkUnit(), "foo");
 
             // Assert - AggregatorResult
-            Assert.AreEqual(2, result.CurrentUnitIndex);
-
             Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(2, result.WorkUnitQueue.CurrentQueueID);
+            Assert.AreEqual(2, result.WorkUnitQueue.CurrentID);
 
             Assert.IsNotNull(result.WorkUnits);
+            Assert.AreEqual(2, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
+            Assert.IsFalse(result.WorkUnits.Any(x => x == null));
+            Assert.IsFalse(result.WorkUnits.Any(x => x.LogLines == null));
 
             // Assert - Work Unit
-            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
+            var workUnit = result.WorkUnits.Current;
 
             Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);
@@ -177,19 +171,17 @@ namespace HFM.Core.Client
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-
             Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentID);
 
             Assert.IsNotNull(result.WorkUnits);
+            Assert.AreEqual(1, result.WorkUnits.CurrentID);
             Assert.AreEqual(1, result.WorkUnits.Count);
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-            Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
+            Assert.IsFalse(result.WorkUnits.Any(x => x == null));
+            Assert.IsFalse(result.WorkUnits.Any(x => x.LogLines == null));
 
             // Assert - Work Unit
-            var workUnit = result.WorkUnits[result.CurrentUnitIndex];
+            var workUnit = result.WorkUnits.Current;
 
             Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
             Assert.AreEqual("harlam357", workUnit.FoldingID);

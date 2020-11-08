@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 using HFM.Core.WorkUnits;
 
@@ -11,7 +7,7 @@ namespace HFM.Core.Client
     /// <summary>
     /// Represent a work unit assigned to a slot in the client work unit queue.
     /// </summary>
-    public class WorkUnitQueueItem : IProjectInfo
+    public class WorkUnitQueueItem : IQueueItem, IProjectInfo
     {
         public int ID { get; }
 
@@ -84,42 +80,8 @@ namespace HFM.Core.Client
         public int SlotID { get; set; }
     }
 
-    public class WorkUnitQueue : IEnumerable<WorkUnitQueueItem>
+    public class WorkUnitQueueItemCollection : QueueItemCollection<WorkUnitQueueItem>
     {
-        private readonly WorkUnitQueueItemKeyedCollection _inner = new WorkUnitQueueItemKeyedCollection();
 
-        public int DefaultQueueID => _inner.Count > 0 ? _inner.First().ID : NoQueueID;
-
-        internal const int NoQueueID = -1;
-
-        /// <summary>
-        /// Gets the current work unit queue ID value.
-        /// </summary>
-        public int CurrentQueueID { get; set; } = NoQueueID;
-
-        /// <summary>
-        /// Gets the work unit at the current index.
-        /// </summary>
-        public WorkUnitQueueItem Current => _inner.Contains(CurrentQueueID) ? _inner[CurrentQueueID] : null;
-
-        public void Add(WorkUnitQueueItem workUnit) => _inner.Add(workUnit);
-
-        public int Count => _inner.Count;
-
-        public WorkUnitQueueItem this[int id] => _inner.Contains(id) ? _inner[id] : null;
-
-        public IEnumerator<WorkUnitQueueItem> GetEnumerator() => _inner.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private class WorkUnitQueueItemKeyedCollection : KeyedCollection<int, WorkUnitQueueItem>
-        {
-            public WorkUnitQueueItemKeyedCollection() : base(EqualityComparer<int>.Default, 1)
-            {
-
-            }
-
-            protected override int GetKeyForItem(WorkUnitQueueItem item) => item.ID;
-        }
     }
 }

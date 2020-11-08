@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NUnit.Framework;
-
 using HFM.Log;
+
+using NUnit.Framework;
 
 namespace HFM.Core.WorkUnits
 {
@@ -32,7 +32,7 @@ namespace HFM.Core.WorkUnits
             Assert.IsNull(workUnit.LogLines);
             Assert.IsNull(workUnit.Frames);
             Assert.IsNull(workUnit.CoreID);
-            Assert.AreEqual(-1, workUnit.QueueIndex);
+            Assert.AreEqual(WorkUnitCollection.NoID, workUnit.ID);
         }
 
         [Test]
