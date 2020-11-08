@@ -166,22 +166,7 @@ namespace HFM.Core.WorkUnits
 
         internal bool EqualsProjectAndDownloadTime(WorkUnit other)
         {
-            if (other == null)
-            {
-                return false;
-            }
-
-            // if the Projects are known
-            if (this.HasProject() && other.HasProject())
-            {
-                // equals the Project and Assigned
-                if (this.EqualsProject(other) && Assigned.Equals(other.Assigned))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return other != null && this.HasProject() && other.HasProject() && this.EqualsProject(other) && Assigned.Equals(other.Assigned);
         }
 
         #endregion
@@ -189,6 +174,19 @@ namespace HFM.Core.WorkUnits
 
     public class WorkUnitCollection : QueueItemCollection<WorkUnit>
     {
+        public WorkUnitCollection()
+        {
 
+        }
+
+        public WorkUnitCollection(IEnumerable<WorkUnit> workUnits)
+        {
+            foreach (var workUnit in workUnits)
+            {
+                Add(workUnit);
+            }
+        }
+
+        public bool HasWorkUnit(WorkUnit workUnit) => this.Any(x => x.EqualsProjectAndDownloadTime(workUnit));
     }
 }

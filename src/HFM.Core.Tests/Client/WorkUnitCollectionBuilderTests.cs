@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using HFM.Client;
+using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 
@@ -15,8 +16,6 @@ namespace HFM.Core.Client
     [TestFixture]
     public class WorkUnitCollectionBuilderTests
     {
-        // ReSharper disable InconsistentNaming
-
         [Test]
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0()
         {
@@ -61,18 +60,12 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0_UnitDataOnly()
+        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0_ClientDataOnly()
         {
             // Arrange
             var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
-
+            // clear the log data so this test operates only on data provided by FahClient
             fahClient.Messages.Log.Clear();
-            string filteredLogText = String.Join(Environment.NewLine, File.ReadLines(@"..\..\..\..\TestFiles\Client_v7_10\log.txt").Where(x => x.Length != 0).Take(82));
-            using (var textReader = new StringReader(filteredLogText))
-            using (var reader = new FahClientLogTextReader(textReader))
-            {
-                await fahClient.Messages.Log.ReadAsync(reader);
-            }
 
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(0));
 
@@ -152,6 +145,49 @@ namespace HFM.Core.Client
         }
 
         [Test]
+        public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_1_CompletesPreviousUnit()
+        {
+            // Arrange
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetSlotRun(1));
+
+            // Act
+            var workUnits = builder.BuildForSlot(1, new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
+
+            // Assert - AggregatorResult
+            Assert.IsNotNull(workUnits);
+            Assert.AreEqual(2, workUnits.CurrentID);
+            Assert.AreEqual(2, workUnits.Count);
+            Assert.IsFalse(workUnits.Any(x => x == null));
+            Assert.IsFalse(workUnits.Any(x => x.LogLines == null));
+
+            // Assert - Work Unit
+            var workUnit = workUnits[0];
+
+            Assert.AreEqual(DateTime.MinValue, workUnit.UnitRetrievalTime);
+            Assert.AreEqual(null, workUnit.FoldingID);
+            Assert.AreEqual(0, workUnit.Team);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Assigned);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Timeout);
+            Assert.AreEqual(new TimeSpan(3, 25, 36), workUnit.UnitStartTimeStamp);
+            Assert.AreNotEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(1.31f, workUnit.CoreVersion);
+            Assert.AreEqual(5767, workUnit.ProjectID);
+            Assert.AreEqual(3, workUnit.ProjectRun);
+            Assert.AreEqual(138, workUnit.ProjectClone);
+            Assert.AreEqual(144, workUnit.ProjectGen);
+            Assert.AreEqual(WorkUnitResult.FinishedUnit, workUnit.UnitResult);
+            Assert.AreEqual(100, workUnit.FramesObserved);
+            Assert.AreEqual(100, workUnit.CurrentFrame.ID);
+            Assert.AreEqual(100, workUnit.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(100, workUnit.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(4, 21, 39), workUnit.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 0, 33), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual(186, workUnit.LogLines.Count);
+            Assert.AreEqual(null, workUnit.CoreID);
+        }
+
+        [Test]
         public async Task WorkUnitCollectionBuilder_Client_v7_11_SlotID_0()
         {
             // Arrange
@@ -194,7 +230,37 @@ namespace HFM.Core.Client
             Assert.AreEqual("A4", workUnit.CoreID);
         }
 
-        // ReSharper restore InconsistentNaming
+        [Test]
+        public void WorkUnitCollectionBuilder_BuildForSlot_SetsCurrentIDForRunningWorkUnit()
+        {
+            // Arrange
+            var units = new UnitCollection
+            {
+                new Unit { Slot = 0, ID = 0, State = "READY" },
+                new Unit { Slot = 0, ID = 1, State = "RUNNING" }
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null);
+            // Act
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            // Assert
+            Assert.AreEqual(1, workUnits.CurrentID);
+        }
+
+        [Test]
+        public void WorkUnitCollectionBuilder_BuildForSlot_SetsCurrentIDForFirstReadyWorkUnit()
+        {
+            // Arrange
+            var units = new UnitCollection
+            {
+                new Unit { Slot = 0, ID = 2, State = "READY" },
+                new Unit { Slot = 0, ID = 1, State = "READY" }
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null);
+            // Act
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            // Assert
+            Assert.AreEqual(2, workUnits.CurrentID);
+        }
 
         private static async Task<FahClient> CreateClientWithMessagesLoadedFrom(string clientName, string path)
         {

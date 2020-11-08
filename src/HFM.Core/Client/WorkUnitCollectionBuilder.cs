@@ -28,9 +28,9 @@ namespace HFM.Core.Client
             _slotRun = slotRun;
         }
 
-        public WorkUnitCollection BuildForSlot(int slotID, WorkUnit currentWorkUnit)
+        public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
         {
-            if (currentWorkUnit == null) throw new ArgumentNullException(nameof(currentWorkUnit));
+            if (previousWorkUnit == null) throw new ArgumentNullException(nameof(previousWorkUnit));
 
             if (Logger.IsDebugEnabled && _slotRun != null)
             {
@@ -40,65 +40,28 @@ namespace HFM.Core.Client
                 }
             }
 
-            return BuildWorkUnits(slotID, currentWorkUnit);
+            return BuildWorkUnitCollection(slotID, previousWorkUnit);
         }
 
-        private WorkUnitCollection BuildWorkUnits(int slotID, WorkUnit currentWorkUnit)
+        private WorkUnitCollection BuildWorkUnitCollection(int slotID, WorkUnit previousWorkUnit)
         {
-            Debug.Assert(currentWorkUnit != null);
+            Debug.Assert(previousWorkUnit != null);
 
-            bool foundCurrentUnitInfo = false;
-            var workUnits = new WorkUnitCollection();
-
-            foreach (var unit in _units.Where(x => x.Slot == slotID))
+            var workUnits = new WorkUnitCollection(_units.Where(x => x.Slot == slotID).Select(x => BuildWorkUnit(slotID, x)));
+            var currentID = GetCurrentWorkUnitID(slotID);
+            if (currentID.HasValue)
             {
-                var projectInfo = unit.ToProjectInfo();
-                if (projectInfo.EqualsProject(currentWorkUnit) &&
-                    unit.AssignedDateTime.GetValueOrDefault().Equals(currentWorkUnit.Assigned))
-                {
-                    foundCurrentUnitInfo = true;
-                }
-
-                // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(_slotRun, unit.ID.GetValueOrDefault(), projectInfo);
-                if (unitRun == null)
-                {
-                    string message = $"Could not find log section for Slot {slotID} {projectInfo}.";
-                    Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
-                }
-
-                WorkUnit workUnit = BuildWorkUnit(unit, _options, unitRun);
-                if (workUnit != null)
-                {
-                    workUnits.Add(workUnit);
-                    if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
-                    {
-                        workUnits.CurrentID = workUnit.ID;
-                    }
-                }
+                workUnits.CurrentID = currentID.Value;
             }
 
-            // if no RUNNING WU found
-            if (workUnits.CurrentID == WorkUnitCollection.NoID)
+            // if the previous unit has already left the UnitCollection then find the log section and update here
+            if (!workUnits.HasWorkUnit(previousWorkUnit))
             {
-                // look for a WU with READY state
-                var unit = _units.FirstOrDefault(x => x.Slot == slotID && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase));
-                if (unit != null)
-                {
-                    workUnits.CurrentID = unit.ID.GetValueOrDefault();
-                }
-            }
-
-            // if the current unit has already left the UnitCollection then find the log section and update here
-            if (!foundCurrentUnitInfo)
-            {
-                // Get the Log Lines for this queue position from the reader
-                var unitRun = GetUnitRun(_slotRun, currentWorkUnit.ID, currentWorkUnit);
+                var unitRun = GetUnitRun(_slotRun, previousWorkUnit.ID, previousWorkUnit);
                 if (unitRun != null)
                 {
-                    // create a copy of the current WorkUnit object so we're not working with an
-                    // instance that is referenced by a SlotModel that is bound to the grid - Issue 277
-                    var workUnitCopy = currentWorkUnit.Copy();
+                    // create a copy of the previous WorkUnit so we're not mutating a given instance
+                    var workUnitCopy = previousWorkUnit.Copy();
 
                     PopulateWorkUnitFromLogData(workUnitCopy, unitRun);
                     workUnits.Add(workUnitCopy);
@@ -113,21 +76,45 @@ namespace HFM.Core.Client
             return slotRun?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(x.Data.ToProjectInfo()));
         }
 
-        private static WorkUnit BuildWorkUnit(Unit unit, Options options, UnitRun unitRun)
+        private WorkUnit BuildWorkUnit(int slotID, Unit unit)
         {
             Debug.Assert(unit != null);
-            Debug.Assert(options != null);
 
             var workUnit = new WorkUnit();
-            PopulateWorkUnitFromFahClientData(workUnit, unit, options);
-            if (unitRun != null)
+            PopulateWorkUnitFromClientData(workUnit, unit, _options);
+
+            var projectInfo = unit.ToProjectInfo();
+            var unitRun = GetUnitRun(_slotRun, unit.ID.GetValueOrDefault(), projectInfo);
+            if (unitRun == null)
+            {
+                string message = $"Could not find log section for Slot {slotID} {projectInfo}.";
+                Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
+            }
+            else
             {
                 PopulateWorkUnitFromLogData(workUnit, unitRun);
             }
+
             return workUnit;
         }
 
-        private static void PopulateWorkUnitFromFahClientData(WorkUnit workUnit, Unit unit, Options options)
+        private int? GetCurrentWorkUnitID(int slotID)
+        {
+            int? currentID = _units
+                .FirstOrDefault(x => x.Slot == slotID && x.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
+                ?.ID;
+
+            if (!currentID.HasValue)
+            {
+                currentID = _units
+                    .FirstOrDefault(x => x.Slot == slotID && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase))
+                    ?.ID;
+            }
+
+            return currentID;
+        }
+
+        private static void PopulateWorkUnitFromClientData(WorkUnit workUnit, Unit unit, Options options)
         {
             Debug.Assert(workUnit != null);
             Debug.Assert(unit != null);
@@ -145,7 +132,7 @@ namespace HFM.Core.Client
             workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
             workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault();
 
-            workUnit.CoreID = unit.Core.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.CoreID = unit.Core?.Replace("0x", String.Empty).ToUpperInvariant();
         }
 
         private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)
