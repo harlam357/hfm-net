@@ -27,19 +27,17 @@ namespace HFM.Core.Client
             // Act
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
-            // Assert
+            // Assert - AggregatorResult
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+
+            Assert.IsNotNull(result.WorkUnitQueue);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+
+            Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-
-            // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-            {
-                Assert.AreEqual(39, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
-            }
+            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
 
             // Assert - Work Unit
             var workUnit = result.WorkUnits[result.CurrentUnitIndex];
@@ -63,6 +61,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(2000000, workUnit.CurrentFrame.RawFramesTotal);
             Assert.AreEqual(new TimeSpan(4, 46, 8), workUnit.CurrentFrame.TimeStamp);
             Assert.AreEqual(new TimeSpan(0, 8, 31), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual(39, workUnit.LogLines.Count);
             Assert.AreEqual("A4", workUnit.CoreID);
         }
 
@@ -85,19 +84,17 @@ namespace HFM.Core.Client
             // Act
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
-            // Assert
+            // Assert - AggregatorResult
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+
+            Assert.IsNotNull(result.WorkUnitQueue);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+
+            Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-
-            // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsTrue(result.WorkUnits.All(x => x.Value.LogLines == null));
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-            {
-                Assert.AreEqual(82, LogLineEnumerable.Create(fahClient.Messages.Log.ClientRuns.Last()).Count());
-            }
+            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
 
             // Assert - Work Unit
             var workUnit = result.WorkUnits[result.CurrentUnitIndex];
@@ -117,6 +114,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(0, workUnit.FramesObserved);
             Assert.IsNull(workUnit.CurrentFrame);
+            Assert.IsNull(workUnit.LogLines);
             Assert.AreEqual("A4", workUnit.CoreID);
         }
 
@@ -130,19 +128,17 @@ namespace HFM.Core.Client
             // Act
             var result = aggregator.AggregateData(1, new WorkUnit(), "foo");
 
-            // Assert
+            // Assert - AggregatorResult
+            Assert.AreEqual(2, result.CurrentUnitIndex);
+
+            Assert.IsNotNull(result.WorkUnitQueue);
+            Assert.AreEqual(2, result.WorkUnitQueue.CurrentQueueID);
+
+            Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-
-            // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(2, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 1, 11, 3, 24, 22), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-            {
-                Assert.AreEqual(98, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
-            }
+            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
 
             // Assert - Work Unit
             var workUnit = result.WorkUnits[result.CurrentUnitIndex];
@@ -166,6 +162,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(100, workUnit.CurrentFrame.RawFramesTotal);
             Assert.AreEqual(new TimeSpan(4, 51, 53), workUnit.CurrentFrame.TimeStamp);
             Assert.AreEqual(new TimeSpan(0, 0, 42), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual(98, workUnit.LogLines.Count);
             Assert.AreEqual("11", workUnit.CoreID);
         }
 
@@ -180,18 +177,16 @@ namespace HFM.Core.Client
             var result = aggregator.AggregateData(0, new WorkUnit(), "foo");
 
             // Assert
+            Assert.AreEqual(1, result.CurrentUnitIndex);
+
+            Assert.IsNotNull(result.WorkUnitQueue);
+            Assert.AreEqual(1, result.WorkUnitQueue.CurrentQueueID);
+
+            Assert.IsNotNull(result.WorkUnits);
             Assert.AreEqual(1, result.WorkUnits.Count);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value == null));
-
-            // Assert - AggregatorResult
-            Assert.IsNotNull(result.WorkUnitQueue);
-            Assert.AreEqual(1, result.CurrentUnitIndex);
-            Assert.AreEqual(new DateTime(2012, 2, 18, 6, 33, 41), fahClient.Messages.GetClientRun().Data.StartTime);
             Assert.IsFalse(result.WorkUnits.Any(x => x.Value.LogLines == null));
-            if (result.WorkUnits.ContainsKey(result.CurrentUnitIndex))
-            {
-                Assert.AreEqual(32, result.WorkUnits[result.CurrentUnitIndex].LogLines.Count);
-            }
+            Assert.IsTrue(result.WorkUnits.ContainsKey(result.CurrentUnitIndex));
 
             // Assert - Work Unit
             var workUnit = result.WorkUnits[result.CurrentUnitIndex];
@@ -215,6 +210,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(2000000, workUnit.CurrentFrame.RawFramesTotal);
             Assert.AreEqual(new TimeSpan(6, 46, 16), workUnit.CurrentFrame.TimeStamp);
             Assert.AreEqual(new TimeSpan(0, 4, 50), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual(32, workUnit.LogLines.Count);
             Assert.AreEqual("A4", workUnit.CoreID);
         }
 

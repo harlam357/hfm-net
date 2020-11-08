@@ -107,7 +107,7 @@ namespace HFM.Forms.Controls
                 NextAttemptTextBox.Text = item.NextAttempt.ToString();
                 var protein = _proteinService.Get(item.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                AssignedTextBox.Text = FormatAssignedDateTimeUtc(item.AssignedDateTimeUtc);
+                AssignedTextBox.Text = FormatAssignedAsLocalDateTime(item.Assigned);
                 WorkServerTextBox.Text = item.WorkServer;
                 CPUTypeTextBox.Text = item.CPU;
                 OSTextBox.Text = item.OperatingSystem;
@@ -126,7 +126,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private static string FormatAssignedDateTimeUtc(DateTime value)
+        private static string FormatAssignedAsLocalDateTime(DateTime value)
         {
             if (value == DateTime.MinValue)
             {

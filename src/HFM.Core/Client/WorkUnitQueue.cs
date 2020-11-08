@@ -51,7 +51,7 @@ namespace HFM.Core.Client
         /// <summary>
         /// Get or sets the date and time this work unit was assigned in UTC.
         /// </summary>
-        public DateTime AssignedDateTimeUtc { get; set; }
+        public DateTime Assigned { get; set; }
 
         /// <summary>
         /// Get or sets the work server IP address.

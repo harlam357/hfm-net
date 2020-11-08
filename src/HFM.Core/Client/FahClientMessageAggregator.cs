@@ -65,7 +65,7 @@ namespace HFM.Core.Client
                 wui.WaitingOn = unit.WaitingOn;
                 wui.Attempts = unit.Attempts.GetValueOrDefault();
                 wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
-                wui.AssignedDateTimeUtc = unit.AssignedDateTime.GetValueOrDefault();
+                wui.Assigned = unit.AssignedDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
                 wui.CPU = slotProcessor;
                 wui.OperatingSystem = info.System.OS;
@@ -77,7 +77,7 @@ namespace HFM.Core.Client
                 d.Add(wui);
                 if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 {
-                    d.CurrentQueueID = unit.ID.GetValueOrDefault();
+                    d.CurrentQueueID = wui.ID;
                 }
             }
 
@@ -127,10 +127,10 @@ namespace HFM.Core.Client
                 WorkUnit workUnit = BuildWorkUnit(unit, options, unitRun);
                 if (workUnit != null)
                 {
-                    result.WorkUnits.Add(unit.ID.GetValueOrDefault(), workUnit);
+                    result.WorkUnits.Add(workUnit.QueueIndex, workUnit);
                     if (unit.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                     {
-                        result.CurrentUnitIndex = unit.ID.GetValueOrDefault();
+                        result.CurrentUnitIndex = workUnit.QueueIndex;
                     }
                 }
             }
