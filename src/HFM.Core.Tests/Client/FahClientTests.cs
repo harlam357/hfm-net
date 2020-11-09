@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using HFM.Client;
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
@@ -35,8 +36,8 @@ namespace HFM.Core.Client
             workUnit.Finished = new DateTime(2010, 1, 1);
             workUnit.ID = 0;
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            var currentWorkUnit = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
-            var slotIdentifier = currentWorkUnit.SlotModel.SlotIdentifier;
+            var previousWorkUnitModel = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
+            var slotIdentifier = previousWorkUnitModel.SlotModel.SlotIdentifier;
 
             var workUnitCopy = workUnit.Copy();
             workUnitCopy.FramesObserved = 4;
@@ -48,7 +49,7 @@ namespace HFM.Core.Client
             workUnitCopy.Frames = frames;
             workUnitCopy.UnitResult = WorkUnitResult.FinishedUnit;
 
-            var parsedUnits = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
+            var workUnitModels = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
 
             mockWorkUnitRepository.SetupGet(x => x.Connected).Returns(true);
 
@@ -60,7 +61,7 @@ namespace HFM.Core.Client
             Assert.IsNull(benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier));
 
             // Act
-            fahClient.UpdateWorkUnitBenchmarkAndRepository(currentWorkUnit, parsedUnits);
+            fahClient.UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
 
             // Assert
             Assert.IsTrue(benchmarkService.DataContainer.Data.Any(x => x.SlotIdentifier.Equals(slotIdentifier)));
@@ -84,22 +85,21 @@ namespace HFM.Core.Client
             workUnit.ProjectGen = 8;
             workUnit.Assigned = DateTime.UtcNow;
             var settings = new ClientSettings { Name = "Foo", Server = "Bar", Port = ClientSettings.DefaultPort };
-            var workUnitModel = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
-            var newWorkUnitModel = new WorkUnitModel(workUnitModel.SlotModel, workUnit.Copy());
+            var previousWorkUnitModel = new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnit);
+            var workUnitModel = new WorkUnitModel(previousWorkUnitModel.SlotModel, workUnit.Copy());
 
             // Act
-            fahClient.UpdateBenchmarkFrameTimes(workUnitModel, newWorkUnitModel);
+            fahClient.UpdateBenchmarkFrameTimes(previousWorkUnitModel, workUnitModel);
 
             // Assert
-            Assert.IsNull(benchmarkService.GetBenchmark(newWorkUnitModel.SlotModel.SlotIdentifier, newWorkUnitModel.BenchmarkIdentifier));
+            Assert.IsNull(benchmarkService.GetBenchmark(workUnitModel.SlotModel.SlotIdentifier, workUnitModel.BenchmarkIdentifier));
         }
 
         [Test]
         public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_10()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_10" };
-            var fahClient = CreateClient(settings);
+            var fahClient = CreateClient("Client_v7_10");
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
@@ -121,8 +121,7 @@ namespace HFM.Core.Client
         public async Task FahClient_RefreshSlots_ParsesSlotDescriptionForSlotTypeAndSlotThreads_Client_v7_12()
         {
             // Arrange
-            var settings = new ClientSettings { Name = "Client_v7_12" };
-            var fahClient = CreateClient(settings);
+            var fahClient = CreateClient("Client_v7_12");
             var extractor = new FahClientJsonMessageExtractor();
             await fahClient.Messages.UpdateMessageAsync(
                 extractor.Extract(new StringBuilder(
@@ -137,10 +136,10 @@ namespace HFM.Core.Client
             Assert.AreEqual(null, slots[0].SlotProcessor);
         }
 
-        private static FahClient CreateClient(ClientSettings settings)
+        private static FahClient CreateClient(string clientName)
         {
             var client = new FahClient(null, null, null, null, null);
-            client.Settings = settings;
+            client.Settings = new ClientSettings { Name = clientName };
             return client;
         }
     }

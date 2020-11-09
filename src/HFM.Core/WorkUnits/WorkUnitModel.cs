@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -9,8 +10,10 @@ using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits
 {
-    public class WorkUnitModel
+    public class WorkUnitModel : IQueueItem
     {
+        public int ID => WorkUnit.ID;
+
         public SlotModel SlotModel { get; }
 
         public WorkUnit WorkUnit { get; }
@@ -434,6 +437,22 @@ namespace HFM.Core.WorkUnits
         internal static bool ProteinIsUnknown(Protein protein)
         {
             return protein.ProjectNumber == 0;
+        }
+    }
+
+    public class WorkUnitModelCollection : QueueItemCollection<WorkUnitModel>
+    {
+        public WorkUnitModelCollection()
+        {
+
+        }
+
+        public WorkUnitModelCollection(IEnumerable<WorkUnitModel> workUnits)
+        {
+            foreach (var workUnit in workUnits)
+            {
+                Add(workUnit);
+            }
         }
     }
 }

@@ -307,33 +307,19 @@ namespace HFM.Core.Client
             _slotsLock.EnterReadLock();
             try
             {
-                var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrievalTime);
-                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(Messages.UnitCollection, Messages.Info?.System);
+                var workUnitsBuilder = new WorkUnitCollectionBuilder(
+                    Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrievalTime);
+                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
+                    Messages.UnitCollection, Messages.Info?.System);
 
                 foreach (var slotModel in _slots)
                 {
-                    var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
-                    var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.WorkUnitModel.WorkUnit);
-                    PopulateRunLevelData(Messages.Info?.Client, slotModel, slotProcessor);
+                    var previousWorkUnitModel = slotModel.WorkUnitModel;
+                    var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, previousWorkUnitModel.WorkUnit);
+                    var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
-                    slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
-                    slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
-
-                    var newWorkUnitModels = new Dictionary<int, WorkUnitModel>(workUnits.Count);
-                    foreach (var workUnit in workUnits)
-                    {
-                        newWorkUnitModels[workUnit.ID] = BuildWorkUnitModel(slotModel, workUnit);
-                    }
-
-                    // *** THIS HAS TO BE DONE BEFORE UPDATING SlotModel.WorkUnitModel ***
-                    UpdateWorkUnitBenchmarkAndRepository(slotModel.WorkUnitModel, newWorkUnitModels.Values);
-
-                    // Update the WorkUnitModel if we have a current unit index
-                    if (workUnits.CurrentID != WorkUnitCollection.NoID && newWorkUnitModels.ContainsKey(workUnits.CurrentID))
-                    {
-                        slotModel.WorkUnitModel = newWorkUnitModels[workUnits.CurrentID];
-                    }
-
+                    PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
+                    UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
                     SetSlotStatus(slotModel);
 
                     slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
@@ -402,12 +388,20 @@ namespace HFM.Core.Client
             }
         }
 
-        private void PopulateRunLevelData(ClientInfo clientInfo, SlotModel slotModel, string slotProcessor)
+        private void PopulateSlotModel(SlotModel slotModel, WorkUnitCollection workUnits,
+            WorkUnitModelCollection workUnitModels, WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
         {
             Debug.Assert(slotModel != null);
+            Debug.Assert(workUnits != null);
+            Debug.Assert(workUnitModels != null);
+            Debug.Assert(workUnitQueueBuilder != null);
 
-            slotModel.ClientVersion = clientInfo?.Version;
+            var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
+
+            slotModel.ClientVersion = Messages.Info?.Client.Version;
             slotModel.SlotProcessor = slotProcessor;
+            slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
+            slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
 
             var clientRun = Messages.GetClientRun();
             if (WorkUnitRepository.Connected && clientRun != null)
@@ -417,16 +411,22 @@ namespace HFM.Core.Client
                 slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, null);
             }
+
+            // Update the WorkUnitModel if we have a current unit index
+            if (workUnits.CurrentID != WorkUnitCollection.NoID && workUnitModels.ContainsID(workUnits.CurrentID))
+            {
+                slotModel.WorkUnitModel = workUnitModels[workUnits.CurrentID];
+            }
         }
 
-        internal void UpdateWorkUnitBenchmarkAndRepository(WorkUnitModel workUnitModel, IEnumerable<WorkUnitModel> newWorkUnitModels)
+        internal void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels, WorkUnitModel previousWorkUnitModel)
         {
-            foreach (var m in newWorkUnitModels.Where(x => x != null))
+            foreach (var m in workUnitModels)
             {
-                // find the WorkUnit in newWorkUnitModels that matches the current WorkUnit
-                if (workUnitModel.WorkUnit.EqualsProjectAndDownloadTime(m.WorkUnit))
+                // find the WorkUnit in workUnitModels that matches the previousWorkUnitModel
+                if (previousWorkUnitModel.WorkUnit.EqualsProjectAndDownloadTime(m.WorkUnit))
                 {
-                    UpdateBenchmarkFrameTimes(workUnitModel, m);
+                    UpdateBenchmarkFrameTimes(previousWorkUnitModel, m);
                 }
                 if (m.WorkUnit.UnitResult != WorkUnitResult.Unknown)
                 {
@@ -435,17 +435,17 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateBenchmarkFrameTimes(WorkUnitModel workUnitModel, WorkUnitModel newWorkUnitModel)
+        internal void UpdateBenchmarkFrameTimes(WorkUnitModel previousWorkUnitModel, WorkUnitModel workUnitModel)
         {
             // current frame has already been recorded, increment to the next frame
-            int nextFrame = workUnitModel.FramesComplete + 1;
-            int count = newWorkUnitModel.FramesComplete - workUnitModel.FramesComplete;
-            var frameTimes = GetFrameTimes(newWorkUnitModel.WorkUnit, nextFrame, count);
+            int nextFrame = previousWorkUnitModel.FramesComplete + 1;
+            int count = workUnitModel.FramesComplete - previousWorkUnitModel.FramesComplete;
+            var frameTimes = GetFrameTimes(workUnitModel.WorkUnit, nextFrame, count);
 
             if (frameTimes.Count > 0)
             {
-                var slotIdentifier = newWorkUnitModel.SlotModel.SlotIdentifier;
-                var benchmarkIdentifier = newWorkUnitModel.BenchmarkIdentifier;
+                var slotIdentifier = workUnitModel.SlotModel.SlotIdentifier;
+                var benchmarkIdentifier = workUnitModel.BenchmarkIdentifier;
                 BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
             }
         }

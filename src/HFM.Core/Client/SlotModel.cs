@@ -53,9 +53,6 @@ namespace HFM.Core.Client
 
         #region Grid Properties
 
-        /// <summary>
-        /// Status of this client
-        /// </summary>
         public SlotStatus Status { get; set; }
 
         public float Progress => ((float)PercentComplete) / 100;
