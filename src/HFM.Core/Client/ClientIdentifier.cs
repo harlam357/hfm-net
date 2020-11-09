@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -140,8 +139,8 @@ namespace HFM.Core.Client
 
         public string ToServerPortString()
         {
-            return TcpPort.Validate(Port) 
-                ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port) 
+            return TcpPort.Validate(Port)
+                ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port)
                 : Server;
         }
 
@@ -150,8 +149,8 @@ namespace HFM.Core.Client
         internal static ClientIdentifier FromPath(string name, string path, Guid guid)
         {
             var match = path is null ? null : ServerPortRegex.Match(path);
-            return match != null && match.Success 
-                ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid) 
+            return match != null && match.Success
+                ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid)
                 : new ClientIdentifier(name, path, ClientSettings.NoPort, guid);
         }
     }

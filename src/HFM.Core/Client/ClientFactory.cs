@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +40,7 @@ namespace HFM.Core.Client
 
         public ClientFactory() : this(new Dictionary<ClientType, IClientTypeFactory> { { ClientType.FahClient, new NullClientTypeFactory() } })
         {
-            
+
         }
 
         public ClientFactory(IDictionary<ClientType, IClientTypeFactory> clientFactories)

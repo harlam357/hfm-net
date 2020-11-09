@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,7 +75,7 @@ namespace HFM.Core.ScheduledTasks
             Action(ct);
         }
     }
-    
+
     public abstract class ScheduledTask
     {
         private readonly System.Timers.Timer _timer;

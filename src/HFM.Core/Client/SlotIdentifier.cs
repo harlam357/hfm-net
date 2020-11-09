@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -10,7 +9,7 @@ namespace HFM.Core.Client
         internal const int NoSlotID = -1;
 
         public static SlotIdentifier AllSlots => new SlotIdentifier(0, "All Slots");
-        
+
         private SlotIdentifier(int ordinal, string name)
         {
             Ordinal = ordinal;
@@ -26,7 +25,7 @@ namespace HFM.Core.Client
         }
 
         public int Ordinal { get; }
-        
+
         public ClientIdentifier ClientIdentifier { get; }
 
         public int SlotID { get; }
