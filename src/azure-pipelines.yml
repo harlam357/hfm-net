@@ -39,6 +39,8 @@ stages:
           Configure-Version -CommitCount
           Update-AssemblyVersion -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $Global:Version -AssemblyFileVersion $Global:Version
           Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $Global:Version
+          $buildNumber = "$env:BUILD_DEFINITIONNAME`_$Global:Version"
+          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
         workingDirectory: '.\src'
 
     - task: VSBuild@1
