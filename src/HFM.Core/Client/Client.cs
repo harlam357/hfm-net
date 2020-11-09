@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
-using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
@@ -58,17 +57,11 @@ namespace HFM.Core.Client
     {
         public event EventHandler SlotsChanged;
 
-        protected virtual void OnSlotsChanged(EventArgs e)
-        {
-            SlotsChanged?.Invoke(this, e);
-        }
+        protected virtual void OnSlotsChanged(EventArgs e) => SlotsChanged?.Invoke(this, e);
 
         public event EventHandler RetrievalFinished;
 
-        protected virtual void OnRetrievalFinished(EventArgs e)
-        {
-            RetrievalFinished?.Invoke(this, e);
-        }
+        protected virtual void OnRetrievalFinished(EventArgs e) => RetrievalFinished?.Invoke(this, e);
 
         public ILogger Logger { get; }
         public IPreferences Preferences { get; }
@@ -78,7 +71,7 @@ namespace HFM.Core.Client
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences ?? new InMemoryPreferencesProvider();
-            BenchmarkService = benchmarkService ?? new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
         }
 
         private ClientSettings _settings;
@@ -104,19 +97,13 @@ namespace HFM.Core.Client
 
         public IEnumerable<SlotModel> Slots => OnEnumerateSlots();
 
-        protected virtual IEnumerable<SlotModel> OnEnumerateSlots()
-        {
-            return Array.Empty<SlotModel>();
-        }
+        protected virtual IEnumerable<SlotModel> OnEnumerateSlots() => Array.Empty<SlotModel>();
 
         public DateTime LastRetrievalTime { get; protected set; } = DateTime.MinValue;
 
         protected bool AbortFlag { get; private set; }
 
-        public virtual void Abort()
-        {
-            AbortFlag = true;
-        }
+        public virtual void Abort() => AbortFlag = true;
 
         private readonly object _retrieveLock = new object();
 
