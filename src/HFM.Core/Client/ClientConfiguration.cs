@@ -211,7 +211,7 @@ namespace HFM.Core.Client
                     client = _clientDictionary[key];
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
-                    client.Abort();
+                    client.Cancel();
                 }
                 result = _clientDictionary.Remove(key);
             }
@@ -267,7 +267,7 @@ namespace HFM.Core.Client
                 {
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
-                    client.Abort();
+                    client.Cancel();
                 }
                 _clientDictionary.Clear();
             }

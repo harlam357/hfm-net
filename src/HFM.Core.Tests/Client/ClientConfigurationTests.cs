@@ -237,7 +237,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientConfiguration_Remove_CallsClientAbortAndFactoryRelease()
+        public void ClientConfiguration_Remove_CallsClientCancel()
         {
             // Arrange
             var mockClient = new Mock<IFahClient>();
@@ -246,7 +246,7 @@ namespace HFM.Core.Client
             // Act
             configuration.Remove("test");
             // Assert
-            mockClient.Verify(x => x.Abort());
+            mockClient.Verify(x => x.Cancel());
         }
 
         [Test]
@@ -296,7 +296,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientConfiguration_Clear_CallsClientAbortAndFactoryRelease()
+        public void ClientConfiguration_Clear_CallsClientCancel()
         {
             // Arrange
             var mockClient = new Mock<IFahClient>();
@@ -305,7 +305,7 @@ namespace HFM.Core.Client
             // Act
             configuration.Clear();
             // Assert
-            mockClient.Verify(x => x.Abort());
+            mockClient.Verify(x => x.Cancel());
         }
 
         private static ClientConfiguration CreateConfiguration()

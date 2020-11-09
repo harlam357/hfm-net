@@ -38,12 +38,12 @@ namespace HFM.Core.Client
         IEnumerable<SlotModel> Slots { get; }
 
         /// <summary>
-        /// Abort retrieval processes.
+        /// Cancels the retrieval process.
         /// </summary>
-        void Abort();
+        void Cancel();
 
         /// <summary>
-        /// Start retrieval processes.
+        /// Starts the retrieval process.
         /// </summary>
         void Retrieve();
     }
@@ -67,8 +67,11 @@ namespace HFM.Core.Client
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
+
+            RefreshSlots();
         }
 
+        // ClientSettings
         private ClientSettings _settings;
 
         public ClientSettings Settings
@@ -87,18 +90,55 @@ namespace HFM.Core.Client
 
         protected virtual void OnSettingsChanged(ClientSettings oldSettings, ClientSettings newSettings)
         {
-
         }
 
-        public IEnumerable<SlotModel> Slots => OnEnumerateSlots();
+        // Slots
+        private readonly List<SlotModel> _slots = new List<SlotModel>();
+        private readonly ReaderWriterLockSlim _slotsLock = new ReaderWriterLockSlim();
 
-        protected virtual IEnumerable<SlotModel> OnEnumerateSlots() => Array.Empty<SlotModel>();
+        public IEnumerable<SlotModel> Slots
+        {
+            get
+            {
+                _slotsLock.EnterReadLock();
+                try
+                {
+                    return _slots.ToArray();
+                }
+                finally
+                {
+                    _slotsLock.ExitReadLock();
+                }
+            }
+        }
 
+        public void RefreshSlots()
+        {
+            _slotsLock.EnterWriteLock();
+            try
+            {
+                _slots.Clear();
+                OnRefreshSlots(_slots);
+            }
+            finally
+            {
+                _slotsLock.ExitWriteLock();
+            }
+
+            OnSlotsChanged();
+        }
+
+        protected virtual void OnRefreshSlots(ICollection<SlotModel> slots) =>
+            slots.Add(SlotModel.CreateOfflineSlotModel(this));
+
+        // Retrieve
         public DateTime LastRetrieveTime { get; protected set; } = DateTime.MinValue;
 
-        protected bool AbortFlag { get; private set; }
+        public bool IsCancellationRequested { get; private set; }
 
-        public virtual void Abort() => AbortFlag = true;
+        public void Cancel() => OnCancel();
+
+        protected virtual void OnCancel() => IsCancellationRequested = true;
 
         private readonly object _retrieveLock = new object();
 
@@ -106,12 +146,12 @@ namespace HFM.Core.Client
         {
             if (!Monitor.TryEnter(_retrieveLock))
             {
-                Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
+                OnRetrieveInProgress();
                 return;
             }
             try
             {
-                AbortFlag = false;
+                IsCancellationRequested = false;
 
                 LastRetrieveTime = DateTime.Now;
                 OnRetrieve();
@@ -120,10 +160,12 @@ namespace HFM.Core.Client
             {
                 OnRetrieveFinished();
 
-                AbortFlag = false;
                 Monitor.Exit(_retrieveLock);
             }
         }
+
+        protected virtual void OnRetrieveInProgress() =>
+            Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
 
         protected abstract void OnRetrieve();
     }

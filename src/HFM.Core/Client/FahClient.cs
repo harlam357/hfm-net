@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 using HFM.Client;
@@ -47,32 +46,10 @@ namespace HFM.Core.Client
             }
         }
 
-        protected override IEnumerable<SlotModel> OnEnumerateSlots()
-        {
-            _slotsLock.EnterReadLock();
-            try
-            {
-                // not connected or no slots
-                if (_slots.Count == 0)
-                {
-                    // return default slot (for grid binding)
-                    return new[] { SlotModel.CreateOfflineSlotModel(this) };
-                }
-                return _slots.ToArray();
-            }
-            finally
-            {
-                _slotsLock.ExitReadLock();
-            }
-        }
-
         public IProteinService ProteinService { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
         public FahClientMessages Messages { get; }
         public FahClientConnection Connection { get; private set; }
-
-        private readonly List<SlotModel> _slots;
-        private readonly ReaderWriterLockSlim _slotsLock;
 
         public FahClient(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService,
                          IProteinService proteinService, IWorkUnitRepository workUnitRepository)
@@ -81,14 +58,11 @@ namespace HFM.Core.Client
             ProteinService = proteinService;
             WorkUnitRepository = workUnitRepository;
             Messages = new FahClientMessages(this);
-
-            _slots = new List<SlotModel>();
-            _slotsLock = new ReaderWriterLockSlim();
         }
 
         protected virtual async Task OnMessageRead(FahClientMessage message)
         {
-            if (AbortFlag) return;
+            if (IsCancellationRequested) return;
 
             Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"{message.Identifier} - Length: {message.MessageText.Length}"));
 
@@ -119,37 +93,31 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void RefreshSlots()
+        protected override void OnRefreshSlots(ICollection<SlotModel> slots)
         {
-            _slotsLock.EnterWriteLock();
-            try
+            var slotCollection = Messages?.SlotCollection;
+            if (slotCollection != null && slotCollection.Count > 0)
             {
-                _slots.Clear();
-                if (Messages.SlotCollection != null)
+                // iterate through slot collection
+                foreach (var slot in Messages.SlotCollection)
                 {
-                    // iterate through slot collection
-                    foreach (var slot in Messages.SlotCollection)
+                    var slotDescription = ParseSlotDescription(slot.Description);
+                    // add slot model to the collection
+                    var slotModel = new SlotModel(this)
                     {
-                        var slotDescription = ParseSlotDescription(slot.Description);
-                        // add slot model to the collection
-                        var slotModel = new SlotModel(this)
-                        {
-                            Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                            SlotID = slot.ID.GetValueOrDefault(),
-                            SlotType = slotDescription.SlotType,
-                            SlotThreads = slotDescription.CPUThreads,
-                            SlotProcessor = slotDescription.GPU
-                        };
-                        _slots.Add(slotModel);
-                    }
+                        Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
+                        SlotID = slot.ID.GetValueOrDefault(),
+                        SlotType = slotDescription.SlotType,
+                        SlotThreads = slotDescription.CPUThreads,
+                        SlotProcessor = slotDescription.GPU
+                    };
+                    slots.Add(slotModel);
                 }
             }
-            finally
+            else
             {
-                _slotsLock.ExitWriteLock();
+                base.OnRefreshSlots(slots);
             }
-
-            OnSlotsChanged();
         }
 
         private static (SlotType SlotType, int? CPUThreads, string GPU, int? GPUBus, int? GPUSlot) ParseSlotDescription(string description)
@@ -208,9 +176,9 @@ namespace HFM.Core.Client
                 : null;
         }
 
-        public override void Abort()
+        protected override void OnCancel()
         {
-            base.Abort();
+            base.OnCancel();
 
             if (Connection != null && Connection.Connected)
             {
@@ -223,7 +191,7 @@ namespace HFM.Core.Client
             if (Messages.IsHeartbeatOverdue())
             {
                 // haven't seen a heartbeat
-                Abort();
+                Cancel();
             }
 
             // connect if not connected
@@ -275,42 +243,34 @@ namespace HFM.Core.Client
 
         protected override void OnRetrieveFinished()
         {
-            if (!AbortFlag) base.OnRetrieveFinished();
+            if (!IsCancellationRequested) base.OnRetrieveFinished();
         }
 
         private void Process()
         {
             var sw = Stopwatch.StartNew();
 
-            _slotsLock.EnterReadLock();
-            try
+            var workUnitsBuilder = new WorkUnitCollectionBuilder(
+                Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
+            var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
+                Messages.UnitCollection, Messages.Info?.System);
+
+            foreach (var slotModel in Slots)
             {
-                var workUnitsBuilder = new WorkUnitCollectionBuilder(
-                    Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
-                var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
-                    Messages.UnitCollection, Messages.Info?.System);
+                var previousWorkUnitModel = slotModel.WorkUnitModel;
+                var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, previousWorkUnitModel.WorkUnit);
+                var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
-                foreach (var slotModel in _slots)
-                {
-                    var previousWorkUnitModel = slotModel.WorkUnitModel;
-                    var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, previousWorkUnitModel.WorkUnit);
-                    var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
+                PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
+                UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
+                SetSlotStatus(slotModel);
 
-                    PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
-                    UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
-                    SetSlotStatus(slotModel);
+                slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
+                   Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
+                   Preferences.Get<BonusCalculation>(Preference.BonusCalculation));
 
-                    slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
-                       Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
-                       Preferences.Get<BonusCalculation>(Preference.BonusCalculation));
-
-                    string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-                    Logger.Info(String.Format(Logging.Logger.NameFormat, slotModel.Name, statusMessage));
-                }
-            }
-            finally
-            {
-                _slotsLock.ExitReadLock();
+                string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
+                Logger.Info(String.Format(Logging.Logger.NameFormat, slotModel.Name, statusMessage));
             }
 
             string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
