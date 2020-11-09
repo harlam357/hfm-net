@@ -250,6 +250,19 @@ namespace HFM.Core.Client
         }
 
         [Test]
+        public void ClientConfiguration_Remove_CallsClientDispose()
+        {
+            // Arrange
+            var mockClient = new Mock<IClientDisposable>();
+            var configuration = CreateConfiguration();
+            configuration.Add("test", mockClient.Object);
+            // Act
+            configuration.Remove("test");
+            // Assert
+            mockClient.Verify(x => x.Dispose());
+        }
+
+        [Test]
         public void ClientConfiguration_Remove_ThrowsWhenKeyIsNull()
         {
             Assert.Throws<ArgumentNullException>(() => CreateConfiguration().Remove(null));
@@ -308,6 +321,19 @@ namespace HFM.Core.Client
             mockClient.Verify(x => x.Cancel());
         }
 
+        [Test]
+        public void ClientConfiguration_Clear_CallsClientDispose()
+        {
+            // Arrange
+            var mockClient = new Mock<IClientDisposable>();
+            var configuration = CreateConfiguration();
+            configuration.Add("test", mockClient.Object);
+            // Act
+            configuration.Clear();
+            // Assert
+            mockClient.Verify(x => x.Dispose());
+        }
+
         private static ClientConfiguration CreateConfiguration()
         {
             return new ClientConfiguration(null,
@@ -335,5 +361,10 @@ namespace HFM.Core.Client
 
             }
         }
+    }
+
+    public interface IClientDisposable : IClient, IDisposable
+    {
+
     }
 }

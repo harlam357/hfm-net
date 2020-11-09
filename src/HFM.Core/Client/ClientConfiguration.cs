@@ -214,6 +214,10 @@ namespace HFM.Core.Client
                     client.Cancel();
                 }
                 result = _clientDictionary.Remove(key);
+                if (client is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
             finally
             {
@@ -263,13 +267,21 @@ namespace HFM.Core.Client
             {
                 hasValues = _clientDictionary.Count != 0;
                 // clear subscriptions
-                foreach (var client in _clientDictionary.Values)
+                var clients = _clientDictionary.Values.ToList();
+                foreach (var client in clients)
                 {
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
                     client.Cancel();
                 }
                 _clientDictionary.Clear();
+                foreach (var client in clients)
+                {
+                    if (client is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+                }
             }
             finally
             {
