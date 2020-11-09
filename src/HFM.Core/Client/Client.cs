@@ -48,7 +48,7 @@ namespace HFM.Core.Client
         void Retrieve();
     }
 
-    public abstract class Client : IClient
+    public abstract class Client : IClient, IDisposable
     {
         public event EventHandler SlotsChanged;
 
@@ -168,5 +168,27 @@ namespace HFM.Core.Client
             Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
 
         protected abstract void OnRetrieve();
+
+        // Dispose
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _slotsLock.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
