@@ -56,7 +56,7 @@ namespace HFM.Core.Client
                 if (_slots.Count == 0)
                 {
                     // return default slot (for grid binding)
-                    return new[] { new SlotModel(this) { Status = SlotStatus.Offline } };
+                    return new[] { SlotModel.CreateOfflineSlotModel(this) };
                 }
                 return _slots.ToArray();
             }

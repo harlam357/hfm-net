@@ -234,5 +234,8 @@ namespace HFM.Core.Client
                 slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.WorkUnit.ToShortProjectString());
             }
         }
+
+        public static SlotModel CreateOfflineSlotModel(IClient client) => 
+            new SlotModel(client) { Status = SlotStatus.Offline };
     }
 }
