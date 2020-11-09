@@ -67,7 +67,7 @@ namespace HFM.Core.Client
                     if (client != null)
                     {
                         client.SlotsChanged += OnInvalidate;
-                        client.RetrievalFinished += OnInvalidate;
+                        client.RetrieveFinished += OnInvalidate;
                         _clientDictionary.Add(client.Settings.Name, client);
                         added++;
                     }
@@ -133,7 +133,7 @@ namespace HFM.Core.Client
                 client = _clientDictionary[key];
 
                 client.SlotsChanged -= OnInvalidate;
-                client.RetrievalFinished -= OnInvalidate;
+                client.RetrieveFinished -= OnInvalidate;
                 // update the settings
                 client.Settings = settings;
                 // if the key changed the client object needs removed and re-added with the correct key
@@ -143,7 +143,7 @@ namespace HFM.Core.Client
                     _clientDictionary.Add(settings.Name, client);
                 }
                 client.SlotsChanged += OnInvalidate;
-                client.RetrievalFinished += OnInvalidate;
+                client.RetrieveFinished += OnInvalidate;
             }
             finally
             {
@@ -171,7 +171,7 @@ namespace HFM.Core.Client
             try
             {
                 value.SlotsChanged += OnInvalidate;
-                value.RetrievalFinished += OnInvalidate;
+                value.RetrieveFinished += OnInvalidate;
                 _clientDictionary.Add(key, value);
             }
             finally
@@ -210,7 +210,7 @@ namespace HFM.Core.Client
                 {
                     client = _clientDictionary[key];
                     client.SlotsChanged -= OnInvalidate;
-                    client.RetrievalFinished -= OnInvalidate;
+                    client.RetrieveFinished -= OnInvalidate;
                     client.Abort();
                 }
                 result = _clientDictionary.Remove(key);
@@ -266,7 +266,7 @@ namespace HFM.Core.Client
                 foreach (var client in _clientDictionary.Values)
                 {
                     client.SlotsChanged -= OnInvalidate;
-                    client.RetrievalFinished -= OnInvalidate;
+                    client.RetrieveFinished -= OnInvalidate;
                     client.Abort();
                 }
                 _clientDictionary.Clear();

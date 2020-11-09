@@ -149,7 +149,7 @@ namespace HFM.Core.Client
                 _slotsLock.ExitWriteLock();
             }
 
-            OnSlotsChanged(EventArgs.Empty);
+            OnSlotsChanged();
         }
 
         private static (SlotType SlotType, int? CPUThreads, string GPU, int? GPUBus, int? GPUSlot) ParseSlotDescription(string description)
@@ -271,24 +271,22 @@ namespace HFM.Core.Client
             {
                 Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
             }
-            finally
-            {
-                if (!AbortFlag) OnRetrievalFinished(EventArgs.Empty);
-            }
+        }
+
+        protected override void OnRetrieveFinished()
+        {
+            if (!AbortFlag) base.OnRetrieveFinished();
         }
 
         private void Process()
         {
             var sw = Stopwatch.StartNew();
 
-            // Set successful Last Retrieval Time
-            LastRetrievalTime = DateTime.Now;
-
             _slotsLock.EnterReadLock();
             try
             {
                 var workUnitsBuilder = new WorkUnitCollectionBuilder(
-                    Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrievalTime);
+                    Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
                 var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
                     Messages.UnitCollection, Messages.Info?.System);
 

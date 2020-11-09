@@ -19,7 +19,7 @@ namespace HFM.Core.Client
         /// <summary>
         /// Fired when the Retrieve method finishes.
         /// </summary>
-        event EventHandler RetrievalFinished;
+        event EventHandler RetrieveFinished;
 
         ILogger Logger { get; }
 
@@ -52,11 +52,11 @@ namespace HFM.Core.Client
     {
         public event EventHandler SlotsChanged;
 
-        protected virtual void OnSlotsChanged(EventArgs e) => SlotsChanged?.Invoke(this, e);
+        protected virtual void OnSlotsChanged() => SlotsChanged?.Invoke(this, EventArgs.Empty);
 
-        public event EventHandler RetrievalFinished;
+        public event EventHandler RetrieveFinished;
 
-        protected virtual void OnRetrievalFinished(EventArgs e) => RetrievalFinished?.Invoke(this, e);
+        protected virtual void OnRetrieveFinished() => RetrieveFinished?.Invoke(this, EventArgs.Empty);
 
         public ILogger Logger { get; }
         public IPreferences Preferences { get; }
@@ -94,7 +94,7 @@ namespace HFM.Core.Client
 
         protected virtual IEnumerable<SlotModel> OnEnumerateSlots() => Array.Empty<SlotModel>();
 
-        public DateTime LastRetrievalTime { get; protected set; } = DateTime.MinValue;
+        public DateTime LastRetrieveTime { get; protected set; } = DateTime.MinValue;
 
         protected bool AbortFlag { get; private set; }
 
@@ -113,11 +113,13 @@ namespace HFM.Core.Client
             {
                 AbortFlag = false;
 
-                // perform the client specific retrieval
+                LastRetrieveTime = DateTime.Now;
                 OnRetrieve();
             }
             finally
             {
+                OnRetrieveFinished();
+
                 AbortFlag = false;
                 Monitor.Exit(_retrieveLock);
             }
