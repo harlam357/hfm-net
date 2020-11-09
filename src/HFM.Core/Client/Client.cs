@@ -38,11 +38,6 @@ namespace HFM.Core.Client
         IEnumerable<SlotModel> Slots { get; }
 
         /// <summary>
-        /// Last successful retrieval time.
-        /// </summary>
-        DateTime LastRetrievalTime { get; }
-
-        /// <summary>
         /// Abort retrieval processes.
         /// </summary>
         void Abort();

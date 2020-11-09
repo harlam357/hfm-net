@@ -518,7 +518,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
             {
                 client.Fold(GridModel.SelectedSlot.SlotID);
             }
@@ -528,7 +528,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
             {
                 client.Pause(GridModel.SelectedSlot.SlotID);
             }
@@ -538,7 +538,7 @@ namespace HFM.Forms.Presenters
         {
             if (GridModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClient client)
+            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
             {
                 client.Finish(GridModel.SelectedSlot.SlotID);
             }
