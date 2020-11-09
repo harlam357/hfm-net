@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace HFM.Core.Client
 {
@@ -9,8 +7,6 @@ namespace HFM.Core.Client
     /// </summary>
     public enum SlotStatus
     {
-        // Matches HFM.Client.DataTypes.FahClientSlotStatus
-
         /// <summary>
         /// The status of the slot is unknown.
         /// </summary>
