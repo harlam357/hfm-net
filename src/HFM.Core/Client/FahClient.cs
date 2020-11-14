@@ -101,16 +101,23 @@ namespace HFM.Core.Client
                 // iterate through slot collection
                 foreach (var slot in Messages.SlotCollection)
                 {
-                    var slotDescription = ParseSlotDescription(slot.Description);
+                    var slotDescription = SlotDescription.Parse(slot.Description);
                     // add slot model to the collection
                     var slotModel = new SlotModel(this)
                     {
                         Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
                         SlotID = slot.ID.GetValueOrDefault(),
-                        SlotType = slotDescription.SlotType,
-                        SlotThreads = slotDescription.CPUThreads,
-                        SlotProcessor = slotDescription.GPU
+                        SlotType = slotDescription.SlotType
                     };
+                    switch (slotDescription)
+                    {
+                        case GPUSlotDescription g:
+                            slotModel.SlotProcessor = g.GPU;
+                            break;
+                        case CPUSlotDescription c:
+                            slotModel.SlotThreads = c.CPUThreads;
+                            break;
+                    }
                     slots.Add(slotModel);
                 }
             }
@@ -118,62 +125,6 @@ namespace HFM.Core.Client
             {
                 base.OnRefreshSlots(slots);
             }
-        }
-
-        private static (SlotType SlotType, int? CPUThreads, string GPU, int? GPUBus, int? GPUSlot) ParseSlotDescription(string description)
-        {
-            if (description is null) return (SlotType.CPU, null, null, null, null);
-
-            var slotType = ConvertToSlotType.FromSlotDescription(description);
-
-            string gpu = null;
-            int? gpuBus = null;
-            int? gpuSlot = null;
-            int? cpuThreads = null;
-
-            if (slotType == SlotType.GPU)
-            {
-                gpu = GetGPUFromDescription(description);
-                (gpuBus, gpuSlot) = GetGPUBusAndSlotFromDescription(description);
-            }
-            else
-            {
-                Debug.Assert(slotType == SlotType.CPU);
-                cpuThreads = GetCPUThreadsFromDescription(description);
-            }
-
-            return (slotType, cpuThreads, gpu, gpuBus, gpuSlot);
-        }
-
-        private static string GetGPUFromDescription(string description)
-        {
-            var match = Regex.Match(description, "\\[(?<GPU>.+)\\]", RegexOptions.Singleline);
-            return match.Success ? match.Groups["GPU"].Value : null;
-        }
-
-        private static (int? GPUBus, int? GPUSlot) GetGPUBusAndSlotFromDescription(string description)
-        {
-            int? gpuBus = null;
-            int? gpuSlot = null;
-
-            var match = Regex.Match(description, @"gpu\:(?<GPUBus>\d+)\:(?<GPUSlot>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            if (match.Success &&
-                Int32.TryParse(match.Groups["GPUBus"].Value, out var bus) &&
-                Int32.TryParse(match.Groups["GPUSlot"].Value, out var slot))
-            {
-                gpuBus = bus;
-                gpuSlot = slot;
-            }
-
-            return (gpuBus, gpuSlot);
-        }
-
-        private static int? GetCPUThreadsFromDescription(string description)
-        {
-            var match = Regex.Match(description, @"[cpu|smp]\:(?<CPUThreads>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            return match.Success && Int32.TryParse(match.Groups["CPUThreads"].Value, out var threads)
-                ? (int?)threads
-                : null;
         }
 
         protected override void OnCancel()

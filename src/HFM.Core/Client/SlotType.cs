@@ -14,15 +14,6 @@ namespace HFM.Core.Client
 
     public static class ConvertToSlotType
     {
-        public static SlotType FromSlotDescription(string description)
-        {
-            if (String.IsNullOrEmpty(description)) return SlotType.Unknown;
-
-            return description.StartsWith("gpu", StringComparison.OrdinalIgnoreCase)
-                ? SlotType.GPU
-                : SlotType.CPU;
-        }
-
         public static SlotType FromCoreName(string coreName)
         {
             if (String.IsNullOrEmpty(coreName)) return SlotType.Unknown;
