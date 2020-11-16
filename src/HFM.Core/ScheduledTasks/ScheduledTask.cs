@@ -143,19 +143,28 @@ namespace HFM.Core.ScheduledTasks
             InnerTask = Task.Run(() => OnRun(_cts.Token), _cts.Token);
             InnerTask.ContinueWith(t =>
             {
-                if (t.Status == TaskStatus.Faulted)
+                switch (t.Status)
                 {
-                    Exception = t.Exception?.InnerException;
-                    OnTaskChanged(ScheduledTaskChangedAction.Faulted);
+                    case TaskStatus.Faulted:
+                        Exception = t.Exception?.InnerException;
+                        OnTaskChanged(ScheduledTaskChangedAction.Faulted);
+                        break;
+                    case TaskStatus.Canceled:
+                        OnTaskChanged(ScheduledTaskChangedAction.Canceled);
+                        break;
+                    case TaskStatus.RanToCompletion:
+                        OnTaskChanged(ScheduledTaskChangedAction.Finished, sw.ElapsedMilliseconds);
+                        if (_cts.Token.IsCancellationRequested)
+                        {
+                            OnTaskChanged(ScheduledTaskChangedAction.Canceled);
+                        }
+                        else if (Enabled)
+                        {
+                            Start();
+                        }
+                        break;
                 }
-                _cts.Token.ThrowIfCancellationRequested();
-                OnTaskChanged(ScheduledTaskChangedAction.Finished, sw.ElapsedMilliseconds);
-                if (Enabled)
-                {
-                    _cts.Token.ThrowIfCancellationRequested();
-                    Start();
-                }
-            }, _cts.Token);
+            }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
         }
 
         protected abstract void OnRun(CancellationToken ct);
@@ -206,7 +215,6 @@ namespace HFM.Core.ScheduledTasks
         public void Cancel()
         {
             _cts?.Cancel();
-            OnTaskChanged(ScheduledTaskChangedAction.Canceled);
             Stop();
         }
     }

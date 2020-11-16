@@ -13,7 +13,7 @@ namespace HFM.Core.ScheduledTasks
     public class ScheduledTaskTests
     {
         [Test]
-        public void DelegateScheduledTask_Test()
+        public async Task DelegateScheduledTask_Test()
         {
             // create and start the task
             var task = new DelegateScheduledTask("Task", ct => Thread.Sleep(10), 100);
@@ -24,24 +24,27 @@ namespace HFM.Core.ScheduledTasks
             Assert.IsTrue(task.Enabled);
 
             // allow the task time to be scheduled and run
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             // stop the task
             task.Stop();
             Assert.IsFalse(task.Enabled);
 
             // wait for completion
-            task.InnerTask?.GetAwaiter().GetResult();
+            await task.InnerTask;
         }
 
         [Test]
-        public void DelegateScheduledTask_WithCancellation_Test()
+        public async Task DelegateScheduledTask_WithCancellation_Test()
         {
             // create and start the task
             var task = new DelegateScheduledTask("Task", ct =>
             {
-                ct.ThrowIfCancellationRequested();
-                Thread.Sleep(10);
+                while (!ct.IsCancellationRequested)
+                {
+                    Thread.Sleep(10);
+                    ct.ThrowIfCancellationRequested();
+                }
             }, 100);
             task.Changed += TaskChanged;
             Assert.IsFalse(task.Enabled);
@@ -49,20 +52,51 @@ namespace HFM.Core.ScheduledTasks
             task.Start();
             Assert.IsTrue(task.Enabled);
 
-            // schedule a cancellation and wait
-            Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                task.Cancel();
-            }).GetAwaiter().GetResult();
+            // allow the task time to be scheduled and run
+            await Task.Delay(1000);
+
+            // cancel the task
+            task.Cancel();
             Assert.IsFalse(task.Enabled);
 
-            // wait for completion
-            task.InnerTask?.GetAwaiter().GetResult();
+            try
+            {
+                // wait for completion
+                await task.InnerTask;
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         [Test]
-        public void DelegateScheduledTask_WithException_Test()
+        public async Task DelegateScheduledTask_CancelAfterCompletion_Test()
+        {
+            // create and start the task
+            var task = new DelegateScheduledTask("Task", ct =>
+            {
+                Thread.Sleep(1000);
+            }, 10);
+            task.Changed += TaskChanged;
+            Assert.IsFalse(task.Enabled);
+
+            task.Start();
+            Assert.IsTrue(task.Enabled);
+
+            // allow the task time to be scheduled and run
+            await Task.Delay(100);
+
+            // cancel the task
+            task.Cancel();
+            Assert.IsFalse(task.Enabled);
+
+            // wait for completion
+            await task.InnerTask;
+        }
+
+        [Test]
+        public async Task DelegateScheduledTask_WithException_Test()
         {
             // create and start the task
             var task = new DelegateScheduledTask("Task", ct =>
@@ -77,7 +111,7 @@ namespace HFM.Core.ScheduledTasks
             Assert.IsTrue(task.Enabled);
 
             // allow the task time to be scheduled and run
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             // stop the task
             task.Stop();
@@ -87,7 +121,7 @@ namespace HFM.Core.ScheduledTasks
             try
             {
                 // wait for completion
-                task.InnerTask?.GetAwaiter().GetResult();
+                await task.InnerTask;
             }
             catch (Exception ex)
             {
