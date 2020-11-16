@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using HFM.Core.Logging;
 using HFM.Preferences;
@@ -181,7 +182,7 @@ namespace HFM.Core.Client
             configuration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
             // Assert
             Assert.AreEqual(1, configuration.Count);
-            Assert.IsTrue(configuration.ContainsKey("test2"));
+            Assert.AreEqual("test2", configuration.GetClients().First().Settings.Name);
             Assert.AreEqual(ClientConfigurationChangedAction.Edit, changedEventArgs.Action);
             Assert.AreEqual("test2", changedEventArgs.Client.Settings.Name);
             Assert.AreEqual("server1", changedEventArgs.Client.Settings.Server);

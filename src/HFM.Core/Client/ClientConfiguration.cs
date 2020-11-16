@@ -155,13 +155,13 @@ namespace HFM.Core.Client
         }
 
         /// <summary>
-        /// Adds an <see cref="T:HFM.Core.IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// Adds an <see cref="IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
         /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
         /// <param name="key">The string to use as the key of the element to add.</param>
-        /// <param name="value">The <see cref="T:HFM.Core.IClient"/> object to use as the value of the element to add.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
+        /// <param name="value">The <see cref="IClient"/> object to use as the value of the element to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
         internal void Add(string key, IClient value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -181,19 +181,6 @@ namespace HFM.Core.Client
 
             IsDirty = true;
             OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Add, value));
-        }
-
-        public bool ContainsKey(string key)
-        {
-            _syncLock.EnterReadLock();
-            try
-            {
-                return _clientDictionary.ContainsKey(key);
-            }
-            finally
-            {
-                _syncLock.ExitReadLock();
-            }
         }
 
         public bool Remove(string key)
@@ -238,19 +225,6 @@ namespace HFM.Core.Client
             try
             {
                 return _clientDictionary.Values.ToList();
-            }
-            finally
-            {
-                _syncLock.ExitReadLock();
-            }
-        }
-
-        public IClient Get(string key)
-        {
-            _syncLock.EnterReadLock();
-            try
-            {
-                return _clientDictionary[key];
             }
             finally
             {
