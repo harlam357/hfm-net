@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -43,9 +44,19 @@ namespace HFM.Core.Client
         void Cancel();
 
         /// <summary>
+        /// Gets a value indicating whether the client is connected.
+        /// </summary>
+        bool Connected { get; }
+
+        /// <summary>
+        /// Asynchronously connects the client to the resources defined by the <see cref="ClientSettings"/>.
+        /// </summary>
+        Task Connect();
+
+        /// <summary>
         /// Starts the retrieval process.
         /// </summary>
-        void Retrieve();
+        Task Retrieve();
     }
 
     public abstract class Client : IClient, IDisposable
@@ -93,37 +104,15 @@ namespace HFM.Core.Client
         }
 
         // Slots
-        private readonly List<SlotModel> _slots = new List<SlotModel>();
-        private readonly ReaderWriterLockSlim _slotsLock = new ReaderWriterLockSlim();
+        private List<SlotModel> _slots = new List<SlotModel>();
 
-        public IEnumerable<SlotModel> Slots
-        {
-            get
-            {
-                _slotsLock.EnterReadLock();
-                try
-                {
-                    return _slots.ToArray();
-                }
-                finally
-                {
-                    _slotsLock.ExitReadLock();
-                }
-            }
-        }
+        public IEnumerable<SlotModel> Slots => _slots.ToArray();
 
         public void RefreshSlots()
         {
-            _slotsLock.EnterWriteLock();
-            try
-            {
-                _slots.Clear();
-                OnRefreshSlots(_slots);
-            }
-            finally
-            {
-                _slotsLock.ExitWriteLock();
-            }
+            var slots = new List<SlotModel>();
+            OnRefreshSlots(slots);
+            Interlocked.Exchange(ref _slots, slots);
 
             OnSlotsChanged();
         }
@@ -140,34 +129,51 @@ namespace HFM.Core.Client
 
         protected virtual void OnCancel() => IsCancellationRequested = true;
 
-        private readonly object _retrieveLock = new object();
+        public virtual bool Connected => false;
 
-        public void Retrieve()
+        public Task Connect() => OnConnect();
+
+        protected virtual Task OnConnect() => Task.CompletedTask;
+
+        private int _retrieveLock;
+
+        public async Task Retrieve()
         {
-            if (!Monitor.TryEnter(_retrieveLock))
+            if (Interlocked.CompareExchange(ref _retrieveLock, 1, 0) != 0)
             {
                 OnRetrieveInProgress();
                 return;
             }
+
             try
             {
                 IsCancellationRequested = false;
-
                 LastRetrieveTime = DateTime.Now;
-                OnRetrieve();
+
+                if (!Connected)
+                {
+                    await Connect().ConfigureAwait(false);
+                    return;
+                }
+
+                await OnRetrieve().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(String.Format(Logging.Logger.NameFormat, Settings?.Name, ex.Message), ex);
             }
             finally
             {
                 OnRetrieveFinished();
 
-                Monitor.Exit(_retrieveLock);
+                Interlocked.Exchange(ref _retrieveLock, 0);
             }
         }
 
         protected virtual void OnRetrieveInProgress() =>
-            Debug.WriteLine(Logging.Logger.NameFormat, Settings.Name, "Retrieval already in progress...");
+            Debug.WriteLine(Logging.Logger.NameFormat, Settings?.Name, "Retrieval already in progress...");
 
-        protected abstract void OnRetrieve();
+        protected abstract Task OnRetrieve();
 
         // Dispose
         private bool _disposed;
@@ -178,7 +184,7 @@ namespace HFM.Core.Client
             {
                 if (disposing)
                 {
-                    _slotsLock.Dispose();
+
                 }
 
                 _disposed = true;

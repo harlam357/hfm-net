@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 using HFM.Client;
@@ -74,7 +74,7 @@ namespace HFM.Core.Client
             if (result.ExecuteRetrieval)
             {
                 // Process the retrieved logs
-                Retrieve();
+                await Retrieve().ConfigureAwait(false);
             }
         }
 
@@ -131,65 +131,79 @@ namespace HFM.Core.Client
         {
             base.OnCancel();
 
-            if (Connection != null && Connection.Connected)
+            if (Connected)
             {
                 Connection.Close();
             }
         }
 
-        protected override async void OnRetrieve()
+        public override bool Connected => Connection != null && Connection.Connected;
+
+        protected override async Task OnConnect()
         {
-            if (Messages.IsHeartbeatOverdue())
+            await CreateAndOpenConnection().ConfigureAwait(false);
+
+            _ = Task.Run(async () => await ReadMessagesFromConnection().ConfigureAwait(false))
+                .ContinueWith(async t => await CloseConnection().ConfigureAwait(false),
+                    CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
+        }
+
+        private async Task CreateAndOpenConnection()
+        {
+            Connection = new FahClientConnection(Settings.Server, Settings.Port);
+            await Connection.OpenAsync().ConfigureAwait(false);
+            if (!String.IsNullOrWhiteSpace(Settings.Password))
             {
-                // haven't seen a heartbeat
-                Cancel();
+                await Connection.CreateCommand("auth " + Settings.Password).ExecuteAsync().ConfigureAwait(false);
             }
+            await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
+        }
 
-            // connect if not connected
-            if (Connection is null || !Connection.Connected)
-            {
-                try
-                {
-                    Connection = new FahClientConnection(Settings.Server, Settings.Port);
-                    await Connection.OpenAsync().ConfigureAwait(false);
-                    if (!String.IsNullOrWhiteSpace(Settings.Password))
-                    {
-                        await Connection.CreateCommand("auth " + Settings.Password).ExecuteAsync().ConfigureAwait(false);
-                    }
-                    await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
-
-                    var reader = Connection.CreateReader();
-                    try
-                    {
-                        while (await reader.ReadAsync().ConfigureAwait(false))
-                        {
-                            await OnMessageRead(reader.Message).ConfigureAwait(false);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // connection died
-                        Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
-                    }
-                    Connection.Close();
-                    await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
-                }
-                return;
-            }
-
+        private async Task ReadMessagesFromConnection()
+        {
+            var reader = Connection.CreateReader();
             try
             {
-                // Process the retrieved data
-                Process();
+                while (await reader.ReadAsync().ConfigureAwait(false))
+                {
+                    await OnMessageRead(reader.Message).ConfigureAwait(false);
+                }
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
             }
             catch (Exception ex)
             {
                 Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
             }
+        }
+
+        private async Task CloseConnection()
+        {
+            try
+            {
+                Connection.Close();
+                await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
+            }
+        }
+
+        protected override Task OnRetrieve()
+        {
+            if (Messages.IsHeartbeatOverdue())
+            {
+                // haven't seen a heartbeat
+                Cancel();
+                return Task.CompletedTask;
+            }
+
+            // Process the retrieved data
+            Process();
+            return Task.CompletedTask;
         }
 
         protected override void OnRetrieveFinished()
