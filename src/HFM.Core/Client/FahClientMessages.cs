@@ -72,7 +72,7 @@ namespace HFM.Core.Client
             }
         }
 
-        public const int HeartbeatInterval = 60;
+        private const int HeartbeatInterval = 60;
 
         public bool IsHeartbeatOverdue()
         {
