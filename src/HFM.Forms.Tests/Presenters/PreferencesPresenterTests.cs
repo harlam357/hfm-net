@@ -215,7 +215,7 @@ namespace HFM.Forms.Presenters
                 presenter.Model.WebGenerationModel.Enabled = true;
                 presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Ftp;
                 // Act & Assert
-                Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
+                Assert.DoesNotThrowAsync(() => presenter.TestWebGenerationConnection(NullFtpService.Instance));
             }
         }
 
@@ -230,7 +230,7 @@ namespace HFM.Forms.Presenters
                 presenter.Model.WebGenerationModel.Enabled = true;
                 presenter.Model.WebGenerationModel.WebDeploymentType = WebDeploymentType.Ftp;
                 // Act & Assert
-                Assert.ThrowsAsync<WebException>(async () => await presenter.TestWebGenerationConnection(new FtpServiceThrowsOnCheckConnection()));
+                Assert.ThrowsAsync<WebException>(() => presenter.TestWebGenerationConnection(new FtpServiceThrowsOnCheckConnection()));
             }
         }
 
@@ -248,7 +248,7 @@ namespace HFM.Forms.Presenters
                 {
                     presenter.Model.WebGenerationModel.Path = artifacts.Path;
                     // Act & Assert
-                    Assert.DoesNotThrowAsync(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
+                    Assert.DoesNotThrowAsync(() => presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace HFM.Forms.Presenters
                 {
                     presenter.Model.WebGenerationModel.Path = Path.Combine(artifacts.Path, "DoesNotExist");
                     // Act & Assert
-                    Assert.ThrowsAsync<DirectoryNotFoundException>(async () => await presenter.TestWebGenerationConnection(NullFtpService.Instance));
+                    Assert.ThrowsAsync<DirectoryNotFoundException>(() => presenter.TestWebGenerationConnection(NullFtpService.Instance));
                 }
             }
         }
