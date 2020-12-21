@@ -23,15 +23,16 @@ namespace HFM.Core.Client
         {
             Logger = logger ?? NullLogger.Instance;
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _units = units ?? throw new ArgumentNullException(nameof(units));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _units = units;
+            _options = options;
             _clientRun = clientRun;
             _unitRetrievalTime = unitRetrievalTime;
         }
 
         public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
         {
-            if (previousWorkUnit == null) throw new ArgumentNullException(nameof(previousWorkUnit));
+            if (_units is null) return new WorkUnitCollection();
+            if (previousWorkUnit is null) throw new ArgumentNullException(nameof(previousWorkUnit));
 
             var slotRun = GetSlotRun(slotID);
             if (Logger.IsDebugEnabled && slotRun != null)
@@ -133,7 +134,6 @@ namespace HFM.Core.Client
         {
             Debug.Assert(workUnit != null);
             Debug.Assert(unit != null);
-            Debug.Assert(options != null);
 
             workUnit.ID = unit.ID.GetValueOrDefault();
             workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
@@ -144,8 +144,8 @@ namespace HFM.Core.Client
             workUnit.ProjectClone = unit.Clone.GetValueOrDefault();
             workUnit.ProjectGen = unit.Gen.GetValueOrDefault();
 
-            workUnit.FoldingID = options[Options.User] ?? Unknown.Value;
-            workUnit.Team = ToNullableInt32(options[Options.Team]).GetValueOrDefault();
+            workUnit.FoldingID = options?[Options.User] ?? Unknown.Value;
+            workUnit.Team = ToNullableInt32(options?[Options.Team]).GetValueOrDefault();
 
             workUnit.CoreID = unit.Core?.Replace("0x", String.Empty).ToUpperInvariant();
         }

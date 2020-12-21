@@ -19,6 +19,31 @@ namespace HFM.Core.Client
         private static readonly DateTime _UnitRetrievalTime = new DateTime(2020, 1, 1);
 
         [Test]
+        public void WorkUnitCollectionBuilder_BuildForSlot_ReturnsEmptyCollectionWhenUnitCollectionIsNull()
+        {
+            // Arrange
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings(), null, null, null, _UnitRetrievalTime);
+            // Act
+            var workUnits = builder.BuildForSlot(0, null);
+            // Assert
+            Assert.AreEqual(0, workUnits.Count);
+        }
+
+        [Test]
+        public async Task WorkUnitCollectionBuilder_BuildForSlot_DoesNotPopulateFoldingIDAndTeamWhenOptionsIsNull()
+        {
+            // Arrange
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, null, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            // Act
+            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            // Assert
+            var workUnit = workUnits.Current;
+            Assert.AreEqual(Unknown.Value, workUnit.FoldingID);
+            Assert.AreEqual(0, workUnit.Team);
+        }
+
+        [Test]
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0()
         {
             // Arrange
