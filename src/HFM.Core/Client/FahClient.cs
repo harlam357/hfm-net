@@ -245,7 +245,7 @@ namespace HFM.Core.Client
         private static string GetSlotProcessor(SystemInfo systemInfo, SlotModel slotModel) =>
             slotModel.SlotType == SlotType.GPU
                 ? slotModel.SlotProcessor
-                : systemInfo.CPU;
+                : systemInfo?.CPU;
 
         private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
         {
