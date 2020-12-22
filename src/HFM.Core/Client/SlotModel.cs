@@ -25,25 +25,19 @@ namespace HFM.Core.Client
 
     public class SlotModel
     {
-        #region IPreferenceSet
+        private PPDCalculation PPDCalculation => Client.Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
 
-        public IPreferences Prefs => Client.Preferences;
+        private BonusCalculation BonusCalculation => Client.Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
 
-        private PPDCalculation PPDCalculation => Prefs.Get<PPDCalculation>(Preference.PPDCalculation);
+        private bool ShowVersions => Client.Preferences.Get<bool>(Preference.DisplayVersions);
 
-        private BonusCalculation BonusCalculation => Prefs.Get<BonusCalculation>(Preference.BonusCalculation);
+        private int DecimalPlaces => Client.Preferences.Get<int>(Preference.DecimalPlaces);
 
-        private bool ShowVersions => Prefs.Get<bool>(Preference.DisplayVersions);
-
-        private int DecimalPlaces => Prefs.Get<int>(Preference.DecimalPlaces);
-
-        internal bool ShowETADate => Prefs.Get<bool>(Preference.DisplayEtaAsDate);
-
-        #endregion
-
-        public WorkUnitModel WorkUnitModel { get; set; }
+        internal bool ShowETADate => Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
 
         public IClient Client { get; }
+
+        public WorkUnitModel WorkUnitModel { get; set; }
 
         public SlotModel(IClient client)
         {
@@ -144,12 +138,12 @@ namespace HFM.Core.Client
         public double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public int Completed =>
-           Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
+            Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
               ? TotalCompletedUnits
               : TotalRunCompletedUnits;
 
         public int Failed =>
-           Prefs.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
+            Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
               ? TotalFailedUnits
               : TotalRunFailedUnits;
 
@@ -212,8 +206,8 @@ namespace HFM.Core.Client
                 {
                     return true;
                 }
-                return WorkUnitModel.WorkUnit.FoldingID == Prefs.Get<string>(Preference.StanfordId) &&
-                       WorkUnitModel.WorkUnit.Team == Prefs.Get<int>(Preference.TeamId);
+                return WorkUnitModel.WorkUnit.FoldingID == Client.Preferences.Get<string>(Preference.StanfordId) &&
+                       WorkUnitModel.WorkUnit.Team == Client.Preferences.Get<int>(Preference.TeamId);
             }
         }
 

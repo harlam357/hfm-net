@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
@@ -327,7 +326,7 @@ namespace HFM.Forms.Controls
             }
 
             var timeSpan = (TimeSpan)value;
-            var timeFormatting = slotModel.Prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+            var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
             if (timeFormatting == TimeFormatting.Format1)
             {
                 string format = "{1:00}min {2:00}sec";
@@ -371,7 +370,7 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
-            var decimalPlaces = slotModel.Prefs.Get<int>(Preference.DecimalPlaces);
+            var decimalPlaces = slotModel.Client.Preferences.Get<int>(Preference.DecimalPlaces);
             string format = NumberFormat.Get(decimalPlaces);
             var number = (double)value;
             return number.ToString(format);
@@ -392,7 +391,7 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
-            var timeFormatting = slotModel.Prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+            var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
             if (timeFormatting == TimeFormatting.Format1)
             {
                 var timeSpan = (TimeSpan)value;
@@ -405,7 +404,7 @@ namespace HFM.Forms.Controls
                 return String.Format(format, timeSpan.Days, timeSpan.Hours, timeSpan.Minutes);
             }
 
-            var etaAsDate = slotModel.Prefs.Get<bool>(Preference.DisplayEtaAsDate);
+            var etaAsDate = slotModel.Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
             if (etaAsDate)
             {
                 return slotModel.ETADate.ToString(CultureInfo.CurrentCulture);
@@ -441,7 +440,7 @@ namespace HFM.Forms.Controls
 
         protected override bool OnHasWarning(SlotModel slotModel)
         {
-            return slotModel.ProjectIsDuplicate && slotModel.Prefs.Get<bool>(Preference.DuplicateProjectCheck);
+            return slotModel.ProjectIsDuplicate && slotModel.Client.Preferences.Get<bool>(Preference.DuplicateProjectCheck);
         }
     }
 
@@ -471,7 +470,7 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
-            var decimalPlaces = slotModel.Prefs.Get<int>(Preference.DecimalPlaces);
+            var decimalPlaces = slotModel.Client.Preferences.Get<int>(Preference.DecimalPlaces);
             string format = NumberFormat.Get(decimalPlaces);
             var number = (double)value;
             return number.ToString(format);
@@ -513,7 +512,7 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
-            var timeFormatting = slotModel.Prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+            var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
             if (timeFormatting == TimeFormatting.Format1)
             {
                 var timeSpan = DateTime.Now.Subtract(dateTime);
@@ -546,7 +545,7 @@ namespace HFM.Forms.Controls
                 return String.Empty;
             }
 
-            var timeFormatting = slotModel.Prefs.Get<TimeFormatting>(Preference.TimeFormatting);
+            var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
             if (timeFormatting == TimeFormatting.Format1)
             {
                 var timeSpan = dateTime.Subtract(DateTime.Now);
