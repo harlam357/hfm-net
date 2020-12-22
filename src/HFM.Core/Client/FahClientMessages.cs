@@ -31,8 +31,6 @@ namespace HFM.Core.Client
 
         public SlotCollection SlotCollection { get; private set; }
 
-        public IList<SlotOptions> SlotOptionsCollection { get; } = new List<SlotOptions>();
-
         public UnitCollection UnitCollection { get; private set; }
 
         public FahClientLog Log { get; } = new FahClientLog();
@@ -58,7 +56,6 @@ namespace HFM.Core.Client
             Info = null;
             Options = null;
             SlotCollection = null;
-            SlotOptionsCollection.Clear();
             UnitCollection = null;
             SetupLogAssetsForLogRestart();
         }
@@ -100,41 +97,36 @@ namespace HFM.Core.Client
         /// Updates the cached messages with a message received from the client.
         /// </summary>
         /// <param name="message">The message received from the client.</param>
-        public async Task<(bool SlotsUpdated, bool ExecuteRetrieval)> UpdateMessageAsync(FahClientMessage message)
+        public async Task<bool> UpdateMessageAsync(FahClientMessage message)
         {
-            bool slotCollectionChanged = false;
-            bool unitCollectionChanged = false;
             bool logIsRetrieved = LogIsRetrieved;
 
             switch (message.Identifier.MessageType)
             {
                 case FahClientMessageType.Heartbeat:
                     Heartbeat = message;
-                    break;
+                    return true;
                 case FahClientMessageType.Info:
                     Info = Info.Load(message.MessageText);
-                    break;
+                    return true;
                 case FahClientMessageType.Options:
                     Options = Options.Load(message.MessageText);
-                    break;
+                    return true;
                 case FahClientMessageType.SlotInfo:
                     await UpdateSlotCollectionFromMessage(message).ConfigureAwait(false);
-                    break;
+                    return true;
                 case FahClientMessageType.SlotOptions:
-                    slotCollectionChanged = UpdateSlotOptionsCollectionFromMessage(message);
-                    break;
+                    UpdateSlotOptionsFromMessage(message);
+                    return true;
                 case FahClientMessageType.QueueInfo:
-                    unitCollectionChanged = UpdateUnitCollectionFromMessage(message);
-                    break;
+                    return UpdateUnitCollectionFromMessage(message);
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
                     await UpdateLogFromMessage(message).ConfigureAwait(false);
-                    break;
+                    return logIsRetrieved != LogIsRetrieved;
+                default:
+                    return false;
             }
-
-            bool executeRetrieval = logIsRetrieved != LogIsRetrieved ||
-                                    (LogIsRetrieved && (slotCollectionChanged || unitCollectionChanged));
-            return (slotCollectionChanged, executeRetrieval);
         }
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
@@ -142,7 +134,6 @@ namespace HFM.Core.Client
         private async Task UpdateSlotCollectionFromMessage(FahClientMessage message)
         {
             SlotCollection = SlotCollection.Load(message.MessageText);
-            SlotOptionsCollection.Clear();
             foreach (var slot in SlotCollection)
             {
                 var slotOptionsCommandText = String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID);
@@ -156,24 +147,17 @@ namespace HFM.Core.Client
             }
         }
 
-        private bool UpdateSlotOptionsCollectionFromMessage(FahClientMessage message)
+        private void UpdateSlotOptionsFromMessage(FahClientMessage message)
         {
-            SlotOptionsCollection.Add(SlotOptions.Load(message.MessageText));
-            if (SlotCollection != null && SlotCollection.Count == SlotOptionsCollection.Count)
+            var slotOptions = SlotOptions.Load(message.MessageText);
+            if (SlotCollection != null)
             {
-                foreach (var slotOptions in SlotOptionsCollection)
+                if (Int32.TryParse(slotOptions[Options.MachineID], out var machineID))
                 {
-                    if (Int32.TryParse(slotOptions[Options.MachineID], out var machineID))
-                    {
-                        var slot = SlotCollection.First(x => x.ID == machineID);
-                        slot.SlotOptions = slotOptions;
-                    }
+                    var slot = SlotCollection.First(x => x.ID == machineID);
+                    slot.SlotOptions = slotOptions;
                 }
-
-                return true;
             }
-
-            return false;
         }
 
         private bool UpdateUnitCollectionFromMessage(FahClientMessage message)

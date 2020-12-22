@@ -58,7 +58,14 @@ namespace HFM.Core.Client
             ProteinService = proteinService;
             WorkUnitRepository = workUnitRepository;
             Messages = new FahClientMessages(this);
+            _messageActions = new List<FahClientMessageAction>
+            {
+                new SlotInfoMessageAction(RefreshSlots),
+                new ExecuteRetrieveMessageAction(Messages, async () => await Retrieve().ConfigureAwait(false))
+            };
         }
+
+        private readonly List<FahClientMessageAction> _messageActions;
 
         protected virtual async Task OnMessageRead(FahClientMessage message)
         {
@@ -66,15 +73,10 @@ namespace HFM.Core.Client
 
             Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"{message.Identifier} - Length: {message.MessageText.Length}"));
 
-            var result = await Messages.UpdateMessageAsync(message).ConfigureAwait(false);
-            if (result.SlotsUpdated)
+            bool updated = await Messages.UpdateMessageAsync(message).ConfigureAwait(false);
+            if (updated)
             {
-                RefreshSlots();
-            }
-            if (result.ExecuteRetrieval)
-            {
-                // Process the retrieved logs
-                await Retrieve().ConfigureAwait(false);
+                _messageActions.ForEach(x => x.Execute(message.Identifier.MessageType));
             }
         }
 

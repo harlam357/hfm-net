@@ -37,7 +37,6 @@ namespace HFM.Core.Client
                 Assert.IsNotNull(messages.Info);
                 Assert.IsNotNull(messages.Options);
                 Assert.IsNotNull(messages.SlotCollection);
-                Assert.AreNotEqual(0, messages.SlotOptionsCollection.Count);
                 Assert.IsNotNull(messages.UnitCollection);
                 Assert.AreNotEqual(0, messages.Log.ClientRuns.Count);
                 Assert.IsTrue(messages.LogIsRetrieved);
@@ -48,7 +47,6 @@ namespace HFM.Core.Client
                 Assert.IsNull(messages.Info);
                 Assert.IsNull(messages.Options);
                 Assert.IsNull(messages.SlotCollection);
-                Assert.AreEqual(0, messages.SlotOptionsCollection.Count);
                 Assert.IsNull(messages.UnitCollection);
                 Assert.AreEqual(0, messages.Log.ClientRuns.Count);
                 Assert.IsFalse(messages.LogIsRetrieved);
@@ -78,9 +76,8 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(heartbeat);
             // Assert
+            Assert.IsTrue(result);
             Assert.AreEqual(heartbeat, messages.Heartbeat);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
         }
 
         [Test]
@@ -116,9 +113,8 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(info);
             // Assert
+            Assert.IsTrue(result);
             Assert.IsNotNull(messages.Info);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
         }
 
         [Test]
@@ -130,9 +126,8 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(options);
             // Assert
+            Assert.IsTrue(result);
             Assert.IsNotNull(messages.Options);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
         }
 
         [Test]
@@ -145,10 +140,9 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(slotInfo);
             // Assert
+            Assert.IsTrue(result);
             Assert.IsNotNull(messages.SlotCollection);
             Assert.AreEqual(2, messages.SlotCollection.Count);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
         }
 
         [Test]
@@ -162,35 +156,13 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(slotInfo);
             // Assert
+            Assert.IsTrue(result);
             Assert.AreEqual(2, connection.Commands.Count);
             Assert.IsTrue(connection.Commands.All(x => x.Executed));
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
         }
 
         [Test]
-        public async Task FahClientMessages_UpdateMessageAsync_StoresEachSlotOptionsMessage()
-        {
-            // Arrange
-            var messages = new FahClientMessages(null);
-            var slotOptions0 = CreateMessage(FahClientMessageType.SlotOptions, "{ \"machine-id\": \"0\" }");
-            var slotOptions1 = CreateMessage(FahClientMessageType.SlotOptions, "{ \"machine-id\": \"1\" }");
-            // Act
-            var result = await messages.UpdateMessageAsync(slotOptions0);
-            // Assert
-            Assert.AreEqual(1, messages.SlotOptionsCollection.Count);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
-            // Act
-            result = await messages.UpdateMessageAsync(slotOptions1);
-            // Assert
-            Assert.AreEqual(2, messages.SlotOptionsCollection.Count);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
-        }
-
-        [Test]
-        public async Task FahClientMessages_UpdateMessageAsync_PopulatesSlotWithSlotOptionsAfterReceivingAllSlotOptions()
+        public async Task FahClientMessages_UpdateMessageAsync_PopulatesSlotWithSlotOptions()
         {
             // Arrange
             var fahClient = SetupFahClientForSendingMockCommands();
@@ -204,69 +176,17 @@ namespace HFM.Core.Client
             Assert.IsNull(messages.SlotCollection[0].SlotOptions);
             Assert.IsNull(messages.SlotCollection[1].SlotOptions);
             // Act
-            await messages.UpdateMessageAsync(slotOptions0);
-            // Assert
-            Assert.IsNull(messages.SlotCollection[0].SlotOptions);
-            Assert.IsNull(messages.SlotCollection[1].SlotOptions);
-            // Act
-            await messages.UpdateMessageAsync(slotOptions1);
-            // Assert
-            Assert.AreSame(messages.SlotOptionsCollection[0], messages.SlotCollection[0].SlotOptions);
-            Assert.AreSame(messages.SlotOptionsCollection[1], messages.SlotCollection[1].SlotOptions);
-        }
-
-        [Test]
-        public async Task FahClientMessages_UpdateMessageAsync_ReturnsNotificationThatSlotInformationHasChangedAfterReceivingAllSlotOptions()
-        {
-            // Arrange
-            var fahClient = SetupFahClientForSendingMockCommands();
-            var messages = new FahClientMessages(fahClient);
-            var slotInfo = CreateMessage(FahClientMessageType.SlotInfo, "[ { \"id\": \"00\" }, { \"id\": \"01\" } ]");
-            // slot info must have already populated the SlotCollection
-            await messages.UpdateMessageAsync(slotInfo);
-            var slotOptions0 = CreateMessage(FahClientMessageType.SlotOptions, "{ \"machine-id\": \"0\" }");
-            var slotOptions1 = CreateMessage(FahClientMessageType.SlotOptions, "{ \"machine-id\": \"1\" }");
-            // Act
             var result = await messages.UpdateMessageAsync(slotOptions0);
             // Assert
-            Assert.AreEqual(1, messages.SlotOptionsCollection.Count);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
+            Assert.IsTrue(result);
+            Assert.IsNotNull(messages.SlotCollection[0].SlotOptions);
+            Assert.IsNull(messages.SlotCollection[1].SlotOptions);
             // Act
             result = await messages.UpdateMessageAsync(slotOptions1);
             // Assert
-            Assert.AreEqual(2, messages.SlotOptionsCollection.Count);
-            Assert.IsTrue(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
-        }
-
-        [Test]
-        public async Task FahClientMessages_UpdateMessageAsync_ReturnsNotificationThatClientDataShouldBeUpdatedWhenSlotInformationHasChangedAfterLogIsRetrieved()
-        {
-            // Arrange
-            using (var artifacts = new ArtifactFolder())
-            {
-                var fahClient = SetupFahClientForHandlingLogMessages(artifacts.Path);
-                var messages = new FahClientMessages(fahClient);
-                var slotInfo = CreateMessage(FahClientMessageType.SlotInfo, "[ { \"id\": \"00\" } ]");
-                await messages.UpdateMessageAsync(slotInfo);
-                var logRestart = CreateMessage(FahClientMessageType.LogRestart, "\"Log\"");
-                await messages.UpdateMessageAsync(logRestart);
-                slotInfo = CreateMessage(FahClientMessageType.SlotInfo, "[ { \"id\": \"00\", \"description\": \"cpu:15\" } ]");
-                var slotOptions = CreateMessage(FahClientMessageType.SlotOptions, "{ \"machine-id\": \"0\" }");
-                // Act
-                var result = await messages.UpdateMessageAsync(slotInfo);
-                // Assert
-                Assert.IsTrue(messages.LogIsRetrieved);
-                Assert.IsFalse(result.SlotsUpdated);
-                Assert.IsFalse(result.ExecuteRetrieval);
-                // Act
-                result = await messages.UpdateMessageAsync(slotOptions);
-                // Assert
-                Assert.IsTrue(messages.LogIsRetrieved);
-                Assert.IsTrue(result.SlotsUpdated);
-                Assert.IsTrue(result.ExecuteRetrieval);
-            }
+            Assert.IsTrue(result);
+            Assert.IsNotNull(messages.SlotCollection[0].SlotOptions);
+            Assert.IsNotNull(messages.SlotCollection[1].SlotOptions);
         }
 
         [Test]
@@ -278,32 +198,9 @@ namespace HFM.Core.Client
             // Act
             var result = await messages.UpdateMessageAsync(queueInfo);
             // Assert
+            Assert.IsTrue(result);
             Assert.IsNotNull(messages.UnitCollection);
             Assert.AreEqual(2, messages.UnitCollection.Count);
-            Assert.IsFalse(result.SlotsUpdated);
-            Assert.IsFalse(result.ExecuteRetrieval);
-        }
-
-        [Test]
-        public async Task FahClientMessages_UpdateMessageAsync_ReturnsNotificationThatClientDataShouldBeUpdatedWhenUnitInformationHasChangedAfterLogIsRetrieved()
-        {
-            // Arrange
-            using (var artifacts = new ArtifactFolder())
-            {
-                var fahClient = SetupFahClientForHandlingLogMessages(artifacts.Path);
-                var messages = new FahClientMessages(fahClient);
-                var queueInfo = CreateMessage(FahClientMessageType.QueueInfo, "[ { \"id\": \"01\", \"slot\": 0, \"percentdone\": \"8%\" } ]");
-                await messages.UpdateMessageAsync(queueInfo);
-                var logRestart = CreateMessage(FahClientMessageType.LogRestart, "\"Log\"");
-                await messages.UpdateMessageAsync(logRestart);
-                queueInfo = CreateMessage(FahClientMessageType.QueueInfo, "[ { \"id\": \"01\", \"slot\": 0, \"percentdone\": \"9%\" } ]");
-                // Act
-                var result = await messages.UpdateMessageAsync(queueInfo);
-                // Assert
-                Assert.IsTrue(messages.LogIsRetrieved);
-                Assert.IsFalse(result.SlotsUpdated);
-                Assert.IsTrue(result.ExecuteRetrieval);
-            }
         }
 
         [Test]
@@ -318,9 +215,8 @@ namespace HFM.Core.Client
                 // Act
                 var result = await messages.UpdateMessageAsync(logRestart);
                 // Assert
+                Assert.IsTrue(result);
                 Assert.AreEqual(1, messages.Log.ClientRuns[0].LogLines.Count);
-                Assert.IsFalse(result.SlotsUpdated);
-                Assert.IsTrue(result.ExecuteRetrieval);
             }
         }
 
