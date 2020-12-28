@@ -4,6 +4,13 @@ using System.Globalization;
 
 namespace HFM.Core.WorkUnits
 {
+    public interface IProteinBenchmarkDetailSource
+    {
+        string Processor { get; }
+
+        int? Threads { get; }
+    }
+
     public readonly struct ProteinBenchmarkIdentifier : IEquatable<ProteinBenchmarkIdentifier>, IComparable<ProteinBenchmarkIdentifier>, IComparable
     {
         internal const string NoProcessor = null;

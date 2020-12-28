@@ -290,7 +290,7 @@ namespace HFM.Forms.Controls
 
     public class SlotsGridProgressColumn : SlotsGridColumn
     {
-        public SlotsGridProgressColumn() : base("Progress", "Progress", "Work unit progress", nameof(SlotModel.Progress))
+        public SlotsGridProgressColumn() : base("Progress", "Progress", "Work unit progress", nameof(SlotModel.PercentComplete))
         {
 
         }

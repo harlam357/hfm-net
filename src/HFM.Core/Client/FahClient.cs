@@ -104,20 +104,17 @@ namespace HFM.Core.Client
                 foreach (var slot in Messages.SlotCollection)
                 {
                     var slotDescription = SlotDescription.Parse(slot.Description);
-                    // add slot model to the collection
-                    var slotModel = new SlotModel(this)
-                    {
-                        Status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true),
-                        SlotID = slot.ID.GetValueOrDefault(),
-                        SlotType = slotDescription.SlotType
-                    };
+                    var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
+                    var slotID = slot.ID.GetValueOrDefault();
+                    var slotType = slotDescription.SlotType;
+                    var slotModel = new FahClientSlotModel(this, status, slotID, slotType);
                     switch (slotDescription)
                     {
                         case GPUSlotDescription g:
-                            slotModel.SlotProcessor = g.GPU;
+                            slotModel.Processor = g.GPU;
                             break;
                         case CPUSlotDescription c:
-                            slotModel.SlotThreads = c.CPUThreads;
+                            slotModel.Threads = c.CPUThreads;
                             break;
                     }
                     slots.Add(slotModel);
@@ -217,12 +214,14 @@ namespace HFM.Core.Client
         {
             var sw = Stopwatch.StartNew();
 
+            ClientVersion = Messages.Info?.Client.Version;
+
             var workUnitsBuilder = new WorkUnitCollectionBuilder(
                 Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
             var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
                 Messages.UnitCollection, Messages.Info?.System);
 
-            foreach (var slotModel in Slots)
+            foreach (var slotModel in Slots.OfType<FahClientSlotModel>())
             {
                 var previousWorkUnitModel = slotModel.WorkUnitModel;
                 var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, previousWorkUnitModel.WorkUnit);
@@ -230,7 +229,6 @@ namespace HFM.Core.Client
 
                 PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
                 UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
-                SetSlotStatus(slotModel);
 
                 slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                    Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
@@ -244,9 +242,9 @@ namespace HFM.Core.Client
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
-        private static string GetSlotProcessor(SystemInfo systemInfo, SlotModel slotModel) =>
+        private static string GetSlotProcessor(SystemInfo systemInfo, FahClientSlotModel slotModel) =>
             slotModel.SlotType == SlotType.GPU
-                ? slotModel.SlotProcessor
+                ? slotModel.Processor
                 : systemInfo?.CPU;
 
         private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
@@ -284,16 +282,7 @@ namespace HFM.Core.Client
             return workUnitModel;
         }
 
-        private static void SetSlotStatus(SlotModel slotModel)
-        {
-            if (slotModel.Status == SlotStatus.Running ||
-                slotModel.Status == SlotStatus.RunningNoFrameTimes)
-            {
-                slotModel.Status = slotModel.IsUsingBenchmarkFrameTime ? SlotStatus.RunningNoFrameTimes : SlotStatus.Running;
-            }
-        }
-
-        private void PopulateSlotModel(SlotModel slotModel, WorkUnitCollection workUnits,
+        private void PopulateSlotModel(FahClientSlotModel slotModel, WorkUnitCollection workUnits,
             WorkUnitModelCollection workUnitModels, WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
         {
             Debug.Assert(slotModel != null);
@@ -303,8 +292,7 @@ namespace HFM.Core.Client
 
             var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
 
-            slotModel.ClientVersion = Messages.Info?.Client.Version;
-            slotModel.SlotProcessor = slotProcessor;
+            slotModel.Processor = slotProcessor;
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
             slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
 

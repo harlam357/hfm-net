@@ -1,11 +1,6 @@
-﻿
-using System;
-using System.Drawing;
+﻿using System;
 
 using AutoMapper;
-
-using HFM.Core.Client;
-using HFM.Core.WorkUnits;
 
 namespace HFM.Core.SlotXml
 {
@@ -13,17 +8,6 @@ namespace HFM.Core.SlotXml
     {
         public XmlBuilderProfile()
         {
-            CreateMap<SlotModel, SlotData>()
-                .ForMember(dest => dest.StatusColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(src.Status.GetStatusColor())))
-                .ForMember(dest => dest.StatusFontColor, opt => opt.MapFrom(src => ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(src.Status))))
-                .ForMember(dest => dest.SlotType, opt => opt.MapFrom(src => src.SlotTypeString))
-                .ForMember(dest => dest.ETA, opt => opt.MapFrom(src => src.ShowETADate ? src.ETADate.ToShortStringOrEmpty() : src.ETA.ToString()))
-                .ForMember(dest => dest.Core, opt => opt.MapFrom(src => src.Core ?? String.Empty))
-                .ForMember(dest => dest.CoreId, opt => opt.MapFrom(src => src.CoreID ?? String.Empty))
-                .ForMember(dest => dest.DownloadTime, opt => opt.MapFrom(src => src.Assigned.ToShortStringOrEmpty()))
-                .ForMember(dest => dest.PreferredDeadline, opt => opt.MapFrom(src => src.PreferredDeadline.ToShortStringOrEmpty()))
-                .ForMember(dest => dest.Protein, opt => opt.MapFrom(src => src.WorkUnitModel.CurrentProtein));
-
             CreateMap<Log.LogLine, LogLine>();
             CreateMap<Proteins.Protein, Protein>()
                 .ForMember(dest => dest.ServerIP, opt => opt.MapFrom(src => src.ServerIP ?? String.Empty))

@@ -25,15 +25,7 @@ namespace HFM.Core.Client
 
     public class SlotModel
     {
-        private PPDCalculation PPDCalculation => Client.Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
-
-        private BonusCalculation BonusCalculation => Client.Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
-
-        private bool ShowVersions => Client.Preferences.Get<bool>(Preference.DisplayVersions);
-
-        private int DecimalPlaces => Client.Preferences.Get<int>(Preference.DecimalPlaces);
-
-        internal bool ShowETADate => Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+        public virtual SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotIdentifier.NoSlotID);
 
         public IClient Client { get; }
 
@@ -45,30 +37,116 @@ namespace HFM.Core.Client
             WorkUnitModel = new WorkUnitModel(this);
         }
 
-        #region Grid Properties
+        public virtual SlotStatus Status { get; set; }
 
-        public SlotStatus Status { get; set; }
+        public virtual int PercentComplete { get; set; }
 
-        public float Progress => ((float)PercentComplete) / 100;
+        public virtual string Name
+        {
+            get => SlotIdentifier.Name;
+            set => _ = value;
+        }
+
+        public SlotType SlotType { get; set; }
+
+        public virtual string SlotTypeString { get; set; }
+
+        public virtual TimeSpan TPF { get; set; }
+
+        public virtual double PPD { get; set; }
+
+        public virtual double UPD { get; set; }
+
+        public virtual TimeSpan ETA { get; set; }
+
+        public virtual DateTime ETADate { get; set; }
+
+        public virtual string Core { get; set; }
+
+        public virtual string CoreID { get; set; }
+
+        public virtual string ProjectRunCloneGen { get; set; }
+
+        public virtual double Credit { get; set; }
+
+        public virtual int Completed { get; set; }
+
+        public virtual int Failed { get; set; }
+
+        public virtual string Username { get; set; }
+
+        public virtual DateTime Assigned { get; set; }
+
+        public virtual DateTime PreferredDeadline { get; set; }
+
+        public ICollection<LogLine> CurrentLogLines { get; } = new List<LogLine>();
+
+        public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
+
+        public bool ProjectIsDuplicate { get; set; }
+
+        public bool UsernameOk { get; set; }
+
+        public static SlotModel CreateOfflineSlotModel(IClient client) =>
+            new SlotModel(client) { Status = SlotStatus.Offline };
+
+        public static void ValidateRules(ICollection<SlotModel> slots)
+        {
+            var rules = new ISlotModelRule[]
+            {
+                new SlotModelUsernameRule(),
+                new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots))
+            };
+
+            foreach (var slot in slots)
+            {
+                foreach (var rule in rules)
+                {
+                    rule.Validate(slot);
+                }
+            }
+        }
+    }
+
+    public class FahClientSlotModel : SlotModel, IProteinBenchmarkDetailSource, ICompletedFailedUnitsSource
+    {
+        private PPDCalculation PPDCalculation => Client.Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
+
+        private BonusCalculation BonusCalculation => Client.Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
+
+        private bool ShowVersions => Client.Preferences.Get<bool>(Preference.DisplayVersions);
+
+        private int DecimalPlaces => Client.Preferences.Get<int>(Preference.DecimalPlaces);
+
+        public override SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotID);
+
+        private readonly SlotStatus _status;
+
+        public FahClientSlotModel(IClient client, SlotStatus status, int slotID, SlotType slotType) : base(client)
+        {
+            _status = status;
+            SlotID = slotID;
+            SlotType = slotType;
+        }
+
+        public override SlotStatus Status =>
+            _status == SlotStatus.Running
+                ? IsUsingBenchmarkFrameTime
+                    ? SlotStatus.RunningNoFrameTimes
+                    : SlotStatus.Running
+                : _status;
 
         /// <summary>
         /// Current progress (percentage) of the unit
         /// </summary>
-        public int PercentComplete => Status.IsRunning() || Status == SlotStatus.Paused ? WorkUnitModel.PercentComplete : 0;
+        public override int PercentComplete =>
+            _status.IsRunning() || Status == SlotStatus.Paused
+                ? WorkUnitModel.PercentComplete
+                : 0;
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotID);
+        public int SlotID { get; }
 
-        public string Name => SlotIdentifier.Name;
-
-        public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
-
-        public SlotType SlotType { get; set; }
-
-        public int? SlotThreads { get; set; }
-
-        public string ClientVersion { get; set; }
-
-        public string SlotTypeString
+        public override string SlotTypeString
         {
             get
             {
@@ -78,48 +156,50 @@ namespace HFM.Core.Client
                 }
 
                 var sb = new StringBuilder(SlotType.ToString());
-                if (SlotThreads.HasValue)
+                if (Threads.HasValue)
                 {
-                    sb.AppendFormat(CultureInfo.InvariantCulture, ":{0}", SlotThreads);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, ":{0}", Threads);
                 }
-                if (ShowVersions && !String.IsNullOrEmpty(ClientVersion))
+                if (ShowVersions && !String.IsNullOrEmpty(Client.ClientVersion))
                 {
-                    sb.Append($" ({ClientVersion})");
+                    sb.Append($" ({Client.ClientVersion})");
                 }
                 return sb.ToString();
             }
         }
 
-        public string SlotProcessor { get; set; }
+        public string Processor { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+        public int? Threads { get; set; }
+
+        public bool IsUsingBenchmarkFrameTime => _status.IsRunning() && WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public TimeSpan TPF => Status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
+        public override TimeSpan TPF => _status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public double PPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
+        public override double PPD => _status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public double UPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
+        public override double UPD => _status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public TimeSpan ETA => Status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
+        public override TimeSpan ETA => _status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public DateTime ETADate => Status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
+        public override DateTime ETADate => _status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
 
-        public string Core
+        public override string Core
         {
             get
             {
@@ -131,18 +211,18 @@ namespace HFM.Core.Client
             }
         }
 
-        public string CoreID => WorkUnitModel.WorkUnit.CoreID;
+        public override string CoreID => WorkUnitModel.WorkUnit.CoreID;
 
-        public string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
+        public override string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
-        public double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+        public override double Credit => _status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
-        public int Completed =>
+        public override int Completed =>
             Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
               ? TotalCompletedUnits
               : TotalRunCompletedUnits;
 
-        public int Failed =>
+        public override int Failed =>
             Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
               ? TotalFailedUnits
               : TotalRunFailedUnits;
@@ -170,66 +250,63 @@ namespace HFM.Core.Client
         /// <summary>
         /// Combined Folding ID and Team String
         /// </summary>
-        public string Username =>
+        public override string Username =>
             String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID)
                 ? String.Empty
                 : String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.WorkUnit.FoldingID, WorkUnitModel.WorkUnit.Team);
 
-        public DateTime Assigned => WorkUnitModel.Assigned;
+        public override DateTime Assigned => WorkUnitModel.Assigned;
 
-        public DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
+        public override DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
+    }
 
-        #endregion
+    public interface ISlotModelRule
+    {
+        void Validate(SlotModel slotModel);
+    }
 
-        public ICollection<LogLine> CurrentLogLines { get; } = new List<LogLine>();
-
-        public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
-
-        #region Grid Data Warnings
-
-        /// <summary>
-        /// Project (R/C/G) is a Duplicate of another Client's Project (R/C/G)
-        /// </summary>
-        public bool ProjectIsDuplicate { get; set; }
-
-        public bool UsernameOk
+    public class SlotModelUsernameRule : ISlotModelRule
+    {
+        public void Validate(SlotModel slotModel)
         {
-            get
+            // if these are the default assigned values, don't check the preferences and just return true
+            if ((String.IsNullOrWhiteSpace(slotModel.WorkUnitModel.WorkUnit.FoldingID) || slotModel.WorkUnitModel.WorkUnit.FoldingID == Unknown.Value) && slotModel.WorkUnitModel.WorkUnit.Team == default)
             {
-                // if these are the default assigned values, don't check the prefs and just return true
-                if ((String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID) || WorkUnitModel.WorkUnit.FoldingID == Unknown.Value) && WorkUnitModel.WorkUnit.Team == default)
-                {
-                    return true;
-                }
-                // if the slot is unknown or offline, don't check the prefs and just return true
-                if (Status == SlotStatus.Unknown || Status == SlotStatus.Offline)
-                {
-                    return true;
-                }
-                return WorkUnitModel.WorkUnit.FoldingID == Client.Preferences.Get<string>(Preference.StanfordId) &&
-                       WorkUnitModel.WorkUnit.Team == Client.Preferences.Get<int>(Preference.TeamId);
+                slotModel.UsernameOk = true;
+            }
+            // if the slot is unknown or offline, don't check the preferences and just return true
+            else if (slotModel.Status == SlotStatus.Unknown || slotModel.Status == SlotStatus.Offline)
+            {
+                slotModel.UsernameOk = true;
+            }
+            else
+            {
+                slotModel.UsernameOk = slotModel.WorkUnitModel.WorkUnit.FoldingID == slotModel.Client.Preferences.Get<string>(Preference.StanfordId) &&
+                                       slotModel.WorkUnitModel.WorkUnit.Team == slotModel.Client.Preferences.Get<int>(Preference.TeamId);
             }
         }
+    }
 
-        #endregion
+    public class SlotModelProjectIsDuplicateRule : ISlotModelRule
+    {
+        private readonly ICollection<string> _duplicateProjects;
 
-        /// <summary>
-        /// Find slots with duplicate projects.
-        /// </summary>
-        public static void FindDuplicateProjects(ICollection<SlotModel> slots)
+        public SlotModelProjectIsDuplicateRule(ICollection<string> duplicateProjects)
         {
-            var duplicates = slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
+            _duplicateProjects = duplicateProjects ?? throw new ArgumentNullException(nameof(duplicateProjects));
+        }
+
+        public static ICollection<string> FindDuplicateProjects(ICollection<SlotModel> slots)
+        {
+            return slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
                 .Where(g => g.Count() > 1 && g.First().WorkUnitModel.WorkUnit.HasProject())
                 .Select(g => g.Key)
                 .ToList();
-
-            foreach (var slot in slots)
-            {
-                slot.ProjectIsDuplicate = duplicates.Contains(slot.WorkUnitModel.WorkUnit.ToShortProjectString());
-            }
         }
 
-        public static SlotModel CreateOfflineSlotModel(IClient client) => 
-            new SlotModel(client) { Status = SlotStatus.Offline };
+        public void Validate(SlotModel slotModel)
+        {
+            slotModel.ProjectIsDuplicate = _duplicateProjects.Contains(slotModel.WorkUnitModel.WorkUnit.ToShortProjectString());
+        }
     }
 }

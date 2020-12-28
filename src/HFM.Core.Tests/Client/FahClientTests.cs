@@ -107,14 +107,14 @@ namespace HFM.Core.Client
             // Act
             fahClient.RefreshSlots();
             // Assert
-            var slots = fahClient.Slots.ToList();
+            var slots = fahClient.Slots.Cast<FahClientSlotModel>().ToList();
             Assert.AreEqual(2, slots.Count);
             Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
-            Assert.AreEqual(4, slots[0].SlotThreads);
-            Assert.AreEqual(null, slots[0].SlotProcessor);
+            Assert.AreEqual(4, slots[0].Threads);
+            Assert.AreEqual(null, slots[0].Processor);
             Assert.AreEqual(SlotType.GPU, slots[1].SlotType);
-            Assert.AreEqual(null, slots[1].SlotThreads);
-            Assert.AreEqual("GeForce GTX 285", slots[1].SlotProcessor);
+            Assert.AreEqual(null, slots[1].Threads);
+            Assert.AreEqual("GeForce GTX 285", slots[1].Processor);
         }
 
         [Test]
@@ -129,11 +129,11 @@ namespace HFM.Core.Client
             // Act
             fahClient.RefreshSlots();
             // Assert
-            var slots = fahClient.Slots.ToList();
+            var slots = fahClient.Slots.Cast<FahClientSlotModel>().ToList();
             Assert.AreEqual(1, slots.Count);
             Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
-            Assert.AreEqual(4, slots[0].SlotThreads);
-            Assert.AreEqual(null, slots[0].SlotProcessor);
+            Assert.AreEqual(4, slots[0].Threads);
+            Assert.AreEqual(null, slots[0].Processor);
         }
 
         private static FahClient CreateClient(string clientName)

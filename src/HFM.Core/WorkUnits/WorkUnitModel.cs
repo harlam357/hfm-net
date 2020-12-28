@@ -31,7 +31,10 @@ namespace HFM.Core.WorkUnits
             WorkUnit = workUnit ?? throw new ArgumentNullException(nameof(workUnit));
         }
 
-        public ProteinBenchmarkIdentifier BenchmarkIdentifier => new ProteinBenchmarkIdentifier(WorkUnit.ProjectID, SlotModel.SlotProcessor, SlotModel.SlotThreads.GetValueOrDefault());
+        public ProteinBenchmarkIdentifier BenchmarkIdentifier =>
+            SlotModel is IProteinBenchmarkDetailSource detailSource
+                ? new ProteinBenchmarkIdentifier(WorkUnit.ProjectID, detailSource.Processor, detailSource.Threads.GetValueOrDefault())
+                : new ProteinBenchmarkIdentifier(WorkUnit.ProjectID);
 
         #region Unit Level Members
 

@@ -3,6 +3,29 @@ using System.Runtime.Serialization;
 
 namespace HFM.Core.Client
 {
+    public interface ICompletedFailedUnitsSource
+    {
+        /// <summary>
+        /// Gets the number of completed units since the last client start.
+        /// </summary>
+        int TotalRunCompletedUnits { get; }
+
+        /// <summary>
+        /// Gets the total number of completed units.
+        /// </summary>
+        int TotalCompletedUnits { get; }
+
+        /// <summary>
+        /// Gets the number of failed units since the last client start.
+        /// </summary>
+        int TotalRunFailedUnits { get; }
+
+        /// <summary>
+        /// Gets the total number of failed units.
+        /// </summary>
+        int TotalFailedUnits { get; }
+    }
+
     [DataContract(Namespace = "")]
     public class SlotTotals
     {
@@ -51,10 +74,13 @@ namespace HFM.Core.Client
             {
                 totals.PPD += slot.PPD;
                 totals.UPD += slot.UPD;
-                totals.TotalRunCompletedUnits += slot.TotalRunCompletedUnits;
-                totals.TotalRunFailedUnits += slot.TotalRunFailedUnits;
-                totals.TotalCompletedUnits += slot.TotalCompletedUnits;
-                totals.TotalFailedUnits += slot.TotalFailedUnits;
+                if (slot is ICompletedFailedUnitsSource unitsSource)
+                {
+                    totals.TotalRunCompletedUnits += unitsSource.TotalRunCompletedUnits;
+                    totals.TotalRunFailedUnits += unitsSource.TotalRunFailedUnits;
+                    totals.TotalCompletedUnits += unitsSource.TotalCompletedUnits;
+                    totals.TotalFailedUnits += unitsSource.TotalFailedUnits;
+                }
 
                 if (slot.Status.IsRunning())
                 {

@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +9,7 @@ using AutoMapper;
 
 using HFM.Core.Client;
 using HFM.Core.Serializers;
+using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 namespace HFM.Core.SlotXml
@@ -67,7 +68,7 @@ namespace HFM.Core.SlotXml
             slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
             slotSummary.UpdateDateTime = updateDateTime;
             slotSummary.SlotTotals = SlotTotals.Create(slots);
-            slotSummary.Slots = SortSlots(slots).Select(_mapper.Map<SlotModel, SlotData>).ToList();
+            slotSummary.Slots = SortSlots(slots).Select(CreateSlotData).ToList();
             return slotSummary;
         }
 
@@ -111,12 +112,58 @@ namespace HFM.Core.SlotXml
             slotDetail.UpdateDateTime = updateDateTime;
             slotDetail.LogFileAvailable = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
             slotDetail.LogFileName = slot.Client.Settings.ClientLogFileName;
-            slotDetail.TotalRunCompletedUnits = slot.TotalRunCompletedUnits;
-            slotDetail.TotalCompletedUnits = slot.TotalCompletedUnits;
-            slotDetail.TotalRunFailedUnits = slot.TotalRunFailedUnits;
-            slotDetail.TotalFailedUnits = slot.TotalFailedUnits;
-            slotDetail.SlotData = _mapper.Map<SlotModel, SlotData>(slot);
+            if (slot is ICompletedFailedUnitsSource unitsSource)
+            {
+                slotDetail.TotalRunCompletedUnits = unitsSource.TotalRunCompletedUnits;
+                slotDetail.TotalCompletedUnits = unitsSource.TotalCompletedUnits;
+                slotDetail.TotalRunFailedUnits = unitsSource.TotalRunFailedUnits;
+                slotDetail.TotalFailedUnits = unitsSource.TotalFailedUnits;
+            }
+            slotDetail.SlotData = CreateSlotData(slot);
             return slotDetail;
+        }
+
+        internal SlotData CreateSlotData(SlotModel slot)
+        {
+            var slotData = new SlotData();
+            slotData.Status = slot.Status;
+            slotData.StatusColor = ColorTranslator.ToHtml(slot.Status.GetStatusColor());
+            slotData.StatusFontColor = ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(slot.Status));
+            slotData.PercentComplete = slot.PercentComplete;
+            slotData.Name = slot.Name;
+            slotData.SlotType = slot.SlotTypeString;
+            slotData.ClientVersion = slot.Client.ClientVersion;
+            slotData.TPF = slot.TPF.ToString();
+            slotData.PPD = slot.PPD;
+            slotData.UPD = slot.UPD;
+            slotData.ETA = ToETAString(slot);
+            slotData.Core = slot.Core ?? String.Empty;
+            slotData.CoreId = slot.CoreID ?? String.Empty;
+            slotData.ProjectIsDuplicate = slot.ProjectIsDuplicate;
+            slotData.ProjectRunCloneGen = slot.ProjectRunCloneGen;
+            slotData.Credit = slot.Credit;
+            slotData.Completed = slot.Completed;
+            slotData.Failed = slot.Failed;
+            if (slot is ICompletedFailedUnitsSource unitsSource)
+            {
+                slotData.TotalRunCompletedUnits = unitsSource.TotalRunCompletedUnits;
+                slotData.TotalCompletedUnits = unitsSource.TotalCompletedUnits;
+                slotData.TotalRunFailedUnits = unitsSource.TotalRunFailedUnits;
+                slotData.TotalFailedUnits = unitsSource.TotalFailedUnits;
+            }
+            slotData.UsernameOk = slot.UsernameOk;
+            slotData.Username = slot.Username;
+            slotData.DownloadTime = slot.Assigned.ToShortStringOrEmpty();
+            slotData.PreferredDeadline = slot.PreferredDeadline.ToShortStringOrEmpty();
+            slotData.CurrentLogLines = slot.CurrentLogLines.Select(x => _mapper.Map<Log.LogLine, LogLine>(x)).ToList();
+            slotData.Protein = _mapper.Map<Proteins.Protein, Protein>(slot.WorkUnitModel.CurrentProtein);
+            return slotData;
+        }
+
+        private static string ToETAString(SlotModel slotModel)
+        {
+            var showETADate = slotModel.Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+            return showETADate ? slotModel.ETADate.ToShortStringOrEmpty() : slotModel.ETA.ToString();
         }
 
         private const string XsltNumberFormat = "###,###,##0";

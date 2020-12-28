@@ -45,8 +45,7 @@ namespace HFM.Forms.Controls
             // value here.  check and get out if so. - 1/28/12
             if (value == null) return;
 
-            var percentage = (float)value;
-            var progressVal = Convert.ToInt32(percentage * 100);
+            var progressVal = (int)value;
             using (var foreColorBrush = new SolidBrush(cellStyle.ForeColor))
             {
 
@@ -54,13 +53,13 @@ namespace HFM.Forms.Controls
                 base.Paint(g, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
                     cellStyle, advancedBorderStyle, paintParts & ~DataGridViewPaintParts.ContentForeground);
 
-                if (percentage > 0.0)
+                if (progressVal > 0)
                 {
                     // Draw the progress bar and the text
                     var progressBarColor = Color.FromArgb(163, 189, 242);
                     using (var progressBarBrush = new SolidBrush(progressBarColor))
                     {
-                        g.FillRectangle(progressBarBrush, cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32((percentage * cellBounds.Width) - 4), cellBounds.Height - 4);
+                        g.FillRectangle(progressBarBrush, cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32(((float)progressVal / 100 * cellBounds.Width) - 4), cellBounds.Height - 4);
                     }
                     g.DrawString(progressVal + "%", cellStyle.Font, foreColorBrush, cellBounds.X + 6, cellBounds.Y + 2);
                 }

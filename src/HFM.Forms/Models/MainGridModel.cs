@@ -180,7 +180,7 @@ namespace HFM.Forms.Models
 
                 SortInternal();
                 ResetSelectedSlot();
-                SlotModel.FindDuplicateProjects(slots);
+                SlotModel.ValidateRules(slots);
                 SlotTotals = SlotTotals.Create(slots);
 
                 BindingSource.ResetBindings(false);

@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 using NUnit.Framework;
 
 using HFM.Core.WorkUnits;
@@ -6,40 +7,44 @@ using HFM.Core.WorkUnits;
 namespace HFM.Core.Client
 {
     [TestFixture]
-    public class SlotModelTests
+    public class SlotModelProjectIsDuplicateRuleTests
     {
         [Test]
-        public void SlotModel_FindDuplicateProjects_WhenProjectsAreDuplicates()
+        public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenProjectsAreDuplicates()
         {
             // Arrange
             var slotModel1 = new SlotModel(new NullClient());
             slotModel1.WorkUnitModel = new WorkUnitModel(slotModel1, new WorkUnit { ProjectID = 1 });
             var slotModel2 = new SlotModel(new NullClient());
             slotModel2.WorkUnitModel = new WorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
+            var slots = new List<SlotModel> { slotModel1, slotModel2 };
+            var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
             // Act
-            SlotModel.FindDuplicateProjects(new[] { slotModel1, slotModel2 });
+            slots.ForEach(x => rule.Validate(x));
             // Assert
             Assert.IsTrue(slotModel1.ProjectIsDuplicate);
             Assert.IsTrue(slotModel2.ProjectIsDuplicate);
         }
 
         [Test]
-        public void SlotModel_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
+        public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
         {
             // Arrange
             var slotModel1 = new SlotModel(new NullClient());
             slotModel1.WorkUnitModel = new WorkUnitModel(slotModel1, new WorkUnit { ProjectID = 1 });
             var slotModel2 = new SlotModel(new NullClient());
             slotModel2.WorkUnitModel = new WorkUnitModel(slotModel2, new WorkUnit { ProjectID = 2 });
+            var slots = new List<SlotModel> { slotModel1, slotModel2 };
+            var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
             // Act
-            SlotModel.FindDuplicateProjects(new[] { slotModel1, slotModel2 });
+            slots.ForEach(x => rule.Validate(x));
             // Assert
             Assert.IsFalse(slotModel1.ProjectIsDuplicate);
             Assert.IsFalse(slotModel2.ProjectIsDuplicate);
         }
 
         [Test]
-        public void SlotModel_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
+        public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
         {
             // Arrange
             var slotModel1 = new SlotModel(new NullClient());
@@ -48,8 +53,10 @@ namespace HFM.Core.Client
             slotModel2.WorkUnitModel = new WorkUnitModel(slotModel2, new WorkUnit { ProjectID = 2 });
             var slotModel3 = new SlotModel(new NullClient());
             slotModel3.WorkUnitModel = new WorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
+            var slots = new List<SlotModel> { slotModel1, slotModel2, slotModel3 };
+            var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
             // Act
-            SlotModel.FindDuplicateProjects(new[] { slotModel1, slotModel2, slotModel3 });
+            slots.ForEach(x => rule.Validate(x));
             // Assert
             Assert.IsTrue(slotModel1.ProjectIsDuplicate);
             Assert.IsFalse(slotModel2.ProjectIsDuplicate);

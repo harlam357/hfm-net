@@ -34,6 +34,11 @@ namespace HFM.Core.Client
         ClientSettings Settings { get; set; }
 
         /// <summary>
+        /// Gets the client version.
+        /// </summary>
+        string ClientVersion { get; }
+
+        /// <summary>
         /// Enumeration of client slots.
         /// </summary>
         IEnumerable<SlotModel> Slots { get; }
@@ -102,6 +107,8 @@ namespace HFM.Core.Client
         protected virtual void OnSettingsChanged(ClientSettings oldSettings, ClientSettings newSettings)
         {
         }
+
+        public string ClientVersion { get; set; }
 
         // Slots
         private List<SlotModel> _slots = new List<SlotModel>();
