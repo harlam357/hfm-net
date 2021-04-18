@@ -46,7 +46,11 @@ namespace HFM.Core.Client
         /// <summary>
         /// The slot is offline.
         /// </summary>
-        Offline = 8
+        Offline = 8,
+        /// <summary>
+        /// The slot is disabled.
+        /// </summary>
+        Disabled = 9
     }
 
     public static class SlotStatusExtensions
@@ -73,6 +77,8 @@ namespace HFM.Core.Client
                     return Color.Orange;
                 case SlotStatus.Offline:
                     return Color.Gray;
+                case SlotStatus.Disabled:
+                    return Color.DimGray;
                 default:
                     return Color.Gray;
             }
