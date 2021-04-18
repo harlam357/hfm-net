@@ -269,13 +269,11 @@ namespace HFM.Core.Client
     {
         public void Validate(SlotModel slotModel)
         {
-            // if these are the default assigned values, don't check the preferences and just return true
-            if ((String.IsNullOrWhiteSpace(slotModel.WorkUnitModel.WorkUnit.FoldingID) || slotModel.WorkUnitModel.WorkUnit.FoldingID == Unknown.Value) && slotModel.WorkUnitModel.WorkUnit.Team == default)
+            if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit))
             {
                 slotModel.UsernameOk = true;
             }
-            // if the slot is unknown or offline, don't check the preferences and just return true
-            else if (slotModel.Status == SlotStatus.Unknown || slotModel.Status == SlotStatus.Offline)
+            else if (!slotModel.Status.IsOnline())
             {
                 slotModel.UsernameOk = true;
             }
@@ -285,6 +283,9 @@ namespace HFM.Core.Client
                                        slotModel.WorkUnitModel.WorkUnit.Team == slotModel.Client.Preferences.Get<int>(Preference.TeamId);
             }
         }
+
+        private static bool FoldingIdentityIsDefault(WorkUnit workUnit) =>
+            (String.IsNullOrWhiteSpace(workUnit.FoldingID) || workUnit.FoldingID == Unknown.Value) && workUnit.Team == default;
     }
 
     public class SlotModelProjectIsDuplicateRule : ISlotModelRule

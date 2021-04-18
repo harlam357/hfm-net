@@ -106,7 +106,7 @@ namespace HFM.Core.Client
                     var slotDescription = SlotDescription.Parse(slot.Description);
                     var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
                     var slotID = slot.ID.GetValueOrDefault();
-                    var slotType = slotDescription.SlotType;
+                    var slotType = slotDescription?.SlotType ?? default;
                     var slotModel = new FahClientSlotModel(this, status, slotID, slotType);
                     switch (slotDescription)
                     {

@@ -163,7 +163,7 @@ namespace HFM.Forms.Models
             Slots.Clear();
             foreach (var slot in slots)
             {
-                var slotType = SlotDescription.Parse(slot.Description)?.SlotType ?? SlotType.Unknown;
+                var slotType = SlotDescription.Parse(slot.Description)?.SlotType ?? default;
                 Slots.Add(new FahClientSettingsSlotModel
                 {
                     ID = String.Format(CultureInfo.InvariantCulture, "{0:00}", slot.ID),

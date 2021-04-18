@@ -13,6 +13,8 @@ using HFM.Preferences;
 
 using Moq;
 
+using Newtonsoft.Json;
+
 using NUnit.Framework;
 
 namespace HFM.Core.Client
@@ -134,6 +136,36 @@ namespace HFM.Core.Client
             Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
             Assert.AreEqual(4, slots[0].Threads);
             Assert.AreEqual(null, slots[0].Processor);
+        }
+
+        [Test]
+        public async Task FahClient_RefreshSlots_ParsesDisabledSlotStatus()
+        {
+            // Arrange
+            var fahClient = CreateClient("ParsesDisabledSlotStatus");
+            var buffer = new StringBuilder();
+            buffer.AppendLine("PyON 1 slots");
+            buffer.AppendLine(JsonConvert.SerializeObject(
+                new[]
+                {
+                    new
+                    {
+                        id = "00",
+                        status = "DISABLED"
+                    }
+                }));
+            buffer.AppendLine("---");
+
+            var extractor = new FahClientJsonMessageExtractor();
+            await fahClient.Messages.UpdateMessageAsync(
+                extractor.Extract(buffer));
+            // Act
+            fahClient.RefreshSlots();
+            // Assert
+            var slots = fahClient.Slots.Cast<FahClientSlotModel>().ToList();
+            Assert.AreEqual(1, slots.Count);
+            Assert.AreEqual(SlotType.Unknown, slots[0].SlotType);
+            Assert.AreEqual(SlotStatus.Disabled, slots[0].Status);
         }
 
         private static FahClient CreateClient(string clientName)

@@ -163,6 +163,7 @@ namespace HFM.Core.SlotXml
                 case SlotStatus.Paused:
                 case SlotStatus.Finishing:
                 case SlotStatus.Offline:
+                case SlotStatus.Disabled:
                     return Color.Black;
                 default:
                     return Color.White;
