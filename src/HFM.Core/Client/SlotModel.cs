@@ -172,7 +172,7 @@ namespace HFM.Core.Client
 
         public int? Threads { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+        private bool IsUsingBenchmarkFrameTime => WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
