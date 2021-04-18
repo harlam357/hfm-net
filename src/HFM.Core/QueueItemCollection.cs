@@ -22,7 +22,7 @@ namespace HFM.Core
 
         public T Current => (T)(_inner.Contains(CurrentID) ? _inner[CurrentID] : null);
 
-        public void Add(T workUnit) => _inner.Add(workUnit);
+        public void Add(T item) => _inner.Add(item);
 
         public int Count => _inner.Count;
 
