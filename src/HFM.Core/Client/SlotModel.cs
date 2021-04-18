@@ -140,7 +140,7 @@ namespace HFM.Core.Client
         /// Current progress (percentage) of the unit
         /// </summary>
         public override int PercentComplete =>
-            _status.IsRunning() || Status == SlotStatus.Paused
+            Status.IsRunning() || Status == SlotStatus.Paused
                 ? WorkUnitModel.PercentComplete
                 : 0;
 
@@ -172,32 +172,32 @@ namespace HFM.Core.Client
 
         public int? Threads { get; set; }
 
-        public bool IsUsingBenchmarkFrameTime => _status.IsRunning() && WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+        public bool IsUsingBenchmarkFrameTime => Status.IsRunning() && WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 
         /// <summary>
         /// Time per frame (TPF) of the unit
         /// </summary>
-        public override TimeSpan TPF => _status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
+        public override TimeSpan TPF => Status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Points per day (PPD) rating for this instance
         /// </summary>
-        public override double PPD => _status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
+        public override double PPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
 
         /// <summary>
         /// Units per day (UPD) rating for this instance
         /// </summary>
-        public override double UPD => _status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
+        public override double UPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public override TimeSpan ETA => _status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
+        public override TimeSpan ETA => Status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
 
         /// <summary>
         /// Estimated time of arrival (ETA) for this protein
         /// </summary>
-        public override DateTime ETADate => _status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
+        public override DateTime ETADate => Status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
 
         public override string Core
         {
@@ -215,7 +215,7 @@ namespace HFM.Core.Client
 
         public override string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
-        public override double Credit => _status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+        public override double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
         public override int Completed =>
             Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
