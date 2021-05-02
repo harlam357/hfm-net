@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HFM.Core
 {
@@ -26,5 +27,7 @@ namespace HFM.Core
                 }
             }
         }
+
+        public static double MaxOrDefault(this ICollection<double> source) => source.Count > 0 ? source.Max() : default;
     }
 }

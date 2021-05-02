@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 
+using HFM.Core;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -78,7 +79,7 @@ namespace HFM.Forms.Models
                 }
 
                 ConfigureXAxis(pane.XAxis, projectToXAxisOrdinal);
-                ConfigureYAxis(pane.YAxis, ppd.Max());
+                ConfigureYAxis(pane.YAxis, ppd.MaxOrDefault());
 
                 FillGraphPane(pane);
             }
