@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="5.1.1" />
     <PackageReference Include="HFM.Client" Version="0.4.1" />
-    <PackageReference Include="HFM.Log" Version="0.2.0" />
+    <PackageReference Include="HFM.Log" Version="0.2.1" />
     <PackageReference Include="HFM.Proteins" Version="0.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
