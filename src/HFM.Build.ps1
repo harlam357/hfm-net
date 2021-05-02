@@ -309,7 +309,7 @@ Function Configure-Platform
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '0.9.22.0'
+Configure-Version -Version '0.9.23.0'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
