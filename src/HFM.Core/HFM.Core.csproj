@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="5.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="HFM.Client" Version="0.4.1" />
     <PackageReference Include="HFM.Log" Version="0.2.1" />
     <PackageReference Include="HFM.Proteins" Version="0.2.0" />
