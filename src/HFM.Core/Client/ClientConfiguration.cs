@@ -9,7 +9,7 @@ using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
-    public class ClientConfiguration
+    public class ClientConfiguration : IDisposable
     {
         public event EventHandler<ClientConfigurationChangedEventArgs> ClientConfigurationChanged;
 
@@ -283,6 +283,27 @@ namespace HFM.Core.Client
                     _syncLock.ExitReadLock();
                 }
             }
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _syncLock?.Dispose();
+                }
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

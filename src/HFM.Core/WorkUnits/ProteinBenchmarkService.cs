@@ -34,7 +34,7 @@ namespace HFM.Core.WorkUnits
         void UpdateClientIdentifier(ClientIdentifier clientIdentifier);
     }
 
-    public class ProteinBenchmarkService : IProteinBenchmarkService
+    public class ProteinBenchmarkService : IProteinBenchmarkService, IDisposable
     {
         public ProteinBenchmarkDataContainer DataContainer { get; }
         private readonly ReaderWriterLockSlim _cacheLock;
@@ -263,6 +263,27 @@ namespace HFM.Core.WorkUnits
             if (ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(b.SlotIdentifier.ClientIdentifier, clientIdentifier)) return true;
 
             return false;
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _cacheLock?.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

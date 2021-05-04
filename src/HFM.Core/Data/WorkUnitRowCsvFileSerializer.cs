@@ -14,10 +14,8 @@ namespace HFM.Core.Data
 
         public string FileTypeFilter => "Comma Separated Value Files|*.csv";
 
-        public List<WorkUnitRow> Deserialize(string path)
-        {
+        public List<WorkUnitRow> Deserialize(string path) =>
             throw new NotSupportedException("History entry csv deserialization is not supported.");
-        }
 
         public void Serialize(string path, List<WorkUnitRow> value)
         {
@@ -27,7 +25,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal void Serialize(TextWriter writer, List<WorkUnitRow> value)
+        internal static void Serialize(TextWriter writer, List<WorkUnitRow> value)
         {
             string line = String.Join(",", new[]
             {

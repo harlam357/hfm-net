@@ -49,11 +49,12 @@ namespace HFM.Core.SlotXml
             var copyXml = Preferences.Get<bool>(Preference.WebGenCopyXml);
             var copyLogs = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
 
+            const StringComparison comparisonType = StringComparison.OrdinalIgnoreCase;
             foreach (var f in Directory.EnumerateFiles(path))
             {
-                if ((f.EndsWith(".html") || f.EndsWith(".css")) && copyHtml) yield return f;
-                if (f.EndsWith(".xml") && copyXml) yield return f;
-                if (f.EndsWith("log.txt") && copyLogs) yield return f;
+                if ((f.EndsWith(".html", comparisonType) || f.EndsWith(".css", comparisonType)) && copyHtml) yield return f;
+                if (f.EndsWith(".xml", comparisonType) && copyXml) yield return f;
+                if (f.EndsWith("log.txt", comparisonType) && copyLogs) yield return f;
             }
         }
 
