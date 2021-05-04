@@ -94,7 +94,7 @@ namespace HFM.Forms.Controls
         {
             if (LogLines is null)
             {
-                Rtf = Core.Application.IsRunningOnMono ? String.Empty : null;
+                Rtf = null;
                 Text = "No Log Available";
             }
             else
@@ -115,14 +115,7 @@ namespace HFM.Forms.Controls
         {
             SelectionStart = TextLength;
 
-            if (Core.Application.IsRunningOnMono)
-            {
-                ScrollToCaret();
-            }
-            else
-            {
-                Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
-            }
+            Internal.NativeMethods.SendMessage(Handle, Internal.NativeMethods.WM_VSCROLL, new IntPtr(Internal.NativeMethods.SB_BOTTOM), new IntPtr(0));
         }
     }
 

@@ -126,22 +126,9 @@ namespace HFM.Forms.Controls
         {
             using (var gridLinePen = new Pen(gridColor))
             {
-                if (Core.Application.IsRunningOnMono)
-                {
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                        e.CellBounds.Top, e.CellBounds.Right,
-                        e.CellBounds.Top);
-
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                        e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                        e.CellBounds.Bottom - 1);
-                }
-                else
-                {
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
-                        e.CellBounds.Bottom - 1, e.CellBounds.Right,
-                        e.CellBounds.Bottom - 1);
-                }
+                e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left,
+                    e.CellBounds.Bottom - 1, e.CellBounds.Right,
+                    e.CellBounds.Bottom - 1);
             }
         }
 

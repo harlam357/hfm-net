@@ -141,30 +141,5 @@ namespace HFM.Core
         }
 
         public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
-
-        private static string GetMonoDisplayName()
-        {
-            if (!IsRunningOnMono) return String.Empty;
-
-            var monoRuntimeType = typeof(object).Assembly.GetType("Mono.Runtime");
-            const BindingFlags bindings = BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding;
-            return (string)monoRuntimeType.InvokeMember("GetDisplayName", bindings, null, null, null);
-        }
-
-        /// <summary>
-        /// Returns the Mono version number found in the runtime display name.
-        /// </summary>
-        public static Version GetMonoVersion()
-        {
-            return GetMonoDisplayName()
-                .Split(' ')
-                .Select(ParseVersionOrDefault)
-                .FirstOrDefault(v => v != null);
-        }
-
-        private static Version ParseVersionOrDefault(string value)
-        {
-            return System.Version.TryParse(value, out var result) ? result : null;
-        }
     }
 }

@@ -49,7 +49,6 @@ namespace HFM
             if (CheckSingleInstance())
             {
                 Logger = InitializeLogging();
-                CheckMonoVersion();
                 Preferences = InitializePreferences(arguments);
                 ClearCacheFolder();
                 MainForm = InitializeMainForm(arguments);
@@ -103,38 +102,6 @@ namespace HFM
                 logger.Info(String.Empty);
             };
             return logger;
-        }
-
-        private void CheckMonoVersion()
-        {
-            // check for Mono runtime
-            if (!Core.Application.IsRunningOnMono)
-            {
-                return;
-            }
-
-            Version monoVersion = null;
-            try
-            {
-                monoVersion = Core.Application.GetMonoVersion();
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(Properties.Resources.MonoDetectFailed, ex);
-            }
-
-            if (monoVersion != null)
-            {
-                if (monoVersion.Major < 2 || (monoVersion.Major == 2 && monoVersion.Minor < 8))
-                {
-                    throw new StartupException(Properties.Resources.MonoTooOld);
-                }
-                Logger.Info($"Running on Mono v{monoVersion}...");
-            }
-            else
-            {
-                Logger.Info("Running on Mono...");
-            }
         }
 
         private IPreferences InitializePreferences(ICollection<Argument> arguments)

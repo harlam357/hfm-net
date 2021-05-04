@@ -24,8 +24,6 @@ namespace HFM.Forms.Controls
 
         public override void InitializeEditingControl(int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
         {
-            if (Core.Application.IsRunningOnMono) return;
-
             // Set the value of the editing control to the current cell value.
             base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
 
