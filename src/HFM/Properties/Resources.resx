@@ -133,9 +133,6 @@
   <data name="IpcRegisterFailed" xml:space="preserve">
     <value>Single Instance IPC channel failed to register.</value>
   </data>
-  <data name="MonoDetectFailed" xml:space="preserve">
-    <value>Mono version detection failed.</value>
-  </data>
   <data name="MonoTooOld" xml:space="preserve">
     <value>Your version of Mono is too old.  Please update to 2.8 or later.</value>
   </data>

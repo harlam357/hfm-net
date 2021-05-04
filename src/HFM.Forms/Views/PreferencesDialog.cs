@@ -51,20 +51,17 @@ namespace HFM.Forms.Views
             clientsDecimalPlacesUpDown.Minimum = 0;
             clientsDecimalPlacesUpDown.Maximum = MaxDecimalPlaces;
 
-            if (!Core.Application.IsRunningOnMono)
-            {
-                _cssSampleBrowser = new WebBrowser();
+            _cssSampleBrowser = new WebBrowser();
 
-                pnl1CSSSample.Controls.Add(_cssSampleBrowser);
+            pnl1CSSSample.Controls.Add(_cssSampleBrowser);
 
-                _cssSampleBrowser.Dock = DockStyle.Fill;
-                _cssSampleBrowser.Location = new Point(0, 0);
-                _cssSampleBrowser.MinimumSize = new Size(20, 20);
-                _cssSampleBrowser.Name = nameof(_cssSampleBrowser);
-                _cssSampleBrowser.Size = new Size(354, 208);
-                _cssSampleBrowser.TabIndex = 0;
-                _cssSampleBrowser.TabStop = false;
-            }
+            _cssSampleBrowser.Dock = DockStyle.Fill;
+            _cssSampleBrowser.Location = new Point(0, 0);
+            _cssSampleBrowser.MinimumSize = new Size(20, 20);
+            _cssSampleBrowser.Name = nameof(_cssSampleBrowser);
+            _cssSampleBrowser.Size = new Size(354, 208);
+            _cssSampleBrowser.TabIndex = 0;
+            _cssSampleBrowser.TabStop = false;
         }
 
         private void PreferencesDialog_Load(object sender, EventArgs e)
@@ -86,13 +83,6 @@ namespace HFM.Forms.Views
                 }
             }
             tabControl1.SelectTab(0);
-
-            _presenter.Model.ClientsModel.PropertyChanged += ClientsPropertyChanged;
-            _presenter.Model.OptionsModel.PropertyChanged += OptionsPropertyChanged;
-            _presenter.Model.WebGenerationModel.PropertyChanged += WebGenerationPropertyChanged;
-            _presenter.Model.WebVisualStylesModel.PropertyChanged += WebVisualStylesPropertyChanged;
-            _presenter.Model.ReportingModel.PropertyChanged += ReportingPropertyChanged;
-            _presenter.Model.WebProxyModel.PropertyChanged += WebProxyPropertyChanged;
         }
 
         // *** Always add bindings for CheckBox controls that control TextBox.Enabled after binding TextBox.Text ***
@@ -163,15 +153,7 @@ namespace HFM.Forms.Views
         private void LoadOptionsTab()
         {
             // Startup
-            if (!Core.Application.IsRunningOnMono)
-            {
-                optionsAutoRunCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoRun));
-            }
-            else
-            {
-                // No AutoRun under Mono
-                optionsAutoRunCheckBox.Enabled = false;
-            }
+            optionsAutoRunCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.AutoRun));
 
             optionsRunMinimizedCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.RunMinimized));
             optionsStartupCheckForUpdateCheckBox.BindChecked(_presenter.Model.OptionsModel, nameof(OptionsModel.StartupCheckForUpdate));
@@ -300,13 +282,9 @@ namespace HFM.Forms.Views
 
         private void LoadVisualStylesTab()
         {
-            if (Core.Application.IsRunningOnMono)
-            {
-                webVisualStylesCssFileListBox.Sorted = false;
-            }
             webVisualStylesCssFileListBox.DataSource = _presenter.Model.WebVisualStylesModel.CssFileList;
-            webVisualStylesCssFileListBox.DisplayMember = "DisplayMember";
-            webVisualStylesCssFileListBox.ValueMember = "ValueMember";
+            webVisualStylesCssFileListBox.DisplayMember = nameof(ListItem.DisplayMember);
+            webVisualStylesCssFileListBox.ValueMember = nameof(ListItem.ValueMember);
             webVisualStylesCssFileListBox.DataBindings.Add(SelectedValuePropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.CssFile), false, DataSourceUpdateMode.OnPropertyChanged);
 
             webVisualStylesOverviewTextBox.DataBindings.Add(TextPropertyName, _presenter.Model.WebVisualStylesModel, nameof(WebVisualStylesModel.OverviewXsltPath), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -387,8 +365,6 @@ namespace HFM.Forms.Views
 
         private void ShowCssPreview()
         {
-            if (Core.Application.IsRunningOnMono) return;
-
             string sStylesheet = Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.CssFolderName, _presenter.Model.WebVisualStylesModel.CssFile);
             var sb = new StringBuilder();
 

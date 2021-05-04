@@ -284,30 +284,6 @@ namespace HFM.Forms.Views
             statusUserWeek.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
             statusUserTotal.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
             statusUserWUs.BindVisible(userStatsDataModel, nameof(UserStatsDataModel.ControlsVisible));
-
-            if (Core.Application.IsRunningOnMono)
-            {
-                userStatsDataModel.PropertyChanged += (s, e) => UserStatsDataModelPropertyChangedForMono(userStatsDataModel);
-            }
-        }
-
-        private void UserStatsDataModelPropertyChangedForMono(UserStatsDataModel userStatsDataModel)
-        {
-            statusUserTeamRank.Text = userStatsDataModel.Rank;
-            statusUserProjectRank.Text = userStatsDataModel.OverallRank;
-            statusUser24hr.Text = userStatsDataModel.TwentyFourHourAverage;
-            statusUserToday.Text = userStatsDataModel.PointsToday;
-            statusUserWeek.Text = userStatsDataModel.PointsWeek;
-            statusUserTotal.Text = userStatsDataModel.PointsTotal;
-            statusUserWUs.Text = userStatsDataModel.WorkUnitsTotal;
-
-            statusUserTeamRank.Visible = userStatsDataModel.ControlsVisible;
-            statusUserProjectRank.Visible = userStatsDataModel.OverallRankVisible;
-            statusUser24hr.Visible = userStatsDataModel.ControlsVisible;
-            statusUserToday.Visible = userStatsDataModel.ControlsVisible;
-            statusUserWeek.Visible = userStatsDataModel.ControlsVisible;
-            statusUserTotal.Visible = userStatsDataModel.ControlsVisible;
-            statusUserWUs.Visible = userStatsDataModel.ControlsVisible;
         }
 
         private void SubscribeToUserStatsControlEvents()
@@ -325,15 +301,7 @@ namespace HFM.Forms.Views
                 if (e.Button == MouseButtons.Right)
                 {
                     var statusLabel = (ToolStripStatusLabel)sender;
-                    // Issue 235
-                    if (Core.Application.IsRunningOnMono)
-                    {
-                        statsContextMenuStrip.Show(statusStrip, e.X, e.Y);
-                    }
-                    else
-                    {
-                        statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
-                    }
+                    statsContextMenuStrip.Show(statusStrip, statusLabel.Bounds.X + e.X, statusLabel.Bounds.Y + e.Y);
                 }
             }
         }
@@ -356,14 +324,7 @@ namespace HFM.Forms.Views
             }
             else
             {
-                if (Core.Application.IsRunningOnMono)
-                {
-                    Activate();
-                }
-                else
-                {
-                    NativeMethods.SetForegroundWindow(Handle);
-                }
+                NativeMethods.SetForegroundWindow(Handle);
             }
         }
 
