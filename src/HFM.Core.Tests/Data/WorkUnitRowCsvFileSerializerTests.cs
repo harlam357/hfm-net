@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -18,7 +17,6 @@ namespace HFM.Core.Data
             // Arrange
             var value = new List<WorkUnitRow>();
             value.Add(new WorkUnitRow());
-            var serializer = new WorkUnitRowCsvFileSerializer();
             string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
             expected += Environment.NewLine;
             expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
@@ -27,7 +25,7 @@ namespace HFM.Core.Data
             // Act
             using (var writer = new StringWriter())
             {
-                serializer.Serialize(writer, value);
+                WorkUnitRowCsvFileSerializer.Serialize(writer, value);
                 actual = writer.ToString();
             }
             // Assert
@@ -41,7 +39,6 @@ namespace HFM.Core.Data
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var value = new List<WorkUnitRow>();
             value.Add(new WorkUnitRow());
-            var serializer = new WorkUnitRowCsvFileSerializer();
             string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
             expected += Environment.NewLine;
             expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
@@ -50,7 +47,7 @@ namespace HFM.Core.Data
             // Act
             using (var writer = new StringWriter())
             {
-                serializer.Serialize(writer, value);
+                WorkUnitRowCsvFileSerializer.Serialize(writer, value);
                 actual = writer.ToString();
             }
             // Assert
