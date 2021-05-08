@@ -99,7 +99,7 @@ namespace HFM.Core.ScheduledTasks
         public async Task DelegateScheduledTask_WithException_Test()
         {
             // create and start the task
-            var task = new DelegateScheduledTask("Task", ct =>
+            var task = new DelegateScheduledTaskWithRunCount("Task", ct =>
             {
                 Thread.Sleep(10);
                 throw new Exception("test exception");
@@ -127,11 +127,28 @@ namespace HFM.Core.ScheduledTasks
             {
                 Console.WriteLine(ex);
             }
+
+            Assert.IsTrue(task.RunCount > 1, "RunCount should be greater than 1");
         }
 
         private static void TaskChanged(object sender, ScheduledTaskChangedEventArgs e)
         {
             Console.WriteLine(e.ToString());
+        }
+
+        private class DelegateScheduledTaskWithRunCount : DelegateScheduledTask
+        {
+            public DelegateScheduledTaskWithRunCount(string name, Action<CancellationToken> action, double interval) : base(name, action, interval)
+            {
+            }
+
+            public int RunCount { get; set; }
+
+            protected override void OnRun(CancellationToken ct)
+            {
+                RunCount++;
+                base.OnRun(ct);
+            }
         }
     }
 }

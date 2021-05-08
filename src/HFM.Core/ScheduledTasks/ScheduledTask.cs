@@ -50,7 +50,7 @@ namespace HFM.Core.ScheduledTasks
                 case ScheduledTaskChangedAction.Canceled:
                     return $"{key} task canceled";
                 case ScheduledTaskChangedAction.Faulted:
-                    return $"{key} task faulted: {Source.Exception}";
+                    return $"{key} task faulted: {Interval:#,##0} ms {Source.Exception}";
                 case ScheduledTaskChangedAction.Finished:
                     return $"{key} task finished: {Interval:#,##0} ms";
                 case ScheduledTaskChangedAction.AlreadyInProgress:
@@ -147,24 +147,30 @@ namespace HFM.Core.ScheduledTasks
                 {
                     case TaskStatus.Faulted:
                         Exception = t.Exception?.InnerException;
-                        OnTaskChanged(ScheduledTaskChangedAction.Faulted);
+                        OnTaskChanged(ScheduledTaskChangedAction.Faulted, sw.ElapsedMilliseconds);
+                        CancelOrStart();
                         break;
                     case TaskStatus.Canceled:
                         OnTaskChanged(ScheduledTaskChangedAction.Canceled);
                         break;
                     case TaskStatus.RanToCompletion:
                         OnTaskChanged(ScheduledTaskChangedAction.Finished, sw.ElapsedMilliseconds);
-                        if (_cts.Token.IsCancellationRequested)
-                        {
-                            OnTaskChanged(ScheduledTaskChangedAction.Canceled);
-                        }
-                        else if (Enabled)
-                        {
-                            Start();
-                        }
+                        CancelOrStart();
                         break;
                 }
             }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
+
+            void CancelOrStart()
+            {
+                if (_cts.Token.IsCancellationRequested)
+                {
+                    OnTaskChanged(ScheduledTaskChangedAction.Canceled);
+                }
+                else if (Enabled)
+                {
+                    Start();
+                }
+            }
         }
 
         protected abstract void OnRun(CancellationToken ct);
