@@ -265,7 +265,7 @@ Function Configure-Version
     {
         $Commits = $(git rev-list HEAD --count | Out-String).Trim()
         $Version = $Version.Substring(0, $Version.LastIndexOf('.'))
-        $Version = "$Version.$Commits"
+        $Version = "$Version.$Commits.0"
     }
 
     $Global:Version = $Version
@@ -309,7 +309,7 @@ Function Configure-Platform
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '0.9.24.0'
+Configure-Version -Version '9.24.0'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
