@@ -8,7 +8,8 @@ namespace HFM.Core.SlotXml
     {
         public XmlBuilderProfile()
         {
-            CreateMap<Log.LogLine, LogLine>();
+            CreateMap<Log.LogLine, LogLine>()
+                .ForMember(dest => dest.Raw, opt => opt.MapFrom(src => LogLine.RemoveInvalidXmlChars(src.Raw)));
             CreateMap<Proteins.Protein, Protein>()
                 .ForMember(dest => dest.ServerIP, opt => opt.MapFrom(src => src.ServerIP ?? String.Empty))
                 .ForMember(dest => dest.WorkUnitName, opt => opt.MapFrom(src => src.WorkUnitName ?? String.Empty))
