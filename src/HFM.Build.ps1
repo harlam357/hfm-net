@@ -22,25 +22,34 @@ Function Exec
     }
 }
 
-Function Update-AssemblyVersion
+Function Update-AssemblyVersionContent
 {
     [CmdletBinding()]
     param([string]$Path, 
           [string]$AssemblyVersion=$Global:Version, 
           [string]$AssemblyFileVersion=$Global:Version)
 
-    Write-Host "---------------------------------------------------"
-    Write-Host "Updating Assembly Version"
-    Write-Host " Path: $Path"
-    Write-Host " AssemblyVersion: $AssemblyVersion"
-    Write-Host " AssemblyFileVersion: $AssemblyFileVersion"
-    Write-Host "---------------------------------------------------"
-
     $content = Get-Content -Path $Path -ErrorAction Stop |
      %{ $_ -Replace 'AssemblyVersion(Attribute)?\(.*\)', "AssemblyVersion(`"$AssemblyVersion`")" } |
      %{ $_ -Replace 'AssemblyFileVersion(Attribute)?\(.*\)', "AssemblyFileVersion(`"$AssemblyFileVersion`")" }
      
      Set-Content -Path $Path -Value $content -Encoding UTF8 -Force -ErrorAction Stop
+}
+
+Function Update-AssemblyVersion
+{
+    [CmdletBinding()]
+    param([string]$AssemblyVersion=$Global:Version, 
+          [string]$AssemblyFileVersion=$Global:Version)
+
+    Write-Host "---------------------------------------------------"
+    Write-Host "Updating Assembly Version"
+    Write-Host " AssemblyVersion: $AssemblyVersion"
+    Write-Host " AssemblyFileVersion: $AssemblyFileVersion"
+    Write-Host "---------------------------------------------------"
+
+    Update-AssemblyVersionContent -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $AssemblyVersion -AssemblyFileVersion $AssemblyFileVersion
+    Update-AssemblyVersionContent -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
 }
 
 Function Build-Solution
@@ -51,8 +60,7 @@ Function Build-Solution
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
 
-    Update-AssemblyVersion -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $AssemblyVersion -AssemblyFileVersion $AssemblyFileVersion
-    Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
+    Update-AssemblyVersion -AssemblyVersion $AssemblyVersion -AssemblyFileVersion $AssemblyFileVersion
 
     Write-Host "---------------------------------------------------"
     Write-Host "Building Solution"
@@ -265,10 +273,10 @@ Function Configure-Version
     {
         $Commits = $(git rev-list HEAD --count | Out-String).Trim()
         $Version = $Version.Substring(0, $Version.LastIndexOf('.'))
-        $Version = "$Version.$Commits.0"
+        $Version = "$Version.$Commits"
     }
 
-    $Global:Version = $Version
+    $Global:Version = "$Version.0"
 
     Write-Host "---------------------------------------------------"
     Write-Host "Configuring Version: $Version"
