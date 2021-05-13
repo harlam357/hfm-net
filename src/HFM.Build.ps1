@@ -269,17 +269,17 @@ Function Configure-Version
 {
     param([string]$Version = $Global:Version, [switch]$CommitCount)
 
+    $Commits = '0'
     if ($CommitCount)
     {
         $Commits = $(git rev-list HEAD --count | Out-String).Trim()
-        $Version = $Version.Substring(0, $Version.LastIndexOf('.'))
-        $Version = "$Version.$Commits"
     }
 
-    $Global:Version = "$Version.0"
+    $VersionSplit = $Version.Split('.')
+    $Global:Version = [String]::Join('.', $VersionSplit[0], $VersionSplit[1], $Commits, '0')
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Version: $Version"
+    Write-Host "Configuring Version: $Global:Version"
     Write-Host "---------------------------------------------------"
 }
 
@@ -290,7 +290,7 @@ Function Configure-TargetFramework
     $Global:TargetFramework = $TargetFramework
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring TargetFramework: $TargetFramework"
+    Write-Host "Configuring TargetFramework: $Global:TargetFramework"
     Write-Host "---------------------------------------------------"
 }
 
@@ -301,7 +301,7 @@ Function Configure-Configuration
     $Global:Configuration = $Configuration
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Configuration: $Configuration"
+    Write-Host "Configuring Configuration: $Global:Configuration"
     Write-Host "---------------------------------------------------"
 }
 
@@ -312,12 +312,12 @@ Function Configure-Platform
     $Global:Platform = $Platform
 
     Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Platform: $Platform"
+    Write-Host "Configuring Platform: $Global:Platform"
     Write-Host "---------------------------------------------------"
 }
 
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
-Configure-Version -Version '9.24.0'
+Configure-Version -Version '9.24'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
