@@ -37,8 +37,7 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          Update-AssemblyVersion -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $Global:Version -AssemblyFileVersion $Global:Version
-          Update-AssemblyVersion -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $Global:Version
+          Update-AssemblyVersion -AssemblyVersion $Global:Version -AssemblyFileVersion $Global:Version
           $buildNumber = "$env:BUILD_DEFINITIONNAME`_$Global:Version"
           Write-Host "##vso[build.updatebuildnumber]$buildNumber"
         workingDirectory: '.\src'
