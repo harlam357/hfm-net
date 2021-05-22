@@ -21,7 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
-    <PackageReference Include="protobuf-net" Version="2.0.0.668" />
+    <PackageReference Include="protobuf-net" Version="3.0.101" />
   </ItemGroup>
 
   <ItemGroup>
