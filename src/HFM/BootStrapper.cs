@@ -4,13 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting;
 using System.Threading;
 using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
-using HFM.Forms;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
@@ -60,29 +58,13 @@ namespace HFM
 
         private bool CheckSingleInstance()
         {
-            try
+            bool singleInstance = SingleInstanceHelper.Start();
+            if (!singleInstance)
             {
-                bool singleInstance = SingleInstanceHelper.Start();
-                if (!singleInstance)
-                {
-                    SingleInstanceHelper.SignalFirstInstance(Args);
-                }
-                return singleInstance;
+                MessageBox.Show(Properties.Resources.AlreadyRunning,
+                    Core.Application.NameAndVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (RemotingException ex)
-            {
-                var result = MessageBox.Show(Properties.Resources.RemotingFailedQuestion,
-                   Core.Application.NameAndVersion, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result == DialogResult.No)
-                {
-                    throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new StartupException(Properties.Resources.RemotingCallFailed, ex);
-            }
+            return singleInstance;
         }
 
         private Logger InitializeLogging()
@@ -207,21 +189,6 @@ namespace HFM
             }
         }
 
-        private static void RegisterIpcChannel(MainForm mainForm)
-        {
-            try
-            {
-                SingleInstanceHelper.RegisterIpcChannel((s, e) =>
-                {
-                    mainForm.SecondInstanceStarted(e.Args);
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new StartupException(Properties.Resources.IpcRegisterFailed, ex);
-            }
-        }
-
         private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
             MainPresenter mainPresenter;
@@ -263,8 +230,6 @@ namespace HFM
             {
                 ShowStartupException(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
             }
-
-            RegisterIpcChannel(mainForm);
 
             return mainForm;
         }

@@ -61,6 +61,15 @@ namespace HFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HFM is already running..
+        /// </summary>
+        internal static string AlreadyRunning {
+            get {
+                return ResourceManager.GetString("AlreadyRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to clear cache file &apos;{0}&apos;..
         /// </summary>
         internal static string CacheFileDeleteFailed {
@@ -94,51 +103,6 @@ namespace HFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("hfm_48_48", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Single Instance IPC channel failed to register..
-        /// </summary>
-        internal static string IpcRegisterFailed {
-            get {
-                return ResourceManager.GetString("IpcRegisterFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mono version detection failed..
-        /// </summary>
-        internal static string MonoDetectFailed {
-            get {
-                return ResourceManager.GetString("MonoDetectFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your version of Mono is too old.  Please update to 2.8 or later..
-        /// </summary>
-        internal static string MonoTooOld {
-            get {
-                return ResourceManager.GetString("MonoTooOld", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to signal first instance of HFM.NET.  Please try starting HFM.NET again before reporting this issue..
-        /// </summary>
-        internal static string RemotingCallFailed {
-            get {
-                return ResourceManager.GetString("RemotingCallFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HFM.NET detected an instance of HFM.NET already running on this computer but failed to connect with it.  If you&apos;re sure there is not an existing instance of HFM.NET running then you may safely ignore this warning and allow HFM.NET to start.  Note that running more than one instance of HFM.NET on the same computer will cause problems.  Do you want to allow HFM.NET to start?.
-        /// </summary>
-        internal static string RemotingFailedQuestion {
-            get {
-                return ResourceManager.GetString("RemotingFailedQuestion", resourceCulture);
             }
         }
         
