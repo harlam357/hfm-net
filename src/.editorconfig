@@ -15,6 +15,8 @@ indent_style = space
 # Default severity for analyzer diagnostics - Requires **VS2019 16.5** or later
 dotnet_analyzer_diagnostic.severity = warning
 
+# CA1002: Do not expose generic lists
+dotnet_diagnostic.CA1002.severity = none
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
 # CA1033: Interface methods should be callable by child types
@@ -29,12 +31,18 @@ dotnet_diagnostic.CA1303.severity = none
 dotnet_diagnostic.CA1307.severity = none
 # CA1305: Specify IFormatProvider (NOISE REDUCTION: TURN BACK ON LATER)
 dotnet_diagnostic.CA1305.severity = none
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
 # CA1716: Identifiers should not match keywords
 dotnet_diagnostic.CA1716.severity = none
 # CA1720: Identifiers should not contain type names
 dotnet_diagnostic.CA1720.severity = none
+# CA1724: Type names should not match namespaces
+dotnet_diagnostic.CA1724.severity = none
 # CA2007: Do not directly await a Task
 dotnet_code_quality.CA2007.exclude_async_void_methods = true
+# CA2227: Collection properties should be read only
+dotnet_diagnostic.CA2227.severity = none
 
 indent_size = 4
 insert_final_newline = true
@@ -166,7 +174,7 @@ csharp_style_expression_bodied_operators = when_on_single_line:suggestion
 
 # Specific Code files
 [HyperTypeDescriptor.cs]
-dotnet_analyzer_diagnostic.severity = none
+generated_code = true
 
 [PetaPoco.cs]
-dotnet_analyzer_diagnostic.severity = none
+generated_code = true
