@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
@@ -26,7 +25,7 @@ namespace HFM.Core.Data
             var selectSql = PetaPoco.Sql.Builder.Select("ID", "ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime", "COUNT(*)")
                .From("WuHistory")
                .GroupBy("ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime")
-               .Append("HAVING COUNT(*) > 1");
+               .Append("HAVING MAX(ID) AND COUNT(*) > 1");
 
             int count = 0;
             int totalCount = 0;

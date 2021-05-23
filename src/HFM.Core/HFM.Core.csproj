@@ -20,6 +20,7 @@
     <PackageReference Include="HFM.Proteins" Version="0.2.0" />
     <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,9 +29,6 @@
 
   <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

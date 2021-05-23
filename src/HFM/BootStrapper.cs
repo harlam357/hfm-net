@@ -42,8 +42,6 @@ namespace HFM
                 return;
             }
 
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-
             if (CheckSingleInstance())
             {
                 Logger = InitializeLogging();
@@ -232,27 +230,6 @@ namespace HFM
             }
 
             return mainForm;
-        }
-
-        [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile")]
-        private System.Reflection.Assembly AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            const string sqliteDll = "System.Data.SQLite";
-            if (args.Name.StartsWith(sqliteDll, StringComparison.Ordinal))
-            {
-                string platform = Core.Application.IsRunningOnMono ? "Mono" : Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-                if (platform != null)
-                {
-                    string filePath = Path.GetFullPath(Path.Combine(Application.StartupPath, "SQLite", platform, String.Concat(sqliteDll, ".dll")));
-                    var logger = Container.GetInstance<ILogger>();
-                    logger.Info($"SQLite DLL Path: {filePath}");
-                    if (File.Exists(filePath))
-                    {
-                        return System.Reflection.Assembly.LoadFile(filePath);
-                    }
-                }
-            }
-            return null;
         }
 
         public void RegisterForUnhandledExceptions()

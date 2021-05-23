@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -139,7 +138,5 @@ namespace HFM.Core
             throw new FormatException(String.Format(CultureInfo.CurrentCulture,
                "Given version '{0}' is not in the correct format.", version));
         }
-
-        public static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
     }
 }

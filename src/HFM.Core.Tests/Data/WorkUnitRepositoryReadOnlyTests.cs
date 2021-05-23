@@ -680,7 +680,7 @@ namespace HFM.Core.Data
 //          //Debug.WriteLine(query.Parameters[0].Column);
 //          foreach (var entry in entries)
 //          {
-//              Debug.WriteLine(entry.ID);
+//              Console.WriteLine(entry.ID);
 //          }
 //#endif
             Assert.AreEqual(count, entries.Count);
