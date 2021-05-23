@@ -1,21 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
-    <Platforms>AnyCPU;x86</Platforms>
+    <TargetFrameworks>net5.0;net47</TargetFrameworks>
     <RootNamespace>HFM.Core</RootNamespace>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>

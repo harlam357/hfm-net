@@ -88,7 +88,8 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_PreferredDeadlineTest2()
         {
-            var workUnit = new WorkUnit { Assigned = DateTime.UtcNow, Timeout = DateTime.UtcNow.Add(TimeSpan.FromDays(5)) };
+            var utcNow = DateTime.UtcNow;
+            var workUnit = new WorkUnit { Assigned = utcNow, Timeout = utcNow.Add(TimeSpan.FromDays(5)) };
             var workUnitModel = CreateWorkUnitModel(new Protein(), workUnit);
 
             // PreferredDeadline comes from DueTime when ProteinIsUnknown
