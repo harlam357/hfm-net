@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFrameworks>net5.0-windows;net47</TargetFrameworks>
     <RootNamespace>HFM.Forms</RootNamespace>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
@@ -30,7 +30,7 @@
     <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
