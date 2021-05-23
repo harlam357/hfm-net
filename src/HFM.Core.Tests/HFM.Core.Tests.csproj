@@ -31,10 +31,4 @@
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
