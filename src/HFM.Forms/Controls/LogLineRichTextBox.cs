@@ -139,6 +139,7 @@ namespace HFM.Forms.Controls
             {
                 sb.Append(Build(line));
             }
+            sb.Append('}');
             return sb.ToString();
         }
 
