@@ -35,9 +35,9 @@ namespace HFM
                     container.RegisterAssembly(Assembly.GetExecutingAssembly());
                     // wires up IServiceProvider and IServiceScopeFactory
                     _ = container.CreateServiceProvider(new EmptyServiceCollection());
-
+#if NETFRAMEWORK
                     Forms.TypeDescriptionProviderSetup.Execute();
-
+#endif
                     bootStrapper.Execute();
                 }
                 catch (Exception ex)
