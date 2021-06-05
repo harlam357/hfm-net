@@ -151,27 +151,28 @@ namespace HFM.Forms.Views
             this.workingSlotsStatusLabel,
             this.totalProductionStatusLabel,
             this.statusLabelRight});
-            this.statusStrip.Location = new System.Drawing.Point(0, 744);
+            this.statusStrip.Location = new System.Drawing.Point(0, 863);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(988, 29);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1153, 29);
             this.statusStrip.TabIndex = 2;
             // 
-            // statusLabelLeft
+            // clientDetailsStatusLabel
             // 
-            this.clientDetailsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.clientDetailsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.clientDetailsStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.clientDetailsStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.clientDetailsStatusLabel.Name = "clientDetailsStatusLabel";
-            this.clientDetailsStatusLabel.Size = new System.Drawing.Size(369, 24);
+            this.clientDetailsStatusLabel.Size = new System.Drawing.Size(532, 24);
             this.clientDetailsStatusLabel.Spring = true;
             this.clientDetailsStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // statusUserTeamRank
             // 
-            this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserTeamRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserTeamRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserTeamRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -181,8 +182,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserProjectRank
             // 
-            this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserProjectRank.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserProjectRank.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserProjectRank.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -192,8 +193,8 @@ namespace HFM.Forms.Views
             // 
             // statusUser24hr
             // 
-            this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUser24hr.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUser24hr.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUser24hr.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -203,8 +204,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserToday
             // 
-            this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserToday.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserToday.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserToday.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -214,8 +215,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserWeek
             // 
-            this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserWeek.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserWeek.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserWeek.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -225,8 +226,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserTotal
             // 
-            this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserTotal.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserTotal.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserTotal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -236,8 +237,8 @@ namespace HFM.Forms.Views
             // 
             // statusUserWUs
             // 
-            this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusUserWUs.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusUserWUs.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusUserWUs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -248,17 +249,17 @@ namespace HFM.Forms.Views
             // statusLabelMiddle
             // 
             this.statusLabelMiddle.AutoSize = false;
-            this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusLabelMiddle.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelMiddle.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelMiddle.Name = "statusLabelMiddle";
             this.statusLabelMiddle.Size = new System.Drawing.Size(50, 24);
             // 
-            // statusLabelHosts
+            // workingSlotsStatusLabel
             // 
-            this.workingSlotsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.workingSlotsStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.workingSlotsStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.workingSlotsStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -267,10 +268,10 @@ namespace HFM.Forms.Views
             this.workingSlotsStatusLabel.Text = "0";
             this.workingSlotsStatusLabel.ToolTipText = "Number of Hosts";
             // 
-            // statusLabelPPW
+            // totalProductionStatusLabel
             // 
-            this.totalProductionStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.totalProductionStatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.totalProductionStatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.totalProductionStatusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -282,8 +283,8 @@ namespace HFM.Forms.Views
             // statusLabelRight
             // 
             this.statusLabelRight.AutoSize = false;
-            this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+            this.statusLabelRight.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusLabelRight.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusLabelRight.Name = "statusLabelRight";
@@ -346,7 +347,8 @@ namespace HFM.Forms.Views
             this.mnuHelp});
             this.AppMenu.Location = new System.Drawing.Point(0, 0);
             this.AppMenu.Name = "AppMenu";
-            this.AppMenu.Size = new System.Drawing.Size(988, 24);
+            this.AppMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.AppMenu.Size = new System.Drawing.Size(1153, 24);
             this.AppMenu.TabIndex = 4;
             this.AppMenu.Text = "App Menu";
             // 
@@ -392,7 +394,7 @@ namespace HFM.Forms.Views
             // 
             this.mnuFileSaveas.Image = global::HFM.Forms.Properties.Resources.SaveAs;
             this.mnuFileSaveas.Name = "mnuFileSaveas";
-            this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.mnuFileSaveas.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
             this.mnuFileSaveas.Size = new System.Drawing.Size(263, 22);
             this.mnuFileSaveas.Text = "Save Configuration &As";
@@ -842,6 +844,7 @@ namespace HFM.Forms.Views
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -854,8 +857,9 @@ namespace HFM.Forms.Views
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer1.Size = new System.Drawing.Size(988, 720);
-            this.splitContainer1.SplitterDistance = 360;
+            this.splitContainer1.Size = new System.Drawing.Size(1153, 839);
+            this.splitContainer1.SplitterDistance = 478;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 6;
             // 
             // dataGridView1
@@ -870,7 +874,7 @@ namespace HFM.Forms.Views
             this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -879,7 +883,7 @@ namespace HFM.Forms.Views
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -887,6 +891,7 @@ namespace HFM.Forms.Views
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
@@ -894,7 +899,7 @@ namespace HFM.Forms.Views
             this.dataGridView1.RowTemplate.Height = 18;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.ShowCellToolTips = false;
-            this.dataGridView1.Size = new System.Drawing.Size(988, 360);
+            this.dataGridView1.Size = new System.Drawing.Size(1153, 478);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.DataGridViewCellPainting);
             this.dataGridView1.ColumnDividerDoubleClick += new System.Windows.Forms.DataGridViewColumnDividerDoubleClickEventHandler(this.DataGridViewColumnDividerDoubleClick);
@@ -906,6 +911,7 @@ namespace HFM.Forms.Views
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -917,30 +923,33 @@ namespace HFM.Forms.Views
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.txtLogFile);
-            this.splitContainer2.Size = new System.Drawing.Size(988, 356);
+            this.splitContainer2.Size = new System.Drawing.Size(1153, 356);
             this.splitContainer2.SplitterDistance = 289;
+            this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 2;
             // 
             // queueControl
             // 
-            this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.queueControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.queueControl.BackColor = System.Drawing.SystemColors.Window;
             this.queueControl.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.queueControl.Location = new System.Drawing.Point(31, 0);
+            this.queueControl.Location = new System.Drawing.Point(36, 0);
+            this.queueControl.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.queueControl.Name = "queueControl";
-            this.queueControl.Size = new System.Drawing.Size(258, 356);
+            this.queueControl.Size = new System.Drawing.Size(252, 355);
             this.queueControl.TabIndex = 1;
             // 
             // btnQueue
             // 
-            this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.btnQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.btnQueue.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnQueue.Location = new System.Drawing.Point(2, 0);
+            this.btnQueue.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnQueue.Name = "btnQueue";
-            this.btnQueue.Size = new System.Drawing.Size(25, 355);
+            this.btnQueue.Size = new System.Drawing.Size(29, 355);
             this.btnQueue.TabIndex = 0;
             this.btnQueue.Text = "H\r\ni\r\nd\r\ne\r\n\r\nQ\r\nu\r\ne\r\nu\r\ne";
             this.btnQueue.UseVisualStyleBackColor = true;
@@ -949,13 +958,15 @@ namespace HFM.Forms.Views
             // txtLogFile
             // 
             this.txtLogFile.BackColor = System.Drawing.Color.White;
+            this.txtLogFile.ColorLogFile = false;
             this.txtLogFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtLogFile.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLogFile.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtLogFile.Location = new System.Drawing.Point(0, 0);
+            this.txtLogFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtLogFile.Name = "txtLogFile";
             this.txtLogFile.ReadOnly = true;
             this.txtLogFile.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtLogFile.Size = new System.Drawing.Size(695, 356);
+            this.txtLogFile.Size = new System.Drawing.Size(859, 356);
             this.txtLogFile.TabIndex = 1;
             this.txtLogFile.Text = "";
             this.txtLogFile.WordWrap = false;
@@ -995,13 +1006,14 @@ namespace HFM.Forms.Views
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(988, 773);
+            this.ClientSize = new System.Drawing.Size(1153, 892);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.AppMenu);
             this.Controls.Add(this.statusStrip);
-            this.MinimumSize = new System.Drawing.Size(150, 150);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MinimumSize = new System.Drawing.Size(172, 167);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "HFM.NET";
