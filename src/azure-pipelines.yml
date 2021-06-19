@@ -18,6 +18,7 @@ stages:
     variables:
       solution: '**/HFM.All.sln'
       setupSolution: '**/HFM.Setup.sln'
+      entryProject: '**/HFM.csproj'
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
 
@@ -97,6 +98,26 @@ stages:
           Configure-Version -CommitCount
           Deploy-Msi -Verbose
         workingDirectory: '.\src'
+    
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+        
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '$(entryProject)'
+        arguments: '-f net5.0-windows -c $(buildConfiguration) --no-restore'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(entryProject)'
+        arguments: '-f net5.0-windows -c $(buildConfiguration) --no-restore'
+        zipAfterPublish: false
+        modifyOutputPath: false
 
     - task: CopyFiles@2
       inputs:
