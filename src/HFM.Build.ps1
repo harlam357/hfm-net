@@ -2,6 +2,9 @@
 $NuGetPath = '.\.nuget\NuGet.exe'
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
+$EntryProjectPath = ".\HFM\HFM.csproj"
+$DotNetFiveWindows = 'net5.0-windows'
+$DotNetFive = 'net5.0'
 
 [string]$Global:ArtifactsPath = ''
 [string]$Global:ArtifactsBin = ''
@@ -52,9 +55,17 @@ Function Update-AssemblyVersion
     Update-AssemblyVersionContent -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
 }
 
+Function Should-Invoke-Dotnet 
+{
+    param([string]$TargetFramework)
+
+    return $TargetFramework -eq $DotNetFiveWindows
+}
+
 Function Build-Solution
 {
     param([string]$Target='Rebuild',
+          [string]$TargetFramework=$Global:TargetFramework,
           [string]$Configuration=$Global:Configuration,
           [string]$Platform=$Global:Platform,
           [string]$AssemblyVersion=$Global:Version,
@@ -65,12 +76,37 @@ Function Build-Solution
     Write-Host "---------------------------------------------------"
     Write-Host "Building Solution"
     Write-Host " Target: $Target"
+    Write-Host " TargetFramework: $TargetFramework"
     Write-Host " Configuration: $Configuration"
     Write-Host " Platform: $Platform"
     Write-Host "---------------------------------------------------"
 
+    if (Should-Invoke-Dotnet -TargetFramework $TargetFramework) {
+        Build-Solution-Dotnet -TargetFramework $TargetFramework -Configuration $Configuration
+    } else {
+        Build-Solution-Framework -Target $Target -TargetFramework $TargetFramework -Configuration $Configuration -Platform $Platform
+    }
+}
+
+Function Build-Solution-Framework
+{
+    param([string]$Target,
+          [string]$TargetFramework,
+          [string]$Configuration=$Global:Configuration,
+          [string]$Platform=$Global:Platform)
+
     Exec { & $NuGetPath restore $SolutionFileName }
-    Exec { & $MSBuild $SolutionFileName /t:$Target /p:Configuration=$Configuration`;Platform=$Platform`;NoWarn=1591 }
+    Exec { & $MSBuild $SolutionFileName /t:$Target /p:TargetFramework=$TargetFramework`;Configuration=$Configuration`;Platform=$Platform`;NoWarn=1591 }
+}
+
+Function Build-Solution-Dotnet
+{
+    param([string]$TargetFramework,
+          [string]$Configuration)
+
+    Exec { & dotnet restore $SolutionFileName }      
+    Exec { & dotnet build $EntryProjectPath -f $TargetFramework -c $Configuration --no-restore }
+    Exec { & dotnet publish $EntryProjectPath -f $TargetFramework -c $Configuration --no-restore }
 }
 
 Function Test-Build
@@ -86,10 +122,41 @@ Function Test-Build
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
+    if (Should-Invoke-Dotnet -TargetFramework $TargetFramework) {
+        Test-Build-Dotnet -TargetFramework $TargetFramework -Configuration $Configuration -ArtifactsPath $ArtifactsPath
+    } else {
+        Test-Build-Framework -TargetFramework $TargetFramework -Configuration $Configuration -ArtifactsPath $ArtifactsPath
+    }
+}
+
+Function Test-Build-Framework
+{
+    param([string]$TargetFramework,
+          [string]$Configuration,
+          [string]$ArtifactsPath)
+
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
     Exec { & $NUnitPath .\HFM.Core.Tests\bin\$Configuration\$TargetFramework\HFM.Core.Tests.dll --x86 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Forms.Tests\bin\$Configuration\$TargetFramework\HFM.Forms.Tests.dll --x86 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
     Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\$Configuration\$TargetFramework\HFM.Preferences.Tests.dll --x86 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+}
+
+Function Test-Build-Dotnet
+{
+    param([string]$TargetFramework,
+          [string]$Configuration,
+          [string]$ArtifactsPath)
+
+    $coreTargetFramework = $TargetFramework
+    $preferencesTargetFramework = $TargetFramework
+    if ($TargetFramework -eq $DotNetFiveWindows) {
+        $coreTargetFramework = $DotNetFive
+        $preferencesTargetFramework = $DotNetFive
+    }
+
+    Exec { & dotnet test .\HFM.Core.Tests\HFM.Core.Tests.csproj -f $coreTargetFramework -c $Configuration -l "trx;LogFileName=HFM.Core.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Forms.Tests\HFM.Forms.Tests.csproj -f $TargetFramework -c $Configuration -l "trx;LogFileName=HFM.Forms.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Preferences.Tests\HFM.Preferences.Tests.csproj -f $preferencesTargetFramework -c $Configuration -l "trx;LogFileName=HFM.Preferences.Tests.Results.trx" -r $ArtifactsPath }
 }
 
 Function Clean-Artifacts
