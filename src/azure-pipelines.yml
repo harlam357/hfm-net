@@ -21,6 +21,8 @@ stages:
       entryProject: '**/HFM.csproj'
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
+      targetFramework: 'net47'
+      dotnetFramework: 'net5.0-windows'
 
     steps:
     - task: NuGetToolInstaller@1
@@ -44,13 +46,15 @@ stages:
         workingDirectory: '.\src'
 
     - task: VSBuild@1
+      displayName: 'Build - $(targetFramework)'
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:TargetFramework=net47 /p:NoWarn=1591'
+        msbuildArgs: '/p:TargetFramework=$(targetFramework) /p:NoWarn=1591'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
     - task: VSTest@2
+      displayName: 'Test - $(targetFramework)'
       inputs:
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
@@ -64,7 +68,7 @@ stages:
         diagnosticsEnabled: true
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Build'
+      displayName: 'HFM.Build - Deploy-Build - $(targetFramework)'
       inputs:
         targetType: 'inline'
         script: |
@@ -84,6 +88,7 @@ stages:
         workingDirectory: '.\src'
 
     - task: VSBuild@1
+      displayName: 'Build Setup - $(targetFramework)'
       inputs:
         solution: $(setupSolution)
         platform: x86
@@ -100,24 +105,38 @@ stages:
         workingDirectory: '.\src'
     
     - task: DotNetCoreCLI@2
+      displayName: 'Restore - $(dotnetFramework)'
       inputs:
         command: 'restore'
         projects: '$(solution)'
         
     - task: DotNetCoreCLI@2
+      displayName: 'Build - $(dotnetFramework)'
       inputs:
         command: 'build'
         projects: '$(entryProject)'
-        arguments: '-f net5.0-windows -c $(buildConfiguration) --no-restore'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore'
 
     - task: DotNetCoreCLI@2
+      displayName: 'Test - $(dotnetFramework)'
       inputs:
         command: 'publish'
         publishWebProjects: false
         projects: '$(entryProject)'
-        arguments: '-f net5.0-windows -c $(buildConfiguration) --no-restore'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore'
         zipAfterPublish: false
         modifyOutputPath: false
+
+    - task: PowerShell@2
+      displayName: 'HFM.Build - Deploy-Build - $(dotnetFramework)'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-TargetFramework -TargetFramework $(dotnetFramework)
+          Clean-Artifacts
+          Deploy-Build -Verbose
+        workingDirectory: '.\src'
 
     - task: CopyFiles@2
       inputs:
