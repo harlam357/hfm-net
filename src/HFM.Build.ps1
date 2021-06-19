@@ -136,9 +136,9 @@ Function Test-Build-Framework
           [string]$ArtifactsPath)
 
     $NUnitPath = 'packages\NUnit.ConsoleRunner.3.9.0\tools\nunit3-console.exe'
-    Exec { & $NUnitPath .\HFM.Core.Tests\bin\$Configuration\$TargetFramework\HFM.Core.Tests.dll --x86 --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\$Configuration\$TargetFramework\HFM.Forms.Tests.dll --x86 --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
-    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\$Configuration\$TargetFramework\HFM.Preferences.Tests.dll --x86 --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Core.Tests\bin\$Configuration\$TargetFramework\HFM.Core.Tests.dll --result=$ArtifactsPath\HFM.Core.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Forms.Tests\bin\$Configuration\$TargetFramework\HFM.Forms.Tests.dll --result=$ArtifactsPath\HFM.Forms.Tests.Results.xml }
+    Exec { & $NUnitPath .\HFM.Preferences.Tests\bin\$Configuration\$TargetFramework\HFM.Preferences.Tests.dll --result=$ArtifactsPath\HFM.Preferences.Tests.Results.xml }
 }
 
 Function Test-Build-Dotnet
