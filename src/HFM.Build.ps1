@@ -280,17 +280,23 @@ Function Build-Zip
 {
     [CmdletBinding()]
     param([string]$Version=$Global:Version,
+          [string]$TargetFramework=$Global:TargetFramework,
           [string]$ArtifactsBin=$Global:ArtifactsBin,
           [string]$ArtifactsPackages=$Global:ArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Building Zip Package"
     Write-Host " Version: $Version"
+    Write-Host " TargetFramework: $TargetFramework"
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host " ArtifactsPackages: $ArtifactsPackages"
     Write-Host "---------------------------------------------------"
 
-    $zipName = "$ArtifactsPackages\HFM $Version.zip"
+    if (Should-Invoke-Dotnet -TargetFramework $TargetFramework) {
+        $zipName = "$ArtifactsPackages\HFM $Version $TargetFramework.zip"
+    } else {
+        $zipName = "$ArtifactsPackages\HFM $Version.zip"
+    }
 
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
     if ($localVerbose) {

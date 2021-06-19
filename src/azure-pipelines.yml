@@ -78,7 +78,7 @@ stages:
         workingDirectory: '.\src'
         
     - task: PowerShell@2
-      displayName: 'HFM.Build - Build-Zip'
+      displayName: 'HFM.Build - Build-Zip - $(targetFramework)'
       inputs:
         targetType: 'inline'
         script: |
@@ -95,7 +95,7 @@ stages:
         configuration: '$(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Msi'
+      displayName: 'HFM.Build - Deploy-Msi - $(targetFramework)'
       inputs:
         targetType: 'inline'
         script: |
@@ -136,6 +136,17 @@ stages:
           Configure-TargetFramework -TargetFramework $(dotnetFramework)
           Clean-Artifacts
           Deploy-Build -Verbose
+        workingDirectory: '.\src'
+
+    - task: PowerShell@2
+      displayName: 'HFM.Build - Build-Zip - $(dotnetFramework)'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-TargetFramework -TargetFramework $(dotnetFramework)
+          Configure-Version -CommitCount
+          Build-Zip -Verbose
         workingDirectory: '.\src'
 
     - task: CopyFiles@2
