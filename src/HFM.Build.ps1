@@ -162,12 +162,14 @@ Function Test-Build-Dotnet
 Function Clean-Artifacts
 {
     [CmdletBinding()]
-    param([string]$ArtifactsPath=$Global:ArtifactsPath,
+    param([string]$TargetFramework=$Global:TargetFramework,
+          [string]$ArtifactsPath=$Global:ArtifactsPath,
           [string]$ArtifactsBin=$Global:ArtifactsBin,
           [string]$ArtifactsPackages=$Global:ArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Cleaning Artifacts"
+    Write-Host " TargetFramework: $TargetFramework"
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host " ArtifactsBin: $ArtifactsBin"
     Write-Host " ArtifactsPackages: $ArtifactsPackages"
@@ -179,13 +181,21 @@ Function Clean-Artifacts
     {
         Remove-Item $ArtifactsPath -Recurse -Force -ErrorAction Stop -Verbose:$localVerbose
     }
-    New-Item "$ArtifactsBin\x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    New-Item "$ArtifactsBin\x64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+
     New-Item "$ArtifactsBin\Tools" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\Documentation\License" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\CSS" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\XSL" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item $ArtifactsPackages -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+    
+    if (Should-Invoke-Dotnet -TargetFramework $TargetFramework) {
+        New-Item "$ArtifactsBin\runtimes\win" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+        New-Item "$ArtifactsBin\runtimes\win-x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+        New-Item "$ArtifactsBin\runtimes\win-x64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+    } else {
+        New-Item "$ArtifactsBin\x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+        New-Item "$ArtifactsBin\x64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+    }
 }
 
 Function Deploy-Build
@@ -211,8 +221,12 @@ Function Deploy-Build
         "EntityFramework.SqlServer.dll",
         "HFM.Client.dll",
         "HFM.Core.dll",
+        "HFM.deps.json", 
+        "HFM.dll", 
+        "HFM.dll.config", 
         "HFM.exe", 
         "HFM.exe.config",
+        "HFM.runtimeconfig.json",
         "HFM.Forms.dll",
         "HFM.Log.dll",
         "HFM.Preferences.dll",
@@ -228,11 +242,24 @@ Function Deploy-Build
         "System.Data.SQLite.Linq.dll"
         "ZedGraph.dll"
         )
-    $AssemblyFiles = Get-ChildItem -Path "HFM\bin\$Configuration\$TargetFramework\*" -Include $Assemblies
+
+    $hfmBinRoot = "HFM\bin\$Configuration\$TargetFramework"
+    $invokeDotnet = Should-Invoke-Dotnet -TargetFramework $TargetFramework
+    if ($invokeDotnet) {
+        $hfmBinRoot = "$hfmBinRoot\publish"
+    }
+    
+    $AssemblyFiles = Get-ChildItem -Path "$hfmBinRoot\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
-    ## SQLite Assemblies
-    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\x86\*" -Destination "$ArtifactsBin\x86" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\x64\*" -Destination "$ArtifactsBin\x64" -ErrorAction Stop -Verbose:$localVerbose
+    # SQLite Assemblies
+    if ($invokeDotnet) {
+        Copy-Item -Path "$hfmBinRoot\runtimes\win\*" -Destination "$ArtifactsBin\runtimes\win" -Recurse -ErrorAction Stop -Verbose:$localVerbose
+        Copy-Item -Path "$hfmBinRoot\runtimes\win-x86\*" -Destination "$ArtifactsBin\runtimes\win-x86" -Recurse -ErrorAction Stop -Verbose:$localVerbose
+        Copy-Item -Path "$hfmBinRoot\runtimes\win-x64\*" -Destination "$ArtifactsBin\runtimes\win-x64" -Recurse -ErrorAction Stop -Verbose:$localVerbose
+    } else {
+        Copy-Item -Path "$hfmBinRoot\x86\*" -Destination "$ArtifactsBin\x86" -ErrorAction Stop -Verbose:$localVerbose
+        Copy-Item -Path "$hfmBinRoot\x64\*" -Destination "$ArtifactsBin\x64" -ErrorAction Stop -Verbose:$localVerbose
+    }
     # Tools Assemblies
     #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     #Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
@@ -245,8 +272,8 @@ Function Deploy-Build
     Copy-Item -Path '..\doc\protoc-license.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path '..\doc\ZedGraph License.txt' -Destination "$ArtifactsBin\Documentation\License" -ErrorAction Stop -Verbose:$localVerbose
     # CSS & XSL
-    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\CSS\*" -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\XSL\*" -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "$hfmBinRoot\CSS\*" -Destination "$ArtifactsBin\CSS" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "$hfmBinRoot\XSL\*" -Destination "$ArtifactsBin\XSL" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Build-Zip
@@ -361,6 +388,8 @@ Function Configure-TargetFramework
     Write-Host "---------------------------------------------------"
     Write-Host "Configuring TargetFramework: $Global:TargetFramework"
     Write-Host "---------------------------------------------------"
+
+    Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 }
 
 Function Configure-Configuration
@@ -389,4 +418,3 @@ Configure-Version -Version '9.24'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
-Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
