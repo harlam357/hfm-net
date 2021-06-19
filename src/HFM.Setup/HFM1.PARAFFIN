@@ -5,8 +5,8 @@
   <WARNING>Manual changes to this file may cause incorrect behavior.</WARNING>
   <ParaffinFileVersion>2</ParaffinFileVersion>
   <GroupName>group_hfm</GroupName>
-  <Directory>..\..\..\Artifacts\HFM.NET\</Directory>
-  <DirAlias>..\..\..\Artifacts\HFM.NET\</DirAlias>
+  <Directory>..\..\..\Artifacts\net47\HFM.NET\</Directory>
+  <DirAlias>..\..\..\Artifacts\net47\HFM.NET\</DirAlias>
   <Win64></Win64>
   <Norecurse>false</Norecurse>
   <NoRootDirectory>true</NoRootDirectory>
