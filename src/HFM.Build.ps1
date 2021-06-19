@@ -179,11 +179,8 @@ Function Clean-Artifacts
     {
         Remove-Item $ArtifactsPath -Recurse -Force -ErrorAction Stop -Verbose:$localVerbose
     }
-    #New-Item $ArtifactsPath -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    #New-Item $ArtifactsBin -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    New-Item "$ArtifactsBin\SQLite\x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    New-Item "$ArtifactsBin\SQLite\AMD64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    New-Item "$ArtifactsBin\SQLite\Mono" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+    New-Item "$ArtifactsBin\x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
+    New-Item "$ArtifactsBin\x64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\Tools" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\Documentation\License" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$ArtifactsBin\CSS" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
@@ -210,6 +207,8 @@ Function Deploy-Build
     # Primary Assemblies
     [string[]]$Assemblies = @(
         "AutoMapper.dll",
+        "EntityFramework.dll",
+        "EntityFramework.SqlServer.dll",
         "HFM.Client.dll",
         "HFM.Core.dll",
         "HFM.exe", 
@@ -222,15 +221,18 @@ Function Deploy-Build
         "LightInject.Microsoft.DependencyInjection.dll",
         "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "Newtonsoft.Json.dll",
+        "protobuf-net.Core.dll",
         "protobuf-net.dll",
+        "System.Data.SQLite.dll"
+        "System.Data.SQLite.EF6.dll"
+        "System.Data.SQLite.Linq.dll"
         "ZedGraph.dll"
         )
     $AssemblyFiles = Get-ChildItem -Path "HFM\bin\$Configuration\$TargetFramework\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $ArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
-    # SQLite Assemblies
-    Copy-Item -Path '..\lib\System.Data.SQLite\bin\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\x86" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\lib\System.Data.SQLite\bin\x64\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\AMD64" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path '..\lib\SQLite.NET\bin\ManagedOnly\System.Data.SQLite.dll' -Destination "$ArtifactsBin\SQLite\Mono" -ErrorAction Stop -Verbose:$localVerbose
+    ## SQLite Assemblies
+    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\x86\*" -Destination "$ArtifactsBin\x86" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM\bin\$Configuration\$TargetFramework\x64\*" -Destination "$ArtifactsBin\x64" -ErrorAction Stop -Verbose:$localVerbose
     # Tools Assemblies
     #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     #Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$ArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
@@ -320,9 +322,9 @@ Function Configure-Artifacts
 {
     param([string]$Path)
 
-    $Global:ArtifactsPath = $Path
-    $Global:ArtifactsBin = "$Path\HFM.NET"
-    $Global:ArtifactsPackages = "$Path\Packages"
+    $Global:ArtifactsPath = "$Path\$Global:TargetFramework"
+    $Global:ArtifactsBin = "$Global:ArtifactsPath\HFM.NET"
+    $Global:ArtifactsPackages = "$Global:ArtifactsPath\Packages"
 
     Write-Host "---------------------------------------------------"
     Write-Host "Configuring Artifacts"
@@ -383,8 +385,8 @@ Function Configure-Platform
     Write-Host "---------------------------------------------------"
 }
 
-Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 Configure-Version -Version '9.24'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
+Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
