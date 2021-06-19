@@ -45,7 +45,7 @@ stages:
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
-        msbuildArgs: '/p:NoWarn=1591'
+        msbuildArgs: '/p:TargetFramework=net47 /p:NoWarn=1591'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
