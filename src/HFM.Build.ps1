@@ -414,7 +414,7 @@ Function Configure-Platform
     Write-Host "---------------------------------------------------"
 }
 
-Configure-Version -Version '9.24'
+Configure-Version -Version '9.25'
 Configure-TargetFramework -TargetFramework 'net47'
 Configure-Configuration -Configuration 'Release'
 Configure-Platform -Platform 'Any CPU'
