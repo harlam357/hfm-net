@@ -236,7 +236,12 @@ Function Deploy-Build
         "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "Newtonsoft.Json.dll",
         "protobuf-net.Core.dll",
+        "System.Collections.Immutable.dll",
         "protobuf-net.dll",
+        "System.Memory.dll",
+        "System.Buffers.dll",
+        "System.Numerics.Vectors.dll",
+        "System.Runtime.CompilerServices.Unsafe.dll",
         "System.Data.SQLite.dll"
         "System.Data.SQLite.EF6.dll"
         "System.Data.SQLite.Linq.dll"
