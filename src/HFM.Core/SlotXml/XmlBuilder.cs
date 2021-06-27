@@ -125,6 +125,9 @@ namespace HFM.Core.SlotXml
 
         internal SlotData CreateSlotData(SlotModel slot)
         {
+            // to prevent large xml files, limit the number of log lines
+            var maxLogLines = 500;
+
             var slotData = new SlotData();
             slotData.Status = slot.Status;
             slotData.StatusColor = ColorTranslator.ToHtml(slot.Status.GetStatusColor());
@@ -132,6 +135,7 @@ namespace HFM.Core.SlotXml
             slotData.PercentComplete = slot.PercentComplete;
             slotData.Name = slot.Name;
             slotData.SlotType = slot.SlotTypeString;
+            slotData.Processor = (slot as FahClientSlotModel)?.Processor;
             slotData.ClientVersion = slot.Client.ClientVersion;
             slotData.TPF = slot.TPF.ToString();
             slotData.PPD = slot.PPD;
@@ -155,7 +159,7 @@ namespace HFM.Core.SlotXml
             slotData.Username = slot.Username;
             slotData.DownloadTime = slot.Assigned.ToShortStringOrEmpty();
             slotData.PreferredDeadline = slot.PreferredDeadline.ToShortStringOrEmpty();
-            slotData.CurrentLogLines = slot.CurrentLogLines.Select(x => _mapper.Map<Log.LogLine, LogLine>(x)).ToList();
+            slotData.CurrentLogLines = slot.CurrentLogLines.Skip(slot.CurrentLogLines.Count - maxLogLines).Select(x => _mapper.Map<Log.LogLine, LogLine>(x)).ToList();
             slotData.Protein = _mapper.Map<Proteins.Protein, Protein>(slot.WorkUnitModel.CurrentProtein);
             return slotData;
         }

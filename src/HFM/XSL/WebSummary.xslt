@@ -15,7 +15,7 @@
             <table class="Overview" width="100%">
                <tr>
                   <td class="Heading" colspan="2">Summary</td>
-                  <td class="Plain" colspan="14">
+                  <td class="Plain" colspan="15">
                      <a href="index.html">Overview Page</a>
                   </td>
                </tr>
@@ -24,6 +24,7 @@
                   <td class="Heading">Progress</td>
                   <td class="Heading">Name</td>
                   <td class="Heading">Slot Type</td>
+                  <td class="Heading">Processor</td>
                   <td class="Heading">TPF</td>
                   <td class="Heading">PPD</td>
                   <td class="Heading">ETA</td>
@@ -105,16 +106,19 @@
          <td width="6%" class="RightCol">
             <xsl:value-of select="SlotType"/>
          </td>
+         <td width="5%" class="RightCol">
+            <xsl:value-of select="Processor"/>
+         </td>
          <td width="4%" class="RightCol">
             <xsl:value-of select="TPF"/>
          </td>
          <td width="8%" class="RightCol">
             <xsl:value-of select="format-number(PPD, $NumberFormat)"/> (<xsl:value-of select="format-number(UPD, $NumberFormat)"/> WUs)
          </td>
-         <td width="7%" class="RightCol">
+         <td width="4%" class="RightCol">
             <xsl:value-of select="ETA"/>
          </td>
-         <td width="8%" class="RightCol">
+         <td width="4%" class="RightCol">
             <xsl:value-of select="Core"/>
          </td>
          <td width="2%" class="RightCol">
@@ -153,10 +157,10 @@
             </xsl:choose>
             <xsl:value-of select="Username"/>
          </td>
-         <td width="8%" class="RightCol">
+         <td width="9%" class="RightCol">
             <xsl:value-of select="DownloadTime"/>
          </td>
-         <td width="8%" class="RightCol"> <!--100%-->
+         <td width="9%" class="RightCol"> <!--100%-->
             <xsl:value-of select="PreferredDeadline"/>
          </td>
       </tr>

@@ -92,5 +92,8 @@ namespace HFM.Core.SlotXml
 
         [DataMember(Order = 28)]
         public Protein Protein { get; set; }
+
+        [DataMember(Order = 29)]
+        public string Processor { get; set; }
     }
 }
