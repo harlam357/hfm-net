@@ -132,6 +132,7 @@ namespace HFM.Core.SlotXml
             slotData.PercentComplete = slot.PercentComplete;
             slotData.Name = slot.Name;
             slotData.SlotType = slot.SlotTypeString;
+            slotData.Processor = (slot as FahClientSlotModel)?.Processor;
             slotData.ClientVersion = slot.Client.ClientVersion;
             slotData.TPF = slot.TPF.ToString();
             slotData.PPD = slot.PPD;
