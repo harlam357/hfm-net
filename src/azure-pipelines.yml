@@ -115,7 +115,7 @@ stages:
       inputs:
         command: 'build'
         projects: '$(entryProject)'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test - $(dotnetFramework)'
@@ -123,7 +123,7 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(entryProject)'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal'
         zipAfterPublish: false
         modifyOutputPath: false
 
@@ -153,7 +153,6 @@ stages:
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: |
-          src\GoogleDriveFunctions.ps1
           src\Artifacts\**
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
