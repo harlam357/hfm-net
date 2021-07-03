@@ -76,8 +76,8 @@ namespace HFM.Forms.Presenters
                 try
                 {
                     var m = Model.ReportingModel;
-                    sendMailService.SendEmail(m.FromAddress, m.ToAddress, "HFM.NET - Test Email",
-                        "HFM.NET - Test Email", m.Server, m.Port, m.Username, m.Password, m.IsSecure);
+                    sendMailService.SendEmail(m.FromAddress, m.ToAddress, $"{Core.Application.Name} - Test Email",
+                        $"{Core.Application.Name} - Test Email", m.Server, m.Port, m.Username, m.Password, m.IsSecure);
                     MessageBox.ShowInformation(Dialog, "Test email sent successfully.", Core.Application.NameAndVersion);
                 }
                 catch (Exception ex)

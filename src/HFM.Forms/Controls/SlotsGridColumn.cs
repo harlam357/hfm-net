@@ -474,7 +474,7 @@ namespace HFM.Forms.Controls
         protected override string OnGetMouseOverText(SlotModel slotModel)
         {
             return HasWarning(slotModel)
-                ? $"Client's username does not match the username configured in {Core.Application.ShortName} preferences."
+                ? $"Client's username does not match the username configured in {Core.Application.Name} preferences."
                 : base.OnGetMouseOverText(slotModel);
         }
 

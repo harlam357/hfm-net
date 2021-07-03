@@ -1,4 +1,4 @@
-
+﻿
 using System;
 
 using Microsoft.Win32;
@@ -69,7 +69,7 @@ namespace HFM.Forms
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("HFM.NET auto run value could not be set.", ex);
+                throw new InvalidOperationException($"{Core.Application.Name} auto run value could not be set.", ex);
             }
         }
 

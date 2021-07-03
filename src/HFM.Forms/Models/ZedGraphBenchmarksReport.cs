@@ -27,7 +27,7 @@ namespace HFM.Forms.Models
         protected static ZedGraphControl CreateZedGraphControl()
         {
             var zg = new ZedGraphControl();
-            zg.GraphPane.Title.Text = "HFM.NET - Slot Benchmarks";
+            zg.GraphPane.Title.Text = $"{Core.Application.Name} - Slot Benchmarks";
             return zg;
         }
 

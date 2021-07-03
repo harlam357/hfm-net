@@ -409,7 +409,7 @@ namespace HFM.Forms.Presenters
 
         public void ShowHfmGoogleGroup(LocalProcessService localProcess)
         {
-            const string errorMessage = "An error occurred while attempting to open the HFM.NET Google Group.";
+            string errorMessage = $"An error occurred while attempting to open the {Core.Application.Name} Google Group.";
             localProcess.StartAndNotifyError(Core.Application.SupportForumUrl, errorMessage, Logger, MessageBox);
         }
 
@@ -749,7 +749,7 @@ namespace HFM.Forms.Presenters
 
         public void ShowHfmGitHub(LocalProcessService localProcess)
         {
-            const string errorMessage = "An error occurred while attempting to open the HFM.NET GitHub project.";
+            string errorMessage = $"An error occurred while attempting to open the {Core.Application.Name} GitHub project.";
             localProcess.StartAndNotifyError(Core.Application.ProjectSiteUrl, errorMessage, Logger, MessageBox);
         }
 

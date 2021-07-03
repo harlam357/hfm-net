@@ -130,7 +130,7 @@ namespace HFM.Forms.Views
             this.Name = "AboutDialog";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About HFM.NET";
+            this.Text = "About HFM";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

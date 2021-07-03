@@ -641,7 +641,7 @@ namespace HFM.Forms.Views
             this.labelWrapper2.Name = "labelWrapper2";
             this.labelWrapper2.Size = new System.Drawing.Size(114, 13);
             this.labelWrapper2.TabIndex = 0;
-            this.labelWrapper2.Text = "Show HFM.NET in the";
+            this.labelWrapper2.Text = "Show HFM in the";
             // 
             // optionsMessageLevelGroupBox
             // 

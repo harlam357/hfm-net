@@ -71,7 +71,7 @@ namespace HFM.Forms.Views
             }
             catch (Exception)
             {
-                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET GitHub Project");
+                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, $"{Core.Application.Name} GitHub Project");
                 MessageBox.ShowError(this, text, Core.Application.NameAndVersion);
             }
         }
@@ -84,7 +84,7 @@ namespace HFM.Forms.Views
             }
             catch (Exception)
             {
-                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, "HFM.NET Google Group");
+                string text = String.Format(CultureInfo.CurrentCulture, Properties.Resources.ProcessStartError, $"{Core.Application.Name} Google Group");
                 MessageBox.ShowError(this, text, Core.Application.NameAndVersion);
             }
         }

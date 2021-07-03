@@ -17,8 +17,7 @@ namespace HFM.Core
             DataFolderPath = dataFolderPath;
         }
 
-        public const string ShortName = "HFM";
-        public const string Name = "HFM.NET";
+        public const string Name = "HFM";
 
         public const string CssFolderName = "CSS";
         public const string XsltFolderName = "XSL";
