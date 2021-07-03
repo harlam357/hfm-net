@@ -43,7 +43,10 @@ namespace HFM.Forms.Views
             SubscribeToNotifyIconMenuControlEvents();
             SubscribeToUserStatsContextMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
-            base.Text = $@"HFM.NET v{Core.Application.Version}";
+            base.Text = $@"{Core.Application.Name} v{Core.Application.Version}";
+#if NET5_0_OR_GREATER
+            base.Text += " (dotnet)";
+#endif
         }
 
         private void MainForm_Load(object sender, EventArgs e)
