@@ -14,18 +14,11 @@ namespace HFM.Core
         public DateTime UpdateDate { get; set; }
         public List<ApplicationUpdateFile> UpdateFiles { get; set; }
 
-        public bool VersionIsGreaterThan(int versionNumber)
+        public bool VersionIsGreaterThan(Version versionNumber)
         {
             if (Version is null) return false;
 
-            try
-            {
-                return Application.ParseVersionNumber(Version) > versionNumber;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            return System.Version.TryParse(Version, out Version result) && result > versionNumber;
         }
     }
 

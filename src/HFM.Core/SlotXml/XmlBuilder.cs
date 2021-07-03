@@ -64,7 +64,7 @@ namespace HFM.Core.SlotXml
         internal SlotSummary CreateSlotSummary(ICollection<SlotModel> slots, DateTime updateDateTime)
         {
             var slotSummary = new SlotSummary();
-            slotSummary.HfmVersion = Application.FullVersion;
+            slotSummary.HfmVersion = Application.Version;
             slotSummary.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
             slotSummary.UpdateDateTime = updateDateTime;
             slotSummary.SlotTotals = SlotTotals.Create(slots);
@@ -107,7 +107,7 @@ namespace HFM.Core.SlotXml
         internal SlotDetail CreateSlotDetail(SlotModel slot, DateTime updateDateTime)
         {
             var slotDetail = new SlotDetail();
-            slotDetail.HfmVersion = Application.FullVersion;
+            slotDetail.HfmVersion = Application.Version;
             slotDetail.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
             slotDetail.UpdateDateTime = updateDateTime;
             slotDetail.LogFileAvailable = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);

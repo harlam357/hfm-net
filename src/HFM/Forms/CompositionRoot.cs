@@ -32,7 +32,7 @@ namespace HFM.Forms
                     var messageBox = factory.GetInstance<MessageBoxPresenter>();
                     var properties = new Dictionary<string, string>
                     {
-                        { "Application", Core.Application.NameAndFullVersion },
+                        { "Application", Core.Application.NameAndVersion },
                         { "OS Version", Environment.OSVersion.VersionString }
                     };
                     return new DefaultExceptionPresenterFactory(logger, messageBox, properties, Core.Application.SupportForumUrl);

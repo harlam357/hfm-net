@@ -35,7 +35,7 @@ namespace HFM.Forms.Views
         private void LoadData(ApplicationUpdateModel model)
         {
             captionLabel.Text = $"A new version of {Core.Application.Name} is available for download.";
-            thisVersionLabel.Text = $"This version: {Core.Application.FullVersion}";
+            thisVersionLabel.Text = $"This version: {Core.Application.Version}";
             newVersionLabel.Text = $"New version: {model.Update.Version}";
 
             model.PropertyChanged += ModelPropertyChanged;

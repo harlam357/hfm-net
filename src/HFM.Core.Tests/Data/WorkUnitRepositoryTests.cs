@@ -131,7 +131,7 @@ namespace HFM.Core.Data
             // Assert
             VerifyWuHistoryTableSchema(_testDataFileCopy);
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-            Assert.AreEqual(Application.ParseVersionNumber("0.9.2"), Application.ParseVersionNumber(_repository.GetDatabaseVersion()));
+            Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace HFM.Core.Data
             Assert.IsFalse(result);
             VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
             Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
-            Assert.IsTrue(Application.ParseVersionNumber("0.9.2") <= Application.ParseVersionNumber(_repository.GetDatabaseVersion()));
+            Assert.IsTrue(Version.Parse("0.9.2") <= Version.Parse(_repository.GetDatabaseVersion()));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace HFM.Core.Data
             VerifyWuHistoryTableSchema(_testData2FileCopy);
             // 32 duplicates deleted
             Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
-            Assert.AreEqual(Application.ParseVersionNumber("0.9.2"), Application.ParseVersionNumber(_repository.GetDatabaseVersion()));
+            Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
         }
 
         #endregion

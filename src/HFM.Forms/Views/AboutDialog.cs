@@ -34,7 +34,7 @@ namespace HFM.Forms.Views
 
         private void SetVersionLabelText()
         {
-            versionLabel.Text = $"Version {Core.Application.FullVersion}";
+            versionLabel.Text = $"Version {Core.Application.Version}";
         }
 
         private void SetBuildDateLabelText()

@@ -72,7 +72,7 @@ namespace HFM
             var logger = (Logger)Container.GetInstance<ILogger>();
             // write log header
             logger.Info(String.Empty);
-            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.FullVersion));
+            logger.Info(String.Format(CultureInfo.InvariantCulture, "Starting - HFM.NET v{0}", Core.Application.Version));
             logger.Info(String.Empty);
 
             Application.ApplicationExit += (s, e) =>
@@ -254,7 +254,7 @@ namespace HFM
         {
             var properties = new Dictionary<string, string>
             {
-                { "Application", Core.Application.NameAndFullVersion },
+                { "Application", Core.Application.NameAndVersion },
                 { "OS Version", Environment.OSVersion.VersionString }
             };
             if (!String.IsNullOrEmpty(message))

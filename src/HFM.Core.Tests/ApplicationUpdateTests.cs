@@ -13,7 +13,7 @@ namespace HFM.Core
             // Arrange
             var update = new ApplicationUpdate { Version = "1.0.0.0" };
             // Act
-            bool result = update.VersionIsGreaterThan(Application.ParseVersionNumber("0.9.9.9"));
+            bool result = update.VersionIsGreaterThan(Version.Parse("0.9.9.9"));
             // Assert
             Assert.IsTrue(result);
         }
@@ -24,7 +24,7 @@ namespace HFM.Core
             // Arrange
             var update = new ApplicationUpdate { Version = "1.0.0.0" };
             // Act
-            bool result = update.VersionIsGreaterThan(Application.ParseVersionNumber("1.0.0.1"));
+            bool result = update.VersionIsGreaterThan(Version.Parse("1.0.0.1"));
             // Assert
             Assert.IsFalse(result);
         }
@@ -35,7 +35,7 @@ namespace HFM.Core
             // Arrange
             var update = new ApplicationUpdate { Version = "FailsToParse" };
             // Act
-            bool result = update.VersionIsGreaterThan(0);
+            bool result = update.VersionIsGreaterThan(new Version());
             // Assert
             Assert.IsFalse(result);
         }
@@ -56,7 +56,7 @@ namespace HFM.Core
 
                 hash = new Hash(HashProvider.MD5);
                 var md5 = hash.Calculate(File.OpenRead(path));
-                
+
                 var updateFile = new ApplicationUpdateFile { Size = (int)fileInfo.Length, SHA1 = sha1.ToHex(), MD5 = md5.ToHex() };
                 // Act
                 Assert.DoesNotThrow(() => updateFile.Verify(path));

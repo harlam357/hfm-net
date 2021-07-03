@@ -1,6 +1,4 @@
-﻿using System;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace HFM.Core
 {
@@ -8,27 +6,19 @@ namespace HFM.Core
     public class ApplicationTests
     {
         [Test]
-        public void Application_ParseVersionNumber_FromFourSegments()
+        public void Application_Version_IsNotNull()
         {
-            Assert.AreEqual(1020030004, Application.ParseVersionNumber("1.2.3.4"));
+            Assert.IsNotNull(Application.Version);
         }
 
         [Test]
-        public void Application_ParseVersionNumber_ThrowsWhenVersionStringIsNull()
+        public void Application_VersionNumber_HasThreeParts()
         {
-            Assert.Throws<ArgumentNullException>(() => Application.ParseVersionNumber(null));
-        }
-
-        [Test]
-        public void Application_ParseVersionNumber_FromThreeSegments()
-        {
-            Assert.AreEqual(1020030000, Application.ParseVersionNumber("1.2.3"));
-        }
-
-        [Test]
-        public void Application_ParseVersionNumber_ThrowsWhenSegmentIsNotInteger()
-        {
-            Assert.Throws<FormatException>(() => Application.ParseVersionNumber("1.2.3.b"));
+            var version = Application.VersionNumber;
+            Assert.AreNotEqual(0, version.Major);
+            Assert.AreNotEqual(0, version.Minor);
+            Assert.AreNotEqual(-1, version.Build);
+            Assert.AreEqual(-1, version.Revision);
         }
     }
 }

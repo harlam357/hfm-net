@@ -137,7 +137,7 @@ namespace HFM.Core.Data
 
             var version = GetDatabaseVersion();
             Logger.Info($"WU History database v{version}");
-            return RequiresUpgrade(Application.ParseVersionNumber(version), VersionString092);
+            return RequiresUpgrade(Version.Parse(version), VersionString092);
         }
 
         public void Upgrade()
@@ -149,7 +149,7 @@ namespace HFM.Core.Data
         {
             if (!Connected) return;
 
-            int versionNumber = Application.ParseVersionNumber(GetDatabaseVersion());
+            var versionNumber = Version.Parse(GetDatabaseVersion());
             try
             {
                 UpgradeToVersion092(versionNumber, progress);
@@ -163,7 +163,7 @@ namespace HFM.Core.Data
 
         private const string VersionString092 = "0.9.2";
 
-        private void UpgradeToVersion092(int versionNumber, IProgress<ProgressInfo> progress)
+        private void UpgradeToVersion092(Version versionNumber, IProgress<ProgressInfo> progress)
         {
             if (!RequiresUpgrade(versionNumber, VersionString092)) return;
 
@@ -197,9 +197,9 @@ namespace HFM.Core.Data
             }
         }
 
-        private static bool RequiresUpgrade(int versionNumber, string upgradeVersionString)
+        private static bool RequiresUpgrade(Version versionNumber, string upgradeVersionString)
         {
-            return versionNumber < Application.ParseVersionNumber(upgradeVersionString);
+            return versionNumber < Version.Parse(upgradeVersionString);
         }
 
         private static void AddProteinColumns(SQLiteConnection connection)
