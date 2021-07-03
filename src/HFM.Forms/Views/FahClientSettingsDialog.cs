@@ -85,5 +85,16 @@ namespace HFM.Forms.Views
         {
             _slotsGridBindingSource.ResetBindings(false);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _slotsGridBindingSource?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
