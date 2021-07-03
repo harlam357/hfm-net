@@ -120,10 +120,23 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: 'Test - $(dotnetFramework)'
       inputs:
+        command: 'test'
+        projects: '**/*Test*.csproj'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish Code Coverage - $(dotnetFramework)'
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Agent.TempDirectory)\**\coverage.cobertura.xml'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish - $(dotnetFramework)'
+      inputs:
         command: 'publish'
         publishWebProjects: false
         projects: '$(entryProject)'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
+        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal'
         zipAfterPublish: false
         modifyOutputPath: false
 
