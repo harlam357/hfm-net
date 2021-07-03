@@ -129,13 +129,13 @@ namespace HFM.Forms
         /// <summary>
         /// Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class; otherwise, returns null. 
         /// </summary>
-        /// <returns>The <see cref="T:System.ComponentModel.PropertyDescriptor"/> used for sorting the list.</returns>
+        /// <returns>The <see cref="PropertyDescriptor"/> used for sorting the list.</returns>
         protected override PropertyDescriptor SortPropertyCore => SortComparer.Property;
 
         /// <summary>
         /// Gets the direction the list is sorted.
         /// </summary>
-        /// <returns>One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values. The default is <see cref="F:System.ComponentModel.ListSortDirection.Ascending"/>.</returns>
+        /// <returns>One of the <see cref="ListSortDirection"/> values. The default is <see cref="ListSortDirection.Ascending"/>.</returns>
         protected override ListSortDirection SortDirectionCore => SortComparer.Direction;
 
         /// <summary>
@@ -145,10 +145,10 @@ namespace HFM.Forms
         protected override bool SupportsSortingCore => SortComparer.SupportsSorting;
 
         /// <summary>
-        /// Sorts the items if overridden in a derived class; otherwise, throws a <see cref="T:System.NotSupportedException"/>.
+        /// Sorts the items if overridden in a derived class; otherwise, throws a <see cref="NotSupportedException"/>.
         /// </summary>
-        /// <param name="prop">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that specifies the property to sort on.</param>
-        /// <param name="direction">One of the <see cref="T:System.ComponentModel.ListSortDirection"/> values.</param>
+        /// <param name="prop">A <see cref="PropertyDescriptor"/> that specifies the property to sort on.</param>
+        /// <param name="direction">One of the <see cref="ListSortDirection"/> values.</param>
         protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
             if (prop != null)
@@ -194,7 +194,7 @@ namespace HFM.Forms
         }
 
         /// <summary>
-        /// Removes any sort applied with <see cref="M:System.ComponentModel.BindingList`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)"/> if sorting is implemented in a derived class; otherwise, raises <see cref="T:System.NotSupportedException"/>.
+        /// Removes any sort applied with <see cref="BindingList{T}.ApplySortCore(PropertyDescriptor,ListSortDirection)"/> if sorting is implemented in a derived class; otherwise, raises <see cref="NotSupportedException"/>.
         /// </summary>
         protected override void RemoveSortCore()
         {
@@ -222,7 +222,7 @@ namespace HFM.Forms
         /// <summary>
         /// Gets the collection of sort descriptions currently applied to the data source.
         /// </summary>
-        /// <returns>The <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/> currently applied to the data source.</returns>
+        /// <returns>The <see cref="ListSortDescriptionCollection"/> currently applied to the data source.</returns>
         public ListSortDescriptionCollection SortDescriptions => SortComparer.SortDescriptions;
 
         /// <summary>
@@ -232,9 +232,9 @@ namespace HFM.Forms
         public bool SupportsAdvancedSorting => SortComparer.SupportsAdvancedSorting;
 
         /// <summary>
-        /// Sorts the data source based on the given <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/>.
+        /// Sorts the data source based on the given <see cref="ListSortDescriptionCollection"/>.
         /// </summary>
-        /// <param name="sorts">The <see cref="T:System.ComponentModel.ListSortDescriptionCollection"/> containing the sorts to apply to the data source.</param>
+        /// <param name="sorts">The <see cref="ListSortDescriptionCollection"/> containing the sorts to apply to the data source.</param>
         public virtual void ApplySort(ListSortDescriptionCollection sorts)
         {
             if (sorts != null)
