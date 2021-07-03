@@ -42,7 +42,7 @@ namespace HFM.Forms
 
         public void Clear() => ClearItems();
 
-        public void CopyTo(ListItem[] array, int index) => Items.CopyTo(array, index);
+        public void CopyTo(ListItem[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
 
         public bool Contains(ListItem item) => Items.Contains(item);
 
