@@ -695,7 +695,7 @@ namespace HFM.Forms.Views
             // 
             this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
             this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebHFMGoogleCode.Text = "HFM.NET on &GitHub";
+            this.mnuWebHFMGoogleCode.Text = "HFM on &GitHub";
             // 
             // mnuHelp
             // 
@@ -715,13 +715,13 @@ namespace HFM.Forms.Views
             // 
             this.mnuHelpHfmLogFile.Name = "mnuHelpHfmLogFile";
             this.mnuHelpHfmLogFile.Size = new System.Drawing.Size(205, 22);
-            this.mnuHelpHfmLogFile.Text = "View HFM.NET &Log File";
+            this.mnuHelpHfmLogFile.Text = "View HFM &Log File";
             // 
             // mnuHelpHfmDataFiles
             // 
             this.mnuHelpHfmDataFiles.Name = "mnuHelpHfmDataFiles";
             this.mnuHelpHfmDataFiles.Size = new System.Drawing.Size(205, 22);
-            this.mnuHelpHfmDataFiles.Text = "View HFM.NET &Data Files";
+            this.mnuHelpHfmDataFiles.Text = "View HFM &Data Files";
             // 
             // mnuHelpSep1
             // 
@@ -733,7 +733,7 @@ namespace HFM.Forms.Views
             // 
             this.mnuHelpHfmGroup.Name = "mnuHelpHfmGroup";
             this.mnuHelpHfmGroup.Size = new System.Drawing.Size(205, 22);
-            this.mnuHelpHfmGroup.Text = "HFM.NET &Google Group";
+            this.mnuHelpHfmGroup.Text = "HFM &Google Group";
             // 
             // mnuHelpCheckForUpdate
             // 
@@ -1006,7 +1006,7 @@ namespace HFM.Forms.Views
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1153, 892);
             this.Controls.Add(this.splitContainer1);
@@ -1016,7 +1016,7 @@ namespace HFM.Forms.Views
             this.MinimumSize = new System.Drawing.Size(172, 167);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "HFM.NET";
+            this.Text = "HFM";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
