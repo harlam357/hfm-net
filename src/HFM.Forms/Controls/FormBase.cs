@@ -7,6 +7,10 @@ namespace HFM.Forms.Controls
     {
         public FormBase()
         {
+            // https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms
+            Font = new Font(new FontFamily("Microsoft Sans Serif"), 8f);
+            // later, replace with https://devblogs.microsoft.com/dotnet/whats-new-in-windows-forms-in-net-6-0-preview-5/#application-wide-default-font
+
             InitializeComponent();
             Icon = Properties.Resources.hfm_48_48;
         }
