@@ -22,7 +22,8 @@ stages:
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
       targetFramework: 'net47'
-      dotnetFramework: 'net5.0-windows'
+      dotnetFive: 'net5.0'
+      dotnetFiveWindows: 'net5.0-windows'
 
     steps:
     - task: NuGetToolInstaller@1
@@ -105,59 +106,73 @@ stages:
         workingDirectory: '.\src'
     
     - task: DotNetCoreCLI@2
-      displayName: 'Restore - $(dotnetFramework)'
+      displayName: 'Restore - $(dotnetFiveWindows)'
       inputs:
         command: 'restore'
         projects: '$(solution)'
         
     - task: DotNetCoreCLI@2
-      displayName: 'Build - $(dotnetFramework)'
+      displayName: 'Build - $(dotnetFiveWindows)'
       inputs:
         command: 'build'
         projects: '$(entryProject)'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal'
+        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-restore --verbosity normal'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test - $(dotnetFramework)'
+      displayName: 'Test HFM.Core - $(dotnetFive)'
       inputs:
         command: 'test'
-        projects: '**/*Test*.csproj'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
+        projects: '**/HFM.Core.Tests.csproj'
+        arguments: '-f $(dotnetFive) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Forms - $(dotnetFiveWindows)'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Forms.Tests.csproj'
+        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Preferences - $(dotnetFive)'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Preferences.Tests.csproj'
+        arguments: '-f $(dotnetFive) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
 
     - task: PublishCodeCoverageResults@1
-      displayName: 'Publish Code Coverage - $(dotnetFramework)'
+      displayName: 'Publish Code Coverage - $(dotnetFiveWindows)'
       inputs:
         codeCoverageTool: 'Cobertura'
         summaryFileLocation: '$(Agent.TempDirectory)\**\coverage.cobertura.xml'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Publish - $(dotnetFramework)'
+      displayName: 'Publish - $(dotnetFiveWindows)'
       inputs:
         command: 'publish'
         publishWebProjects: false
         projects: '$(entryProject)'
-        arguments: '-f $(dotnetFramework) -c $(buildConfiguration) --no-restore --verbosity normal'
+        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-build --verbosity normal'
         zipAfterPublish: false
         modifyOutputPath: false
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Build - $(dotnetFramework)'
+      displayName: 'HFM.Build - Deploy-Build - $(dotnetFiveWindows)'
       inputs:
         targetType: 'inline'
         script: |
           . .\HFM.Build.ps1
-          Configure-TargetFramework -TargetFramework $(dotnetFramework)
+          Configure-TargetFramework -TargetFramework $(dotnetFiveWindows)
           Clean-Artifacts
           Deploy-Build -Verbose
         workingDirectory: '.\src'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Build-Zip - $(dotnetFramework)'
+      displayName: 'HFM.Build - Build-Zip - $(dotnetFiveWindows)'
       inputs:
         targetType: 'inline'
         script: |
           . .\HFM.Build.ps1
-          Configure-TargetFramework -TargetFramework $(dotnetFramework)
+          Configure-TargetFramework -TargetFramework $(dotnetFiveWindows)
           Configure-Version -CommitCount
           Build-Zip -Verbose
         workingDirectory: '.\src'

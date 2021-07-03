@@ -104,9 +104,9 @@ Function Build-Solution-Dotnet
     param([string]$TargetFramework,
           [string]$Configuration)
 
-    Exec { & dotnet restore $SolutionFileName }      
-    Exec { & dotnet build $EntryProjectPath -f $TargetFramework -c $Configuration --no-restore }
-    Exec { & dotnet publish $EntryProjectPath -f $TargetFramework -c $Configuration --no-restore }
+    Exec { & dotnet restore $SolutionFileName --verbosity normal }      
+    Exec { & dotnet build $EntryProjectPath -f $TargetFramework -c $Configuration --verbosity normal --no-restore }
+    Exec { & dotnet publish $EntryProjectPath -f $TargetFramework -c $Configuration --verbosity normal --no-build }
 }
 
 Function Test-Build
@@ -123,7 +123,7 @@ Function Test-Build
     Write-Host "---------------------------------------------------"
     
     if (Should-Invoke-Dotnet -TargetFramework $TargetFramework) {
-        Test-Build-Dotnet -TargetFramework $TargetFramework -Configuration $Configuration -ArtifactsPath $ArtifactsPath
+        Test-Build-Dotnet -Configuration $Configuration -ArtifactsPath $ArtifactsPath
     } else {
         Test-Build-Framework -TargetFramework $TargetFramework -Configuration $Configuration -ArtifactsPath $ArtifactsPath
     }
@@ -143,20 +143,12 @@ Function Test-Build-Framework
 
 Function Test-Build-Dotnet
 {
-    param([string]$TargetFramework,
-          [string]$Configuration,
+    param([string]$Configuration,
           [string]$ArtifactsPath)
 
-    $coreTargetFramework = $TargetFramework
-    $preferencesTargetFramework = $TargetFramework
-    if ($TargetFramework -eq $DotNetFiveWindows) {
-        $coreTargetFramework = $DotNetFive
-        $preferencesTargetFramework = $DotNetFive
-    }
-
-    Exec { & dotnet test .\HFM.Core.Tests\HFM.Core.Tests.csproj -f $coreTargetFramework -c $Configuration -l "trx;LogFileName=HFM.Core.Tests.Results.trx" -r $ArtifactsPath }
-    Exec { & dotnet test .\HFM.Forms.Tests\HFM.Forms.Tests.csproj -f $TargetFramework -c $Configuration -l "trx;LogFileName=HFM.Forms.Tests.Results.trx" -r $ArtifactsPath }
-    Exec { & dotnet test .\HFM.Preferences.Tests\HFM.Preferences.Tests.csproj -f $preferencesTargetFramework -c $Configuration -l "trx;LogFileName=HFM.Preferences.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Core.Tests\HFM.Core.Tests.csproj --no-restore -f $DotNetFive -c $Configuration -l "trx;LogFileName=HFM.Core.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Forms.Tests\HFM.Forms.Tests.csproj --no-restore -f $DotNetFiveWindows -c $Configuration -l "trx;LogFileName=HFM.Forms.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Preferences.Tests\HFM.Preferences.Tests.csproj --no-restore -f $DotNetFive -c $Configuration -l "trx;LogFileName=HFM.Preferences.Tests.Results.trx" -r $ArtifactsPath }
 }
 
 Function Clean-Artifacts
