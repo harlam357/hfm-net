@@ -53,6 +53,7 @@ namespace HFM.Forms.Mocks
         public void Dispose()
         {
             Close();
+            GC.SuppressFinalize(this);
         }
     }
 

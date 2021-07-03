@@ -48,6 +48,7 @@ namespace HFM.Forms.Mocks
         public void Dispose()
         {
             Close();
+            GC.SuppressFinalize(this);
         }
 
         public ICollection<MethodInvocation> Invocations { get; } = new List<MethodInvocation>();
