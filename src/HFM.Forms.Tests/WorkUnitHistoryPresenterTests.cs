@@ -284,7 +284,7 @@ namespace HFM.Forms
             // Arrange
             var presenter = CreatePresenter();
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new WorkUnitRow[0]);
+            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitRow>());
             var saveFile = CreateSaveFileDialogView();
             // Act
             presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
