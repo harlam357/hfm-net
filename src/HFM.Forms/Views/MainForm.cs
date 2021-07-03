@@ -44,7 +44,7 @@ namespace HFM.Forms.Views
             SubscribeToUserStatsContextMenuControlEvents();
             queueControl.SetProteinService(_presenter.ProteinService);
             base.Text = $@"{Core.Application.Name} v{Core.Application.Version}";
-#if NET5_0_OR_GREATER
+#if NET5_0
             base.Text += " (dotnet)";
 #endif
         }
