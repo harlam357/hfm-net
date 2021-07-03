@@ -54,7 +54,7 @@ namespace HFM
             }
         }
 
-        private bool CheckSingleInstance()
+        private static bool CheckSingleInstance()
         {
             bool singleInstance = SingleInstanceHelper.Start();
             if (!singleInstance)

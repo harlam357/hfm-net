@@ -18,10 +18,7 @@ namespace HFM.Forms.Internal
         // ReSharper restore InconsistentNaming
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }

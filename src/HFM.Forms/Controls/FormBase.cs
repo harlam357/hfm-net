@@ -8,7 +8,9 @@ namespace HFM.Forms.Controls
         public FormBase()
         {
             // https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms
+#pragma warning disable CA2000 // Dispose objects before losing scope
             Font = new Font(new FontFamily("Microsoft Sans Serif"), 8f);
+#pragma warning restore CA2000 // Dispose objects before losing scope
             // later, replace with https://devblogs.microsoft.com/dotnet/whats-new-in-windows-forms-in-net-6-0-preview-5/#application-wide-default-font
 
             InitializeComponent();

@@ -41,6 +41,8 @@ dotnet_diagnostic.CA1720.severity = none
 dotnet_diagnostic.CA1724.severity = none
 # CA2007: Do not directly await a Task
 dotnet_code_quality.CA2007.exclude_async_void_methods = true
+# CA2109: Review visible event handlers
+dotnet_diagnostic.CA2109.severity = none
 # CA2227: Collection properties should be read only
 dotnet_diagnostic.CA2227.severity = none
 

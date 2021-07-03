@@ -309,28 +309,6 @@ namespace HFM.Forms.Views
             }
         }
 
-        // Form Handlers
-        public void SecondInstanceStarted(string[] args)
-        {
-            if (InvokeRequired)
-            {
-                // make sure to use new object[] for the params array.  not doing so will cause
-                // the invoke to use the args array as the params array which can easily cause
-                // a TargetParameterCountException
-                BeginInvoke(new Action<string[]>(SecondInstanceStarted), new object[] { args });
-                return;
-            }
-
-            if (WindowState == FormWindowState.Minimized)
-            {
-                WindowState = _presenter.Model.OriginalWindowState;
-            }
-            else
-            {
-                NativeMethods.SetForegroundWindow(Handle);
-            }
-        }
-
         private void MainForm_Shown(object sender, EventArgs e)
         {
             _notifyIcon = new NotifyIcon(components);
