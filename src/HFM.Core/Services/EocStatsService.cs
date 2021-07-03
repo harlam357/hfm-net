@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.XPath;
 
 using HFM.Preferences;
 
@@ -28,7 +29,10 @@ namespace HFM.Core.Services
             string eocXmlDataUrl = String.Concat(UserXmlBaseUrl, _preferences.Get<int>(Preference.EocUserId));
 
             var xmlData = new XmlDocument();
-            xmlData.Load(eocXmlDataUrl);
+            using (var reader = XmlReader.Create(eocXmlDataUrl, new XmlReaderSettings { XmlResolver = null }))
+            {
+                xmlData.Load(reader);
+            }
             xmlData.RemoveChild(xmlData.ChildNodes[0]);
 
             XmlNode eocNode = GetXmlNode(xmlData, "EOC_Folding_Stats");

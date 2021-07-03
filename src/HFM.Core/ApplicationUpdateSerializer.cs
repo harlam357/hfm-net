@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 using HFM.Core.Serializers;
@@ -16,7 +17,10 @@ namespace HFM.Core
         public ApplicationUpdate Deserialize(Stream stream)
         {
             var s = new XmlSerializer(typeof(ApplicationUpdate));
-            return (ApplicationUpdate)s.Deserialize(stream);
+            using (var reader = XmlReader.Create(stream))
+            {
+                return (ApplicationUpdate)s.Deserialize(reader);
+            }
         }
     }
 }
