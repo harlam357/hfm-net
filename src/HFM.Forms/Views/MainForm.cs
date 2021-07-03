@@ -167,7 +167,7 @@ namespace HFM.Forms.Views
             {
                 queueControl.Visible = false;
                 btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
-                splitContainer2.SplitterDistance = 27;
+                splitContainer2.SplitterDistance = 32;
             }
             else
             {
