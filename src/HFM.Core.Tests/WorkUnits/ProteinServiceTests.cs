@@ -166,11 +166,11 @@ namespace HFM.Core.WorkUnits
             // Arrange
             var summaryService = CreateProjectSummaryService();
             var service = new ProteinService(new ProteinDataContainer(), summaryService, Logging.TestLogger.Instance);
-            Assert.AreEqual(0, service.GetProjects().Count());
+            Assert.AreEqual(0, service.GetProjects().Count);
             // Act
             service.Refresh(null);
             // Assert
-            Assert.AreNotEqual(624, service.GetProjects().Count());
+            Assert.AreNotEqual(624, service.GetProjects().Count);
         }
 
         [Test]

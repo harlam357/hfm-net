@@ -54,13 +54,15 @@ namespace HFM.Core
         /// </summary>
         /// <param name="provider">Provides the type of hash algorithm to create.</param>
         /// <returns>The HashAlgorithm object.</returns>
-        /// <exception cref="T:System.ArgumentException">The provider is unknown.</exception>
+        /// <exception cref="ArgumentException">The provider is unknown.</exception>
         public static HashAlgorithm Create(HashProvider provider)
         {
             switch (provider)
             {
                 case HashProvider.SHA1:
+#pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
                     return SHA1.Create();
+#pragma warning restore CA5350 // Do Not Use Weak Cryptographic Algorithms
                 case HashProvider.SHA256:
                     return SHA256.Create();
                 case HashProvider.SHA384:
@@ -68,7 +70,9 @@ namespace HFM.Core
                 case HashProvider.SHA512:
                     return SHA512.Create();
                 case HashProvider.MD5:
+#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
                     return MD5.Create();
+#pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
             }
 
             throw new ArgumentException("Unknown HashProvider.", nameof(provider));

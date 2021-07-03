@@ -11,15 +11,15 @@ namespace HFM.Core.Client
             get { return false; }
         }
 
-        protected override int CompareInternal(SlotModel xVal, SlotModel yVal)
+        protected override int CompareInternal(SlotModel x, SlotModel y)
         {
             /* Get property values */
-            object xValue = GetPropertyValue(xVal, Property);
-            object yValue = GetPropertyValue(yVal, Property);
-            SlotStatus xStatusValue = xVal.Status;
-            SlotStatus yStatusValue = yVal.Status;
-            object xNameValue = xVal.Name;
-            object yNameValue = yVal.Name;
+            object xValue = GetPropertyValue(x, Property);
+            object yValue = GetPropertyValue(y, Property);
+            SlotStatus xStatusValue = x.Status;
+            SlotStatus yStatusValue = y.Status;
+            object xNameValue = x.Name;
+            object yNameValue = y.Name;
 
             // check for offline clients first
             if (OfflineClientsLast)

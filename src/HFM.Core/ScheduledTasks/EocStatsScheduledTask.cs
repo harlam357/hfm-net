@@ -138,7 +138,9 @@ namespace HFM.Core.ScheduledTasks
         private static double GetRandomMinutes()
         {
             var r = new Random(DateTime.Now.Second);
+#pragma warning disable CA5394 // Do not use insecure randomness
             return r.Next(15, 30);
+#pragma warning restore CA5394 // Do not use insecure randomness
         }
     }
 }
