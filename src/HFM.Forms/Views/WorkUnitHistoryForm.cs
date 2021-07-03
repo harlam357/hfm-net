@@ -201,10 +201,12 @@ namespace HFM.Forms.Views
             _presenter.RefreshDataByIdClick();
         }
 
+        private DataGridViewColumnSelector _columnSelector;
+
         private void SetupDataGridView(IPreferences preferences)
         {
             // Add Column Selector
-            new DataGridViewColumnSelector(dataGridView1);
+            _columnSelector = new DataGridViewColumnSelector(dataGridView1);
 
             string[] names = WorkUnitQueryParameter.GetColumnNames();
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
@@ -299,6 +301,17 @@ namespace HFM.Forms.Views
         private void CopyPRCGToClipboard_Click(object sender, EventArgs e)
         {
             _presenter.CopyPRCGToClipboardClicked();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _columnSelector?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

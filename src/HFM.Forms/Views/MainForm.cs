@@ -622,12 +622,14 @@ namespace HFM.Forms.Views
             mnuContextForceRefreshEocStats.Click += (s, e) => _presenter.RefreshUserStatsData();
         }
 
+        private DataGridViewColumnSelector _columnSelector;
+
         private void SetupDataGridView()
         {
             dataGridView1.AutoGenerateColumns = false;
             SetupDataGridViewColumns(dataGridView1);
 
-            new DataGridViewColumnSelector(dataGridView1);
+            _columnSelector = new DataGridViewColumnSelector(dataGridView1);
         }
 
         protected override void Dispose(bool disposing)
@@ -636,6 +638,7 @@ namespace HFM.Forms.Views
             {
                 components?.Dispose();
                 _notifyIcon?.Dispose();
+                _columnSelector?.Dispose();
             }
 
             base.Dispose(disposing);

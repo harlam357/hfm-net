@@ -58,7 +58,7 @@ namespace HFM.Forms.Controls
         // columns header text. Then it shows the popup. 
         // In this way the CheckedListBox items are always refreshed to reflect changes occurred in 
         // DataGridView columns (column additions or name changes and so on).
-        void DataGridViewMouseUp(object sender, MouseEventArgs e)
+        private void DataGridViewMouseUp(object sender, MouseEventArgs e)
         {
             DataGridView.HitTestInfo hti = _dataGridView.HitTest(e.X, e.Y);
             if (e.Button == MouseButtons.Right && hti.Type == DataGridViewHitTestType.ColumnHeader)
@@ -87,10 +87,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        // The constructor creates an instance of CheckedListBox and ToolStripDropDown.
-        // the CheckedListBox is hosted by ToolStripControlHost, which in turn is
-        // added to ToolStripDropDown.
-        public DataGridViewColumnSelector()
+        public DataGridViewColumnSelector(DataGridView dgv)
         {
             _checkedListBox = new CheckedListBox();
             _checkedListBox.CheckOnClick = true;
@@ -104,23 +101,18 @@ namespace HFM.Forms.Controls
             _popUp = new ToolStripDropDown();
             _popUp.Padding = Padding.Empty;
             _popUp.Items.Add(controlHost);
-        }
 
-        public DataGridViewColumnSelector(DataGridView dgv)
-           : this()
-        {
             DataGridView = dgv;
         }
 
-        // When user checks / unchecks a checkbox, the related column visibility is 
-        // switched.
-        void CheckedListBoxItemCheck(object sender, ItemCheckEventArgs e)
+        // When user checks / unchecks a checkbox, the related column visibility is switched.
+        private void CheckedListBoxItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (NumberOfColumnsVisible() == 1)
             {
                 e.NewValue = CheckState.Checked;
             }
-            _dataGridView.Columns[e.Index].Visible = (e.NewValue == CheckState.Checked);
+            _dataGridView.Columns[e.Index].Visible = e.NewValue == CheckState.Checked;
         }
 
         private int NumberOfColumnsVisible()
@@ -128,21 +120,12 @@ namespace HFM.Forms.Controls
             return _dataGridView.Columns.Cast<DataGridViewColumn>().Count(column => column.Visible);
         }
 
-        #region IDisposable Members
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or
-        /// resetting unmanaged resources.
-        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
         private void Dispose(bool disposing)
         {
             if (false == _disposed)
@@ -161,7 +144,5 @@ namespace HFM.Forms.Controls
         }
 
         private bool _disposed;
-
-        #endregion
     }
 }
