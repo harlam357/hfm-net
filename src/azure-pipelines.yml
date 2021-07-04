@@ -65,11 +65,11 @@ stages:
         modifyOutputPath: false
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Core (net5.0)'
+      displayName: 'Test HFM.Core'
       inputs:
         command: 'test'
         projects: '**/HFM.Core.Tests.csproj'
-        arguments: '-f net5.0 --no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test HFM.Forms'
