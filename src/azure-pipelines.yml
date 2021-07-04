@@ -68,7 +68,7 @@ stages:
       displayName: 'Test'
       inputs:
         command: 'test'
-        projects: $(testProjects)'
+        projects: '$(testProjects)'
         arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
     - task: PublishCodeCoverageResults@1
