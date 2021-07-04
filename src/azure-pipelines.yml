@@ -28,12 +28,6 @@ stages:
       dotnetWindows: 'net5.0-windows'
 
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '6.x'
-        includePreviewVersions: true
-        
     - task: PowerShell@2
       displayName: 'HFM.Build - Update-AssemblyVersion'
       inputs:
@@ -71,10 +65,24 @@ stages:
         modifyOutputPath: false
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test'
+      displayName: 'Test HFM.Core'
       inputs:
         command: 'test'
-        projects: '$(testProjects)'
+        projects: '**/HFM.Core.Tests.csproj'
+        arguments: '-f net5.0 --no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Forms'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Forms.Tests.csproj'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Preferences'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Preferences.Tests.csproj'
         arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
     - task: PublishCodeCoverageResults@1
