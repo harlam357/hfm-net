@@ -47,16 +47,9 @@ stages:
       displayName: 'Build'
       inputs:
         command: 'build'
-        projects: '$(solution)'
-        arguments: '-f $(netFramework) -c $(buildConfiguration) --verbosity normal'
+        projects: '**/*.csproj'
+        arguments: '-c $(buildConfiguration) --verbosity normal --no-incremental --no-restore'
     
-    - task: DotNetCoreCLI@2
-      displayName: 'Build'
-      inputs:
-        command: 'build'
-        projects: '$(solution)'
-        arguments: '-f $(dotnetWindows) -c $(buildConfiguration) --verbosity normal'
-
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
       inputs:
@@ -115,14 +108,14 @@ stages:
         workingDirectory: '.\src'
 
     - task: VSBuild@1
-      displayName: 'Build Setup - $(netFramework)'
+      displayName: 'Build Setup ($(netFramework))'
       inputs:
         solution: $(setupSolution)
         platform: x86
         configuration: '$(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Msi - $(netFramework)'
+      displayName: 'HFM.Build - Deploy-Msi ($(netFramework))'
       inputs:
         targetType: 'inline'
         script: |
