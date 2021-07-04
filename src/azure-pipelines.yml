@@ -24,6 +24,12 @@ stages:
       dotnetWindows: 'net5.0-windows'
 
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '6.x'
+        includePreviewVersions: true
+        
     - task: PowerShell@2
       displayName: 'HFM.Build - Update-AssemblyVersion'
       inputs:
