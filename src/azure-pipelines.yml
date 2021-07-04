@@ -20,7 +20,7 @@ stages:
       setupSolution: '**/HFM.Setup.sln'
       entryProject: '**/HFM.csproj'
       buildConfiguration: 'Release'
-      targetFramework: 'net47'
+      netFramework: 'net47'
       dotnetWindows: 'net5.0-windows'
 
     steps:
@@ -48,7 +48,14 @@ stages:
       inputs:
         command: 'build'
         projects: '$(solution)'
-        arguments: '-c $(buildConfiguration) --verbosity normal'
+        arguments: '-f $(netFramework) -c $(buildConfiguration) --verbosity normal'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '-f $(dotnetWindows) -c $(buildConfiguration) --verbosity normal'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
@@ -108,14 +115,14 @@ stages:
         workingDirectory: '.\src'
 
     - task: VSBuild@1
-      displayName: 'Build Setup - $(targetFramework)'
+      displayName: 'Build Setup - $(netFramework)'
       inputs:
         solution: $(setupSolution)
         platform: x86
         configuration: '$(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Msi - $(targetFramework)'
+      displayName: 'HFM.Build - Deploy-Msi - $(netFramework)'
       inputs:
         targetType: 'inline'
         script: |
