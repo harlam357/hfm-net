@@ -24,12 +24,6 @@ stages:
       dotnetWindows: 'net5.0-windows'
 
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '6.x'
-        includePreviewVersions: true
-        
     - task: PowerShell@2
       displayName: 'HFM.Build - Update-AssemblyVersion'
       inputs:
@@ -47,14 +41,14 @@ stages:
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        arguments: '--verbosity normal'
+        verbosityRestore: 'Normal'
         
     - task: DotNetCoreCLI@2
       displayName: 'Build'
       inputs:
         command: 'build'
         projects: '$(solution)'
-        arguments: '-c $(buildConfiguration) --verbosity normal --no-incremental --no-restore'
+        arguments: '-c $(buildConfiguration) --verbosity detailed --no-incremental --no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
