@@ -47,7 +47,9 @@ stages:
       displayName: 'Build'
       inputs:
         command: 'build'
-        projects: '**/*.csproj'
+        projects: |
+          '**/*.csproj'
+          !**/HFM.Setup*.csproj
         arguments: '-c $(buildConfiguration) --verbosity normal --no-incremental --no-restore'
     
     - task: DotNetCoreCLI@2
