@@ -19,21 +19,11 @@ stages:
       solution: '**/HFM.All.sln'
       setupSolution: '**/HFM.Setup.sln'
       entryProject: '**/HFM.csproj'
-      buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
       targetFramework: 'net47'
-      dotnetFive: 'net5.0'
-      dotnetFiveWindows: 'net5.0-windows'
+      dotnetWindows: 'net5.0-windows'
 
     steps:
-    - task: NuGetToolInstaller@1
-      inputs:
-        versionSpec: '>= 5.5.1'
-
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-
     - task: PowerShell@2
       displayName: 'HFM.Build - Update-AssemblyVersion'
       inputs:
@@ -46,40 +36,69 @@ stages:
           Write-Host "##vso[build.updatebuildnumber]$buildNumber"
         workingDirectory: '.\src'
 
-    - task: VSBuild@1
-      displayName: 'Build - $(targetFramework)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
       inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:TargetFramework=$(targetFramework) /p:NoWarn=1591'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+        command: 'restore'
+        projects: '$(solution)'
+        arguments: '--verbosity normal'
+        
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '-c $(buildConfiguration) --verbosity normal --no-incremental --no-restore'
 
-    - task: VSTest@2
-      displayName: 'Test - $(targetFramework)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
       inputs:
-        testSelector: 'testAssemblies'
-        testAssemblyVer2: |
-          **\*Tests.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-        searchFolder: '$(System.DefaultWorkingDirectory)'
-        codeCoverageEnabled: true
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-        diagnosticsEnabled: true
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(entryProject)'
+        arguments: '-f $(dotnetWindows) -c $(buildConfiguration) --no-build --verbosity normal'
+        zipAfterPublish: false
+        modifyOutputPath: false
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Core'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Core.Tests.csproj'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Forms'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Forms.Tests.csproj'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test HFM.Preferences'
+      inputs:
+        command: 'test'
+        projects: '**/HFM.Preferences.Tests.csproj'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish Code Coverage'
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Agent.TempDirectory)\**\coverage.cobertura.xml'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Build - $(targetFramework)'
+      displayName: 'HFM.Build - Deploy-Build'
       inputs:
         targetType: 'inline'
         script: |
           . .\HFM.Build.ps1
-          Clean-Artifacts
+          Clean-Artifacts -Verbose
           Deploy-Build -Verbose
         workingDirectory: '.\src'
-        
+
     - task: PowerShell@2
-      displayName: 'HFM.Build - Build-Zip - $(targetFramework)'
+      displayName: 'HFM.Build - Build-Zip'
       inputs:
         targetType: 'inline'
         script: |
@@ -104,80 +123,9 @@ stages:
           Configure-Version -CommitCount
           Deploy-Msi -Verbose
         workingDirectory: '.\src'
-    
-    - task: DotNetCoreCLI@2
-      displayName: 'Restore - $(dotnetFiveWindows)'
-      inputs:
-        command: 'restore'
-        projects: '$(solution)'
-        
-    - task: DotNetCoreCLI@2
-      displayName: 'Build - $(dotnetFiveWindows)'
-      inputs:
-        command: 'build'
-        projects: '$(entryProject)'
-        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-restore --verbosity normal'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Core - $(dotnetFive)'
-      inputs:
-        command: 'test'
-        projects: '**/HFM.Core.Tests.csproj'
-        arguments: '-f $(dotnetFive) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Forms - $(dotnetFiveWindows)'
-      inputs:
-        command: 'test'
-        projects: '**/HFM.Forms.Tests.csproj'
-        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Preferences - $(dotnetFive)'
-      inputs:
-        command: 'test'
-        projects: '**/HFM.Preferences.Tests.csproj'
-        arguments: '-f $(dotnetFive) -c $(buildConfiguration) --no-restore --verbosity normal --collect:"XPlat Code Coverage"'
-
-    - task: PublishCodeCoverageResults@1
-      displayName: 'Publish Code Coverage - $(dotnetFiveWindows)'
-      inputs:
-        codeCoverageTool: 'Cobertura'
-        summaryFileLocation: '$(Agent.TempDirectory)\**\coverage.cobertura.xml'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Publish - $(dotnetFiveWindows)'
-      inputs:
-        command: 'publish'
-        publishWebProjects: false
-        projects: '$(entryProject)'
-        arguments: '-f $(dotnetFiveWindows) -c $(buildConfiguration) --no-build --verbosity normal'
-        zipAfterPublish: false
-        modifyOutputPath: false
-
-    - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Build - $(dotnetFiveWindows)'
-      inputs:
-        targetType: 'inline'
-        script: |
-          . .\HFM.Build.ps1
-          Configure-TargetFramework -TargetFramework $(dotnetFiveWindows)
-          Clean-Artifacts
-          Deploy-Build -Verbose
-        workingDirectory: '.\src'
-
-    - task: PowerShell@2
-      displayName: 'HFM.Build - Build-Zip - $(dotnetFiveWindows)'
-      inputs:
-        targetType: 'inline'
-        script: |
-          . .\HFM.Build.ps1
-          Configure-TargetFramework -TargetFramework $(dotnetFiveWindows)
-          Configure-Version -CommitCount
-          Build-Zip -Verbose
-        workingDirectory: '.\src'
 
     - task: CopyFiles@2
+      displayName: 'Copy to Artifact Staging'
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: |
@@ -185,6 +133,7 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifacts'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
