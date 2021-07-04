@@ -65,24 +65,10 @@ stages:
         modifyOutputPath: false
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Core'
+      displayName: 'Test'
       inputs:
         command: 'test'
-        projects: '**/HFM.Core.Tests.csproj'
-        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Forms'
-      inputs:
-        command: 'test'
-        projects: '**/HFM.Forms.Tests.csproj'
-        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Preferences'
-      inputs:
-        command: 'test'
-        projects: '**/HFM.Preferences.Tests.csproj'
+        projects: $(testProjects)'
         arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
 
     - task: PublishCodeCoverageResults@1
