@@ -41,7 +41,6 @@ stages:
       inputs:
         command: 'restore'
         projects: '$(solution)'
-        restoreArguments: '-c $(buildConfiguration)'
         verbosityRestore: 'Normal'
         
     - task: DotNetCoreCLI@2
@@ -49,7 +48,7 @@ stages:
       inputs:
         command: 'build'
         projects: '$(solution)'
-        arguments: '-c $(buildConfiguration) --verbosity detailed --no-incremental --no-restore'
+        arguments: '-c $(buildConfiguration) --verbosity normal'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
