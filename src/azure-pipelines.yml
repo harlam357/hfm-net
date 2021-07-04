@@ -19,7 +19,9 @@ stages:
       solution: '**/HFM.All.sln'
       setupSolution: '**/HFM.Setup.sln'
       entryProject: '**/HFM.csproj'
-      buildProjects: '**/*.csproj;!**/HFM.Setup*.csproj'
+      buildProjects: |
+        **/*.csproj
+        !**/HFM.Setup*.csproj
       buildConfiguration: 'Release'
       netFramework: 'net47'
       dotnetWindows: 'net5.0-windows'
