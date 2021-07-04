@@ -177,12 +177,13 @@ Function Deploy-Build
         )
 
     $hfmBinRoot = "HFM\bin\$Configuration\$NetFramework"
+    $hfmCoreBinRoot = "HFM.Core\bin\$Configuration\$NetFramework"
     
     $AssemblyFiles = Get-ChildItem -Path "$hfmBinRoot\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $NetFrameworkArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
     # SQLite Assemblies
-    Copy-Item -Path "$hfmBinRoot\x86\*" -Destination "$NetFrameworkArtifactsBin\x86" -ErrorAction Stop -Verbose:$localVerbose
-    Copy-Item -Path "$hfmBinRoot\x64\*" -Destination "$NetFrameworkArtifactsBin\x64" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "$hfmCoreBinRoot\x86\*" -Destination "$NetFrameworkArtifactsBin\x86" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "$hfmCoreBinRoot\x64\*" -Destination "$NetFrameworkArtifactsBin\x64" -ErrorAction Stop -Verbose:$localVerbose
     # Tools Assemblies
     #Copy-Item -Path 'HFM.Client.Tool\bin\ReleaseMerge\HFM.Client.exe' -Destination "$NetFrameworkArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
     #Copy-Item -Path 'HFM.Log.Tool\bin\ReleaseMerge\HFM.Log.exe' -Destination "$NetFrameworkArtifactsBin\Tools" -ErrorAction Stop -Verbose:$localVerbose
