@@ -41,6 +41,7 @@ stages:
       inputs:
         command: 'restore'
         projects: '$(solution)'
+        restoreArguments: '-c $(buildConfiguration)'
         verbosityRestore: 'Normal'
         
     - task: DotNetCoreCLI@2
