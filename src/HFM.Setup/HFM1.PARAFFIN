@@ -37,9 +37,14 @@
       <ComponentRef Id="comp_4EBD421CD84B451DACEC73A925A25291" />
       <ComponentRef Id="comp_276ED768C929476A83B10B090FB79D9F" />
       <ComponentRef Id="comp_AC81C7E4BA6942588B91ECA962FEEADF" />
+      <ComponentRef Id="comp_930388C793304AE0B4C5E279E90AF187" />
+      <ComponentRef Id="comp_252D3C231AAA413DB30E547983A96CC5" />
       <ComponentRef Id="comp_3745A9B7E93E47D09C7028B0CBEFAD3A" />
       <ComponentRef Id="comp_83CB5B6EED954A8A99FAC9E9CEE5E3E7" />
       <ComponentRef Id="comp_A1AAE87CE0AA40CEA2A9A06CF66BA7BB" />
+      <ComponentRef Id="comp_C23CEA83E41E4EF29CD1B46020F93FE8" />
+      <ComponentRef Id="comp_CE31CDEF562749DEA2F6DF9FC32A8627" />
+      <ComponentRef Id="comp_A6F01014A47B4B9F95B1E4527CFD2F67" />
       <ComponentRef Id="comp_13302254FD4C4CF985A3FCEC394C91B7" />
       <ComponentRef Id="comp_60D1AFF97D5646989701428BED85F411" />
       <ComponentRef Id="comp_3D62875DD4624121B3AD1202AF9CF2AE" />
@@ -117,6 +122,12 @@
       <Component Id="comp_AC81C7E4BA6942588B91ECA962FEEADF" Guid="DE9FB14D-C1BE-4C0A-9DEB-E08E8CE7E21B">
         <File Id="file_002AA60DDF3E42169ACD8355AD9BC6C1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\protobuf-net.dll" />
       </Component>
+      <Component Id="comp_930388C793304AE0B4C5E279E90AF187" Guid="03905771-18BE-46FE-9C7F-513F9A06DF5C">
+        <File Id="file_4E564AC8E5D54B309624900DF6C55313" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Buffers.dll" />
+      </Component>
+      <Component Id="comp_252D3C231AAA413DB30E547983A96CC5" Guid="8E80DD6A-74F3-4AE8-9D3F-D02119787976">
+        <File Id="file_112ECFB9EBC1464E9AFD7A3E92247A7A" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Collections.Immutable.dll" />
+      </Component>
       <Component Id="comp_3745A9B7E93E47D09C7028B0CBEFAD3A" Guid="AAE0B4C4-CBB5-4698-9968-1883DE563652">
         <File Id="file_FCCEF02BB58C4C41878427EA628489ED" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Data.SQLite.dll" />
       </Component>
@@ -125,6 +136,15 @@
       </Component>
       <Component Id="comp_A1AAE87CE0AA40CEA2A9A06CF66BA7BB" Guid="19338963-3A00-4D52-847F-6DBB2FA68748">
         <File Id="file_68EA6221B9C74F4A81BA6571A9609024" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Data.SQLite.Linq.dll" />
+      </Component>
+      <Component Id="comp_C23CEA83E41E4EF29CD1B46020F93FE8" Guid="A8D55BE4-B4B4-448C-A92A-CB2681B414E4">
+        <File Id="file_EC3CBB12ADC54453810F801FF35FB80F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Memory.dll" />
+      </Component>
+      <Component Id="comp_CE31CDEF562749DEA2F6DF9FC32A8627" Guid="B1CD04AB-B795-402E-94AE-A217ABE59223">
+        <File Id="file_56C721597862412292EEFD45256B1FD1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Numerics.Vectors.dll" />
+      </Component>
+      <Component Id="comp_A6F01014A47B4B9F95B1E4527CFD2F67" Guid="F68A9D3D-6D3B-43D7-909B-5B54A9CB8E35">
+        <File Id="file_7CAA432C292F453E8CF62EC300AE96F4" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Runtime.CompilerServices.Unsafe.dll" />
       </Component>
       <Component Id="comp_13302254FD4C4CF985A3FCEC394C91B7" Guid="C10F2EAD-4361-4297-8B05-4FD4804F87CB">
         <File Id="file_FABFD09F0A424A1AAA9FD02DF38542E8" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\ZedGraph.dll" />
