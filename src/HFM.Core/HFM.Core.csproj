@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net47</TargetFrameworks>
@@ -34,5 +36,11 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+
+  <PropertyGroup>
+    <SQLiteTargetFramework>net46\</SQLiteTargetFramework>
+  </PropertyGroup>
 
 </Project>

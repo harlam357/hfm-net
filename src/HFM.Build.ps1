@@ -52,7 +52,6 @@ Function Update-AssemblyVersion
 Function Build-Solution
 {
     param([string]$Configuration=$Global:Configuration,
-          [string]$Platform=$Global:Platform,
           [string]$AssemblyVersion=$Global:Version,
           [string]$AssemblyFileVersion=$Global:Version)
 
@@ -61,7 +60,6 @@ Function Build-Solution
     Write-Host "---------------------------------------------------"
     Write-Host "Building Solution"
     Write-Host " Configuration: $Configuration"
-    Write-Host " Platform: $Platform"
     Write-Host "---------------------------------------------------"
 
     Exec { & dotnet restore $SolutionFileName --verbosity normal }
@@ -265,15 +263,12 @@ Function Build-Msi
 {
     [CmdletBinding()]
     param([string]$Configuration=$Global:Configuration,
-          [string]$Platform=$Global:Platform,
           [string]$Version=$Global:Version,
           [string]$NetFrameworkArtifactsPackages=$Global:NetFrameworkArtifactsPackages)
 
     Write-Host "---------------------------------------------------"
     Write-Host "Building Msi Package"
-    Write-Host " Target: $Target"
     Write-Host " Configuration: $Configuration"
-    Write-Host " Platform: $Platform"
     Write-Host " Version: $Version"
     Write-Host " NetFrameworkArtifactsPackages: $NetFrameworkArtifactsPackages"
     Write-Host "---------------------------------------------------"
@@ -352,18 +347,6 @@ Function Configure-Configuration
     Write-Host "---------------------------------------------------"
 }
 
-Function Configure-Platform
-{
-    param([string]$Platform)
-
-    $Global:Platform = $Platform
-
-    Write-Host "---------------------------------------------------"
-    Write-Host "Configuring Platform: $Global:Platform"
-    Write-Host "---------------------------------------------------"
-}
-
 Configure-Version -Version '9.25'
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 Configure-Configuration -Configuration 'Release'
-Configure-Platform -Platform 'Any CPU'

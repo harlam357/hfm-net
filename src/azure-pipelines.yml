@@ -65,7 +65,7 @@ stages:
         modifyOutputPath: false
 
     - task: DotNetCoreCLI@2
-      displayName: 'Test HFM.Core'
+      displayName: 'Test HFM.Core (net5.0)'
       inputs:
         command: 'test'
         projects: '**/HFM.Core.Tests.csproj'
