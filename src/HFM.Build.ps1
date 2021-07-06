@@ -156,6 +156,7 @@ Function Deploy-Build
         "HFM.exe.config",
         "HFM.runtimeconfig.json",
         "HFM.Forms.dll",
+        "System.Resources.Extensions.dll",
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
