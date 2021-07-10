@@ -82,7 +82,7 @@ namespace HFM.Forms.Views
             this.googleCodeLinkLabel.AutoSize = true;
             this.googleCodeLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.googleCodeLinkLabel.LinkColor = System.Drawing.Color.Goldenrod;
-            this.googleCodeLinkLabel.Location = new System.Drawing.Point(313, 90);
+            this.googleCodeLinkLabel.Location = new System.Drawing.Point(313, 126);
             this.googleCodeLinkLabel.Name = "googleCodeLinkLabel";
             this.googleCodeLinkLabel.Size = new System.Drawing.Size(0, 16);
             this.googleCodeLinkLabel.TabIndex = 2;
@@ -94,7 +94,7 @@ namespace HFM.Forms.Views
             this.googleGroupLinkLabel.AutoSize = true;
             this.googleGroupLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.googleGroupLinkLabel.LinkColor = System.Drawing.Color.Goldenrod;
-            this.googleGroupLinkLabel.Location = new System.Drawing.Point(313, 117);
+            this.googleGroupLinkLabel.Location = new System.Drawing.Point(313, 153);
             this.googleGroupLinkLabel.Name = "googleGroupLinkLabel";
             this.googleGroupLinkLabel.Size = new System.Drawing.Size(0, 16);
             this.googleGroupLinkLabel.TabIndex = 3;
@@ -107,7 +107,7 @@ namespace HFM.Forms.Views
             this.lblDate.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblDate.Location = new System.Drawing.Point(298, 49);
             this.lblDate.Name = "lblDate";
-            this.lblDate.Size = new System.Drawing.Size(269, 28);
+            this.lblDate.Size = new System.Drawing.Size(269, 74);
             this.lblDate.TabIndex = 6;
             this.lblDate.Text = "[BuildDate]";
             this.lblDate.TextAlign = System.Drawing.ContentAlignment.TopCenter;

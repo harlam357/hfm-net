@@ -46,6 +46,9 @@ namespace HFM.Forms.Views
                 // When localizing use ToLongDateString() instead.
                 //lblDate.Text = "Built on: " + buildDate.ToLongDateString();
                 lblDate.Text = "Built on: " + buildDate.ToString("D", CultureInfo.InvariantCulture);
+                lblDate.Text += Environment.NewLine;
+                lblDate.Text += Environment.NewLine;
+                lblDate.Text += System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
             }
             else
             {
