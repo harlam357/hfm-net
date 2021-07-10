@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <Platforms>AnyCPU</Platforms>
-    <TargetFrameworks>net5.0-windows;net47</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;net472</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>hfm_48_48.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;net47</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows;net472</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
@@ -25,7 +25,7 @@
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 

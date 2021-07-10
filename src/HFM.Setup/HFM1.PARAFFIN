@@ -5,8 +5,8 @@
   <WARNING>Manual changes to this file may cause incorrect behavior.</WARNING>
   <ParaffinFileVersion>2</ParaffinFileVersion>
   <GroupName>group_hfm</GroupName>
-  <Directory>..\..\..\Artifacts\net47\HFM.NET\</Directory>
-  <DirAlias>..\..\..\Artifacts\net47\HFM.NET\</DirAlias>
+  <Directory>..\..\..\Artifacts\net472\HFM.NET\</Directory>
+  <DirAlias>..\..\..\Artifacts\net472\HFM.NET\</DirAlias>
   <Win64></Win64>
   <Norecurse>false</Norecurse>
   <NoRootDirectory>true</NoRootDirectory>
@@ -20,209 +20,213 @@
 </CommandLineOptions>-->
   <Fragment>
     <ComponentGroup Id="group_hfm">
-      <ComponentRef Id="comp_2641D7AD05E04302AFC84483EFE6AC55" />
-      <ComponentRef Id="comp_32050EF335DD4AD0959094C253A9981C" />
-      <ComponentRef Id="comp_39EB8BD97D174A43932C210C69050D61" />
-      <ComponentRef Id="comp_1458C400AE2741EE9C94043CE1F05172" />
-      <ComponentRef Id="comp_E0BBDAD085C04BC782E65A391C9066D4" />
-      <ComponentRef Id="comp_BAB600FAA044426DACB4EDA9FBE35D75" />
-      <ComponentRef Id="comp_3306EE9AE77E408880E4234E36AA712F" />
-      <ComponentRef Id="comp_833DD8EAE2304B239D2D9D92CC9115D8" />
-      <ComponentRef Id="comp_D20676C581AC475A9D9B5EC6495542FE" />
-      <ComponentRef Id="comp_AE485E18CE6547EE9768FD3D0AC313FA" />
-      <ComponentRef Id="comp_6AA18DB751BC48A68349436AFA444BCD" />
-      <ComponentRef Id="comp_9F7A3498DE574EC883E528916BB41927" />
-      <ComponentRef Id="comp_E9A584CD998A4342BE7FEB7AD2BC7E60" />
-      <ComponentRef Id="comp_5A9E68A3C614420D8712E45BF3244235" />
-      <ComponentRef Id="comp_4EBD421CD84B451DACEC73A925A25291" />
-      <ComponentRef Id="comp_276ED768C929476A83B10B090FB79D9F" />
-      <ComponentRef Id="comp_AC81C7E4BA6942588B91ECA962FEEADF" />
-      <ComponentRef Id="comp_930388C793304AE0B4C5E279E90AF187" />
-      <ComponentRef Id="comp_252D3C231AAA413DB30E547983A96CC5" />
-      <ComponentRef Id="comp_3745A9B7E93E47D09C7028B0CBEFAD3A" />
-      <ComponentRef Id="comp_83CB5B6EED954A8A99FAC9E9CEE5E3E7" />
-      <ComponentRef Id="comp_A1AAE87CE0AA40CEA2A9A06CF66BA7BB" />
-      <ComponentRef Id="comp_C23CEA83E41E4EF29CD1B46020F93FE8" />
-      <ComponentRef Id="comp_CE31CDEF562749DEA2F6DF9FC32A8627" />
-      <ComponentRef Id="comp_A6F01014A47B4B9F95B1E4527CFD2F67" />
-      <ComponentRef Id="comp_13302254FD4C4CF985A3FCEC394C91B7" />
-      <ComponentRef Id="comp_60D1AFF97D5646989701428BED85F411" />
-      <ComponentRef Id="comp_3D62875DD4624121B3AD1202AF9CF2AE" />
-      <ComponentRef Id="comp_5FBAD27C69CF4F68A8C66DCD8B0F38BD" />
-      <ComponentRef Id="comp_48C303BC42F3452D91889E777D34641F" />
-      <ComponentRef Id="comp_3687985C1AD546E6A094B5B3D56B6815" />
-      <ComponentRef Id="comp_973346A0AD6746729F7F4B1F3F048DA5" />
-      <ComponentRef Id="comp_2BCB28693E284F9B8FEDFDCA8312FDC2" />
-      <ComponentRef Id="comp_ED4879A2078B4069A985128F38A78259" />
-      <ComponentRef Id="comp_B16A289CF88346C48B351B82DEC97AF8" />
-      <ComponentRef Id="comp_F5299373AD464C508E695BE45843AA0D" />
-      <ComponentRef Id="comp_F854BA2DC6124B5AB515AB570582910E" />
-      <ComponentRef Id="comp_99C4920F33AC441EA368921E1348D7CD" />
-      <ComponentRef Id="comp_C7049A8FE3A244A8B75E65082CD9E8F3" />
-      <ComponentRef Id="comp_3D1B13532BAF48C9AE43E2852BE44CB3" />
-      <ComponentRef Id="comp_A8870F74B6B04309A1203A920600ADCC" />
-      <ComponentRef Id="comp_ED2B607A34654293AE2EAFE842D084BD" />
-      <ComponentRef Id="comp_EBF496A1A2A243E294FB7017BCC4547F" />
-      <ComponentRef Id="comp_F853A4217BF64A13ABE071BAD9884B7B" />
-      <ComponentRef Id="comp_434DF68A9FFA435B807A8A22AB88B3CD" />
-      <ComponentRef Id="comp_01A4059EFFB24D0196400FFD1D0D83D0" />
-      <ComponentRef Id="comp_DAEBAAF29F0844D78C001BD42CF0C998" />
+      <ComponentRef Id="comp_ED6A3E008C0441CCB41E465D754DD0D3" />
+      <ComponentRef Id="comp_589C7196B0F3458588EC7E52FAD2293D" />
+      <ComponentRef Id="comp_7F480A6DDD8E4DB7BEFC9832ED14212A" />
+      <ComponentRef Id="comp_67D28CFF4EBE4391AD028349A52C012A" />
+      <ComponentRef Id="comp_04C03553876B45708F0FDC37BBE6BBB4" />
+      <ComponentRef Id="comp_238BEEA1CEFA47809BD3D9424C914B1C" />
+      <ComponentRef Id="comp_38240B8CBC774BF19782FC7AAB2E5AE8" />
+      <ComponentRef Id="comp_B7721738709544D5A5C500BB2D7E628C" />
+      <ComponentRef Id="comp_599F35EB6E504B5D8166AD70A92E536C" />
+      <ComponentRef Id="comp_701F046528A8471BBDCD7232AC293066" />
+      <ComponentRef Id="comp_C02B4785977A4623841CCA9B1DC6CD3F" />
+      <ComponentRef Id="comp_DD8D3195D07F49FBB5B3A30E26C41DBD" />
+      <ComponentRef Id="comp_B087B57FD1F9434A9BB9BF525FB44B2F" />
+      <ComponentRef Id="comp_BE6AA46EAC174512B40009FD5730A051" />
+      <ComponentRef Id="comp_038A1E9F22294AA3AC4A650AC333C25F" />
+      <ComponentRef Id="comp_4DF221E70C2A4DF7AF299D93AFD9D8ED" />
+      <ComponentRef Id="comp_0291EC6691174079BDF26E083FC70029" />
+      <ComponentRef Id="comp_D23CC09BF7F74235B905D8E528C532BC" />
+      <ComponentRef Id="comp_FBF4167790BD447880F13554BBD0217F" />
+      <ComponentRef Id="comp_213446697893405A8E64651AC2286473" />
+      <ComponentRef Id="comp_430B5C329C984DC8BC164EBA13101A65" />
+      <ComponentRef Id="comp_1243B81ED1B94811AE144A505A5948D2" />
+      <ComponentRef Id="comp_3C7B4450244F4751AF27B40E65AF4F6A" />
+      <ComponentRef Id="comp_45C2C2C7007E4433B13CF54D1EC4FFF6" />
+      <ComponentRef Id="comp_ED4103545BB04B6784D58EE6DA5DAF45" />
+      <ComponentRef Id="comp_5F0AAD6046E04A2786F04270B79FBBB6" />
+      <ComponentRef Id="comp_DCCC3DE81CF741D892C225524E077532" />
+      <ComponentRef Id="comp_DA09281627CF47ABA657509F482181AF" />
+      <ComponentRef Id="comp_0DE5328F6BA04DEC9F4DB698AD6F5EC7" />
+      <ComponentRef Id="comp_F239E4A0778A4B6F9DD7537AE2D81233" />
+      <ComponentRef Id="comp_F0086D66843C49298B36BBC8BD2C7897" />
+      <ComponentRef Id="comp_4F77B74EDF4A4C97B52D41508EE49DAF" />
+      <ComponentRef Id="comp_5E52AA88D99E40B6AE78150B4A532131" />
+      <ComponentRef Id="comp_EDC81C6FA09D4D74B75347CE1D793010" />
+      <ComponentRef Id="comp_6951F79627D54760AA7EDA02A0F1E210" />
+      <ComponentRef Id="comp_57CFAD1B2B8147F2AB6BC600932BBD4A" />
+      <ComponentRef Id="comp_8824F381411C44A3961998CC861CEC9E" />
+      <ComponentRef Id="comp_0E0EC22160BD4578904354E3DA1AC8EE" />
+      <ComponentRef Id="comp_AA2E8240C23C43539B17686096033868" />
+      <ComponentRef Id="comp_40837A64E7BD47F5BF5764EC72AEE457" />
+      <ComponentRef Id="comp_C6EAF9550B4B4C26B55505274260D880" />
+      <ComponentRef Id="comp_1099E3C423E44D739F7EF30AE7376513" />
+      <ComponentRef Id="comp_10520CE000834510BB91E9264FFE73FB" />
+      <ComponentRef Id="comp_B56C6C99472B4262874C181FBA792877" />
+      <ComponentRef Id="comp_D4471553D3F248FFB271598F3EC6D0DF" />
+      <ComponentRef Id="comp_6C2895EC3542491986A5813C0C107911" />
+      <ComponentRef Id="comp_436B150C86DA41BFA1EF77325BFE80E7" />
+      <ComponentRef Id="comp_00D4A0C86DFB42EDA2E05723489C975E" />
     </ComponentGroup>
     <DirectoryRef Id="INSTALLDIR">
-      <Component Id="comp_2641D7AD05E04302AFC84483EFE6AC55" Guid="074CD6E7-4330-478A-B5A4-28302DBE5877">
-        <File Id="file_4283985C2E2243D29DB67ACD7443D846" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\AutoMapper.dll" />
+      <Component Id="comp_ED6A3E008C0441CCB41E465D754DD0D3" Guid="69747D7A-B6AF-4E84-B168-BF54246B6F97">
+        <File Id="file_300F47DA4F884AB885AEE1D4667460F5" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\AutoMapper.dll" />
       </Component>
-      <Component Id="comp_32050EF335DD4AD0959094C253A9981C" Guid="CF791553-37A5-438D-8650-F18A1880B110">
-        <File Id="file_EDCE0576DEA34436BE25F6728632E8EE" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\EntityFramework.dll" />
+      <Component Id="comp_589C7196B0F3458588EC7E52FAD2293D" Guid="03AA8EDD-B8CC-4ED8-8AEA-01DC13A0B407">
+        <File Id="file_F60F45621C284AF78FD296FE83C4E7FD" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\EntityFramework.dll" />
       </Component>
-      <Component Id="comp_39EB8BD97D174A43932C210C69050D61" Guid="4FCD8268-0743-4357-9484-7232CC4774DC">
-        <File Id="file_99E071E79FFB4856AA9209FFC8E7542A" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\EntityFramework.SqlServer.dll" />
+      <Component Id="comp_7F480A6DDD8E4DB7BEFC9832ED14212A" Guid="D31B7748-A855-45FB-9DA4-C119F6286E60">
+        <File Id="file_7C4AEF7C4A95451CB097C777A1EF66B9" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\EntityFramework.SqlServer.dll" />
       </Component>
-      <Component Id="comp_1458C400AE2741EE9C94043CE1F05172" Guid="8F9E9E2D-5312-4CD7-B882-155519644C3A">
-        <File Id="file_351765F6F9864B0488207DF6FA02195F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Client.dll" />
+      <Component Id="comp_67D28CFF4EBE4391AD028349A52C012A" Guid="9E1973A7-1ED8-4901-ADB8-4FAE73DF9D49">
+        <File Id="file_B21C78337B1046AF86AB8D51E7C67574" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Client.dll" />
       </Component>
-      <Component Id="comp_E0BBDAD085C04BC782E65A391C9066D4" Guid="D2B9D668-5885-4670-A25C-4AE71BC4FB70">
-        <File Id="file_CC87096B471346E49F3D791292A03FBB" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Core.dll" />
+      <Component Id="comp_04C03553876B45708F0FDC37BBE6BBB4" Guid="C6F77E0F-A296-4273-A5F6-514FB50E6E2C">
+        <File Id="file_24CA0DC136BE418BAE21E6A2DD36DCAD" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Core.dll" />
       </Component>
-      <Component Id="comp_BAB600FAA044426DACB4EDA9FBE35D75" Guid="990149C2-47E9-4661-B61B-E74093EB6D35">
-        <File Id="file_2BA43CD8087F4984B0A956844E9FE2DA" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.exe" />
+      <Component Id="comp_238BEEA1CEFA47809BD3D9424C914B1C" Guid="DE472921-A933-4E66-A97F-B6C604716173">
+        <File Id="file_1CC7F07A937D4CF49D804C547B520DE5" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.exe" />
         <Shortcut Id="startmenu_hfm_2" Directory="ProgramMenuDir" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
         <Shortcut Id="desktop_hfm_2" Directory="DesktopFolder" Name="HFM.NET" WorkingDirectory="INSTALLDIR" Icon="HFM.exe" IconIndex="0" Advertise="yes" />
       </Component>
-      <Component Id="comp_3306EE9AE77E408880E4234E36AA712F" Guid="B2E453C4-EAD3-4006-99B9-EB8E934F7002">
-        <File Id="file_FAC3C2C20E0846ADA908F07C8207CC27" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.exe.config" />
+      <Component Id="comp_38240B8CBC774BF19782FC7AAB2E5AE8" Guid="E7F3A405-E1C8-428A-885A-B4CA2DFE163B">
+        <File Id="file_176696E8F6FF442AA119AFBA5B2CBF5E" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.exe.config" />
       </Component>
-      <Component Id="comp_833DD8EAE2304B239D2D9D92CC9115D8" Guid="D7DB4058-70B4-4BAF-A414-81F8FA60A776">
-        <File Id="file_4ECF3755A14843EE802AA48F477B63D1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Forms.dll" />
+      <Component Id="comp_B7721738709544D5A5C500BB2D7E628C" Guid="59A7B38C-BA2A-4200-B9FE-6EEF5B76A8DE">
+        <File Id="file_5F11E28D117B43B6BE4C14CC7F7A7C18" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Forms.dll" />
       </Component>
-      <Component Id="comp_D20676C581AC475A9D9B5EC6495542FE" Guid="93A5E14F-DF2D-46D7-B679-797439F3BB0C">
-        <File Id="file_17B1FDE2244B4D82986A8E7A13F4D0CE" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Log.dll" />
+      <Component Id="comp_599F35EB6E504B5D8166AD70A92E536C" Guid="6F010910-C91C-4D0B-9314-456781A7C96B">
+        <File Id="file_CFC7DF03AB0943EE9D377B9B4D627286" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Log.dll" />
       </Component>
-      <Component Id="comp_AE485E18CE6547EE9768FD3D0AC313FA" Guid="B735850C-BF53-4127-8DA8-25564D430B5A">
-        <File Id="file_509FA6DA8ABC4FB39DF0E382E4FC3CE8" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Preferences.dll" />
+      <Component Id="comp_701F046528A8471BBDCD7232AC293066" Guid="ABA7FCCB-84E6-425D-9243-FA614D2978AF">
+        <File Id="file_7457B28D21AC40709E622C83A96781AE" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Preferences.dll" />
       </Component>
-      <Component Id="comp_6AA18DB751BC48A68349436AFA444BCD" Guid="7BCDDAC8-4C78-4F8A-B24E-BD21EDF3B65D">
-        <File Id="file_BC66E7C088934C27BFB3A9CA8B7C7F0F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\HFM.Proteins.dll" />
+      <Component Id="comp_C02B4785977A4623841CCA9B1DC6CD3F" Guid="D000DA2B-7C4D-4766-A0C3-BD312185BF4B">
+        <File Id="file_95645F221C4D4FAFBDE75563D89F2C05" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\HFM.Proteins.dll" />
       </Component>
-      <Component Id="comp_9F7A3498DE574EC883E528916BB41927" Guid="7EF14428-7C16-4F5B-9B25-20ABE016B555">
-        <File Id="file_6D8E99A8B9BC493DBD97989804297055" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\LightInject.dll" />
+      <Component Id="comp_DD8D3195D07F49FBB5B3A30E26C41DBD" Guid="33B8B7F2-A4FC-45E1-B84A-6CD10B5B3A0A">
+        <File Id="file_1293FC1923A04500AA4D321F8B02420D" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\LightInject.dll" />
       </Component>
-      <Component Id="comp_E9A584CD998A4342BE7FEB7AD2BC7E60" Guid="BF7F0C59-2FB8-4B0E-BAB9-F296454BEC4C">
-        <File Id="file_2850DAD3A9E248468E2837815CDE4CD4" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\LightInject.Microsoft.DependencyInjection.dll" />
+      <Component Id="comp_B087B57FD1F9434A9BB9BF525FB44B2F" Guid="E0C460B7-1D75-4A6A-9148-CEA3FBBF3E2E">
+        <File Id="file_7CAD505ED187480481392820CD6861E8" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\LightInject.Microsoft.DependencyInjection.dll" />
       </Component>
-      <Component Id="comp_5A9E68A3C614420D8712E45BF3244235" Guid="4CB30F14-0FDE-49D7-863E-6155EBB5DA72">
-        <File Id="file_19B334AA978147479BC1BB3AC775406E" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <Component Id="comp_BE6AA46EAC174512B40009FD5730A051" Guid="CA1BDAB2-4D76-4D03-A17F-7DCEE9EA9EBF">
+        <File Id="file_AA417C7401A840D8B72FF5A5039DA299" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
       </Component>
-      <Component Id="comp_4EBD421CD84B451DACEC73A925A25291" Guid="62D1DADF-8F6B-420F-B4F1-A5034B96337D">
-        <File Id="file_0C9FF75D5D9C4DEA885362C2E7F022A7" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Newtonsoft.Json.dll" />
+      <Component Id="comp_038A1E9F22294AA3AC4A650AC333C25F" Guid="20C23553-18D5-40C3-9F4D-92ED4D7927EB">
+        <File Id="file_79C64D1B858F4F0AB5D294A105FFF684" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Newtonsoft.Json.dll" />
       </Component>
-      <Component Id="comp_276ED768C929476A83B10B090FB79D9F" Guid="54AC4680-3FF5-401B-BD1F-7FE25DC80B40">
-        <File Id="file_C2D3E7B35CDA42088F527BB038D929F4" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\protobuf-net.Core.dll" />
+      <Component Id="comp_4DF221E70C2A4DF7AF299D93AFD9D8ED" Guid="293C1BBF-71FA-49B0-A3EA-356C21561C1D">
+        <File Id="file_9BF864123277424CA3A5D723677D985F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\protobuf-net.Core.dll" />
       </Component>
-      <Component Id="comp_AC81C7E4BA6942588B91ECA962FEEADF" Guid="DE9FB14D-C1BE-4C0A-9DEB-E08E8CE7E21B">
-        <File Id="file_002AA60DDF3E42169ACD8355AD9BC6C1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\protobuf-net.dll" />
+      <Component Id="comp_0291EC6691174079BDF26E083FC70029" Guid="99E6979D-7CAF-4252-AE92-8E26476E0072">
+        <File Id="file_B9A6394479B147088BA1736FE45B80B1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\protobuf-net.dll" />
       </Component>
-      <Component Id="comp_930388C793304AE0B4C5E279E90AF187" Guid="03905771-18BE-46FE-9C7F-513F9A06DF5C">
-        <File Id="file_4E564AC8E5D54B309624900DF6C55313" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Buffers.dll" />
+      <Component Id="comp_D23CC09BF7F74235B905D8E528C532BC" Guid="EC92C37C-631D-4699-8887-D310049FE6B3">
+        <File Id="file_9384CDE03E964D53AC81BE98B3FFE6C5" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Buffers.dll" />
       </Component>
-      <Component Id="comp_252D3C231AAA413DB30E547983A96CC5" Guid="8E80DD6A-74F3-4AE8-9D3F-D02119787976">
-        <File Id="file_112ECFB9EBC1464E9AFD7A3E92247A7A" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Collections.Immutable.dll" />
+      <Component Id="comp_FBF4167790BD447880F13554BBD0217F" Guid="1FB13A3D-FE55-414F-95AB-40799E5C3F24">
+        <File Id="file_D8AA8B068D98426DA4C4BFFAFECC29ED" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Collections.Immutable.dll" />
       </Component>
-      <Component Id="comp_3745A9B7E93E47D09C7028B0CBEFAD3A" Guid="AAE0B4C4-CBB5-4698-9968-1883DE563652">
-        <File Id="file_FCCEF02BB58C4C41878427EA628489ED" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Data.SQLite.dll" />
+      <Component Id="comp_213446697893405A8E64651AC2286473" Guid="16251856-2BF1-47DA-ABE4-64F164253D98">
+        <File Id="file_6AEF875FD46D42CFAE75CB7EEEC3B0E4" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Data.SQLite.dll" />
       </Component>
-      <Component Id="comp_83CB5B6EED954A8A99FAC9E9CEE5E3E7" Guid="3492993B-B1CF-47AB-9E2D-2517E452E3A9">
-        <File Id="file_13B9340E5D3C48F6B2F7E4FF92EC31F6" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Data.SQLite.EF6.dll" />
+      <Component Id="comp_430B5C329C984DC8BC164EBA13101A65" Guid="8E657248-B117-41E8-8F37-5437F37C238D">
+        <File Id="file_1F7B549F230F412CA0A8FB55A5EC4566" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Data.SQLite.EF6.dll" />
       </Component>
-      <Component Id="comp_A1AAE87CE0AA40CEA2A9A06CF66BA7BB" Guid="19338963-3A00-4D52-847F-6DBB2FA68748">
-        <File Id="file_68EA6221B9C74F4A81BA6571A9609024" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Data.SQLite.Linq.dll" />
+      <Component Id="comp_1243B81ED1B94811AE144A505A5948D2" Guid="BC0187FF-EF29-4A58-AEC1-66005F136DF9">
+        <File Id="file_449D21B4D46248CB94A9E38B107D3F49" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Data.SQLite.Linq.dll" />
       </Component>
-      <Component Id="comp_C23CEA83E41E4EF29CD1B46020F93FE8" Guid="A8D55BE4-B4B4-448C-A92A-CB2681B414E4">
-        <File Id="file_EC3CBB12ADC54453810F801FF35FB80F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Memory.dll" />
+      <Component Id="comp_3C7B4450244F4751AF27B40E65AF4F6A" Guid="305CB794-5502-4F7D-B471-1B63C6D7E0F7">
+        <File Id="file_C09487CF6C2447CEA7B40EB127F7F16F" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Memory.dll" />
       </Component>
-      <Component Id="comp_CE31CDEF562749DEA2F6DF9FC32A8627" Guid="B1CD04AB-B795-402E-94AE-A217ABE59223">
-        <File Id="file_56C721597862412292EEFD45256B1FD1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Numerics.Vectors.dll" />
+      <Component Id="comp_45C2C2C7007E4433B13CF54D1EC4FFF6" Guid="A0502A4D-8DBF-4CE5-986B-54E0F18CF484">
+        <File Id="file_00C67F5971664C4F8F56EFF76AEDDC59" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Numerics.Vectors.dll" />
       </Component>
-      <Component Id="comp_A6F01014A47B4B9F95B1E4527CFD2F67" Guid="F68A9D3D-6D3B-43D7-909B-5B54A9CB8E35">
-        <File Id="file_7CAA432C292F453E8CF62EC300AE96F4" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\System.Runtime.CompilerServices.Unsafe.dll" />
+      <Component Id="comp_ED4103545BB04B6784D58EE6DA5DAF45" Guid="94DD84AE-4C6F-4965-BF71-7B3777B1F2E9">
+        <File Id="file_48D1A6491BF84A9AB4EAB1F6DF064911" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Resources.Extensions.dll" />
       </Component>
-      <Component Id="comp_13302254FD4C4CF985A3FCEC394C91B7" Guid="C10F2EAD-4361-4297-8B05-4FD4804F87CB">
-        <File Id="file_FABFD09F0A424A1AAA9FD02DF38542E8" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\ZedGraph.dll" />
+      <Component Id="comp_5F0AAD6046E04A2786F04270B79FBBB6" Guid="B7393F40-B63B-491A-A59D-4067736C6D0E">
+        <File Id="file_2A2F58AE07F44C7AB46C4A819A1A49F7" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\System.Runtime.CompilerServices.Unsafe.dll" />
+      </Component>
+      <Component Id="comp_DCCC3DE81CF741D892C225524E077532" Guid="CEDE18A3-711F-40E1-BB49-C7C6B907B16E">
+        <File Id="file_DEBDE2E65E6E40F4A7D50762AEF47724" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\ZedGraph.dll" />
       </Component>
       <Directory Id="dir_BAC37B08D0404EAF8C0E9FFE3ACA3EC0" Name="CSS">
-        <Component Id="comp_60D1AFF97D5646989701428BED85F411" Guid="C8BBD6E2-401B-43BE-9AFC-97EED160FD40">
-          <File Id="file_277F5FDBA9F34526825A4D657D6C78E7" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Blue.css" />
+        <Component Id="comp_DA09281627CF47ABA657509F482181AF" Guid="67C9CBB1-56FE-467D-9CE0-2B29E2FF5553">
+          <File Id="file_BEE4436EA840468B8E064BA46FD8F9A3" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Blue.css" />
         </Component>
-        <Component Id="comp_3D62875DD4624121B3AD1202AF9CF2AE" Guid="7F0352A4-AC2C-4816-A726-24602779AFF7">
-          <File Id="file_9E20406FA68842E6A54ECEEC299BFAD8" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\BlueTwo.css" />
+        <Component Id="comp_0DE5328F6BA04DEC9F4DB698AD6F5EC7" Guid="6812AADC-5DE6-4607-ADC9-BC33526AF3AB">
+          <File Id="file_81F67E3E787A437AB857CC8C0542F9C8" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\BlueTwo.css" />
         </Component>
-        <Component Id="comp_5FBAD27C69CF4F68A8C66DCD8B0F38BD" Guid="B04ED1BC-D2F7-4D23-839D-32CE12F71D33">
-          <File Id="file_D4FCD940188245388638BF79A99689C2" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Green.css" />
+        <Component Id="comp_F239E4A0778A4B6F9DD7537AE2D81233" Guid="296F5495-B3B4-443D-87A8-D1E0BCCE3480">
+          <File Id="file_4017DAD11F954BD697C097E62DD4A7BB" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Green.css" />
         </Component>
-        <Component Id="comp_48C303BC42F3452D91889E777D34641F" Guid="7E3F8A88-F989-433B-90DA-76732246DB97">
-          <File Id="file_83D8D8A5B3E24532A3A0B795D2CFDEA3" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Grey.css" />
+        <Component Id="comp_F0086D66843C49298B36BBC8BD2C7897" Guid="8B7FDDC1-AF97-42E3-9BE9-5346BE163FC9">
+          <File Id="file_A712D8BE4D564653B168D89BFCBA6FE4" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Grey.css" />
         </Component>
-        <Component Id="comp_3687985C1AD546E6A094B5B3D56B6815" Guid="D81A7B60-1517-4C76-8E30-864BBEB8B691">
-          <File Id="file_12932AAFE93542028FB138EBC573DEAE" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Orange.css" />
+        <Component Id="comp_4F77B74EDF4A4C97B52D41508EE49DAF" Guid="2F98E9FC-CA9D-438B-AED9-58FC47D397F3">
+          <File Id="file_5E03CCD4F10447F4AB0A5393262D2E0E" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Orange.css" />
         </Component>
-        <Component Id="comp_973346A0AD6746729F7F4B1F3F048DA5" Guid="D4E0FE79-14A0-4759-B9D7-A7A5DB5BDBF1">
-          <File Id="file_0F5B808ACD424877B7F152F52E81D246" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Purple.css" />
+        <Component Id="comp_5E52AA88D99E40B6AE78150B4A532131" Guid="A67A9CC6-28E5-490C-9BB1-E2BAF561FB77">
+          <File Id="file_3A6F18948ECC463B8354FB585E1F1C02" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Purple.css" />
         </Component>
-        <Component Id="comp_2BCB28693E284F9B8FEDFDCA8312FDC2" Guid="A0E58942-C260-4741-96C1-71CE219AB83F">
-          <File Id="file_CE8301E543974E2FAF9F3FA374057934" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Red.css" />
+        <Component Id="comp_EDC81C6FA09D4D74B75347CE1D793010" Guid="9663BDF8-287E-4C5E-80CE-740804D15C1B">
+          <File Id="file_2A177876472C48818083549B4398BF58" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Red.css" />
         </Component>
-        <Component Id="comp_ED4879A2078B4069A985128F38A78259" Guid="6D80581D-8064-4ABB-9FA5-F1F9026BEAD8">
-          <File Id="file_C34D4179149542F391B7F72CAE8A46F4" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\CSS\Yellow.css" />
+        <Component Id="comp_6951F79627D54760AA7EDA02A0F1E210" Guid="15E19FDB-A764-4398-9D9B-A7715D9CC5FD">
+          <File Id="file_CA95A260439C4C7D80A4A83082DB8DE4" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Yellow.css" />
         </Component>
       </Directory>
       <Directory Id="dir_835E463324C14EEB99C1256FAA308AE7" Name="Documentation">
         <Directory Id="dir_8147A839FABA45BCA2E0A17EC7CC1460" Name="License">
-          <Component Id="comp_B16A289CF88346C48B351B82DEC97AF8" Guid="9D874712-E062-4F1F-870C-A2E937DC3796">
-            <File Id="file_9084B21FD0BE49E48A07B53DCF071061" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\AutoMapper License.txt" />
+          <Component Id="comp_57CFAD1B2B8147F2AB6BC600932BBD4A" Guid="C071529E-B5D3-4192-8F3D-BB258105FEF8">
+            <File Id="file_DA1E7BAD21AD43AA95B8130A5CFDE3A5" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\AutoMapper License.txt" />
           </Component>
-          <Component Id="comp_F5299373AD464C508E695BE45843AA0D" Guid="7A4C84B0-9E0C-4FA2-B0DF-1A5743A33CC8">
-            <File Id="file_09239189A1AE4334A3D5A9ED23C3AB17" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\GPLv2.TXT" />
+          <Component Id="comp_8824F381411C44A3961998CC861CEC9E" Guid="493D0951-545A-4374-AAA6-231C4B560C45">
+            <File Id="file_2BD1445F02364BE6AA0D3DA4ABD280AF" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\GPLv2.TXT" />
           </Component>
-          <Component Id="comp_F854BA2DC6124B5AB515AB570582910E" Guid="3FD3BC37-4BA3-479C-96B7-775AE77B6C3B">
-            <File Id="file_8EBCA6AD092A4A578FC892E6F2CAFC7D" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\Json.NET License.txt" />
+          <Component Id="comp_0E0EC22160BD4578904354E3DA1AC8EE" Guid="A1BCACAF-9D58-44B9-86A0-731F850A6B9F">
+            <File Id="file_A62FBC1FE6C44AB998A6FDD80B733A07" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\Json.NET License.txt" />
           </Component>
-          <Component Id="comp_99C4920F33AC441EA368921E1348D7CD" Guid="5AA5FB3A-7B26-4CAA-A379-3BC2FC4D22A3">
-            <File Id="file_1057C5E138A4464EA36A0739023AE408" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\LightInject License.txt" />
+          <Component Id="comp_AA2E8240C23C43539B17686096033868" Guid="7604928A-1804-4A26-BA9B-CA8D968DEDDA">
+            <File Id="file_58BF00E39C8B404184E97873D411F9BF" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\LightInject License.txt" />
           </Component>
-          <Component Id="comp_C7049A8FE3A244A8B75E65082CD9E8F3" Guid="1C973C33-7690-4904-8C9D-32160663F104">
-            <File Id="file_E9A8B5A83395442295AAE21D609FD117" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\protobuf-net Licence.txt" />
+          <Component Id="comp_40837A64E7BD47F5BF5764EC72AEE457" Guid="A254353C-7D04-4C4B-81F9-827BFBE529A4">
+            <File Id="file_0E71386DA88D44BA9DBEFB5D56A4DA0F" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\protobuf-net Licence.txt" />
           </Component>
-          <Component Id="comp_3D1B13532BAF48C9AE43E2852BE44CB3" Guid="C670CDF8-1153-488E-BF29-78B847984F52">
-            <File Id="file_3D39DEE967814BB79F85D18C53951EA8" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\protoc-license.txt" />
+          <Component Id="comp_C6EAF9550B4B4C26B55505274260D880" Guid="AA89B666-132E-492F-84C2-96D32603CC44">
+            <File Id="file_8E7550802EC5428A9FC267FE99DC4280" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\protoc-license.txt" />
           </Component>
-          <Component Id="comp_A8870F74B6B04309A1203A920600ADCC" Guid="E710C92E-E4C7-4A1F-851E-FE8CEA8406B9">
-            <File Id="file_A42B30867F134D4DAC2BE8BE8E62EF27" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\Documentation\License\ZedGraph License.txt" />
+          <Component Id="comp_1099E3C423E44D739F7EF30AE7376513" Guid="DAEBBEF4-18D2-4461-9D7A-7F506E124971">
+            <File Id="file_A6A6C7BD05044D67B559370DF2E44589" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\Documentation\License\ZedGraph License.txt" />
           </Component>
         </Directory>
       </Directory>
       <Directory Id="dir_1303E48DAADA4B2298A6B14487265AE6" Name="Tools" />
       <Directory Id="dir_C8CDD6894810414B8D0BEB9DD67AA42C" Name="x64">
-        <Component Id="comp_ED2B607A34654293AE2EAFE842D084BD" Guid="0127C573-639E-493E-AE28-B0B11D88F684">
-          <File Id="file_C147F98D9F7A454B8CE9E46A75BEE3C1" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\x64\SQLite.Interop.dll" />
+        <Component Id="comp_10520CE000834510BB91E9264FFE73FB" Guid="E282EE26-C08F-4378-AA92-26C6DCAF4D8E">
+          <File Id="file_DDC09D747FCF4C09B6174070F9D0FDA9" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\x64\SQLite.Interop.dll" />
         </Component>
       </Directory>
       <Directory Id="dir_BFAADB60812B40ABA6F094481333339A" Name="x86">
-        <Component Id="comp_EBF496A1A2A243E294FB7017BCC4547F" Guid="A244BBFC-A161-4EB6-A426-C18CF413218C">
-          <File Id="file_9B41CF4A571445FEB3FA387EF985E928" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\x86\SQLite.Interop.dll" />
+        <Component Id="comp_B56C6C99472B4262874C181FBA792877" Guid="5556F0CF-F78A-4D5C-9818-D0C5DECDC339">
+          <File Id="file_36EC14C87AB740F08C1535AFDE941A76" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\x86\SQLite.Interop.dll" />
         </Component>
       </Directory>
       <Directory Id="dir_53F5A3A5FCAF449FA0184012BF04882D" Name="XSL">
-        <Component Id="comp_F853A4217BF64A13ABE071BAD9884B7B" Guid="1E568D1F-AF80-49BF-B799-94ECE6D14552">
-          <File Id="file_A9962BA83F794857BD66CDA7BBEADC34" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\XSL\FormatDate.xslt" />
+        <Component Id="comp_D4471553D3F248FFB271598F3EC6D0DF" Guid="FEAC7D21-1032-4C0A-AB5A-A7EF48AF1B3A">
+          <File Id="file_21ABCD15902749B2A58B3846BA2BA889" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\XSL\FormatDate.xslt" />
         </Component>
-        <Component Id="comp_434DF68A9FFA435B807A8A22AB88B3CD" Guid="B2B7AFDB-3D56-4562-98AB-3E61AC27DAEF">
-          <File Id="file_1272FA14A8F9424F849A0E4C4F2430F2" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\XSL\WebOverview.xslt" />
+        <Component Id="comp_6C2895EC3542491986A5813C0C107911" Guid="2C09877B-03C1-48BE-B23D-F3ECE8CD5CA3">
+          <File Id="file_ADC68436750846099D3813B81F38B2F5" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\XSL\WebOverview.xslt" />
         </Component>
-        <Component Id="comp_01A4059EFFB24D0196400FFD1D0D83D0" Guid="DA781A94-5E5A-4FFC-B3B2-13EE87FD9BF3">
-          <File Id="file_A8233D2B803C4E1D8D827FE7FB375D73" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\XSL\WebSlot.xslt" />
+        <Component Id="comp_436B150C86DA41BFA1EF77325BFE80E7" Guid="08D56946-E8AA-4CED-8B2A-A29FF0C8182D">
+          <File Id="file_F5068C7FFEC94A3DA76B0C7DAB4A1B91" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\XSL\WebSlot.xslt" />
         </Component>
-        <Component Id="comp_DAEBAAF29F0844D78C001BD42CF0C998" Guid="2181B502-2AFA-4119-BE5F-92A373FD5A9C">
-          <File Id="file_4B6A925FA2914A2FB1FEEBC65A24C9CA" KeyPath="yes" Source="..\..\..\Artifacts\net47\HFM.NET\XSL\WebSummary.xslt" />
+        <Component Id="comp_00D4A0C86DFB42EDA2E05723489C975E" Guid="A133B9B3-656E-4DDA-A8B9-17D0FC9DC454">
+          <File Id="file_602BD113CEB54CD6A50740ECBFFE4D30" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\XSL\WebSummary.xslt" />
         </Component>
       </Directory>
     </DirectoryRef>

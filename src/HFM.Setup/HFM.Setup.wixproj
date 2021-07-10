@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>HFM.Setup</OutputName>
     <OutputType>Package</OutputType>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>

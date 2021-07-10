@@ -3,7 +3,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net47</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -33,7 +33,7 @@
     <ProjectReference Include="..\HFM.Preferences\HFM.Preferences.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
 

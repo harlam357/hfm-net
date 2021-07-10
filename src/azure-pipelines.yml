@@ -24,7 +24,7 @@ stages:
         !**/HFM.Setup*.csproj
       testProjects: '**/*.Tests.csproj'
       buildConfiguration: 'Release'
-      netFramework: 'net47'
+      netFramework: 'net472'
       dotnetWindows: 'net5.0-windows'
 
     steps:

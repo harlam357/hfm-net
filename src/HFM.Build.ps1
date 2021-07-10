@@ -2,7 +2,7 @@
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
 $EntryProjectPath = ".\HFM\HFM.csproj"
-$NetFramework = 'net47'
+$NetFramework = 'net472'
 $DotNetWindows = 'net5.0-windows'
 $DotNet = 'net5.0'
 
