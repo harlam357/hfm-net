@@ -106,7 +106,7 @@
          <td width="6%" class="RightCol">
             <xsl:value-of select="SlotType"/>
          </td>
-         <td width="5%" class="RightCol">
+         <td width="9%" class="RightCol">
             <xsl:value-of select="Processor"/>
          </td>
          <td width="4%" class="RightCol">
@@ -124,7 +124,7 @@
          <td width="2%" class="RightCol">
             <xsl:value-of select="CoreId"/>
          </td>
-         <td width="11%">
+         <td width="10%">
             <xsl:choose>
                <xsl:when test="ProjectIsDuplicate='true'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -145,7 +145,7 @@
          <td width="3%" class="RightCol">
             <xsl:value-of select="Failed"/>
          </td>
-         <td width="8%">
+         <td width="7%">
             <xsl:choose>
                <xsl:when test="UsernameOk='false'">
                   <xsl:attribute name="class">StatusCol</xsl:attribute>
@@ -157,10 +157,10 @@
             </xsl:choose>
             <xsl:value-of select="Username"/>
          </td>
-         <td width="9%" class="RightCol">
+         <td width="8%" class="RightCol">
             <xsl:value-of select="DownloadTime"/>
          </td>
-         <td width="9%" class="RightCol"> <!--100%-->
+         <td width="8%" class="RightCol"> <!--100%-->
             <xsl:value-of select="PreferredDeadline"/>
          </td>
       </tr>
