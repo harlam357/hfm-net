@@ -30,9 +30,7 @@
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.cboQueueIndex = new System.Windows.Forms.ComboBox();
-            this.MachineIDTextBox = new System.Windows.Forms.TextBox();
             this.StatusLabel = new System.Windows.Forms.Label();
-            this.lblMachineID = new System.Windows.Forms.Label();
             this.StatusTextBox = new System.Windows.Forms.TextBox();
             this.CPUThreadsTextBox = new System.Windows.Forms.TextBox();
             this.BaseCreditLabel = new System.Windows.Forms.Label();
@@ -62,9 +60,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.cboQueueIndex, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.MachineIDTextBox, 1, 12);
             this.tableLayoutPanel1.Controls.Add(this.StatusLabel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 12);
             this.tableLayoutPanel1.Controls.Add(this.StatusTextBox, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 11);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditLabel, 0, 6);
@@ -88,10 +84,9 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7, 5, 9, 5);
-            this.tableLayoutPanel1.RowCount = 14;
+            this.tableLayoutPanel1.RowCount = 13;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
@@ -120,16 +115,6 @@
             this.cboQueueIndex.TabIndex = 0;
             this.cboQueueIndex.SelectedIndexChanged += new System.EventHandler(this.cboQueueIndex_SelectedIndexChanged);
             // 
-            // MachineIDTextBox
-            // 
-            this.MachineIDTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MachineIDTextBox.Location = new System.Drawing.Point(100, 273);
-            this.MachineIDTextBox.Name = "MachineIDTextBox";
-            this.MachineIDTextBox.ReadOnly = true;
-            this.MachineIDTextBox.Size = new System.Drawing.Size(124, 20);
-            this.MachineIDTextBox.TabIndex = 42;
-            this.MachineIDTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // StatusLabel
             // 
             this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -139,16 +124,6 @@
             this.StatusLabel.Size = new System.Drawing.Size(40, 13);
             this.StatusLabel.TabIndex = 1;
             this.StatusLabel.Text = "Status:";
-            // 
-            // lblMachineID
-            // 
-            this.lblMachineID.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblMachineID.AutoSize = true;
-            this.lblMachineID.Location = new System.Drawing.Point(10, 275);
-            this.lblMachineID.Name = "lblMachineID";
-            this.lblMachineID.Size = new System.Drawing.Size(65, 13);
-            this.lblMachineID.TabIndex = 41;
-            this.lblMachineID.Text = "Machine ID:";
             // 
             // StatusTextBox
             // 
@@ -374,8 +349,6 @@
         private System.Windows.Forms.Label BaseCreditLabel;
         private System.Windows.Forms.TextBox StatusTextBox;
         private System.Windows.Forms.Label StatusLabel;
-        private System.Windows.Forms.TextBox MachineIDTextBox;
-        private System.Windows.Forms.Label lblMachineID;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label WaitingOnLabel;
         private System.Windows.Forms.Label labelWrapper3;

@@ -26,8 +26,7 @@ namespace HFM.Forms.Controls
             WorkServer,
             OS,
             Memory,
-            CPUThreads,
-            MachineID
+            CPUThreads
         }
         // ReSharper restore UnusedMember.Local
 
@@ -111,7 +110,6 @@ namespace HFM.Forms.Controls
                 OSTextBox.Text = item.OperatingSystem;
                 MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
                 CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
-                MachineIDTextBox.Text = item.SlotID.ToString(CultureInfo.CurrentCulture);
 
                 OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
             }
@@ -155,7 +153,6 @@ namespace HFM.Forms.Controls
             OSTextBox.Visible = visible;
             MemoryTextBox.Visible = visible;
             CPUThreadsTextBox.Visible = visible;
-            MachineIDTextBox.Visible = visible;
 
             if (visible == false)
             {
