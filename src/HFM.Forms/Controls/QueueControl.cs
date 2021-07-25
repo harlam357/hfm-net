@@ -87,7 +87,7 @@ namespace HFM.Forms.Controls
 
             string FormatDisplay(WorkUnitQueueItem workUnit)
             {
-                return String.Format(CultureInfo.InvariantCulture, "{0:00} - {1}", workUnit.ID, workUnit.ToShortProjectString());
+                return String.Format(CultureInfo.InvariantCulture, "WU{0:00}:FS{1:00}:{2}", workUnit.ID, workUnit.SlotID, workUnit.ToShortProjectString());
             }
         }
 
