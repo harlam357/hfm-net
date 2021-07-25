@@ -15,7 +15,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(null, null);
             // Act
-            var collection = builder.BuildForSlot(0, null);
+            var collection = builder.BuildForSlot(0);
             // Assert
             Assert.IsNull(collection);
         }
@@ -30,7 +30,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitQueueItemCollectionBuilder(unitCollection, null);
             // Act
-            var collection = builder.BuildForSlot(1, null);
+            var collection = builder.BuildForSlot(1);
             // Assert
             Assert.IsNull(collection);
         }
@@ -41,7 +41,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(CreateUnitCollection(), null);
             // Act
-            var collection = builder.BuildForSlot(0, null);
+            var collection = builder.BuildForSlot(0);
             // Assert
             Assert.AreEqual(2, collection.Count);
         }
@@ -52,7 +52,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(CreateUnitCollection(), null);
             // Act
-            var collection = builder.BuildForSlot(1, null);
+            var collection = builder.BuildForSlot(1);
             // Assert
             Assert.AreEqual(1, collection.Count);
         }
@@ -63,7 +63,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(CreateUnitCollection(), null);
             // Act
-            var collection = builder.BuildForSlot(0, null);
+            var collection = builder.BuildForSlot(0);
             // Assert
             Assert.AreEqual(0, collection.CurrentID);
         }
@@ -78,7 +78,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitQueueItemCollectionBuilder(unitCollection, null);
             // Act
-            var collection = builder.BuildForSlot(0, null);
+            var collection = builder.BuildForSlot(0);
             // Assert
             Assert.AreEqual(collection.DefaultID, collection.CurrentID);
         }
@@ -89,7 +89,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(CreateUnitCollection(), CreateSystemInfo());
             // Act
-            var collection = builder.BuildForSlot(0, "AMD Ryzen");
+            var collection = builder.BuildForSlot(0);
             // Assert
             var item = collection[0];
             Assert.AreEqual(0, item.ID);
@@ -103,7 +103,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(TimeSpan.FromMinutes(1), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 1, 1), item.Assigned);
             Assert.AreEqual("1.2.3.4", item.WorkServer);
-            Assert.AreEqual("AMD Ryzen", item.CPU);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);
@@ -121,7 +120,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(TimeSpan.FromMinutes(2), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 2, 2), item.Assigned);
             Assert.AreEqual("2.3.4.5", item.WorkServer);
-            Assert.AreEqual("AMD Ryzen", item.CPU);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);
@@ -134,7 +132,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitQueueItemCollectionBuilder(CreateUnitCollection(), CreateSystemInfo());
             // Act
-            var collection = builder.BuildForSlot(1, "AMD Ryzen");
+            var collection = builder.BuildForSlot(1);
             // Assert
             var item = collection[2];
             Assert.AreEqual(2, item.ID);
@@ -148,7 +146,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(TimeSpan.FromMinutes(3), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 3, 3), item.Assigned);
             Assert.AreEqual("3.4.5.6", item.WorkServer);
-            Assert.AreEqual("AMD Ryzen", item.CPU);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);

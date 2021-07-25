@@ -24,7 +24,6 @@ namespace HFM.Forms.Controls
             BaseCredit,
             BeginDate,
             WorkServer,
-            CPU,
             OS,
             Memory,
             CPUThreads,
@@ -109,7 +108,6 @@ namespace HFM.Forms.Controls
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
                 AssignedTextBox.Text = FormatAssignedAsLocalDateTime(item.Assigned);
                 WorkServerTextBox.Text = item.WorkServer;
-                CPUTypeTextBox.Text = item.CPU;
                 OSTextBox.Text = item.OperatingSystem;
                 MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
                 CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
@@ -154,7 +152,6 @@ namespace HFM.Forms.Controls
             BaseCreditTextBox.Visible = visible;
             AssignedTextBox.Visible = visible;
             WorkServerTextBox.Visible = visible;
-            CPUTypeTextBox.Visible = visible;
             OSTextBox.Visible = visible;
             MemoryTextBox.Visible = visible;
             CPUThreadsTextBox.Visible = visible;
@@ -166,24 +163,12 @@ namespace HFM.Forms.Controls
             }
             else
             {
-                switch (_slotType)
-                {
-                    case SlotType.Unknown:
-                        CPULabel.Text = "CPU:";
-                        CPUThreadsTextBox.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
-                        break;
-                    case SlotType.GPU:
-                        CPULabel.Text = "GPU:";
-                        CPUThreadsTextBox.Visible = false;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
-                        break;
-                    case SlotType.CPU:
-                        CPULabel.Text = "CPU:";
-                        CPUThreadsTextBox.Visible = true;
-                        tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = DefaultRowHeight;
-                        break;
-                }
+                bool slotTypeIsCPU = _slotType == SlotType.CPU;
+
+                CPUThreadsTextBox.Visible = slotTypeIsCPU;
+                tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = slotTypeIsCPU
+                    ? DefaultRowHeight
+                    : 0;
             }
         }
     }

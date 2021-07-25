@@ -16,7 +16,7 @@ namespace HFM.Core.Client
             _info = info;
         }
 
-        public WorkUnitQueueItemCollection BuildForSlot(int slotID, string slotProcessor)
+        public WorkUnitQueueItemCollection BuildForSlot(int slotID)
         {
             if (_units is null)
             {
@@ -37,7 +37,6 @@ namespace HFM.Core.Client
                 wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
                 wui.Assigned = unit.AssignedDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
-                wui.CPU = slotProcessor;
                 if (_info != null)
                 {
                     wui.OperatingSystem = _info.OS;

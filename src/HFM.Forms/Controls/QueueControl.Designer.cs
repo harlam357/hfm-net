@@ -42,10 +42,8 @@
             this.OSTextBox = new System.Windows.Forms.TextBox();
             this.AssignedLabel = new System.Windows.Forms.Label();
             this.MemoryLabel = new System.Windows.Forms.Label();
-            this.CPUTypeTextBox = new System.Windows.Forms.TextBox();
             this.AssignedTextBox = new System.Windows.Forms.TextBox();
             this.OSLabel = new System.Windows.Forms.Label();
-            this.CPULabel = new System.Windows.Forms.Label();
             this.WorkServerLabel = new System.Windows.Forms.Label();
             this.WorkServerTextBox = new System.Windows.Forms.TextBox();
             this.WaitingOnLabel = new System.Windows.Forms.Label();
@@ -64,22 +62,20 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.cboQueueIndex, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.MachineIDTextBox, 1, 13);
+            this.tableLayoutPanel1.Controls.Add(this.MachineIDTextBox, 1, 12);
             this.tableLayoutPanel1.Controls.Add(this.StatusLabel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 13);
+            this.tableLayoutPanel1.Controls.Add(this.lblMachineID, 0, 12);
             this.tableLayoutPanel1.Controls.Add(this.StatusTextBox, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 12);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 11);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditLabel, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsLabel, 0, 12);
-            this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 11);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsLabel, 0, 11);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditTextBox, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 9);
             this.tableLayoutPanel1.Controls.Add(this.AssignedLabel, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 11);
-            this.tableLayoutPanel1.Controls.Add(this.CPUTypeTextBox, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.AssignedTextBox, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 10);
-            this.tableLayoutPanel1.Controls.Add(this.CPULabel, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.WorkServerLabel, 0, 8);
             this.tableLayoutPanel1.Controls.Add(this.WorkServerTextBox, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.WaitingOnLabel, 0, 3);
@@ -92,10 +88,9 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7, 5, 9, 5);
-            this.tableLayoutPanel1.RowCount = 15;
+            this.tableLayoutPanel1.RowCount = 14;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
@@ -110,7 +105,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 330);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 307);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // cboQueueIndex
@@ -128,7 +123,7 @@
             // MachineIDTextBox
             // 
             this.MachineIDTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MachineIDTextBox.Location = new System.Drawing.Point(100, 296);
+            this.MachineIDTextBox.Location = new System.Drawing.Point(100, 273);
             this.MachineIDTextBox.Name = "MachineIDTextBox";
             this.MachineIDTextBox.ReadOnly = true;
             this.MachineIDTextBox.Size = new System.Drawing.Size(124, 20);
@@ -149,7 +144,7 @@
             // 
             this.lblMachineID.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblMachineID.AutoSize = true;
-            this.lblMachineID.Location = new System.Drawing.Point(10, 298);
+            this.lblMachineID.Location = new System.Drawing.Point(10, 275);
             this.lblMachineID.Name = "lblMachineID";
             this.lblMachineID.Size = new System.Drawing.Size(65, 13);
             this.lblMachineID.TabIndex = 41;
@@ -168,7 +163,7 @@
             // CPUThreadsTextBox
             // 
             this.CPUThreadsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CPUThreadsTextBox.Location = new System.Drawing.Point(100, 273);
+            this.CPUThreadsTextBox.Location = new System.Drawing.Point(100, 250);
             this.CPUThreadsTextBox.Name = "CPUThreadsTextBox";
             this.CPUThreadsTextBox.ReadOnly = true;
             this.CPUThreadsTextBox.Size = new System.Drawing.Size(124, 20);
@@ -189,7 +184,7 @@
             // 
             this.CPUThreadsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CPUThreadsLabel.AutoSize = true;
-            this.CPUThreadsLabel.Location = new System.Drawing.Point(10, 275);
+            this.CPUThreadsLabel.Location = new System.Drawing.Point(10, 252);
             this.CPUThreadsLabel.Name = "CPUThreadsLabel";
             this.CPUThreadsLabel.Size = new System.Drawing.Size(74, 13);
             this.CPUThreadsLabel.TabIndex = 35;
@@ -198,7 +193,7 @@
             // MemoryTextBox
             // 
             this.MemoryTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MemoryTextBox.Location = new System.Drawing.Point(100, 250);
+            this.MemoryTextBox.Location = new System.Drawing.Point(100, 227);
             this.MemoryTextBox.Name = "MemoryTextBox";
             this.MemoryTextBox.ReadOnly = true;
             this.MemoryTextBox.Size = new System.Drawing.Size(124, 20);
@@ -218,7 +213,7 @@
             // OSTextBox
             // 
             this.OSTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OSTextBox.Location = new System.Drawing.Point(100, 227);
+            this.OSTextBox.Location = new System.Drawing.Point(100, 204);
             this.OSTextBox.Name = "OSTextBox";
             this.OSTextBox.ReadOnly = true;
             this.OSTextBox.Size = new System.Drawing.Size(124, 20);
@@ -239,21 +234,11 @@
             // 
             this.MemoryLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.MemoryLabel.AutoSize = true;
-            this.MemoryLabel.Location = new System.Drawing.Point(10, 252);
+            this.MemoryLabel.Location = new System.Drawing.Point(10, 229);
             this.MemoryLabel.Name = "MemoryLabel";
             this.MemoryLabel.Size = new System.Drawing.Size(47, 13);
             this.MemoryLabel.TabIndex = 31;
             this.MemoryLabel.Text = "Memory:";
-            // 
-            // CPUTypeTextBox
-            // 
-            this.CPUTypeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CPUTypeTextBox.Location = new System.Drawing.Point(100, 204);
-            this.CPUTypeTextBox.Name = "CPUTypeTextBox";
-            this.CPUTypeTextBox.ReadOnly = true;
-            this.CPUTypeTextBox.Size = new System.Drawing.Size(124, 20);
-            this.CPUTypeTextBox.TabIndex = 28;
-            this.CPUTypeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // AssignedTextBox
             // 
@@ -269,21 +254,11 @@
             // 
             this.OSLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.OSLabel.AutoSize = true;
-            this.OSLabel.Location = new System.Drawing.Point(10, 229);
+            this.OSLabel.Location = new System.Drawing.Point(10, 206);
             this.OSLabel.Name = "OSLabel";
             this.OSLabel.Size = new System.Drawing.Size(25, 13);
             this.OSLabel.TabIndex = 29;
             this.OSLabel.Text = "OS:";
-            // 
-            // CPULabel
-            // 
-            this.CPULabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CPULabel.AutoSize = true;
-            this.CPULabel.Location = new System.Drawing.Point(10, 206);
-            this.CPULabel.Name = "CPULabel";
-            this.CPULabel.Size = new System.Drawing.Size(32, 13);
-            this.CPULabel.TabIndex = 27;
-            this.CPULabel.Text = "CPU:";
             // 
             // WorkServerLabel
             // 
@@ -387,13 +362,11 @@
         private System.Windows.Forms.Label WorkServerLabel;
         private System.Windows.Forms.ComboBox cboQueueIndex;
         private System.Windows.Forms.Label AssignedLabel;
-        private System.Windows.Forms.Label CPULabel;
         private System.Windows.Forms.Label OSLabel;
         private System.Windows.Forms.Label CPUThreadsLabel;
         private System.Windows.Forms.Label MemoryLabel;
         private System.Windows.Forms.TextBox WorkServerTextBox;
         private System.Windows.Forms.TextBox AssignedTextBox;
-        private System.Windows.Forms.TextBox CPUTypeTextBox;
         private System.Windows.Forms.TextBox OSTextBox;
         private System.Windows.Forms.TextBox CPUThreadsTextBox;
         private System.Windows.Forms.TextBox MemoryTextBox;

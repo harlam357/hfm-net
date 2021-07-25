@@ -55,11 +55,6 @@ namespace HFM.Core.Client
         public string WorkServer { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the CPU or GPU that is processing this work unit.
-        /// </summary>
-        public string CPU { get; set; }
-
-        /// <summary>
         /// Gets or sets the name of the operating system that is processing this work unit.
         /// </summary>
         public string OperatingSystem { get; set; }

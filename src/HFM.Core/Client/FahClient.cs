@@ -293,7 +293,7 @@ namespace HFM.Core.Client
             var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
 
             slotModel.Processor = slotProcessor;
-            slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID, slotProcessor);
+            slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
             slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
 
             var clientRun = Messages.GetClientRun();
