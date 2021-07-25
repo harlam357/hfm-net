@@ -242,7 +242,7 @@ namespace HFM.Core.Client
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
 
-        private static string GetSlotProcessor(SystemInfo systemInfo, FahClientSlotModel slotModel) =>
+        private static string GetSlotProcessor(SystemInfo systemInfo, SlotModel slotModel) =>
             slotModel.SlotType == SlotType.GPU
                 ? slotModel.Processor
                 : systemInfo?.CPU;

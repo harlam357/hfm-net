@@ -226,7 +226,7 @@ namespace HFM.Forms.Views
 
                 for (int i = 0; i < columnsList.Count && i < NumberOfDisplayFields; i++)
                 {
-                    var columnSettings = GetColumnSettings(columnsList[i]);
+                    var columnSettings = Preferences.FormColumnPreference.Parse(columnsList[i]);
                     if (columnSettings.HasValue)
                     {
                         int index = columnSettings.Value.Index;
@@ -239,21 +239,13 @@ namespace HFM.Forms.Views
                     }
                 }
             }
-
-            (int DisplayIndex, int Width, bool Visible, int Index)? GetColumnSettings(string value)
-            {
-                string[] tokens = value.Split(',');
-                if (tokens.Length != 4) return null;
-                return (Int32.Parse(tokens[0]), Int32.Parse(tokens[1]), Boolean.Parse(tokens[2]), Int32.Parse(tokens[3]));
-            }
         }
 
         private ICollection<string> GetFormColumns()
         {
             return dataGridView1.Columns.Cast<DataGridViewColumn>()
-                .Select((column, i) => String.Format(CultureInfo.InvariantCulture,
-                    "{0},{1},{2},{3}",
-                    column.DisplayIndex.ToString("D2"),
+                .Select((column, i) => Preferences.FormColumnPreference.Format(
+                    column.DisplayIndex,
                     column.Width,
                     column.Visible,
                     i))

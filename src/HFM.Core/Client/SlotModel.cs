@@ -51,6 +51,8 @@ namespace HFM.Core.Client
 
         public virtual string SlotTypeString { get; set; }
 
+        public virtual string Processor { get; set; }
+
         public virtual TimeSpan TPF { get; set; }
 
         public virtual double PPD { get; set; }
@@ -167,8 +169,6 @@ namespace HFM.Core.Client
                 return sb.ToString();
             }
         }
-
-        public string Processor { get; set; }
 
         public int? Threads { get; set; }
 

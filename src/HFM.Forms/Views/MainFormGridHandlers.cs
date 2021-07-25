@@ -123,6 +123,7 @@ namespace HFM.Forms.Views
             SlotsGridColumns.Find("Progress").AddToDataGridView(dgv);
             SlotsGridColumns.Find("Name").AddToDataGridView(dgv);
             SlotsGridColumns.Find("SlotType").AddToDataGridView(dgv);
+            SlotsGridColumns.Find("Processor").AddToDataGridView(dgv);
             SlotsGridColumns.Find("TPF").AddToDataGridView(dgv);
             SlotsGridColumns.Find("PPD").AddToDataGridView(dgv);
             SlotsGridColumns.Find("ETA").AddToDataGridView(dgv);

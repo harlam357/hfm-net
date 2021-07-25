@@ -20,6 +20,7 @@ namespace HFM.Forms.Controls
                 new SlotsGridProgressColumn(),
                 new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(SlotModel.Name)),
                 new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(SlotModel.SlotTypeString)),
+                new SlotsGridDefaultColumn("Processor", "Processor", "CPU or GPU processor name", nameof(SlotModel.Processor)),
                 new SlotsGridTPFColumn(),
                 new SlotsGridPPDColumn(),
                 new SlotsGridETAColumn(),

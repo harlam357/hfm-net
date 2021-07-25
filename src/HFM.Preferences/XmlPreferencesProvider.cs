@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -9,21 +8,12 @@ using HFM.Preferences.Data;
 
 namespace HFM.Preferences
 {
-    public class XmlPreferencesProvider : PreferencesProvider
+    public partial class XmlPreferencesProvider : PreferencesProvider
     {
         public XmlPreferencesProvider(string applicationPath, string applicationDataFolderPath, string applicationVersion)
            : base(applicationPath, applicationDataFolderPath, applicationVersion)
         {
 
-        }
-
-        protected override IEnumerable<PreferenceUpgrade> OnEnumerateUpgrades()
-        {
-            yield return new PreferenceUpgrade
-            {
-                Version = new Version(0, 9, 13),
-                Action = data => data.ApplicationSettings.ProjectDownloadUrl = "https://apps.foldingathome.org/psummary.json"
-            };
         }
 
         protected override PreferenceData OnRead()
