@@ -368,36 +368,33 @@ namespace HFM.Forms.Views
             string sStylesheet = Path.Combine(_presenter.Model.Preferences.Get<string>(Preference.ApplicationPath), Core.Application.CssFolderName, _presenter.Model.WebVisualStylesModel.CssFile);
             var sb = new StringBuilder();
 
-            sb.Append("<HTML><HEAD><TITLE>Test CSS File</TITLE>");
-            sb.Append("<LINK REL=\"Stylesheet\" TYPE=\"text/css\" href=\"file://" + sStylesheet + "\" />");
-            sb.Append("</HEAD><BODY>");
+            sb.Append("<HTML>");
 
-            sb.Append("<table class=\"Instance\">");
+            sb.Append("<HEAD>");
+            sb.Append("<TITLE>Test CSS File</TITLE>");
+            sb.Append("<LINK REL=\"stylesheet\" href=\"file://" + sStylesheet + "\" />");
+            sb.Append("<style> body { font-family: \"Segoe UI\",Roboto,\"Helvetica Neue\",Arial }</style>");
+            sb.Append("</HEAD>");
+
+            sb.Append("<BODY>");
+            sb.Append("<table>");
+            sb.Append("<thead>");
             sb.Append("<tr>");
-            sb.Append("<td class=\"Heading\">Heading</td>");
-            sb.Append("<td class=\"Blank\" width=\"100%\"></td>");
+            sb.Append("<td class=\"table-heading\">Heading</td>");
+            sb.Append("</tr>");
+            sb.Append("</thead>");
+            sb.Append("<tbody>");
+            sb.Append("<tr>");
+            sb.Append("<td class=\"table-column\">Column</td>");
             sb.Append("</tr>");
             sb.Append("<tr>");
-            sb.Append("<td class=\"LeftCol\">Left Col</td>");
-            sb.Append("<td class=\"RightCol\">Right Column</td>");
+            sb.Append("<td class=\"table-column-alt\">Column (Alt)</td>");
             sb.Append("</tr>");
-            sb.Append("<tr>");
-            sb.Append("<td class=\"AltLeftCol\">Left Col</td>");
-            sb.Append("<td class=\"AltRightCol\">Right Column</td>");
-            sb.Append("</tr>");
-            sb.Append("<tr>");
-            sb.Append("<td class=\"LeftCol\">Left Col</td>");
-            sb.Append("<td class=\"RightCol\">Right Column</td>");
-            sb.Append("</tr>");
-            sb.Append("<tr>");
-            sb.Append("<td class=\"AltLeftCol\">Left Col</td>");
-            sb.Append("<td class=\"AltRightCol\">Right Column</td>");
-            sb.Append("</tr>");
-            sb.Append("<tr>");
-            sb.Append($"<td class=\"Plain\" colspan=\"2\" align=\"center\">Last updated {DateTime.Now.ToLongDateString()} at {DateTime.Now.ToLongTimeString()}</td>");
-            sb.Append("</tr>");
+            sb.Append("</tbody>");
             sb.Append("</table>");
-            sb.Append("</BODY></HTML>");
+            sb.Append("</BODY>");
+
+            sb.Append("</HTML>");
 
             _cssSampleBrowser.DocumentText = sb.ToString();
         }
