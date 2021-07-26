@@ -102,3 +102,20 @@
     font-size: inherit;
     vertical-align: top;
 }
+
+.table-heading {
+    background-color: #FFD800;
+    color: #111111;
+}
+
+.table-column {
+    background-color: #FFF9DD;
+}
+
+.table-column-alt {
+    background-color: #FFEC8E;
+}
+
+.column {
+    background-color: #FFF9DD;
+}
