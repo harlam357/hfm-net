@@ -51,6 +51,7 @@
       <ComponentRef Id="comp_0DE5328F6BA04DEC9F4DB698AD6F5EC7" />
       <ComponentRef Id="comp_F239E4A0778A4B6F9DD7537AE2D81233" />
       <ComponentRef Id="comp_F0086D66843C49298B36BBC8BD2C7897" />
+      <ComponentRef Id="comp_7CC83F452D9E4E35AE74DA3DD3015F38" />
       <ComponentRef Id="comp_4F77B74EDF4A4C97B52D41508EE49DAF" />
       <ComponentRef Id="comp_5E52AA88D99E40B6AE78150B4A532131" />
       <ComponentRef Id="comp_EDC81C6FA09D4D74B75347CE1D793010" />
@@ -165,6 +166,9 @@
         </Component>
         <Component Id="comp_F0086D66843C49298B36BBC8BD2C7897" Guid="8B7FDDC1-AF97-42E3-9BE9-5346BE163FC9">
           <File Id="file_A712D8BE4D564653B168D89BFCBA6FE4" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Grey.css" />
+        </Component>
+        <Component Id="comp_7CC83F452D9E4E35AE74DA3DD3015F38" Guid="34F3C123-5424-4AEC-AE77-D65A7232DDA4">
+          <File Id="file_4C6567ED71AB4D219C48ABFF1A90FFFC" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\HFM.css" />
         </Component>
         <Component Id="comp_4F77B74EDF4A4C97B52D41508EE49DAF" Guid="2F98E9FC-CA9D-438B-AED9-58FC47D397F3">
           <File Id="file_5E03CCD4F10447F4AB0A5393262D2E0E" KeyPath="yes" Source="..\..\..\Artifacts\net472\HFM.NET\CSS\Orange.css" />
