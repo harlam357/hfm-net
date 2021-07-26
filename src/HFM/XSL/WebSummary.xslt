@@ -1,83 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
-                              xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output method="html" encoding="utf-8" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd" />
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="html" encoding="utf-8" />
   <xsl:include href="FormatDate.xslt"/>
   <xsl:template match="SlotSummary">
+    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
     <html>
       <head>
         <title>Folding Client Summary</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Cache-Control" content="no-cache" />
-        <link rel="stylesheet" type="text/css" href="$CSSFILE" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+        <link rel="stylesheet" href="HFM.css" />
+        <link rel="stylesheet" href="$CSSFILE" />
       </head>
       <body>
-        <table class="Overview" width="100%">
-          <tr>
-            <td class="Heading" colspan="2">Summary</td>
-            <td class="Plain" colspan="15">
+        <div class="container-fluid">
+          <div class="row my-3">
+            <div class="col">
+              <span class="h2">Summary</span>
+              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
               <a href="index.html">Overview Page</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="Heading">Status</td>
-            <td class="Heading">Progress</td>
-            <td class="Heading">Name</td>
-            <td class="Heading">Slot Type</td>
-            <td class="Heading">Processor</td>
-            <td class="Heading">TPF</td>
-            <td class="Heading">PPD</td>
-            <td class="Heading">ETA</td>
-            <td class="Heading">Core</td>
-            <td class="Heading">CoreID</td>
-            <td class="Heading">Project (R,C,G)</td>
-            <td class="Heading">Credit</td>
-            <td class="Heading">Completed</td>
-            <td class="Heading">Failed</td>
-            <td class="Heading">Username</td>
-            <td class="Heading">Assigned</td>
-            <td class="Heading">Timeout</td>
-          </tr>
-          <xsl:apply-templates select="Slots/SlotData">
-            <xsl:with-param name="NumberFormat" select="NumberFormat" />
-          </xsl:apply-templates>
-          <tr>
-            <td class="Plain" colspan="18" align="center">
-            </td>
-          </tr>
-          <tr>
-            <td class="Heading" colspan="1">Totals</td>
-            <td class="Plain" colspan="1"></td>
-            <td class="Plain" colspan="16"></td>
-          </tr>
-          <tr>
-            <td class="RightCol" colspan="1">
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr class="table-heading">
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Name</th>
+                <th>Slot Type</th>
+                <th>Processor</th>
+                <th>TPF</th>
+                <th>PPD</th>
+                <th>ETA</th>
+                <th>Core</th>
+                <th>Core ID</th>
+                <th>Project (Run, Clone, Gen)</th>
+                <th>Credit</th>
+                <th>Completed</th>
+                <th>Failed</th>
+                <th>Username</th>
+                <th>Assigned</th>
+                <th>Timeout</th>
+              </tr>
+            </thead>
+            <tbody>
+              <xsl:apply-templates select="Slots/SlotData">
+                <xsl:with-param name="NumberFormat" select="NumberFormat" />
+              </xsl:apply-templates>
+            </tbody>
+          </table>
+        </div>
+        <div class="container-fluid">
+          <div class="row justify-content-end">
+            <div class="col-1 column">
               <xsl:value-of select="SlotTotals/WorkingSlots"/> Working Slots
-            </td>
-            <td class="RightCol" colspan="1">
+            </div>
+            <div class="col-1 column">
               <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
-            </td>
-            <td class="Plain" colspan="16"></td>
-          </tr>
-          <tr>
-            <td class="Plain" colspan="18" align="center">
-            </td>
-          </tr>
-          <tr>
-            <td class="Plain" colspan="18" align="center">
+            </div>
+          </div>
+          <div class="row justify-content-center my-5">
+            <div class="col-auto">
               Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate">
                 <xsl:with-param name="dateTime" select="UpdateDateTime" />
               </xsl:call-template>
-            </td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
       </body>
     </html>
   </xsl:template>
   <xsl:template match="Slots/SlotData">
     <xsl:param name="NumberFormat" />
     <tr>
-      <td width="5%" class="StatusCol">
+      <td>
         <xsl:attribute name="bgcolor">
           <xsl:value-of select="StatusColor"/>
         </xsl:attribute>
@@ -88,18 +93,14 @@
           <xsl:value-of select="Status"/>
         </font>
       </td>
-      <td width="2%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="PercentComplete"/>%
       </td>
-      <td width="14%">
+      <td class="table-column">
         <xsl:choose>
           <xsl:when test="UserIdIsDuplicate='true'">
-            <xsl:attribute name="class">StatusCol</xsl:attribute>
             <xsl:attribute name="bgcolor">Orange</xsl:attribute>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="class">RightCol</xsl:attribute>
-          </xsl:otherwise>
         </xsl:choose>
         <a>
           <xsl:attribute name="href">
@@ -108,65 +109,56 @@
           <xsl:value-of select="Name"/>
         </a>
       </td>
-      <td width="6%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="SlotType"/>
       </td>
-      <td width="9%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="Processor"/>
       </td>
-      <td width="4%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="TPF"/>
       </td>
-      <td width="8%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="format-number(PPD, $NumberFormat)"/> (<xsl:value-of select="format-number(UPD, $NumberFormat)"/> WUs)
       </td>
-      <td width="4%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="ETA"/>
       </td>
-      <td width="4%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="Core"/>
       </td>
-      <td width="2%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="CoreId"/>
       </td>
-      <td width="10%">
+      <td class="table-column">
         <xsl:choose>
           <xsl:when test="ProjectIsDuplicate='true'">
-            <xsl:attribute name="class">StatusCol</xsl:attribute>
             <xsl:attribute name="bgcolor">Orange</xsl:attribute>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="class">RightCol</xsl:attribute>
-          </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="ProjectRunCloneGen"/>
       </td>
-      <td width="3%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="format-number(Credit, $NumberFormat)"/>
       </td>
-      <td width="3%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="Completed"/>
       </td>
-      <td width="3%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="Failed"/>
       </td>
-      <td width="7%">
+      <td class="table-column">
         <xsl:choose>
           <xsl:when test="UsernameOk='false'">
-            <xsl:attribute name="class">StatusCol</xsl:attribute>
             <xsl:attribute name="bgcolor">Orange</xsl:attribute>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="class">RightCol</xsl:attribute>
-          </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="Username"/>
       </td>
-      <td width="8%" class="RightCol">
+      <td class="table-column">
         <xsl:value-of select="DownloadTime"/>
       </td>
-      <td width="8%" class="RightCol">
-        <!--100%-->
+      <td class="table-column">
         <xsl:value-of select="PreferredDeadline"/>
       </td>
     </tr>

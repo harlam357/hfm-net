@@ -14,14 +14,14 @@ namespace HFM.Core.SlotXml
 {
     public struct HtmlBuilderResult
     {
-        public HtmlBuilderResult(string cssFile, ICollection<string> slotSummaryFiles, ICollection<string> slotDetailFiles)
+        public HtmlBuilderResult(ICollection<string> cssFiles, ICollection<string> slotSummaryFiles, ICollection<string> slotDetailFiles)
         {
-            CssFile = cssFile;
+            CssFiles = cssFiles;
             SlotSummaryFiles = slotSummaryFiles;
             SlotDetailFiles = slotDetailFiles;
         }
 
-        public string CssFile { get; set; }
+        public ICollection<string> CssFiles { get; set; }
 
         public ICollection<string> SlotSummaryFiles { get; set; }
 
@@ -30,6 +30,8 @@ namespace HFM.Core.SlotXml
 
     public class HtmlBuilder
     {
+        public static IEnumerable<string> StaticCssFileNames { get; } = new[] { "HFM.css" };
+
         public IPreferences Preferences { get; }
 
         public HtmlBuilder(IPreferences preferences)
@@ -41,13 +43,13 @@ namespace HFM.Core.SlotXml
         {
             var cssFileName = Preferences.Get<string>(Preference.CssFile);
 
-            var cssFile = CopyCssFile(path, cssFileName);
+            var cssFiles = CopyCssFiles(path, cssFileName).ToList();
             var slotSummaryFiles = EnumerateSlotSummaryFiles(xmlBuilderResult.SlotSummaryFile, path, cssFileName).ToList();
             var slotDetailFiles = EnumerateSlotDetailFiles(xmlBuilderResult.SlotDetailFiles, path, cssFileName).ToList();
-            return new HtmlBuilderResult(cssFile, slotSummaryFiles, slotDetailFiles);
+            return new HtmlBuilderResult(cssFiles, slotSummaryFiles, slotDetailFiles);
         }
 
-        private string CopyCssFile(string path, string cssFileName)
+        private IEnumerable<string> CopyCssFiles(string path, string cssFileName)
         {
             var applicationPath = Preferences.Get<string>(Preference.ApplicationPath);
 
@@ -56,9 +58,19 @@ namespace HFM.Core.SlotXml
             {
                 var destFileName = Path.Combine(path, cssFileName);
                 File.Copy(cssFilePath, destFileName, true);
-                return destFileName;
+                yield return destFileName;
             }
-            return null;
+
+            foreach (var name in StaticCssFileNames)
+            {
+                cssFilePath = Path.Combine(applicationPath, Application.CssFolderName, name);
+                if (File.Exists(cssFilePath))
+                {
+                    var destFileName = Path.Combine(path, name);
+                    File.Copy(cssFilePath, destFileName, true);
+                    yield return destFileName;
+                }
+            }
         }
 
         private XmlReaderSettings XmlReaderSettings { get; } = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore };

@@ -129,12 +129,12 @@ namespace HFM.Core.SlotXml
         {
             new object[] { false, false, false, 0 },
             new object[] { true, false, false, 3 },
-            new object[] { false, true, false, 5},
+            new object[] { false, true, false, 6},
             new object[] { false, false, true, 2 },
-            new object[] { true, true, false, 8 },
-            new object[] { false, true, true, 7 },
+            new object[] { true, true, false, 9 },
+            new object[] { false, true, true, 8 },
             new object[] { true, false, true, 5 },
-            new object[] { true, true, true, 10 }
+            new object[] { true, true, true, 11 }
         };
 
         private static IPreferences CreatePreferences()

@@ -1,9 +1,24 @@
 ﻿body
 {
-    /*font-family: Tahoma, Arial, Sans-Serif;*/
     font-size: 0.8rem;
 }
 
 .column {
     border: 1px solid #dee2e6;
+}
+
+.overview-table {
+    width: 25%;
+}
+
+.slot-table {
+    width: 40%;
+}
+
+.log-table {
+    width: 50%;
+}
+
+.project-table {
+    width: 30%;
 }

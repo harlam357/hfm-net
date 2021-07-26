@@ -71,6 +71,7 @@ namespace HFM.Forms.Models
                 if (di.Exists)
                 {
                     list.AddRange(di.EnumerateFiles(CssPattern)
+                        .Where(fi => !Core.SlotXml.HtmlBuilder.StaticCssFileNames.Contains(fi.Name))
                         .Select(fi => new ListItem(Path.GetFileNameWithoutExtension(fi.Name), fi.Name)));
                 }
                 return list.AsReadOnly();
