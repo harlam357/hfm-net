@@ -13,14 +13,23 @@ namespace HFM.ApplicationUpdate.Console
     {
         private static void Main(string[] args)
         {
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var updateDate = DateTime.UtcNow;
+
+            System.Console.WriteLine("Version: {0}", fileVersionInfo.FileVersion);
+            System.Console.WriteLine("UpdateDate: {0}", updateDate);
+
             var update = new Core.ApplicationUpdate
             {
-                Version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion,
-                UpdateDate = DateTime.UtcNow
+                Version = fileVersionInfo.FileVersion,
+                UpdateDate = updateDate
             };
             update.UpdateFiles = EnumerateUpdateFiles(update.Version, args).ToList();
 
-            using var stream = File.Create("ApplicationUpdate.xml");
+            string path = Path.Combine(Environment.CurrentDirectory, "ApplicationUpdate.xml");
+            System.Console.WriteLine("Writing {0}", path);
+
+            using var stream = File.Create(path);
             var serializer = new ApplicationUpdateSerializer();
             serializer.Serialize(stream, update);
         }
@@ -31,6 +40,8 @@ namespace HFM.ApplicationUpdate.Console
             {
                 string path = args.ElementAtOrDefault(i);
                 string description = args.ElementAtOrDefault(++i);
+
+                System.Console.WriteLine("Adding {0} {1}", path, description);
 
                 if (path is null || description is null)
                 {
