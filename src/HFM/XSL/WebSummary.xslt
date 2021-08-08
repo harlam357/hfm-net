@@ -58,17 +58,17 @@
           </table>
         </div>
         <div class="container-fluid">
-          <div class="row justify-content-end">
-            <div class="col-1 column">
+          <div class="row justify-content-end mt-3">
+            <div class="col-auto column">
               <xsl:value-of select="SlotTotals/WorkingSlots"/> Working Slots
             </div>
-            <div class="col-1 column">
-              <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>PPD
+            <div class="col-auto column">
+              <xsl:value-of select="format-number(SlotTotals/PPD, NumberFormat)"/> PPD
             </div>
           </div>
-          <div class="row justify-content-center my-5">
+          <div class="row justify-content-center my-3">
             <div class="col-auto">
-              Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate">
+              Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a> <xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate">
                 <xsl:with-param name="dateTime" select="UpdateDateTime" />
               </xsl:call-template>
             </div>

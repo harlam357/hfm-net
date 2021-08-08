@@ -134,9 +134,9 @@
           <xsl:apply-templates select="SlotData/Protein" />
         </table>
         <div class="container-fluid">
-          <div class="row">
+          <div class="row my-3">
             <div class="col">
-              Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate">
+              Page rendered by <a href="https://github.com/harlam357/hfm-net">HFM.NET</a> <xsl:value-of select="HfmVersion"/> on <xsl:call-template name="FormatDate">
                 <xsl:with-param name="dateTime" select="UpdateDateTime" />
               </xsl:call-template>
             </div>
