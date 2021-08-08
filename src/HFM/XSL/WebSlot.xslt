@@ -30,7 +30,7 @@
           </div>
         </div>
         <div>
-          <table class="table slot-table">
+          <table class="table w-auto">
             <tr>
               <th scope="row" class="table-column-alt">
                 Current Progress
@@ -107,7 +107,7 @@
             </div>
           </div>
         </div>
-        <table class="table log-table">
+        <table class="table w-auto">
           <tr>
             <td class="table-column" colspan="2">
               <xsl:for-each select="SlotData/CurrentLogLines/LogLine">
@@ -126,7 +126,7 @@
             </div>
           </div>
         </div>
-        <table class="table project-table">
+        <table class="table w-auto">
           <xsl:apply-templates select="SlotData/Protein" />
         </table>
         <div class="container-fluid">
