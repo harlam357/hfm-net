@@ -28,7 +28,7 @@
           </div>
         </div>
         <div>
-          <table class="table overview-table">
+          <table class="table w-auto">
             <tbody>
               <tr>
                 <th scope="row" class="table-column">
