@@ -26,6 +26,7 @@ stages:
       buildConfiguration: 'Release'
       netFramework: 'net472'
       dotnetWindows: 'net5.0-windows'
+      dotnet: 'net5.0'
 
     steps:
     - task: PowerShell@2
@@ -121,7 +122,10 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$DotNet\hfm-app.update.exe "..\..\..\..\Artifacts\$NetFramework\Packages\HFM $Global:Version.msi" "Windows Installer" "..\..\..\..\Artifacts\$NetFramework\Packages\HFM $Global:Version.zip" "Zip Archive" "..\..\..\..\Artifacts\$DotNetWindows\Packages\HFM $Global:Version ($DotNetWindows).zip" "Zip Archive ($DotNetWindows)"
+          $netFrameworkMsi = "..\..\..\..\Artifacts\$(netFramework)\Packages\HFM $Global:Version.msi"
+          $netFrameworkZip = "..\..\..\..\Artifacts\$(netFramework)\Packages\HFM $Global:Version.zip"
+          $dotnetWindowsZip = "..\..\..\..\Artifacts\$(dotnetWindows)\Packages\HFM $Global:Version ($(dotnetWindows)).zip"
+          .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$(dotnet)\hfm-app.update.exe $netFrameworkMsi "Windows Installer" $netFrameworkZip "Zip Archive" $dotnetWindowsZip "Zip Archive ($(dotnetWindows))"
         workingDirectory: '.\src'
 
     - task: CopyFiles@2
