@@ -22,10 +22,14 @@
               <span class="h2">
                 <xsl:value-of select="SlotData/Name"/>
               </span>
-              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-              <a href="index.html">Overview Page</a>
-              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>/<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-              <a href="summary.html">Summary Page</a>
+              <xsl:text> </xsl:text>
+              <a href="index.html">
+                <span style="white-space: nowrap;">Overview Page</span>
+              </a>
+              <xsl:text disable-output-escaping="yes">&amp;nbsp;/ </xsl:text>
+              <a href="summary.html">
+                <span style="white-space: nowrap;">Summary Page</span>
+              </a>
             </div>
           </div>
         </div>
@@ -100,7 +104,7 @@
                   <a>
                     <xsl:attribute name="href">
                       <xsl:value-of select="LogFileName"/>
-                    </xsl:attribute>Click here to view the client log file
+                    </xsl:attribute><span style="white-space: nowrap;">View the raw log file</span>
                   </a>
                 </xsl:when>
               </xsl:choose>
@@ -109,7 +113,7 @@
         </div>
         <table class="table w-auto">
           <tr>
-            <td class="table-column" colspan="2">
+            <td class="table-column">
               <xsl:for-each select="SlotData/CurrentLogLines/LogLine">
                 <xsl:value-of select="Raw" disable-output-escaping="yes"/>
                 <xsl:element name="br"/>

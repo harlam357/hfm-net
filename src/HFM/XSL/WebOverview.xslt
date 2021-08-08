@@ -22,8 +22,10 @@
           <div class="row my-3">
             <div class="col">
               <span class="h2">Overview</span>
-              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-              <a href="summary.html">Summary Page</a>
+              <xsl:text> </xsl:text>
+              <a href="summary.html">
+                <span style="white-space: nowrap;">Summary Page</span>
+              </a>
             </div>
           </div>
         </div>

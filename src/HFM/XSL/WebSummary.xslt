@@ -20,8 +20,10 @@
           <div class="row my-3">
             <div class="col">
               <span class="h2">Summary</span>
-              <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
-              <a href="index.html">Overview Page</a>
+                <xsl:text> </xsl:text>
+                <a href="index.html">
+                  <span style="white-space: nowrap;">Overview Page</span>
+                </a>
             </div>
           </div>
         </div>
