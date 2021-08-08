@@ -114,6 +114,16 @@ stages:
           Deploy-Msi -Verbose
         workingDirectory: '.\src'
 
+    - task: PowerShell@2
+      displayName: 'hfm-app-update'
+      inputs:
+        targetType: 'inline'
+        script: |
+          . .\HFM.Build.ps1
+          Configure-Version -CommitCount
+          .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$DotNet\hfm-app.update.exe "..\..\..\..\Artifacts\$NetFramework\Packages\HFM $Global:Version.msi" "Windows Installer" "..\..\..\..\Artifacts\$NetFramework\Packages\HFM $Global:Version.zip" "Zip Archive" "..\..\..\..\Artifacts\$DotNetWindows\Packages\HFM $Global:Version ($DotNetWindows).zip" "Zip Archive ($DotNetWindows)"
+        workingDirectory: '.\src'
+
     - task: CopyFiles@2
       displayName: 'Copy to Artifact Staging'
       inputs:
