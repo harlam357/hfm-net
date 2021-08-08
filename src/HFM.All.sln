@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B2F0D8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Preferences.Tests", "HFM.Preferences.Tests\HFM.Preferences.Tests.csproj", "{C4F6A423-FEBA-4D24-B726-ECDA91223C93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.ApplicationUpdate.Console", "HFM.ApplicationUpdate.Console\HFM.ApplicationUpdate.Console.csproj", "{D1DA043A-6B7F-462F-96D0-5865DDDB9842}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{C4F6A423-FEBA-4D24-B726-ECDA91223C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F6A423-FEBA-4D24-B726-ECDA91223C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F6A423-FEBA-4D24-B726-ECDA91223C93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

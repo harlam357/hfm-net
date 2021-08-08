@@ -54,25 +54,19 @@ namespace HFM.Core
                 stream = new FileStream(path, FileMode.Open, FileAccess.Read);
                 if (!String.IsNullOrEmpty(SHA1))
                 {
-                    using (var hash = new Hash(HashProvider.SHA1))
+                    string hash = CalculateHash(stream, HashProvider.SHA1);
+                    if (String.Compare(SHA1, hash, StringComparison.OrdinalIgnoreCase) != 0)
                     {
-                        byte[] hashData = hash.Calculate(stream);
-                        if (String.Compare(SHA1, hashData.ToHex(), StringComparison.OrdinalIgnoreCase) != 0)
-                        {
-                            throw new IOException("SHA1 file hash is not correct.");
-                        }
+                        throw new IOException("SHA1 file hash is not correct.");
                     }
                 }
                 stream.Position = 0;
                 if (!String.IsNullOrEmpty(MD5))
                 {
-                    using (var hash = new Hash(HashProvider.MD5))
+                    string hash = CalculateHash(stream, HashProvider.MD5);
+                    if (String.Compare(MD5, hash, StringComparison.OrdinalIgnoreCase) != 0)
                     {
-                        byte[] hashData = hash.Calculate(stream);
-                        if (String.Compare(MD5, hashData.ToHex(), StringComparison.OrdinalIgnoreCase) != 0)
-                        {
-                            throw new IOException("MD5 file hash is not correct.");
-                        }
+                        throw new IOException("MD5 file hash is not correct.");
                     }
                 }
             }
@@ -84,6 +78,14 @@ namespace HFM.Core
             finally
             {
                 stream?.Dispose();
+            }
+        }
+
+        public static string CalculateHash(Stream stream, HashProvider provider)
+        {
+            using (var hash = new Hash(provider))
+            {
+                return hash.Calculate(stream).ToHex();
             }
         }
     }
