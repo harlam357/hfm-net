@@ -54,7 +54,7 @@ namespace HFM.ApplicationUpdate.Console
                 {
                     Name = fileInfo.Name,
                     Description = description,
-                    HttpAddress = BuildGitHubHttpAddress(version, fileInfo.Name.Replace(' ', '.')),
+                    HttpAddress = BuildGitHubHttpAddress(version, CleanFileName(fileInfo.Name)),
                     Size = (int)fileInfo.Length,
                     UpdateType = UpdateTypeFromExtension(fileInfo.Extension)
                 };
@@ -70,6 +70,14 @@ namespace HFM.ApplicationUpdate.Console
 
                 yield return updateFile;
             }
+        }
+
+        private static string CleanFileName(string fileName)
+        {
+            return fileName
+                .Replace(' ', '.')
+                .Replace("(", "")
+                .Replace(")", "");
         }
 
         private static string BuildGitHubHttpAddress(string version, string fileName) =>
