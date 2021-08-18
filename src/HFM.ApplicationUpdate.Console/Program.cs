@@ -13,15 +13,16 @@ namespace HFM.ApplicationUpdate.Console
     {
         private static void Main(string[] args)
         {
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            var fileVersion = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+            fileVersion = new Version(fileVersion.Major, fileVersion.Minor, fileVersion.Build);
             var updateDate = DateTime.UtcNow;
 
-            System.Console.WriteLine("Version: {0}", fileVersionInfo.FileVersion);
+            System.Console.WriteLine("Version: {0}", fileVersion);
             System.Console.WriteLine("UpdateDate: {0}", updateDate);
 
             var update = new Core.ApplicationUpdate
             {
-                Version = fileVersionInfo.FileVersion,
+                Version = fileVersion.ToString(),
                 UpdateDate = updateDate
             };
             update.UpdateFiles = EnumerateUpdateFiles(update.Version, args).ToList();
