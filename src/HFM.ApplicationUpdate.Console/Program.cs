@@ -50,11 +50,12 @@ namespace HFM.ApplicationUpdate.Console
 
                 var fileInfo = new FileInfo(path);
 
+                string cleanName = CleanFileName(fileInfo.Name);
                 var updateFile = new ApplicationUpdateFile
                 {
-                    Name = fileInfo.Name,
+                    Name = cleanName,
                     Description = description,
-                    HttpAddress = BuildGitHubHttpAddress(version, CleanFileName(fileInfo.Name)),
+                    HttpAddress = BuildGitHubHttpAddress(version, cleanName),
                     Size = (int)fileInfo.Length,
                     UpdateType = UpdateTypeFromExtension(fileInfo.Extension)
                 };
