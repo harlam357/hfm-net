@@ -54,7 +54,7 @@ namespace HFM.ApplicationUpdate.Console
                 {
                     Name = fileInfo.Name,
                     Description = description,
-                    HttpAddress = BuildGitHubHttpAddress(version, fileInfo.Name),
+                    HttpAddress = BuildGitHubHttpAddress(version, fileInfo.Name.Replace(' ', '.')),
                     Size = (int)fileInfo.Length,
                     UpdateType = UpdateTypeFromExtension(fileInfo.Extension)
                 };
