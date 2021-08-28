@@ -90,12 +90,12 @@ namespace HFM.Core.Services
 
         public static DefaultLocalProcess Start(string fileName)
         {
-            return new DefaultLocalProcess(Process.Start(fileName));
+            return new DefaultLocalProcess(Process.Start(new ProcessStartInfo(fileName) { UseShellExecute = true }));
         }
 
         public static DefaultLocalProcess Start(string fileName, string arguments)
         {
-            return new DefaultLocalProcess(Process.Start(fileName, arguments));
+            return new DefaultLocalProcess(Process.Start(new ProcessStartInfo(fileName, arguments) { UseShellExecute = true }));
         }
     }
 
