@@ -88,9 +88,9 @@ namespace HFM.Forms.Controls
                 NextAttemptTextBox.Text = item.NextAttempt.ToString();
                 var protein = _proteinService.Get(item.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
-                AssignedTextBox.Text = FormatAssignedAsLocalDateTime(item.Assigned);
-                TimeoutTextBox.Text = FormatAssignedAsLocalDateTime(item.Timeout);
-                ExpirationTextBox.Text = FormatAssignedAsLocalDateTime(item.Deadline);
+                AssignedTextBox.Text = FormatAsLocalDateTime(item.Assigned);
+                TimeoutTextBox.Text = FormatAsLocalDateTime(item.Timeout);
+                ExpirationTextBox.Text = FormatAsLocalDateTime(item.Deadline);
                 WorkServerTextBox.Text = item.WorkServer;
                 CollectServerTextBox.Text = item.CollectionServer;
                 OSTextBox.Text = item.OperatingSystem;
@@ -108,7 +108,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private static string FormatAssignedAsLocalDateTime(DateTime value)
+        private static string FormatAsLocalDateTime(DateTime value)
         {
             if (value == DateTime.MinValue)
             {
@@ -129,30 +129,20 @@ namespace HFM.Forms.Controls
                 cboQueueIndex.SelectedIndex = 0;
             }
 
-            StatusTextBox.Visible = visible;
-            WaitingOnTextBox.Visible = visible;
-            AttemptsTextBox.Visible = visible;
-            NextAttemptTextBox.Visible = visible;
-            BaseCreditTextBox.Visible = visible;
-            AssignedTextBox.Visible = visible;
-            WorkServerTextBox.Visible = visible;
-            OSTextBox.Visible = visible;
-            MemoryTextBox.Visible = visible;
-            CPUThreadsTextBox.Visible = visible;
-
-            if (visible == false)
+            foreach (var c in tableLayoutPanel1.Controls)
             {
-                tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = 0;
+                if (c is TextBox textBox)
+                {
+                    textBox.Visible = visible;
+                }
             }
-            else
-            {
-                bool slotTypeIsCPU = _slotType == SlotType.CPU;
 
-                CPUThreadsTextBox.Visible = slotTypeIsCPU;
-                tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = slotTypeIsCPU
-                    ? DefaultRowHeight
-                    : 0;
-            }
+            bool cpuThreadsIsVisible = visible && _slotType == SlotType.CPU;
+
+            CPUThreadsTextBox.Visible = cpuThreadsIsVisible;
+            tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = cpuThreadsIsVisible
+                ? DefaultRowHeight
+                : 0;
         }
     }
 
