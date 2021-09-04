@@ -11,7 +11,7 @@ namespace HFM.Preferences
             yield return new PreferenceUpgrade
             {
                 Version = new Version(0, 9, 13),
-                Action = data => data.ApplicationSettings.ProjectDownloadUrl = "https://apps.foldingathome.org/psummary.json"
+                Action = data => data.ApplicationSettings.ProjectDownloadUrl = Data.ApplicationSettings.DefaultProjectDownloadUrl
             };
 
             yield return new PreferenceUpgrade

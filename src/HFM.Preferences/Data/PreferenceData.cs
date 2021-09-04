@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
@@ -9,6 +8,8 @@ namespace HFM.Preferences.Data
     [DataContract(Namespace = "")]
     public class ApplicationSettings
     {
+        public const string DefaultProjectDownloadUrl = "https://apps.foldingathome.org/psummary.json";
+
         public ApplicationSettings()
         {
             CacheFolder = "logcache";
@@ -19,7 +20,7 @@ namespace HFM.Preferences.Data
             //BonusCalculation = null;
             LogFileViewer = "notepad.exe";
             FileExplorer = "explorer.exe";
-            ProjectDownloadUrl = "https://apps.foldingathome.org/psummary.json";
+            ProjectDownloadUrl = DefaultProjectDownloadUrl;
             DuplicateProjectCheck = true;
         }
 
