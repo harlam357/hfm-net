@@ -111,7 +111,7 @@ namespace HFM.Forms.Views
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.queueControl = new HFM.Forms.Controls.QueueControl();
+            this.queueControl = new HFM.Forms.Controls.WorkUnitQueueControl();
             this.btnQueue = new System.Windows.Forms.Button();
             this.txtLogFile = new HFM.Forms.Controls.LogLineRichTextBox();
             this.statsContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -1111,7 +1111,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripMenuItem mnuWebRefreshUserStats;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Button btnQueue;
-        private QueueControl queueControl;
+        private WorkUnitQueueControl queueControl;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpHfmGroup;
         private System.Windows.Forms.ToolStripMenuItem mnuViewToggleCompletedCountStyle;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpCheckForUpdate;

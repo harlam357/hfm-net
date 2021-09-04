@@ -1,6 +1,6 @@
 ﻿namespace HFM.Forms.Controls
 {
-    partial class QueueControl
+    partial class WorkUnitQueueControl
     {
         /// <summary> 
         /// Required designer variable.

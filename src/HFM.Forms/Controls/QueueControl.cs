@@ -9,8 +9,7 @@ using HFM.Core.WorkUnits;
 
 namespace HFM.Forms.Controls
 {
-    // TODO: Rename to WorkUnitQueueControl
-    public sealed partial class QueueControl : UserControl
+    public sealed partial class WorkUnitQueueControl : UserControl
     {
         private const int CPUThreadsIndex = 11;
 
@@ -23,7 +22,7 @@ namespace HFM.Forms.Controls
 
         private const int DefaultRowHeight = 23;
 
-        public QueueControl()
+        public WorkUnitQueueControl()
         {
             InitializeComponent();
         }
