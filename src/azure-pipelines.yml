@@ -122,9 +122,9 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          $netFrameworkMsi = "Artifacts\$(netFramework)\Packages\HFM $Global:Version.msi"
-          $netFrameworkZip = "Artifacts\$(netFramework)\Packages\HFM $Global:Version.zip"
-          $dotnetWindowsZip = "Artifacts\$(dotnetWindows)\Packages\HFM $Global:Version ($(dotnetWindows)).zip"
+          $netFrameworkMsi = "Artifacts\$(netFramework)\Packages\HFM.$Global:Version.msi"
+          $netFrameworkZip = "Artifacts\$(netFramework)\Packages\HFM.$Global:Version.zip"
+          $dotnetWindowsZip = "Artifacts\$(dotnetWindows)\Packages\HFM.$Global:Version.$(dotnetWindows).zip"
           .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$(dotnet)\hfm-app-update.exe $netFrameworkMsi "Windows Installer" $netFrameworkZip "Zip Archive" $dotnetWindowsZip "Zip Archive ($(dotnetWindows))"
           Copy-Item 'ApplicationUpdate.xml' 'Artifacts\ApplicationUpdate.xml' -Verbose
         workingDirectory: '.\src'
