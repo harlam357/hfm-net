@@ -245,14 +245,14 @@ Function Build-Zip
     Add-Type -assembly "System.IO.Compression.FileSystem"
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
 
-    $zipName = "$NetFrameworkArtifactsPackages\HFM $Version.zip"
+    $zipName = "$NetFrameworkArtifactsPackages\HFM.$Version.zip"
     if ($localVerbose) {
         Write-Verbose "Packing as $zipName"
         Get-ChildItem $NetFrameworkArtifactsBin -File -Recurse | Select FullName
     }
     [IO.Compression.ZipFile]::CreateFromDirectory($NetFrameworkArtifactsBin, $zipName) 
 
-    $zipName = "$DotNetWindowsArtifactsPackages\HFM $Version ($DotNetWindows).zip"
+    $zipName = "$DotNetWindowsArtifactsPackages\HFM.$Version.$DotNetWindows.zip"
     if ($localVerbose) {
         Write-Verbose "Packing as $zipName"
         Get-ChildItem $DotNetWindowsArtifactsBin -File -Recurse | Select FullName
@@ -296,7 +296,7 @@ Function Deploy-Msi
 
     $localVerbose = $PSBoundParameters["Verbose"].IsPresent -eq $true
 
-    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$NetFrameworkArtifactsPackages\HFM $Version.msi" -ErrorAction Stop -Verbose:$localVerbose
+    Copy-Item -Path "HFM.Setup\bin\$Configuration\HFM.Setup.msi" -Destination "$NetFrameworkArtifactsPackages\HFM.$Version.msi" -ErrorAction Stop -Verbose:$localVerbose
 }
 
 Function Configure-Artifacts
