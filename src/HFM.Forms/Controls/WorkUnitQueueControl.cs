@@ -76,9 +76,9 @@ namespace HFM.Forms.Controls
                 ExpirationTextBox.Text = FormatAsLocalDateTime(item.Deadline);
                 WorkServerTextBox.Text = item.WorkServer;
                 CollectServerTextBox.Text = item.CollectionServer;
-                OSTextBox.Text = item.OperatingSystem;
-                MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
-                CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
+                OSTextBox.Text = _workUnitQueue.OperatingSystem;
+                MemoryTextBox.Text = _workUnitQueue.Memory.ToString(CultureInfo.CurrentCulture);
+                CPUThreadsTextBox.Text = _workUnitQueue.CPUThreads.ToString(CultureInfo.CurrentCulture);
             }
             else
             {

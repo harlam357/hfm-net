@@ -61,6 +61,14 @@ namespace HFM.Core.Client
         public string CollectionServer { get; set; }
 
         /// <summary>
+        /// Get or sets the slot ID where this work unit is assigned.
+        /// </summary>
+        public int SlotID { get; set; }
+    }
+
+    public class WorkUnitQueueItemCollection : QueueItemCollection<WorkUnitQueueItem>
+    {
+        /// <summary>
         /// Gets or sets the name of the operating system that is processing this work unit.
         /// </summary>
         public string OperatingSystem { get; set; }
@@ -74,15 +82,5 @@ namespace HFM.Core.Client
         /// Gets or sets the number of CPU threads.
         /// </summary>
         public int CPUThreads { get; set; }
-
-        /// <summary>
-        /// Get or sets the slot ID where this work unit is assigned.
-        /// </summary>
-        public int SlotID { get; set; }
-    }
-
-    public class WorkUnitQueueItemCollection : QueueItemCollection<WorkUnitQueueItem>
-    {
-
     }
 }

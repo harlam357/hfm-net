@@ -40,13 +40,6 @@ namespace HFM.Core.Client
                 wui.Deadline = unit.DeadlineDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
                 wui.CollectionServer = unit.CollectionServer;
-                if (_info != null)
-                {
-                    wui.OperatingSystem = _info.OS;
-                    // Memory Value is in Gigabytes - turn into Megabytes and truncate
-                    wui.Memory = (int)(_info.MemoryValue.GetValueOrDefault() * 1024);
-                    wui.CPUThreads = _info.CPUs.GetValueOrDefault();
-                }
                 wui.SlotID = slotID;
 
                 collection.Add(wui);
@@ -54,6 +47,13 @@ namespace HFM.Core.Client
                 {
                     collection.CurrentID = wui.ID;
                 }
+            }
+            if (_info != null)
+            {
+                collection.OperatingSystem = _info.OS;
+                // Memory Value is in Gigabytes - turn into Megabytes and truncate
+                collection.Memory = (int)(_info.MemoryValue.GetValueOrDefault() * 1024);
+                collection.CPUThreads = _info.CPUs.GetValueOrDefault();
             }
 
             if (collection.CurrentID == WorkUnitQueueItemCollection.NoID)

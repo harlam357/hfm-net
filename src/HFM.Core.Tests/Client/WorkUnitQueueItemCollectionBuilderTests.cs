@@ -106,9 +106,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2020, 1, 3), item.Deadline);
             Assert.AreEqual("1.2.3.4", item.WorkServer);
             Assert.AreEqual("10.20.30.40", item.CollectionServer);
-            Assert.AreEqual("Windows", item.OperatingSystem);
-            Assert.AreEqual(16384, item.Memory);
-            Assert.AreEqual(4, item.CPUThreads);
             Assert.AreEqual(0, item.SlotID);
 
             item = collection[1];
@@ -126,10 +123,11 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2020, 2, 4), item.Deadline);
             Assert.AreEqual("2.3.4.5", item.WorkServer);
             Assert.AreEqual("20.30.40.50", item.CollectionServer);
-            Assert.AreEqual("Windows", item.OperatingSystem);
-            Assert.AreEqual(16384, item.Memory);
-            Assert.AreEqual(4, item.CPUThreads);
             Assert.AreEqual(0, item.SlotID);
+
+            Assert.AreEqual("Windows", collection.OperatingSystem);
+            Assert.AreEqual(16384, collection.Memory);
+            Assert.AreEqual(4, collection.CPUThreads);
         }
 
         [Test]
@@ -155,10 +153,11 @@ namespace HFM.Core.Client
             Assert.AreEqual(new DateTime(2020, 3, 5), item.Deadline);
             Assert.AreEqual("3.4.5.6", item.WorkServer);
             Assert.AreEqual("30.40.50.60", item.CollectionServer);
-            Assert.AreEqual("Windows", item.OperatingSystem);
-            Assert.AreEqual(16384, item.Memory);
-            Assert.AreEqual(4, item.CPUThreads);
             Assert.AreEqual(1, item.SlotID);
+
+            Assert.AreEqual("Windows", collection.OperatingSystem);
+            Assert.AreEqual(16384, collection.Memory);
+            Assert.AreEqual(4, collection.CPUThreads);
         }
 
         private static UnitCollection CreateUnitCollection()
