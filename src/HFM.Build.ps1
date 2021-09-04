@@ -236,7 +236,6 @@ Function Build-Zip
     Write-Host "---------------------------------------------------"
     Write-Host "Building Zip Package"
     Write-Host " Version: $Version"
-    Write-Host " TargetFramework: $TargetFramework"
     Write-Host " NetFrameworkArtifactsBin: $NetFrameworkArtifactsBin"
     Write-Host " NetFrameworkArtifactsPackages: $NetFrameworkArtifactsPackages"
     Write-Host " DotNetWindowsArtifactsBin: $DotNetWindowsArtifactsBin"
