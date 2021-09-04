@@ -7,20 +7,20 @@ using System.Windows.Forms;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
+using Unknown = HFM.Core.Unknown;
+
 namespace HFM.Forms.Controls
 {
     public sealed partial class WorkUnitQueueControl : UserControl
     {
+        public IProteinService ProteinService { get; set; }
+
         private SlotType _slotType = SlotType.Unknown;
 
         public WorkUnitQueueControl()
         {
             InitializeComponent();
         }
-
-        private IProteinService _proteinService;
-
-        public void SetProteinService(IProteinService proteinService) => _proteinService = proteinService;
 
         private WorkUnitQueueItemCollection _workUnitQueue;
 
@@ -70,10 +70,10 @@ namespace HFM.Forms.Controls
 
                 WorkUnitQueueItem item = _workUnitQueue[(int)cboQueueIndex.SelectedValue];
                 StatusTextBox.Text = item.State;
-                WaitingOnTextBox.Text = String.IsNullOrEmpty(item.WaitingOn) ? "(No Action)" : item.WaitingOn;
-                AttemptsTextBox.Text = item.Attempts.ToString();
-                NextAttemptTextBox.Text = item.NextAttempt.ToString();
-                var protein = _proteinService.Get(item.ProjectID);
+                WaitingOnTextBox.Text = item.WaitingOn;
+                AttemptsTextBox.Text = item.Attempts.ToString(CultureInfo.CurrentCulture);
+                NextAttemptTextBox.Text = FormatNextAttempt(item.NextAttempt);
+                var protein = ProteinService.Get(item.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
                 AssignedTextBox.Text = FormatAsLocalDateTime(item.Assigned);
                 TimeoutTextBox.Text = FormatAsLocalDateTime(item.Timeout);
@@ -90,11 +90,13 @@ namespace HFM.Forms.Controls
             }
         }
 
+        private static string FormatNextAttempt(TimeSpan value) => value == TimeSpan.Zero ? Unknown.Value : value.ToString();
+
         private static string FormatAsLocalDateTime(DateTime value)
         {
             if (value == DateTime.MinValue)
             {
-                return "(Unknown)";
+                return Unknown.Value;
             }
 
             var localTime = value.ToLocalTime();

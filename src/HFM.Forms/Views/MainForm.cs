@@ -42,7 +42,7 @@ namespace HFM.Forms.Views
             SubscribeToWebMenuControlEvents();
             SubscribeToNotifyIconMenuControlEvents();
             SubscribeToUserStatsContextMenuControlEvents();
-            queueControl.SetProteinService(_presenter.ProteinService);
+            queueControl.ProteinService = _presenter.ProteinService;
             base.Text = $@"{Core.Application.Name} v{Core.Application.Version}";
 #if NET5_0
             base.Text += " (dotnet)";
