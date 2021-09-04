@@ -13,8 +13,6 @@ namespace HFM.Forms.Controls
     {
         private const int CPUThreadsIndex = 14;
 
-        public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
-
         private WorkUnitQueueItemCollection _workUnitQueue;
         private IProteinService _proteinService;
 
@@ -30,11 +28,6 @@ namespace HFM.Forms.Controls
         public void SetProteinService(IProteinService proteinService)
         {
             _proteinService = proteinService;
-        }
-
-        private void OnQueueIndexChanged(QueueIndexChangedEventArgs e)
-        {
-            QueueIndexChanged?.Invoke(this, e);
         }
 
         public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
@@ -96,15 +89,10 @@ namespace HFM.Forms.Controls
                 OSTextBox.Text = item.OperatingSystem;
                 MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
                 CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
-
-                OnQueueIndexChanged(new QueueIndexChangedEventArgs((int)cboQueueIndex.SelectedValue));
             }
             else
             {
-                // hide controls and display queue not available message
                 SetControlsVisible(false);
-
-                OnQueueIndexChanged(new QueueIndexChangedEventArgs(-1));
             }
         }
 
@@ -143,16 +131,6 @@ namespace HFM.Forms.Controls
             tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = cpuThreadsIsVisible
                 ? DefaultRowHeight
                 : 0;
-        }
-    }
-
-    public class QueueIndexChangedEventArgs : EventArgs
-    {
-        public int Index { get; }
-
-        public QueueIndexChangedEventArgs(int index)
-        {
-            Index = index;
         }
     }
 }
