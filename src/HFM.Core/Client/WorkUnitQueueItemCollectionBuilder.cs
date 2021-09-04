@@ -36,7 +36,10 @@ namespace HFM.Core.Client
                 wui.Attempts = unit.Attempts.GetValueOrDefault();
                 wui.NextAttempt = unit.NextAttemptTimeSpan.GetValueOrDefault();
                 wui.Assigned = unit.AssignedDateTime.GetValueOrDefault();
+                wui.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
+                wui.Deadline = unit.DeadlineDateTime.GetValueOrDefault();
                 wui.WorkServer = unit.WorkServer;
+                wui.CollectionServer = unit.CollectionServer;
                 if (_info != null)
                 {
                     wui.OperatingSystem = _info.OS;

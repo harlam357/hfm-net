@@ -49,10 +49,16 @@ namespace HFM.Core.Client
         /// </summary>
         public DateTime Assigned { get; set; }
 
+        public DateTime Timeout { get; set; }
+
+        public DateTime Deadline { get; set; }
+
         /// <summary>
         /// Get or sets the work server IP address.
         /// </summary>
         public string WorkServer { get; set; }
+
+        public string CollectionServer { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the operating system that is processing this work unit.

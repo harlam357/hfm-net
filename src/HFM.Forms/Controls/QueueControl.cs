@@ -11,7 +11,7 @@ namespace HFM.Forms.Controls
 {
     public sealed partial class WorkUnitQueueControl : UserControl
     {
-        private const int CPUThreadsIndex = 11;
+        private const int CPUThreadsIndex = 14;
 
         public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
 
@@ -89,7 +89,10 @@ namespace HFM.Forms.Controls
                 var protein = _proteinService.Get(item.ProjectID);
                 BaseCreditTextBox.Text = protein != null ? protein.Credit.ToString(CultureInfo.CurrentCulture) : "0";
                 AssignedTextBox.Text = FormatAssignedAsLocalDateTime(item.Assigned);
+                TimeoutTextBox.Text = FormatAssignedAsLocalDateTime(item.Timeout);
+                ExpirationTextBox.Text = FormatAssignedAsLocalDateTime(item.Deadline);
                 WorkServerTextBox.Text = item.WorkServer;
+                CollectServerTextBox.Text = item.CollectionServer;
                 OSTextBox.Text = item.OperatingSystem;
                 MemoryTextBox.Text = item.Memory.ToString(CultureInfo.CurrentCulture);
                 CPUThreadsTextBox.Text = item.CPUThreads.ToString(CultureInfo.CurrentCulture);
