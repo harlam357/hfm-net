@@ -102,7 +102,10 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, item.Attempts);
             Assert.AreEqual(TimeSpan.FromMinutes(1), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 1, 1), item.Assigned);
+            Assert.AreEqual(new DateTime(2020, 1, 2), item.Timeout);
+            Assert.AreEqual(new DateTime(2020, 1, 3), item.Deadline);
             Assert.AreEqual("1.2.3.4", item.WorkServer);
+            Assert.AreEqual("10.20.30.40", item.CollectionServer);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);
@@ -119,7 +122,10 @@ namespace HFM.Core.Client
             Assert.AreEqual(2, item.Attempts);
             Assert.AreEqual(TimeSpan.FromMinutes(2), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 2, 2), item.Assigned);
+            Assert.AreEqual(new DateTime(2020, 2, 3), item.Timeout);
+            Assert.AreEqual(new DateTime(2020, 2, 4), item.Deadline);
             Assert.AreEqual("2.3.4.5", item.WorkServer);
+            Assert.AreEqual("20.30.40.50", item.CollectionServer);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);
@@ -145,7 +151,10 @@ namespace HFM.Core.Client
             Assert.AreEqual(3, item.Attempts);
             Assert.AreEqual(TimeSpan.FromMinutes(3), item.NextAttempt);
             Assert.AreEqual(new DateTime(2020, 3, 3), item.Assigned);
+            Assert.AreEqual(new DateTime(2020, 3, 4), item.Timeout);
+            Assert.AreEqual(new DateTime(2020, 3, 5), item.Deadline);
             Assert.AreEqual("3.4.5.6", item.WorkServer);
+            Assert.AreEqual("30.40.50.60", item.CollectionServer);
             Assert.AreEqual("Windows", item.OperatingSystem);
             Assert.AreEqual(16384, item.Memory);
             Assert.AreEqual(4, item.CPUThreads);
@@ -168,7 +177,10 @@ namespace HFM.Core.Client
             unit.Attempts = 1;
             unit.NextAttemptTimeSpan = TimeSpan.FromMinutes(1);
             unit.AssignedDateTime = new DateTime(2020, 1, 1);
+            unit.TimeoutDateTime = new DateTime(2020, 1, 2);
+            unit.DeadlineDateTime = new DateTime(2020, 1, 3);
             unit.WorkServer = "1.2.3.4";
+            unit.CollectionServer = "10.20.30.40";
             collection.Add(unit);
 
             unit = new Unit();
@@ -183,7 +195,10 @@ namespace HFM.Core.Client
             unit.Attempts = 2;
             unit.NextAttemptTimeSpan = TimeSpan.FromMinutes(2);
             unit.AssignedDateTime = new DateTime(2020, 2, 2);
+            unit.TimeoutDateTime = new DateTime(2020, 2, 3);
+            unit.DeadlineDateTime = new DateTime(2020, 2, 4);
             unit.WorkServer = "2.3.4.5";
+            unit.CollectionServer = "20.30.40.50";
             collection.Add(unit);
 
             unit = new Unit();
@@ -198,7 +213,10 @@ namespace HFM.Core.Client
             unit.Attempts = 3;
             unit.NextAttemptTimeSpan = TimeSpan.FromMinutes(3);
             unit.AssignedDateTime = new DateTime(2020, 3, 3);
+            unit.TimeoutDateTime = new DateTime(2020, 3, 4);
+            unit.DeadlineDateTime = new DateTime(2020, 3, 5);
             unit.WorkServer = "3.4.5.6";
+            unit.CollectionServer = "30.40.50.60";
             collection.Add(unit);
 
             return collection;
