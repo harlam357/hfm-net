@@ -25,10 +25,7 @@ namespace HFM.Forms.Controls
             InitializeComponent();
         }
 
-        public void SetProteinService(IProteinService proteinService)
-        {
-            _proteinService = proteinService;
-        }
+        public void SetProteinService(IProteinService proteinService) => _proteinService = proteinService;
 
         public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
         {
@@ -44,7 +41,7 @@ namespace HFM.Forms.Controls
                 _slotType = slotType;
 
                 cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
-                cboQueueIndex.DataSource = CreateEntryNameCollection(_workUnitQueue);
+                cboQueueIndex.DataSource = CreateListItemCollection(_workUnitQueue);
                 cboQueueIndex.DisplayMember = nameof(ListItem.DisplayMember);
                 cboQueueIndex.ValueMember = nameof(ListItem.ValueMember);
                 cboQueueIndex.SelectedIndex = -1;
@@ -54,7 +51,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private static ICollection<ListItem> CreateEntryNameCollection(WorkUnitQueueItemCollection workUnitQueue)
+        private static ICollection<ListItem> CreateListItemCollection(WorkUnitQueueItemCollection workUnitQueue)
         {
             return workUnitQueue
                 .Select(x => new ListItem(FormatDisplay(x), x.ID))
@@ -68,7 +65,7 @@ namespace HFM.Forms.Controls
 
         private void cboQueueIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_workUnitQueue == null) return;
+            if (_workUnitQueue is null) return;
 
             if (cboQueueIndex.SelectedIndex > -1)
             {
