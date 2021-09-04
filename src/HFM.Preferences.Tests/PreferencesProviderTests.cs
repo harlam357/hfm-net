@@ -96,7 +96,9 @@ namespace HFM.Preferences
         public void XmlPreferencesProvider_Load_ExecutesProjectDownloadUrlUpgrade()
         {
             // Arrange
-            var prefs = new TestPreferenceUpgradeXmlPreferencesProvider(ApplicationVersion, null);
+            var data = new PreferenceData { ApplicationVersion = NoApplicationVersion };
+            data.ApplicationSettings.ProjectDownloadUrl = null;
+            var prefs = new TestPreferenceUpgradeXmlPreferencesProvider(ApplicationVersion, data);
             // Act
             prefs.Load();
             // Assert
@@ -135,6 +137,21 @@ namespace HFM.Preferences
                 "05,44,True,5"
             };
             CollectionAssert.AreEqual(expected, prefs.Get<ICollection<string>>(Preference.FormColumns));
+        }
+
+        [Test]
+        public void XmlPreferencesProvider_Load_ExecutesQueueSplitterLocationUpgrade()
+        {
+            // Arrange
+            var data = new PreferenceData { ApplicationVersion = NoApplicationVersion };
+            data.MainWindowState.QueueSplitterLocation = 0;
+            var prefs = new TestPreferenceUpgradeXmlPreferencesProvider(ApplicationVersion, data);
+            // Act
+            prefs.Load();
+            // Assert
+            Assert.AreEqual(ApplicationVersion, prefs.ApplicationVersion);
+            Assert.AreEqual(ApplicationVersion, prefs.Get<string>(Preference.ApplicationVersion));
+            Assert.AreEqual(289, prefs.Get<int>(Preference.QueueSplitterLocation));
         }
 
         private class TestPreferenceUpgradeXmlPreferencesProvider : XmlPreferencesProvider

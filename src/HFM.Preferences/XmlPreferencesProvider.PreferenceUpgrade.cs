@@ -19,6 +19,12 @@ namespace HFM.Preferences
                 Version = new Version(9, 25),
                 Action = data => data.MainWindowGrid.Columns = InsertGridColumn(data.MainWindowGrid.Columns, 4)
             };
+
+            yield return new PreferenceUpgrade
+            {
+                Version = new Version(9, 26),
+                Action = data => data.MainWindowState.QueueSplitterLocation = Data.MainWindowState.DefaultQueueSplitterLocation
+            };
         }
 
         private static List<string> InsertGridColumn(IEnumerable<string> columns, int insertIndex)

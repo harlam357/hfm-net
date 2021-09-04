@@ -108,6 +108,7 @@ namespace HFM.Preferences
             prefs.Add(Preference.FormLogWindowHeight, p => p.MainWindowState.LogWindowHeight);
             prefs.Add(Preference.FormLogWindowVisible, p => p.MainWindowState.LogWindowVisible);
             prefs.Add(Preference.QueueWindowVisible, p => p.MainWindowState.QueueWindowVisible);
+            prefs.Add(Preference.QueueSplitterLocation, p => p.MainWindowState.QueueSplitterLocation);
             prefs.Add(Preference.TimeFormatting, p => p.MainWindowGridProperties.TimeFormatting);
             prefs.Add(Preference.UnitTotals, p => p.MainWindowGridProperties.UnitTotals);
             prefs.Add(Preference.DisplayVersions, p => p.MainWindowGridProperties.DisplayVersions);

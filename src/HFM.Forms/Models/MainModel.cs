@@ -28,6 +28,7 @@ namespace HFM.Forms.Models
             FormLogWindowHeight = Preferences.Get<int>(Preference.FormLogWindowHeight);
             FormSplitterLocation = Preferences.Get<int>(Preference.FormSplitterLocation);
             QueueWindowVisible = Preferences.Get<bool>(Preference.QueueWindowVisible);
+            QueueSplitterLocation = Preferences.Get<int>(Preference.QueueSplitterLocation);
             FollowLog = Preferences.Get<bool>(Preference.FollowLog);
             FormColumns.Reset(Preferences.Get<ICollection<string>>(Preference.FormColumns));
 
@@ -68,6 +69,7 @@ namespace HFM.Forms.Models
             Preferences.Set(Preference.FormLogWindowHeight, FormLogWindowHeight);
             Preferences.Set(Preference.FormSplitterLocation, FormSplitterLocation);
             Preferences.Set(Preference.QueueWindowVisible, QueueWindowVisible);
+            Preferences.Set(Preference.QueueSplitterLocation, QueueSplitterLocation);
             Preferences.Set(Preference.FollowLog, FollowLog);
             Preferences.Set(Preference.FormColumns, FormColumns);
 
@@ -157,6 +159,21 @@ namespace HFM.Forms.Models
                 if (_queueWindowVisible != value)
                 {
                     _queueWindowVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private int _queueWindowLocation;
+
+        public int QueueSplitterLocation
+        {
+            get => _queueWindowLocation;
+            set
+            {
+                if (_queueWindowLocation != value)
+                {
+                    _queueWindowLocation = value;
                     OnPropertyChanged();
                 }
             }

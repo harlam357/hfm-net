@@ -13,6 +13,7 @@
         FormLogWindowHeight,
         FormLogWindowVisible,
         QueueWindowVisible,
+        QueueSplitterLocation,
         TimeFormatting,
         UnitTotals,
         DisplayVersions,

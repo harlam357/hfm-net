@@ -241,11 +241,14 @@ namespace HFM.Preferences.Data
     [DataContract(Namespace = "")]
     public class MainWindowState
     {
+        public const int DefaultQueueSplitterLocation = 289;
+
         public MainWindowState()
         {
             //LogWindowVisible = false;
             LogWindowHeight = 360;
             QueueWindowVisible = true;
+            QueueSplitterLocation = DefaultQueueSplitterLocation;
             SplitterLocation = 360;
         }
 
@@ -257,6 +260,9 @@ namespace HFM.Preferences.Data
 
         [DataMember]
         public bool QueueWindowVisible { get; set; }
+
+        [DataMember]
+        public int QueueSplitterLocation { get; set; }
 
         [DataMember]
         public int SplitterLocation { get; set; }

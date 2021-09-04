@@ -25,6 +25,7 @@ namespace HFM.Forms.Models
             preferences.Set(Preference.FormLogWindowHeight, 11);
             preferences.Set(Preference.FormSplitterLocation, 31);
             preferences.Set(Preference.QueueWindowVisible, true);
+            preferences.Set(Preference.QueueSplitterLocation, 200);
             preferences.Set(Preference.FollowLog, true);
             preferences.Set(Preference.FormColumns, new List<string> { "A", "B", "C" });
             preferences.Set(Preference.MinimizeTo, MinimizeToOption.Both);
@@ -38,6 +39,7 @@ namespace HFM.Forms.Models
             Assert.AreEqual(11, model.FormLogWindowHeight);
             Assert.AreEqual(31, model.FormSplitterLocation);
             Assert.AreEqual(true, model.QueueWindowVisible);
+            Assert.AreEqual(200, model.QueueSplitterLocation);
             Assert.AreEqual(true, model.FollowLog);
             CollectionAssert.AreEqual(new List<string> { "A", "B", "C" }, model.FormColumns);
             Assert.AreEqual(MinimizeToOption.Both, model.MinimizeTo);
@@ -82,6 +84,7 @@ namespace HFM.Forms.Models
             model.FormLogWindowHeight = 11;
             model.FormSplitterLocation = 31;
             model.QueueWindowVisible = true;
+            model.QueueSplitterLocation = 200;
             model.FollowLog = true;
             model.FormColumns.Reset(new List<string> { "A", "B", "C" });
             // Act
@@ -93,6 +96,7 @@ namespace HFM.Forms.Models
             Assert.AreEqual(11, preferences.Get<int>(Preference.FormLogWindowHeight));
             Assert.AreEqual(31, preferences.Get<int>(Preference.FormSplitterLocation));
             Assert.AreEqual(true, preferences.Get<bool>(Preference.QueueWindowVisible));
+            Assert.AreEqual(200, preferences.Get<int>(Preference.QueueSplitterLocation));
             Assert.AreEqual(true, preferences.Get<bool>(Preference.FollowLog));
             CollectionAssert.AreEqual(new List<string> { "A", "B", "C" }, preferences.Get<ICollection<string>>(Preference.FormColumns));
         }

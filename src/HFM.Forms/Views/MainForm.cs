@@ -83,6 +83,13 @@ namespace HFM.Forms.Views
                 }
                 splitContainer1.SplitterDistance = model.FormSplitterLocation;
                 splitContainer1.SplitterMoved += (s, e) => model.FormSplitterLocation = splitContainer1.SplitterDistance;
+                splitContainer2.SplitterMoved += (s, e) =>
+                {
+                    if (queueControl.Visible)
+                    {
+                        model.QueueSplitterLocation = splitContainer2.SplitterDistance;
+                    }
+                };
             }
 
             if (!model.FormLogWindowVisible)
@@ -159,13 +166,13 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void ShowHideQueue(bool show)
+        private void ShowHideQueue(bool show, int? splitterDistance = null)
         {
             if (show)
             {
                 queueControl.Visible = true;
                 btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
-                splitContainer2.SplitterDistance = 289;
+                splitContainer2.SplitterDistance = splitterDistance.GetValueOrDefault(289);
             }
             else
             {
@@ -184,7 +191,7 @@ namespace HFM.Forms.Views
                     ShowHideLogWindow(model.FormLogWindowVisible);
                     break;
                 case nameof(MainModel.QueueWindowVisible):
-                    ShowHideQueue(model.QueueWindowVisible);
+                    ShowHideQueue(model.QueueWindowVisible, model.QueueSplitterLocation);
                     break;
                 case nameof(MainModel.NotifyIconVisible):
                     if (_notifyIcon != null)
