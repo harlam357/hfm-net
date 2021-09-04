@@ -161,17 +161,17 @@ namespace HFM.Forms.Views
 
         private void ShowHideQueue(bool show)
         {
-            if (!show)
-            {
-                queueControl.Visible = false;
-                btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
-                splitContainer2.SplitterDistance = 32;
-            }
-            else
+            if (show)
             {
                 queueControl.Visible = true;
                 btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "H{0}i{0}d{0}e{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
                 splitContainer2.SplitterDistance = 289;
+            }
+            else
+            {
+                queueControl.Visible = false;
+                btnQueue.Text = String.Format(CultureInfo.CurrentCulture, "S{0}h{0}o{0}w{0}{0}Q{0}u{0}e{0}u{0}e", Environment.NewLine);
+                splitContainer2.SplitterDistance = 32;
             }
         }
 
