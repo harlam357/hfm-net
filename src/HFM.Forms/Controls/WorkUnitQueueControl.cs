@@ -11,21 +11,18 @@ namespace HFM.Forms.Controls
 {
     public sealed partial class WorkUnitQueueControl : UserControl
     {
-        private const int CPUThreadsIndex = 14;
-
-        private WorkUnitQueueItemCollection _workUnitQueue;
-        private IProteinService _proteinService;
-
         private SlotType _slotType = SlotType.Unknown;
-
-        private const int DefaultRowHeight = 23;
 
         public WorkUnitQueueControl()
         {
             InitializeComponent();
         }
 
+        private IProteinService _proteinService;
+
         public void SetProteinService(IProteinService proteinService) => _proteinService = proteinService;
+
+        private WorkUnitQueueItemCollection _workUnitQueue;
 
         public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
         {
@@ -103,6 +100,9 @@ namespace HFM.Forms.Controls
             var localTime = value.ToLocalTime();
             return $"{localTime.ToShortDateString()} {localTime.ToShortTimeString()}";
         }
+
+        private const int CPUThreadsIndex = 14;
+        private const int DefaultRowHeight = 23;
 
         private void SetControlsVisible(bool visible)
         {
