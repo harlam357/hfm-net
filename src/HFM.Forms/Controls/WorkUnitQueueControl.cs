@@ -15,8 +15,6 @@ namespace HFM.Forms.Controls
     {
         public IProteinService ProteinService { get; set; }
 
-        private SlotType _slotType = SlotType.Unknown;
-
         public WorkUnitQueueControl()
         {
             InitializeComponent();
@@ -24,18 +22,16 @@ namespace HFM.Forms.Controls
 
         private WorkUnitQueueItemCollection _workUnitQueue;
 
-        public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
+        public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue)
         {
             if (workUnitQueue is null)
             {
                 _workUnitQueue = null;
-                _slotType = SlotType.Unknown;
                 SetControlsVisible(false);
             }
             else
             {
                 _workUnitQueue = workUnitQueue;
-                _slotType = slotType;
 
                 cboQueueIndex.SelectedIndexChanged -= cboQueueIndex_SelectedIndexChanged;
                 cboQueueIndex.DataSource = CreateListItemCollection(_workUnitQueue);
@@ -103,9 +99,6 @@ namespace HFM.Forms.Controls
             return $"{localTime.ToShortDateString()} {localTime.ToShortTimeString()}";
         }
 
-        private const int CPUThreadsIndex = 14;
-        private const int DefaultRowHeight = 23;
-
         private void SetControlsVisible(bool visible)
         {
             if (visible == false)
@@ -123,13 +116,6 @@ namespace HFM.Forms.Controls
                     textBox.Visible = visible;
                 }
             }
-
-            bool cpuThreadsIsVisible = visible && _slotType == SlotType.CPU;
-
-            CPUThreadsTextBox.Visible = cpuThreadsIsVisible;
-            tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = cpuThreadsIsVisible
-                ? DefaultRowHeight
-                : 0;
         }
     }
 }

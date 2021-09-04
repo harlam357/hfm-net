@@ -117,11 +117,10 @@ namespace HFM.Forms.Views
                 // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
                 var selectedSlot = gridModel.SelectedSlot;
                 var workUnitQueue = selectedSlot?.WorkUnitQueue;
-                var slotType = selectedSlot?.SlotType ?? SlotType.Unknown;
                 var logLines = selectedSlot?.CurrentLogLines?.ToList();
 
                 // run asynchronously so binding operation can finish
-                BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, slotType, logLines)));
+                BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
             };
 
             gridModel.PropertyChanged += (s, e) =>
@@ -134,11 +133,10 @@ namespace HFM.Forms.Views
                         // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
                         var selectedSlot = gridModel.SelectedSlot;
                         var workUnitQueue = selectedSlot?.WorkUnitQueue;
-                        var slotType = selectedSlot?.SlotType ?? SlotType.Unknown;
                         var logLines = selectedSlot?.CurrentLogLines?.ToList();
 
                         // run asynchronously so binding operation can finish
-                        BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, slotType, logLines)));
+                        BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
                         break;
                 }
             };
@@ -252,9 +250,9 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, SlotType slotType, IList<LogLine> logLines)
+        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, IList<LogLine> logLines)
         {
-            queueControl.SetWorkUnitQueue(workUnitQueue, slotType);
+            queueControl.SetWorkUnitQueue(workUnitQueue);
             txtLogFile.SetLogLines(selectedSlot, logLines);
             if (_presenter.Model.FollowLog)
             {

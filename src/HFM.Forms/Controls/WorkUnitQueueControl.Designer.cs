@@ -50,12 +50,13 @@
             this.WaitingOnTextBox = new System.Windows.Forms.TextBox();
             this.AttemptsTextBox = new System.Windows.Forms.TextBox();
             this.NextAttemptTextBox = new System.Windows.Forms.TextBox();
-            this.TimeoutLabel = new System.Windows.Forms.Label();
             this.ExpirationLabel = new System.Windows.Forms.Label();
             this.CollectServerLabel = new System.Windows.Forms.Label();
+            this.TimeoutLabel = new System.Windows.Forms.Label();
             this.TimeoutTextBox = new System.Windows.Forms.TextBox();
             this.ExpirationTextBox = new System.Windows.Forms.TextBox();
             this.CollectServerTextBox = new System.Windows.Forms.TextBox();
+            this.SystemInformationLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,16 +69,16 @@
             this.tableLayoutPanel1.Controls.Add(this.cboQueueIndex, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.StatusLabel, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.StatusTextBox, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 14);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsTextBox, 1, 16);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditLabel, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsLabel, 0, 14);
-            this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 13);
+            this.tableLayoutPanel1.Controls.Add(this.CPUThreadsLabel, 0, 16);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryTextBox, 1, 15);
             this.tableLayoutPanel1.Controls.Add(this.BaseCreditTextBox, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 12);
+            this.tableLayoutPanel1.Controls.Add(this.OSTextBox, 1, 14);
             this.tableLayoutPanel1.Controls.Add(this.AssignedLabel, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 13);
+            this.tableLayoutPanel1.Controls.Add(this.MemoryLabel, 0, 15);
             this.tableLayoutPanel1.Controls.Add(this.AssignedTextBox, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 12);
+            this.tableLayoutPanel1.Controls.Add(this.OSLabel, 0, 14);
             this.tableLayoutPanel1.Controls.Add(this.WorkServerLabel, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.WorkServerTextBox, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this.WaitingOnLabel, 0, 3);
@@ -92,11 +93,12 @@
             this.tableLayoutPanel1.Controls.Add(this.TimeoutTextBox, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.ExpirationTextBox, 1, 9);
             this.tableLayoutPanel1.Controls.Add(this.CollectServerTextBox, 1, 11);
+            this.tableLayoutPanel1.Controls.Add(this.SystemInformationLabel, 0, 13);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7, 5, 9, 5);
-            this.tableLayoutPanel1.RowCount = 16;
+            this.tableLayoutPanel1.RowCount = 18;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
@@ -108,12 +110,15 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 370);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(236, 390);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // cboQueueIndex
@@ -151,7 +156,7 @@
             // CPUThreadsTextBox
             // 
             this.CPUThreadsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CPUThreadsTextBox.Location = new System.Drawing.Point(100, 319);
+            this.CPUThreadsTextBox.Location = new System.Drawing.Point(100, 349);
             this.CPUThreadsTextBox.Name = "CPUThreadsTextBox";
             this.CPUThreadsTextBox.ReadOnly = true;
             this.CPUThreadsTextBox.Size = new System.Drawing.Size(124, 20);
@@ -172,7 +177,7 @@
             // 
             this.CPUThreadsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CPUThreadsLabel.AutoSize = true;
-            this.CPUThreadsLabel.Location = new System.Drawing.Point(10, 321);
+            this.CPUThreadsLabel.Location = new System.Drawing.Point(10, 351);
             this.CPUThreadsLabel.Name = "CPUThreadsLabel";
             this.CPUThreadsLabel.Size = new System.Drawing.Size(71, 13);
             this.CPUThreadsLabel.TabIndex = 35;
@@ -181,7 +186,7 @@
             // MemoryTextBox
             // 
             this.MemoryTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MemoryTextBox.Location = new System.Drawing.Point(100, 296);
+            this.MemoryTextBox.Location = new System.Drawing.Point(100, 326);
             this.MemoryTextBox.Name = "MemoryTextBox";
             this.MemoryTextBox.ReadOnly = true;
             this.MemoryTextBox.Size = new System.Drawing.Size(124, 20);
@@ -201,7 +206,7 @@
             // OSTextBox
             // 
             this.OSTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OSTextBox.Location = new System.Drawing.Point(100, 273);
+            this.OSTextBox.Location = new System.Drawing.Point(100, 303);
             this.OSTextBox.Name = "OSTextBox";
             this.OSTextBox.ReadOnly = true;
             this.OSTextBox.Size = new System.Drawing.Size(124, 20);
@@ -222,7 +227,7 @@
             // 
             this.MemoryLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.MemoryLabel.AutoSize = true;
-            this.MemoryLabel.Location = new System.Drawing.Point(10, 298);
+            this.MemoryLabel.Location = new System.Drawing.Point(10, 328);
             this.MemoryLabel.Name = "MemoryLabel";
             this.MemoryLabel.Size = new System.Drawing.Size(44, 13);
             this.MemoryLabel.TabIndex = 31;
@@ -242,7 +247,7 @@
             // 
             this.OSLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.OSLabel.AutoSize = true;
-            this.OSLabel.Location = new System.Drawing.Point(10, 275);
+            this.OSLabel.Location = new System.Drawing.Point(10, 305);
             this.OSLabel.Name = "OSLabel";
             this.OSLabel.Size = new System.Drawing.Size(22, 13);
             this.OSLabel.TabIndex = 29;
@@ -331,16 +336,6 @@
             this.NextAttemptTextBox.TabIndex = 8;
             this.NextAttemptTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TimeoutLabel
-            // 
-            this.TimeoutLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.TimeoutLabel.AutoSize = true;
-            this.TimeoutLabel.Location = new System.Drawing.Point(10, 183);
-            this.TimeoutLabel.Name = "TimeoutLabel";
-            this.TimeoutLabel.Size = new System.Drawing.Size(45, 13);
-            this.TimeoutLabel.TabIndex = 38;
-            this.TimeoutLabel.Text = "Timeout";
-            // 
             // ExpirationLabel
             // 
             this.ExpirationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -355,11 +350,21 @@
             // 
             this.CollectServerLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CollectServerLabel.AutoSize = true;
-            this.CollectServerLabel.Location = new System.Drawing.Point(10, 252);
+            this.CollectServerLabel.Location = new System.Drawing.Point(10, 253);
             this.CollectServerLabel.Name = "CollectServerLabel";
             this.CollectServerLabel.Size = new System.Drawing.Size(73, 13);
             this.CollectServerLabel.TabIndex = 39;
             this.CollectServerLabel.Text = "Collect Server";
+            // 
+            // TimeoutLabel
+            // 
+            this.TimeoutLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.TimeoutLabel.AutoSize = true;
+            this.TimeoutLabel.Location = new System.Drawing.Point(10, 183);
+            this.TimeoutLabel.Name = "TimeoutLabel";
+            this.TimeoutLabel.Size = new System.Drawing.Size(45, 13);
+            this.TimeoutLabel.TabIndex = 38;
+            this.TimeoutLabel.Text = "Timeout";
             // 
             // TimeoutTextBox
             // 
@@ -391,6 +396,17 @@
             this.CollectServerTextBox.TabIndex = 42;
             this.CollectServerTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // SystemInformationLabel
+            // 
+            this.SystemInformationLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SystemInformationLabel.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.SystemInformationLabel, 2);
+            this.SystemInformationLabel.Location = new System.Drawing.Point(10, 282);
+            this.SystemInformationLabel.Name = "SystemInformationLabel";
+            this.SystemInformationLabel.Size = new System.Drawing.Size(96, 13);
+            this.SystemInformationLabel.TabIndex = 43;
+            this.SystemInformationLabel.Text = "System Information";
+            // 
             // WorkUnitQueueControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -398,7 +414,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "WorkUnitQueueControl";
-            this.Size = new System.Drawing.Size(236, 370);
+            this.Size = new System.Drawing.Size(236, 390);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -435,5 +451,6 @@
         private System.Windows.Forms.TextBox TimeoutTextBox;
         private System.Windows.Forms.TextBox ExpirationTextBox;
         private System.Windows.Forms.TextBox CollectServerTextBox;
+        private System.Windows.Forms.Label SystemInformationLabel;
     }
 }
