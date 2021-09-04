@@ -32,7 +32,13 @@ namespace HFM.Forms.Controls
 
         public void SetWorkUnitQueue(WorkUnitQueueItemCollection workUnitQueue, SlotType slotType)
         {
-            if (workUnitQueue != null)
+            if (workUnitQueue is null)
+            {
+                _workUnitQueue = null;
+                _slotType = SlotType.Unknown;
+                SetControlsVisible(false);
+            }
+            else
             {
                 _workUnitQueue = workUnitQueue;
                 _slotType = slotType;
@@ -45,12 +51,6 @@ namespace HFM.Forms.Controls
                 cboQueueIndex.SelectedIndexChanged += cboQueueIndex_SelectedIndexChanged;
 
                 cboQueueIndex.SelectedValue = _workUnitQueue.CurrentID;
-            }
-            else
-            {
-                _workUnitQueue = null;
-                _slotType = SlotType.Unknown;
-                SetControlsVisible(false);
             }
         }
 
