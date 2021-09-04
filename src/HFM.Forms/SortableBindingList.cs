@@ -274,7 +274,6 @@ namespace HFM.Forms
         #endregion
 
         #region ITypedList Implementation
-#pragma warning disable 1591
 
         public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
         {
@@ -301,7 +300,6 @@ namespace HFM.Forms
             return typeof(T).Name;
         }
 
-#pragma warning restore 1591
         #endregion
     }
 

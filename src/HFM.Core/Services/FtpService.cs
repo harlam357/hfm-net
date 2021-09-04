@@ -109,7 +109,9 @@ namespace HFM.Core.Services
         private static void SetNetworkCredentials(WebRequest request, string username, string password)
         {
             var credentials = NetworkCredentialFactory.Create(username, password);
+#pragma warning disable CA1508 // Avoid dead conditional code
             if (credentials != null)
+#pragma warning restore CA1508 // Avoid dead conditional code
             {
                 request.Credentials = credentials;
             }

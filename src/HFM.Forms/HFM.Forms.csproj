@@ -4,6 +4,7 @@
     <TargetFrameworks>net5.0-windows;net472</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <SignAssembly>true</SignAssembly>
+    <NoWarn>$(NoWarn);1591</NoWarn>
     <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

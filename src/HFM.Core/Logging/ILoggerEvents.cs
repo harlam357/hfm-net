@@ -11,6 +11,8 @@ namespace HFM.Core.Logging
     {
         public static NullLoggerEvents Instance { get; } = new NullLoggerEvents();
 
+#pragma warning disable 0067
         public event EventHandler<LoggedEventArgs> Logged;
+#pragma warning restore 0067
     }
 }
