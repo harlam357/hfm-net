@@ -12,23 +12,7 @@ namespace HFM.Forms.Controls
     // TODO: Rename to WorkUnitQueueControl
     public sealed partial class QueueControl : UserControl
     {
-        // ReSharper disable UnusedMember.Local
-        private enum QueueControlRows
-        {
-            IndexCombo = 0,
-            Blank1,
-            Status,
-            WaitingOn,
-            Attempts,
-            NextAttempt,
-            BaseCredit,
-            BeginDate,
-            WorkServer,
-            OS,
-            Memory,
-            CPUThreads
-        }
-        // ReSharper restore UnusedMember.Local
+        private const int CPUThreadsIndex = 11;
 
         public event EventHandler<QueueIndexChangedEventArgs> QueueIndexChanged;
 
@@ -156,14 +140,14 @@ namespace HFM.Forms.Controls
 
             if (visible == false)
             {
-                tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = 0;
+                tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = 0;
             }
             else
             {
                 bool slotTypeIsCPU = _slotType == SlotType.CPU;
 
                 CPUThreadsTextBox.Visible = slotTypeIsCPU;
-                tableLayoutPanel1.RowStyles[(int)QueueControlRows.CPUThreads].Height = slotTypeIsCPU
+                tableLayoutPanel1.RowStyles[CPUThreadsIndex].Height = slotTypeIsCPU
                     ? DefaultRowHeight
                     : 0;
             }
