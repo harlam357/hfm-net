@@ -31,7 +31,7 @@ namespace HFM.Preferences.Data
 
         public bool Equals(ClientRetrievalTask other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -39,12 +39,12 @@ namespace HFM.Preferences.Data
             {
                 return true;
             }
-            return Enabled == other.Enabled && Interval == other.Interval && String.Equals(ProcessingMode, other.ProcessingMode);
+            return Enabled == other.Enabled && Interval == other.Interval && String.Equals(ProcessingMode, other.ProcessingMode, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
