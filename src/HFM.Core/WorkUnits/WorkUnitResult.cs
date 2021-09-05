@@ -25,7 +25,9 @@ namespace HFM.Core.WorkUnits
         // 8: GPU memtest error (Non-Terminating) - No unit test coverage
         GpuMemtestError,
         // 9: Unknown Enum (Non-Terminating)
-        UnknownEnum
+        UnknownEnum,
+        // 10: Bad Frame Checksum (Terminating)
+        BadFrameChecksum
     }
 
     public static class WorkUnitResultString
@@ -38,27 +40,30 @@ namespace HFM.Core.WorkUnits
         public const string CoreOutdated = "CORE_OUTDATED";
         public const string GpuMemtestError = "GPU_MEMTEST_ERROR";
         public const string UnknownEnum = "UNKNOWN_ENUM";
+        public const string BadFrameChecksum = "BAD_FRAME_CHECKSUM";
 
         internal static WorkUnitResult ToWorkUnitResult(string result)
         {
             switch (result)
             {
-                case WorkUnitResultString.FinishedUnit:
+                case FinishedUnit:
                     return WorkUnitResult.FinishedUnit;
-                case WorkUnitResultString.EarlyUnitEnd:
+                case EarlyUnitEnd:
                     return WorkUnitResult.EarlyUnitEnd;
-                case WorkUnitResultString.UnstableMachine:
+                case UnstableMachine:
                     return WorkUnitResult.UnstableMachine;
-                case WorkUnitResultString.Interrupted:
+                case Interrupted:
                     return WorkUnitResult.Interrupted;
-                case WorkUnitResultString.BadWorkUnit:
+                case BadWorkUnit:
                     return WorkUnitResult.BadWorkUnit;
-                case WorkUnitResultString.CoreOutdated:
+                case CoreOutdated:
                     return WorkUnitResult.CoreOutdated;
-                case WorkUnitResultString.GpuMemtestError:
+                case GpuMemtestError:
                     return WorkUnitResult.GpuMemtestError;
-                case WorkUnitResultString.UnknownEnum:
+                case UnknownEnum:
                     return WorkUnitResult.UnknownEnum;
+                case BadFrameChecksum:
+                    return WorkUnitResult.BadFrameChecksum;
                 default:
                     return WorkUnitResult.Unknown;
             }
@@ -76,6 +81,7 @@ namespace HFM.Core.WorkUnits
                 case WorkUnitResult.UnstableMachine:
                 case WorkUnitResult.BadWorkUnit:
                 case WorkUnitResult.ClientCoreError:
+                case WorkUnitResult.BadFrameChecksum:
                     return true;
                 default:
                     return false;

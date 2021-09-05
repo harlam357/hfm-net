@@ -1,6 +1,6 @@
 ﻿<Project>
 
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="HFM.Client" Version="0.5.0" />
-    <PackageReference Include="HFM.Log" Version="0.2.2" />
+    <PackageReference Include="HFM.Log" Version="0.3.0" />
     <PackageReference Include="HFM.Proteins" Version="0.2.0" />
     <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />
@@ -37,7 +37,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <SQLiteTargetFramework>net46\</SQLiteTargetFramework>
