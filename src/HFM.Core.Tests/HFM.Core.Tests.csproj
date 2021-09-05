@@ -1,6 +1,6 @@
 ﻿<Project>
 
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"/>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;net472</TargetFrameworks>
@@ -37,7 +37,7 @@
     <ProjectReference Include="..\HFM.Core\HFM.Core.csproj" />
   </ItemGroup>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
       <SQLiteTargetFramework>net46\</SQLiteTargetFramework>

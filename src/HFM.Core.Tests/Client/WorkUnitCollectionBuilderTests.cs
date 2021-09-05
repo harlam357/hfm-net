@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-using HFM.Client;
 using HFM.Client.ObjectModel;
 using HFM.Core.WorkUnits;
-using HFM.Log;
 
 using NUnit.Framework;
+
+using static HFM.Core.Client.Internal.FahClientFactoryForTests;
 
 namespace HFM.Core.Client
 {
@@ -319,41 +317,6 @@ namespace HFM.Core.Client
             var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 3 });
             // Assert
             Assert.AreEqual(2, workUnits.Count);
-        }
-
-        private static async Task<FahClient> CreateClientWithMessagesLoadedFrom(string clientName, string path)
-        {
-            var fahClient = CreateClient(clientName);
-            await LoadMessagesFrom(fahClient, path);
-            return fahClient;
-        }
-
-        private static FahClient CreateClient(string clientName)
-        {
-            var client = new FahClient(null, null, null, null, null);
-            client.Settings = new ClientSettings { Name = clientName };
-            return client;
-        }
-
-        private static async Task LoadMessagesFrom(FahClient fahClient, string path)
-        {
-            var extractor = new FahClientJsonMessageExtractor();
-
-            foreach (var file in Directory.EnumerateFiles(path))
-            {
-                if (Path.GetFileName(file) == "log.txt")
-                {
-                    using (var textReader = new StreamReader(file))
-                    using (var reader = new FahClientLogTextReader(textReader))
-                    {
-                        await fahClient.Messages.Log.ReadAsync(reader);
-                    }
-                }
-                else
-                {
-                    await fahClient.Messages.UpdateMessageAsync(extractor.Extract(new StringBuilder(File.ReadAllText(file))));
-                }
-            }
         }
     }
 }

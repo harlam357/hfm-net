@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 
 using NUnit.Framework;
 
+using static HFM.Core.Client.Internal.FahClientFactoryForTests;
+
 namespace HFM.Core.Client
 {
     [TestFixture]
@@ -28,7 +30,7 @@ namespace HFM.Core.Client
             // Arrange
             var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
             var mockWorkUnitRepository = new Mock<IWorkUnitRepository>();
-            var fahClient = new FahClient(null, new InMemoryPreferencesProvider(), benchmarkService, null, mockWorkUnitRepository.Object);
+            var fahClient = new FahClient(null, null, benchmarkService, null, mockWorkUnitRepository.Object);
 
             var workUnit = new WorkUnit();
             workUnit.ProjectID = 2669;
@@ -166,13 +168,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(1, slots.Count);
             Assert.AreEqual(SlotType.Unknown, slots[0].SlotType);
             Assert.AreEqual(SlotStatus.Disabled, slots[0].Status);
-        }
-
-        private static FahClient CreateClient(string clientName)
-        {
-            var client = new FahClient(null, null, null, null, null);
-            client.Settings = new ClientSettings { Name = clientName };
-            return client;
         }
     }
 }
