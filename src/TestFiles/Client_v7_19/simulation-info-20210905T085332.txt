@@ -1,0 +1,3 @@
+PyON 1 simulation-info
+{"user": "harlam357", "team": "32", "project": 18201, "run": 44695, "clone": 3, "gen": 2, "core_type": 34, "core": "OPENMM_22", "total_iterations": 100, "iterations_done": 73, "energy": 0, "temperature": 0, "start_time": "2021-09-05T17:57:05Z", "timeout": 0, "deadline": 1631296625, "eta": 3766, "progress": 0.738472, "slot": 1}
+---

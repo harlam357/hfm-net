@@ -1,0 +1,20 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "PAUSED",
+    "description": "cpu:15",
+    "options": {"client-type": "advanced", "max-packet-size": "big", "pause-on-start": True},
+    "reason": "by user",
+    "idle": False
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:13:0 TU106 [Geforce RTX 2060]",
+    "options": {"max-packet-size": "big", "pause-on-start": True, "paused": False, "pci-bus": "13", "pci-slot": "0"},
+    "reason": "",
+    "idle": False
+  }
+]
+---

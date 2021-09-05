@@ -1,0 +1,68 @@
+PyON 1 info
+[
+  [
+    "libFAH",
+    ["Date", "Oct 20 2020"],
+    ["Time", "13:36:55"],
+    ["Revision", "5ca109d295a6245e2a2f590b3d0085ad5e567aeb"],
+    ["Branch", "master"],
+    ["Compiler", "Visual C++ 2015"],
+    ["Options", " /TP  /nologo /EHa /wd4297 /wd4103 /O2 /Zc:throwingNew /MT"],
+    ["Platform", "win32 10"],
+    ["Bits", "32"],
+    ["Mode", "Release"]
+  ],
+  [
+    "FAHClient",
+    ["Version", "7.6.21"],
+    ["Author", "Joseph Coffland <joseph@cauldrondevelopment.com>"],
+    ["Copyright", "2020 foldingathome.org"],
+    ["Homepage", "https://foldingathome.org/"],
+    ["Date", "Oct 20 2020"],
+    ["Time", "13:41:04"],
+    ["Revision", "6efbf0e138e22d3963e6a291f78dcb9c6422a278"],
+    ["Branch", "master"],
+    ["Compiler", "Visual C++ 2015"],
+    ["Options", " /TP  /nologo /EHa /wd4297 /wd4103 /O2 /Zc:throwingNew /MT"],
+    ["Platform", "win32 10"],
+    ["Bits", "32"],
+    ["Mode", "Release"],
+    ["Args", " --config C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\config.xml"],
+    ["Config", "C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient\\config.xml"]
+  ],
+  [
+    "CBang",
+    ["Date", "Oct 20 2020"],
+    ["Time", "11:36:18"],
+    ["Revision", "7e4ce85225d7eaeb775e87c31740181ca603de60"],
+    ["Branch", "master"],
+    ["Compiler", "Visual C++ 2015"],
+    ["Options", " /TP  /nologo /EHa /wd4297 /wd4103 /O2 /Zc:throwingNew /MT"],
+    ["Platform", "win32 10"],
+    ["Bits", "32"],
+    ["Mode", "Release"]
+  ],
+  [
+    "System",
+    ["CPU", "AMD Ryzen 7 3700X 8-Core Processor             "],
+    ["CPU ID", "AuthenticAMD Family 23 Model 113 Stepping 0"],
+    ["CPUs", "16"],
+    ["Memory", "31.93GiB"],
+    ["Free Memory", "24.20GiB"],
+    ["Threads", "WINDOWS_THREADS"],
+    ["OS Version", "6.2"],
+    ["Has Battery", "false"],
+    ["On Battery", "false"],
+    ["UTC Offset", "-5"],
+    ["PID", "20872"],
+    ["CWD", "C:\\Users\\harlarw\\AppData\\Roaming\\FAHClient"],
+    ["Win32 Service", "false"],
+    ["OS", "Windows 10 Enterprise"],
+    ["OS Arch", "AMD64"],
+    ["GPUs", "1"],
+    ["GPU 0", "Bus:13 Slot:0 Func:0 NVIDIA:7 TU106 [Geforce RTX 2060]"],
+    ["CUDA Device 0", "Platform:0 Device:0 Bus:13 Slot:0 Compute:7.5 Driver:11.1"],
+    ["OpenCL Device 0", "Platform:0 Device:0 Bus:13 Slot:0 Compute:1.2 Driver:456.71"]
+  ]
+]
+---
