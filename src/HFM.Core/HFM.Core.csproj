@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="HFM.Client" Version="0.5.0" />
+    <PackageReference Include="HFM.Client" Version="0.6.0" />
     <PackageReference Include="HFM.Log" Version="0.3.0" />
     <PackageReference Include="HFM.Proteins" Version="0.2.0" />
     <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
