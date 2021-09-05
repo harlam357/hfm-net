@@ -10,17 +10,24 @@ using System.Threading.Tasks;
 using HFM.Client;
 using HFM.Client.ObjectModel;
 using HFM.Log;
-using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
     public class FahClientMessages
     {
-        private readonly IFahClient _client;
+        public IFahClient Client { get; }
 
-        public FahClientMessages(IFahClient client)
+        public FahClientLogFileWriter LogFileWriter { get; }
+
+        public FahClientMessages(IFahClient client) : this(client, new FahClientLogFileWriter(client))
         {
-            _client = client;
+
+        }
+
+        public FahClientMessages(IFahClient client, FahClientLogFileWriter logFileWriter)
+        {
+            Client = client;
+            LogFileWriter = logFileWriter;
         }
 
         public FahClientMessage Heartbeat { get; private set; }
@@ -83,14 +90,14 @@ namespace HFM.Core.Client
         {
             var heartbeatCommandText = String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval);
 
-            await _client.Connection.CreateCommand("updates clear").ExecuteAsync().ConfigureAwait(false);
-            await _client.Connection.CreateCommand("log-updates restart").ExecuteAsync().ConfigureAwait(false);
-            await _client.Connection.CreateCommand(heartbeatCommandText).ExecuteAsync().ConfigureAwait(false);
-            await _client.Connection.CreateCommand("updates add 1 1 $info").ExecuteAsync().ConfigureAwait(false);
-            await _client.Connection.CreateCommand("updates add 2 1 $(options -a)").ExecuteAsync().ConfigureAwait(false);
-            await _client.Connection.CreateCommand("updates add 3 1 $slot-info").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("updates clear").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("log-updates restart").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand(heartbeatCommandText).ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("updates add 1 1 $info").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("updates add 2 1 $(options -a)").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("updates add 3 1 $slot-info").ExecuteAsync().ConfigureAwait(false);
             // get an initial queue reading
-            await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+            await Client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -134,12 +141,13 @@ namespace HFM.Core.Client
         private async Task UpdateSlotCollectionFromMessage(FahClientMessage message)
         {
             SlotCollection = SlotCollection.Load(message.MessageText);
+            var connection = Client.Connection;
+
             foreach (var slot in SlotCollection)
             {
                 var slotOptionsCommandText = String.Format(CultureInfo.InvariantCulture, DefaultSlotOptions, slot.ID);
                 // not an expected situation at application runtime but when running some
                 // tests the Connection will be null and that's fine in those scenarios
-                var connection = _client.Connection;
                 if (connection != null)
                 {
                     await connection.CreateCommand(slotOptionsCommandText).ExecuteAsync().ConfigureAwait(false);
@@ -202,8 +210,19 @@ namespace HFM.Core.Client
         private async Task UpdateLogAssetsFromStringBuilder(StringBuilder value, FileMode mode)
         {
             await UpdateLogFromStringBuilder(value).ConfigureAwait(false);
-            await WriteCachedLogFileFromStringBuilder(value, mode).ConfigureAwait(false);
-            await _client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+
+            if (LogFileWriter != null)
+            {
+                await LogFileWriter.WriteAsync(value, mode).ConfigureAwait(false);
+            }
+
+            var connection = Client.Connection;
+            // not an expected situation at application runtime but when running some
+            // tests the Connection will be null and that's fine in those scenarios
+            if (connection != null)
+            {
+                await Client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+            }
         }
 
         private async Task UpdateLogFromStringBuilder(StringBuilder value)
@@ -212,36 +231,6 @@ namespace HFM.Core.Client
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await Log.ReadAsync(reader).ConfigureAwait(false);
-            }
-        }
-
-        private async Task WriteCachedLogFileFromStringBuilder(StringBuilder logUpdateValue, FileMode mode)
-        {
-            const int sleep = 100;
-            const int timeout = 60 * 1000;
-
-            var cacheDirectory = _client.Preferences.Get<string>(Preference.CacheDirectory);
-            string fahLogPath = Path.Combine(cacheDirectory, _client.Settings.ClientLogFileName);
-
-            try
-            {
-                if (!Directory.Exists(cacheDirectory))
-                {
-                    Directory.CreateDirectory(cacheDirectory);
-                }
-
-                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, mode, FileAccess.Write, FileShare.Read, sleep, timeout))
-                using (var writer = new StreamWriter(stream))
-                {
-                    foreach (var chunk in logUpdateValue.GetChunks())
-                    {
-                        await writer.WriteAsync(chunk).ConfigureAwait(false);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _client.Logger.Warn($"Failed to write to {fahLogPath}", ex);
             }
         }
 

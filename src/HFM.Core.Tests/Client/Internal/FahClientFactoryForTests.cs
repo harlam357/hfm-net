@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace HFM.Core.Client.Internal
 
         internal static FahClient CreateClient(string clientName)
         {
-            var client = new FahClient(null, null, null, null, null);
+            var client = new ConnectedFahClient();
             client.Settings = new ClientSettings { Name = clientName };
             return client;
         }
@@ -27,7 +28,7 @@ namespace HFM.Core.Client.Internal
         {
             var extractor = new FahClientJsonMessageExtractor();
 
-            foreach (var file in Directory.EnumerateFiles(path))
+            foreach (var file in Directory.EnumerateFiles(path).OrderBy(x => x))
             {
                 if (Path.GetFileName(file) == "log.txt")
                 {
@@ -42,6 +43,16 @@ namespace HFM.Core.Client.Internal
                     await fahClient.Messages.UpdateMessageAsync(extractor.Extract(new StringBuilder(File.ReadAllText(file))));
                 }
             }
+        }
+
+        private class ConnectedFahClient : FahClient
+        {
+            public ConnectedFahClient() : base(null, null, null, null, null)
+            {
+                Messages = new FahClientMessages(this, null);
+            }
+
+            public override bool Connected => true;
         }
     }
 }

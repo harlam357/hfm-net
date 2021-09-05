@@ -169,5 +169,27 @@ namespace HFM.Core.Client
             Assert.AreEqual(SlotType.Unknown, slots[0].SlotType);
             Assert.AreEqual(SlotStatus.Disabled, slots[0].Status);
         }
+
+        [Test]
+        public async Task FahClient_Retrieve_Client_v7_19()
+        {
+            // Arrange
+            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_19", @"..\..\..\..\TestFiles\Client_v7_19");
+            fahClient.RefreshSlots();
+            // Act
+            await fahClient.Retrieve();
+            // Assert
+            Assert.AreEqual("7.6.21", fahClient.ClientVersion);
+            var slot00 = fahClient.Slots.ElementAt(0);
+            Assert.AreEqual("AMD Ryzen 7 3700X 8-Core Processor", slot00.Processor);
+            Assert.IsNull(slot00.WorkUnitQueue);
+            Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
+            Assert.AreEqual(-1, slot00.WorkUnitModel.ID);
+            var slot01 = fahClient.Slots.ElementAt(1);
+            Assert.AreEqual("Geforce RTX 2060", slot01.Processor);
+            Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
+            Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
+            Assert.AreEqual(0, slot01.WorkUnitModel.ID);
+        }
     }
 }

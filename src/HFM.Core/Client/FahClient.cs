@@ -48,11 +48,14 @@ namespace HFM.Core.Client
 
         public IProteinService ProteinService { get; }
         public IWorkUnitRepository WorkUnitRepository { get; }
-        public FahClientMessages Messages { get; }
-        public FahClientConnection Connection { get; private set; }
+        public FahClientMessages Messages { get; protected set; }
+        public FahClientConnection Connection { get; protected set; }
 
-        public FahClient(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService,
-                         IProteinService proteinService, IWorkUnitRepository workUnitRepository)
+        public FahClient(ILogger logger,
+                         IPreferences preferences,
+                         IProteinBenchmarkService benchmarkService,
+                         IProteinService proteinService,
+                         IWorkUnitRepository workUnitRepository)
             : base(logger, preferences, benchmarkService)
         {
             ProteinService = proteinService;
@@ -274,7 +277,7 @@ namespace HFM.Core.Client
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnit != null);
 
-            Protein protein = ProteinService.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
+            Protein protein = ProteinService?.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
 
             // update the data
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
@@ -297,7 +300,7 @@ namespace HFM.Core.Client
             slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
 
             var clientRun = Messages.GetClientRun();
-            if (WorkUnitRepository.Connected && clientRun != null)
+            if (WorkUnitRepository != null && WorkUnitRepository.Connected && clientRun != null)
             {
                 slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
