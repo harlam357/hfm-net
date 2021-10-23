@@ -575,11 +575,11 @@ namespace HFM.Forms.Views
 
         private void SubscribeToWebMenuControlEvents()
         {
-            mnuWebEOCUser.Click += (s, e) => _presenter.ShowEocUserPage(LocalProcessService.Default);
-            mnuWebStanfordUser.Click += (s, e) => _presenter.ShowStanfordUserPage(LocalProcessService.Default);
-            mnuWebEOCTeam.Click += (s, e) => _presenter.ShowEocTeamPage(LocalProcessService.Default);
+            mnuWebEocUser.Click += (s, e) => _presenter.ShowEocUserPage(LocalProcessService.Default);
+            mnuWebFahUser.Click += (s, e) => _presenter.ShowFahUserPage(LocalProcessService.Default, FahUserService.Default);
+            mnuWebEocTeam.Click += (s, e) => _presenter.ShowEocTeamPage(LocalProcessService.Default);
             mnuWebRefreshUserStats.Click += (s, e) => _presenter.RefreshUserStatsData();
-            mnuWebHFMGoogleCode.Click += (s, e) => _presenter.ShowHfmGitHub(LocalProcessService.Default);
+            mnuWebHfmGitHub.Click += (s, e) => _presenter.ShowHfmGitHub(LocalProcessService.Default);
         }
 
         private void SubscribeToNotifyIconMenuControlEvents()

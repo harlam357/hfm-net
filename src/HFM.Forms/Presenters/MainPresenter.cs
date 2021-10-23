@@ -728,9 +728,12 @@ namespace HFM.Forms.Presenters
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
-        public void ShowStanfordUserPage(LocalProcessService localProcess)
+        public async void ShowFahUserPage(LocalProcessService localProcess, FahUserService userService)
         {
-            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, Preferences.Get<string>(Preference.StanfordId))).AbsoluteUri;
+            string name = Preferences.Get<string>(Preference.StanfordId);
+            var fahUser = await userService.FindUserAndLogError(name, Logger).ConfigureAwait(true);
+
+            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, fahUser.ID)).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the FAH user stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }

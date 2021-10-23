@@ -79,13 +79,13 @@ namespace HFM.Forms.Views
             this.mnuToolsPointsCalculator = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolsDownloadProjects = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWeb = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWebStanfordUser = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWebEOCUser = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWebEOCTeam = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWebFahUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWebEocUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWebEocTeam = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWebSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuWebRefreshUserStats = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWebSep2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuWebHFMGoogleCode = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWebHfmGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpHfmLogFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpHfmDataFiles = new System.Windows.Forms.ToolStripMenuItem();
@@ -643,37 +643,37 @@ namespace HFM.Forms.Views
             // mnuWeb
             // 
             this.mnuWeb.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuWebStanfordUser,
-            this.mnuWebEOCUser,
-            this.mnuWebEOCTeam,
+            this.mnuWebFahUser,
+            this.mnuWebEocUser,
+            this.mnuWebEocTeam,
             this.mnuWebSep1,
             this.mnuWebRefreshUserStats,
             this.mnuWebSep2,
-            this.mnuWebHFMGoogleCode});
+            this.mnuWebHfmGitHub});
             this.mnuWeb.Name = "mnuWeb";
             this.mnuWeb.Size = new System.Drawing.Size(43, 20);
             this.mnuWeb.Text = "&Web";
             // 
             // mnuWebStanfordUser
             // 
-            this.mnuWebStanfordUser.Name = "mnuWebStanfordUser";
-            this.mnuWebStanfordUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.mnuWebStanfordUser.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebStanfordUser.Text = "&FAH User Stats Page";
+            this.mnuWebFahUser.Name = "mnuWebFahUser";
+            this.mnuWebFahUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.mnuWebFahUser.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebFahUser.Text = "&FAH User Stats Page";
             // 
             // mnuWebEOCUser
             // 
-            this.mnuWebEOCUser.Name = "mnuWebEOCUser";
-            this.mnuWebEOCUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.mnuWebEOCUser.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebEOCUser.Text = "&EOC User Stats Page";
+            this.mnuWebEocUser.Name = "mnuWebEocUser";
+            this.mnuWebEocUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.mnuWebEocUser.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebEocUser.Text = "&EOC User Stats Page";
             // 
             // mnuWebEOCTeam
             // 
-            this.mnuWebEOCTeam.Name = "mnuWebEOCTeam";
-            this.mnuWebEOCTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.mnuWebEOCTeam.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebEOCTeam.Text = "EOC &Team Stats Page";
+            this.mnuWebEocTeam.Name = "mnuWebEocTeam";
+            this.mnuWebEocTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
+            this.mnuWebEocTeam.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebEocTeam.Text = "EOC &Team Stats Page";
             // 
             // mnuWebSep1
             // 
@@ -693,9 +693,9 @@ namespace HFM.Forms.Views
             // 
             // mnuWebHFMGoogleCode
             // 
-            this.mnuWebHFMGoogleCode.Name = "mnuWebHFMGoogleCode";
-            this.mnuWebHFMGoogleCode.Size = new System.Drawing.Size(204, 22);
-            this.mnuWebHFMGoogleCode.Text = "HFM on &GitHub";
+            this.mnuWebHfmGitHub.Name = "mnuWebHfmGitHub";
+            this.mnuWebHfmGitHub.Size = new System.Drawing.Size(204, 22);
+            this.mnuWebHfmGitHub.Text = "HFM on &GitHub";
             // 
             // mnuHelp
             // 
@@ -1094,11 +1094,11 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.SplitContainer splitContainer1;
         private DataGridViewExt dataGridView1;
         private System.Windows.Forms.ToolStripMenuItem mnuWeb;
-        private System.Windows.Forms.ToolStripMenuItem mnuWebEOCUser;
-        private System.Windows.Forms.ToolStripMenuItem mnuWebStanfordUser;
-        private System.Windows.Forms.ToolStripMenuItem mnuWebEOCTeam;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebEocUser;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebFahUser;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebEocTeam;
         private System.Windows.Forms.ToolStripSeparator mnuWebSep1;
-        private System.Windows.Forms.ToolStripMenuItem mnuWebHFMGoogleCode;
+        private System.Windows.Forms.ToolStripMenuItem mnuWebHfmGitHub;
         private System.Windows.Forms.ToolStripMenuItem mnuToolsBenchmarks;
         private System.Windows.Forms.ToolTip toolTipGrid;
         private HFM.Forms.Controls.BindableToolStripStatusLabel statusUser24hr;
