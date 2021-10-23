@@ -348,6 +348,6 @@ Function Configure-Configuration
     Write-Host "---------------------------------------------------"
 }
 
-Configure-Version -Version '9.26'
+Configure-Version -Version '9.27'
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 Configure-Configuration -Configuration 'Release'
