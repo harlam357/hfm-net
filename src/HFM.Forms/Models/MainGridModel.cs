@@ -161,7 +161,7 @@ namespace HFM.Forms.Models
             }
             if (_synchronizeInvoke.InvokeRequired)
             {
-                _synchronizeInvoke.Invoke(new Action(ResetBindingsInternal), null);
+                _synchronizeInvoke.BeginInvoke(new Action(ResetBindingsInternal), null);
                 return;
             }
 
