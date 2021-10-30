@@ -53,6 +53,9 @@ namespace HFM.Preferences.Data
 
         [DataMember]
         public bool DuplicateProjectCheck { get; set; }
+
+        [DataMember]
+        public bool HideInactiveSlots { get; set; }
     }
 
     [DataContract(Namespace = "")]

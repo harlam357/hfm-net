@@ -94,7 +94,8 @@
         ApplicationPath,
         ApplicationDataFolderPath,
         ApplicationVersion,
-        CacheDirectory
+        CacheDirectory,
+        HideInactiveSlots
     }
 
     // ReSharper restore InconsistentNaming

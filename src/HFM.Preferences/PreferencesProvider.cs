@@ -163,6 +163,7 @@ namespace HFM.Preferences
             prefs.Add(Preference.PPDCalculation, p => p.ApplicationSettings.PpdCalculation);
             prefs.Add(Preference.DecimalPlaces, p => p.ApplicationSettings.DecimalPlaces);
             prefs.Add(Preference.BonusCalculation, p => p.ApplicationSettings.BonusCalculation);
+            prefs.Add(Preference.HideInactiveSlots, p => p.ApplicationSettings.HideInactiveSlots);
             prefs.Add(Preference.FollowLog, p => p.LogWindowProperties.FollowLog);
             prefs.Add(Preference.DisplayEtaAsDate, p => p.MainWindowGridProperties.DisplayEtaAsDate);
             prefs.Add(Preference.LogFileViewer, p => p.ApplicationSettings.LogFileViewer);

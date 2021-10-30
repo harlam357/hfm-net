@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -168,7 +170,7 @@ namespace HFM.Forms.Models
             lock (_slotsListLock)
             {
                 // get slots from the dictionary
-                var slots = ClientConfiguration.GetSlots();
+                var slots = FilterSlotModels(ClientConfiguration.GetSlots());
 
                 // refresh the underlying binding list
                 BindingSource.Clear();
@@ -186,6 +188,16 @@ namespace HFM.Forms.Models
                 BindingSource.ResetBindings(false);
             }
             OnAfterResetBindings(EventArgs.Empty);
+        }
+
+        private ICollection<SlotModel> FilterSlotModels(ICollection<SlotModel> slots)
+        {
+            bool hideInactive = Preferences.Get<bool>(Preference.HideInactiveSlots);
+            if (hideInactive)
+            {
+                slots = slots.Where(x => x.Status != SlotStatus.Offline && x.Status != SlotStatus.Paused).ToList();
+            }
+            return slots;
         }
 
         private void Sort()
