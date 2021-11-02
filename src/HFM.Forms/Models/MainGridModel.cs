@@ -117,6 +117,7 @@ namespace HFM.Forms.Models
                 case Preference.PPDCalculation:
                 case Preference.DecimalPlaces:
                 case Preference.BonusCalculation:
+                case Preference.HideInactiveSlots:
                     ResetBindings();
                     break;
             }
@@ -190,10 +191,15 @@ namespace HFM.Forms.Models
             OnAfterResetBindings(EventArgs.Empty);
         }
 
+        public bool HideInactiveSlots
+        {
+            get => Preferences.Get<bool>(Preference.HideInactiveSlots);
+            set => Preferences.Set(Preference.HideInactiveSlots, value);
+        }
+
         private ICollection<SlotModel> FilterSlotModels(ICollection<SlotModel> slots)
         {
-            bool hideInactive = Preferences.Get<bool>(Preference.HideInactiveSlots);
-            if (hideInactive)
+            if (HideInactiveSlots)
             {
                 slots = slots.Where(x => x.Status != SlotStatus.Offline && x.Status != SlotStatus.Paused).ToList();
             }

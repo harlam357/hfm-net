@@ -476,6 +476,11 @@ namespace HFM.Forms.Views
             }
         }
 
+        private void mnuViewInactiveSlots_Click(object sender, EventArgs e)
+        {
+            _presenter.ShowHideInactiveSlots();
+        }
+
         private void mnuViewMessages_Click(object sender, EventArgs e)
         {
             var presenterFactory = new Func<MessagesPresenter>(() =>

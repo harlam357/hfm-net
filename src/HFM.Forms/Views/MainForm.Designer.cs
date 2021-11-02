@@ -120,6 +120,7 @@ namespace HFM.Forms.Views
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuContextForceRefreshEocStats = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipNotify = new System.Windows.Forms.ToolTip(this.components);
+            this.mnuViewInactiveSlots = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.notifyMenu.SuspendLayout();
             this.AppMenu.SuspendLayout();
@@ -499,6 +500,7 @@ namespace HFM.Forms.Views
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuViewAutoSizeGridColumns,
             this.mnuViewSep1,
+            this.mnuViewInactiveSlots,
             this.mnuViewMessages,
             this.mnuViewShowHideLog,
             this.mnuViewSep2,
@@ -654,21 +656,21 @@ namespace HFM.Forms.Views
             this.mnuWeb.Size = new System.Drawing.Size(43, 20);
             this.mnuWeb.Text = "&Web";
             // 
-            // mnuWebStanfordUser
+            // mnuWebFahUser
             // 
             this.mnuWebFahUser.Name = "mnuWebFahUser";
             this.mnuWebFahUser.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.mnuWebFahUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebFahUser.Text = "&FAH User Stats Page";
             // 
-            // mnuWebEOCUser
+            // mnuWebEocUser
             // 
             this.mnuWebEocUser.Name = "mnuWebEocUser";
             this.mnuWebEocUser.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.mnuWebEocUser.Size = new System.Drawing.Size(204, 22);
             this.mnuWebEocUser.Text = "&EOC User Stats Page";
             // 
-            // mnuWebEOCTeam
+            // mnuWebEocTeam
             // 
             this.mnuWebEocTeam.Name = "mnuWebEocTeam";
             this.mnuWebEocTeam.ShortcutKeys = System.Windows.Forms.Keys.F4;
@@ -691,7 +693,7 @@ namespace HFM.Forms.Views
             this.mnuWebSep2.Name = "mnuWebSep2";
             this.mnuWebSep2.Size = new System.Drawing.Size(201, 6);
             // 
-            // mnuWebHFMGoogleCode
+            // mnuWebHfmGitHub
             // 
             this.mnuWebHfmGitHub.Name = "mnuWebHfmGitHub";
             this.mnuWebHfmGitHub.Size = new System.Drawing.Size(204, 22);
@@ -1004,6 +1006,14 @@ namespace HFM.Forms.Views
             this.mnuContextForceRefreshEocStats.Size = new System.Drawing.Size(199, 22);
             this.mnuContextForceRefreshEocStats.Text = "Force Refresh EOC Stats";
             // 
+            // mnuViewInactiveSlots
+            // 
+            this.mnuViewInactiveSlots.Name = "mnuViewInactiveSlots";
+            this.mnuViewInactiveSlots.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.mnuViewInactiveSlots.Size = new System.Drawing.Size(303, 22);
+            this.mnuViewInactiveSlots.Text = "Show/Hide &Inactive Slots";
+            this.mnuViewInactiveSlots.Click += new System.EventHandler(this.mnuViewInactiveSlots_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1142,5 +1152,6 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemFinishSlot;
         private System.Windows.Forms.ToolStripSeparator gridContextMenuSep4;
         private System.Windows.Forms.ToolStripMenuItem gridContextMenuItemCopyPRCG;
+        private System.Windows.Forms.ToolStripMenuItem mnuViewInactiveSlots;
     }
 }

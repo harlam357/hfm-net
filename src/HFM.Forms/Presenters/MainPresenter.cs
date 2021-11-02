@@ -38,8 +38,13 @@ namespace HFM.Forms.Presenters
 
         private readonly ClientSettingsManager _settingsManager;
 
-        public MainPresenter(MainModel model, ILogger logger, IServiceScopeFactory serviceScopeFactory, MessageBoxPresenter messageBox,
-                             ClientConfiguration clientConfiguration, IProteinService proteinService, EocStatsScheduledTask eocStatsScheduledTask)
+        public MainPresenter(MainModel model,
+                             ILogger logger,
+                             IServiceScopeFactory serviceScopeFactory,
+                             MessageBoxPresenter messageBox,
+                             ClientConfiguration clientConfiguration,
+                             IProteinService proteinService,
+                             EocStatsScheduledTask eocStatsScheduledTask)
             : base(model)
         {
             Model = model;
@@ -555,6 +560,11 @@ namespace HFM.Forms.Presenters
         }
 
         // View Menu Handling Methods
+        public void ShowHideInactiveSlots()
+        {
+            GridModel.HideInactiveSlots = !GridModel.HideInactiveSlots;
+        }
+
         private MessagesPresenter _messagesPresenter;
 
         public void ViewMessagesClick(Func<MessagesPresenter> presenterFactory)
