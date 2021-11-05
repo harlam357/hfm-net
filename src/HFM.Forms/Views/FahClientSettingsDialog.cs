@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 
 using HFM.Forms.Controls;
+using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 
@@ -60,13 +61,14 @@ namespace HFM.Forms.Views
 
         private void LoadData(FahClientSettingsModel settings)
         {
-            ClientNameTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Name), false, DataSourceUpdateMode.OnValidation);
-            AddressTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Server), false, DataSourceUpdateMode.OnValidation);
-            AddressPortTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Port), false, DataSourceUpdateMode.OnValidation);
-            PasswordTextBox.DataBindings.Add(nameof(TextBox.Text), settings, nameof(FahClientSettingsModel.Password), false, DataSourceUpdateMode.OnValidation);
-            ConnectButton.DataBindings.Add(nameof(Button.Enabled), settings, nameof(FahClientSettingsModel.ConnectEnabled), false, DataSourceUpdateMode.OnPropertyChanged);
+            ClientNameTextBox.BindText(settings, nameof(FahClientSettingsModel.Name));
+            AddressTextBox.BindText(settings, nameof(FahClientSettingsModel.Server));
+            AddressPortTextBox.BindText(settings, nameof(FahClientSettingsModel.Port));
+            PasswordTextBox.BindText(settings, nameof(FahClientSettingsModel.Password));
+            ConnectButton.BindEnabled(settings, nameof(FahClientSettingsModel.ConnectEnabled));
             _slotsGridBindingSource.DataSource = settings.Slots;
             SlotsDataGridView.DataSource = _slotsGridBindingSource;
+            DisabledCheckBox.BindChecked(settings, nameof(FahClientSettingsModel.Disabled));
 
             _presenter.Model.PropertyChanged += ModelPropertyChanged;
         }

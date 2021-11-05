@@ -1,20 +1,20 @@
 ﻿namespace HFM.Forms.Views
 {
-   partial class FahClientSettingsDialog
-   {
-      /// <summary>
-      /// Required designer variable.
-      /// </summary>
-      private System.ComponentModel.IContainer components = null;
+    partial class FahClientSettingsDialog
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-      #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-      /// <summary>
-      /// Required method for Designer support - do not modify
-      /// the contents of this method with the code editor.
-      /// </summary>
-      private void InitializeComponent()
-      {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             this.DummyTextBox = new System.Windows.Forms.TextBox();
             this.DialogCancelButton = new System.Windows.Forms.Button();
@@ -32,6 +32,7 @@
             this.AddressTextBox = new HFM.Forms.Controls.DataErrorTextBox();
             this.ClientNameLabel = new System.Windows.Forms.Label();
             this.ClientNameTextBox = new HFM.Forms.Controls.DataErrorTextBox();
+            this.DisabledCheckBox = new System.Windows.Forms.CheckBox();
             this.SetupTabControl.SuspendLayout();
             this.ConnectionTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SlotsDataGridView)).BeginInit();
@@ -215,11 +216,22 @@
             this.ClientNameTextBox.Size = new System.Drawing.Size(251, 20);
             this.ClientNameTextBox.TabIndex = 1;
             // 
+            // DisabledCheckBox
+            // 
+            this.DisabledCheckBox.AutoSize = true;
+            this.DisabledCheckBox.Location = new System.Drawing.Point(12, 302);
+            this.DisabledCheckBox.Name = "DisabledCheckBox";
+            this.DisabledCheckBox.Size = new System.Drawing.Size(67, 17);
+            this.DisabledCheckBox.TabIndex = 7;
+            this.DisabledCheckBox.Text = "Disabled";
+            this.DisabledCheckBox.UseVisualStyleBackColor = true;
+            // 
             // FahClientSettingsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 361);
+            this.Controls.Add(this.DisabledCheckBox);
             this.Controls.Add(this.SetupTabControl);
             this.Controls.Add(this.DummyTextBox);
             this.Controls.Add(this.DialogCancelButton);
@@ -240,26 +252,26 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-      }
+        }
 
-      #endregion
+        #endregion
 
-      private System.Windows.Forms.TextBox DummyTextBox;
-      private System.Windows.Forms.Button DialogCancelButton;
-      private System.Windows.Forms.Button DialogOkButton;
-      private System.Windows.Forms.TabControl SetupTabControl;
-      private System.Windows.Forms.TabPage ConnectionTabPage;
-      private System.Windows.Forms.Label ClientNameLabel;
-      private HFM.Forms.Controls.DataErrorTextBox ClientNameTextBox;
-      private System.Windows.Forms.Label AddressLabel;
-      private HFM.Forms.Controls.DataErrorTextBox AddressTextBox;
-      private System.Windows.Forms.Label AddressPortLabel;
-      private HFM.Forms.Controls.DataErrorTextBox PasswordTextBox;
-      private System.Windows.Forms.Label PasswordLabel;
-      private HFM.Forms.Controls.DataErrorTextBox AddressPortTextBox;
-      private System.Windows.Forms.ToolTip toolTip1;
-      private System.Windows.Forms.Button ConnectButton;
-      private System.Windows.Forms.DataGridView SlotsDataGridView;
-
-   }
+        private System.Windows.Forms.TextBox DummyTextBox;
+        private System.Windows.Forms.Button DialogCancelButton;
+        private System.Windows.Forms.Button DialogOkButton;
+        private System.Windows.Forms.TabControl SetupTabControl;
+        private System.Windows.Forms.TabPage ConnectionTabPage;
+        private System.Windows.Forms.Label ClientNameLabel;
+        private HFM.Forms.Controls.DataErrorTextBox ClientNameTextBox;
+        private System.Windows.Forms.Label AddressLabel;
+        private HFM.Forms.Controls.DataErrorTextBox AddressTextBox;
+        private System.Windows.Forms.Label AddressPortLabel;
+        private HFM.Forms.Controls.DataErrorTextBox PasswordTextBox;
+        private System.Windows.Forms.Label PasswordLabel;
+        private HFM.Forms.Controls.DataErrorTextBox AddressPortTextBox;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button ConnectButton;
+        private System.Windows.Forms.DataGridView SlotsDataGridView;
+        private System.Windows.Forms.CheckBox DisabledCheckBox;
+    }
 }
