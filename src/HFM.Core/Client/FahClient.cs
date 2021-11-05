@@ -33,7 +33,8 @@ namespace HFM.Core.Client
             {
                 if (oldSettings.Server != newSettings.Server ||
                     oldSettings.Port != newSettings.Port ||
-                    oldSettings.Password != newSettings.Password)
+                    oldSettings.Password != newSettings.Password ||
+                    oldSettings.Disabled != newSettings.Disabled)
                 {
                     // close existing connection and allow retrieval to open a new connection
                     Connection?.Close();

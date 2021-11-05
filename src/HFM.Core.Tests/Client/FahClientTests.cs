@@ -25,6 +25,64 @@ namespace HFM.Core.Client
     public class FahClientTests
     {
         [Test]
+        public async Task FahClient_Settings_ClosesConnectionWhenDisabledChanges()
+        {
+            // Arrange
+            using (var client = new FahClientCreatesOpenConnection())
+            {
+                client.Settings = new ClientSettings { Name = "Bar" };
+                await client.Connect();
+                Assert.IsTrue(client.Connected);
+                // Act
+                client.Settings = new ClientSettings { Name = "Bar", Disabled = true };
+                // Assert
+                Assert.IsFalse(client.Connected);
+            }
+        }
+
+        private class FahClientCreatesOpenConnection : FahClient
+        {
+            public FahClientCreatesOpenConnection() : base(null, null, null, null, null)
+            {
+            }
+
+            protected override async Task OnConnect()
+            {
+                Connection = new MockFahClientConnection();
+                await Connection.OpenAsync();
+            }
+        }
+
+        private class MockFahClientConnection : FahClientConnection
+        {
+            private bool _connected;
+
+            public override bool Connected => _connected;
+
+            public MockFahClientConnection()
+                : base("foo", 2000)
+            {
+
+            }
+
+            public override void Open()
+            {
+                _connected = true;
+            }
+
+            public override Task OpenAsync()
+            {
+                _connected = true;
+                return Task.CompletedTask;
+            }
+
+            public override void Close()
+            {
+                _connected = false;
+            }
+        }
+
+        [Test]
         public void FahClient_UpdateWorkUnitBenchmarkAndRepository()
         {
             // Arrange

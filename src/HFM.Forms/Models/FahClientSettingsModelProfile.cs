@@ -12,8 +12,8 @@ namespace HFM.Forms.Models
             CreateMap<ClientSettings, FahClientSettingsModel>()
                 .ForMember(dest => dest.ClientSettings, opt => opt.Ignore())
                 .ForMember(dest => dest.ConnectEnabled, opt => opt.Ignore())
-                .ForMember(dest => dest.Slots, opt => opt.Ignore());
-            CreateMap<FahClientSettingsModel, ClientSettings>()
+                .ForMember(dest => dest.Slots, opt => opt.Ignore())
+                .ReverseMap()
                 .ForMember(dest => dest.ClientType, opt => opt.MapFrom(src => ClientType.FahClient));
         }
     }

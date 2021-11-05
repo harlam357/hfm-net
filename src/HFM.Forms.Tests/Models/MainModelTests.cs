@@ -120,11 +120,29 @@ namespace HFM.Forms.Models
         {
             // Arrange
             var model = CreateModel();
-            var selectedSlot = new SlotModel(new NullClient { Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort } });
+            var selectedSlot = new SlotModel(new NullClient
+            {
+                Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort }
+            });
             // Act
             model.GridModelSelectedSlotChanged(selectedSlot);
             // Assert
-            Assert.IsNotNull(model.ClientDetails);
+            Assert.AreEqual("test:36330", model.ClientDetails);
+        }
+
+        [Test]
+        public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlotClientDisabled()
+        {
+            // Arrange
+            var model = CreateModel();
+            var selectedSlot = new SlotModel(new NullClient
+            {
+                Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort, Disabled = true }
+            });
+            // Act
+            model.GridModelSelectedSlotChanged(selectedSlot);
+            // Assert
+            Assert.AreEqual("test:36330 (Disabled)", model.ClientDetails);
         }
 
         [Test]

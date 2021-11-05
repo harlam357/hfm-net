@@ -62,6 +62,12 @@ namespace HFM.Core.Client
         [DataMember(Order = 6)]
         public Guid Guid { get; set; }
 
+        /// <summary>
+        /// Gets or set a value that determines if a client connection will be disabled.
+        /// </summary>
+        [DataMember(Order = 7)]
+        public bool Disabled { get; set; }
+
         private const string FahClientLogFileName = "log.txt";
 
         public string ClientLogFileName => String.Format(CultureInfo.InvariantCulture, "{0}-{1}", Name, FahClientLogFileName);

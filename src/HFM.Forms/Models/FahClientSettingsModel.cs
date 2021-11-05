@@ -156,6 +156,21 @@ namespace HFM.Forms.Models
 
         public Guid Guid { get; set; }
 
+        private bool _disabled;
+
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled != value)
+                {
+                    _disabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public ICollection<FahClientSettingsSlotModel> Slots { get; } = new List<FahClientSettingsSlotModel>();
 
         public void RefreshSlots(SlotCollection slots)

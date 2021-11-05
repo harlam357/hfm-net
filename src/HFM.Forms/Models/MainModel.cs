@@ -78,7 +78,19 @@ namespace HFM.Forms.Models
 
         public void GridModelSelectedSlotChanged(SlotModel selectedSlot)
         {
-            ClientDetails = selectedSlot?.SlotIdentifier.ClientIdentifier.ToServerPortString();
+            if (selectedSlot is null)
+            {
+                ClientDetails = null;
+            }
+            else
+            {
+                ClientDetails = selectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
+                var settings = selectedSlot.Client?.Settings;
+                if (settings != null && settings.Disabled)
+                {
+                    ClientDetails += " (Disabled)";
+                }
+            }
         }
 
         public void GridModelSlotTotalsChanged(SlotTotals totals)

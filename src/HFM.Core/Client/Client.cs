@@ -138,7 +138,15 @@ namespace HFM.Core.Client
 
         public virtual bool Connected => false;
 
-        public Task Connect() => OnConnect();
+        public async Task Connect()
+        {
+            if (ClientCannotConnectOrRetrieve())
+            {
+                return;
+            }
+
+            await OnConnect().ConfigureAwait(false);
+        }
 
         protected virtual Task OnConnect() => Task.CompletedTask;
 
@@ -146,6 +154,11 @@ namespace HFM.Core.Client
 
         public async Task Retrieve()
         {
+            if (ClientCannotConnectOrRetrieve())
+            {
+                return;
+            }
+
             if (Interlocked.CompareExchange(ref _retrieveLock, 1, 0) != 0)
             {
                 OnRetrieveInProgress();
@@ -176,6 +189,8 @@ namespace HFM.Core.Client
                 Interlocked.Exchange(ref _retrieveLock, 0);
             }
         }
+
+        private bool ClientCannotConnectOrRetrieve() => Settings != null && Settings.Disabled;
 
         protected virtual void OnRetrieveInProgress() =>
             Debug.WriteLine(Logging.Logger.NameFormat, Settings?.Name, "Retrieval already in progress...");

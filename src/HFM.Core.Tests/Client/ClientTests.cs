@@ -100,6 +100,20 @@ namespace HFM.Core.Client
         }
 
         [Test]
+        public async Task Client_Connect_DoesNotConnectTheClientIfTheClientIsDisabled()
+        {
+            // Arrange
+            using (var client = new TestClientConnectsOnConnect())
+            {
+                client.Settings = new ClientSettings { Disabled = true };
+                // Act
+                await client.Connect();
+                // Assert
+                Assert.IsFalse(client.Connected);
+            }
+        }
+
+        [Test]
         public void Client_Connect_Throws()
         {
             // Arrange
@@ -163,6 +177,20 @@ namespace HFM.Core.Client
                 await client.Retrieve();
                 // Assert
                 Assert.IsTrue(client.Connected);
+            }
+        }
+
+        [Test]
+        public async Task Client_Retrieve_DoesNotConnectTheClientIfTheClientIsDisabled()
+        {
+            // Arrange
+            using (var client = new TestClientConnectsOnConnect())
+            {
+                client.Settings = new ClientSettings { Disabled = true };
+                // Act
+                await client.Retrieve();
+                // Assert
+                Assert.IsFalse(client.Connected);
             }
         }
 
