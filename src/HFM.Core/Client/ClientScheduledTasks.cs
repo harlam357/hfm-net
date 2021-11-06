@@ -80,6 +80,9 @@ namespace HFM.Core.Client
                         _webGenerationTask.Stop();
                     }
                     break;
+                case Preference.PPDCalculation:
+                    RetrieveAll();
+                    break;
             }
         }
 
