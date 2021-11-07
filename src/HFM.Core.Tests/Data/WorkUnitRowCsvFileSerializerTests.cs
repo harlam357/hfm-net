@@ -11,25 +11,31 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRowCsvFileSerializerTests
     {
+        private List<WorkUnitRow> _value;
+        private string _expected;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            // Arrange
+            _value = new List<WorkUnitRow> { new WorkUnitRow() };
+            _expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit,BaseCredit";
+            _expected += Environment.NewLine;
+            _expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0,0";
+            _expected += Environment.NewLine;
+        }
+
         [Test]
         public void WorkUnitRowCsvFileSerializer_Serialize_UsingCurrentCulture_Test()
         {
-            // Arrange
-            var value = new List<WorkUnitRow>();
-            value.Add(new WorkUnitRow());
-            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
-            expected += Environment.NewLine;
-            expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
-            expected += Environment.NewLine;
-            string actual;
             // Act
+            string actual;
             using (var writer = new StringWriter())
             {
-                WorkUnitRowCsvFileSerializer.Serialize(writer, value);
+                WorkUnitRowCsvFileSerializer.Serialize(writer, _value);
                 actual = writer.ToString();
             }
-            // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(_expected, actual);
         }
 
         [Test]
@@ -37,21 +43,15 @@ namespace HFM.Core.Data
         {
             // Arrange
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            var value = new List<WorkUnitRow>();
-            value.Add(new WorkUnitRow());
-            string expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit";
-            expected += Environment.NewLine;
-            expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0";
-            expected += Environment.NewLine;
-            string actual;
             // Act
+            string actual;
             using (var writer = new StringWriter())
             {
-                WorkUnitRowCsvFileSerializer.Serialize(writer, value);
+                WorkUnitRowCsvFileSerializer.Serialize(writer, _value);
                 actual = writer.ToString();
             }
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(_expected, actual);
         }
     }
 }
