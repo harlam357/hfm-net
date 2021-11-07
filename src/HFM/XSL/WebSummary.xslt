@@ -120,7 +120,7 @@
       <td class="table-column">
         <xsl:value-of select="TPF"/>
       </td>
-      <td class="table-column">
+      <td class="table-column" style="text-align: right">
         <xsl:value-of select="format-number(PPD, $NumberFormat)"/> (<xsl:value-of select="format-number(UPD, $NumberFormat)"/> WUs)
       </td>
       <td class="table-column">
@@ -140,7 +140,7 @@
         </xsl:choose>
         <xsl:value-of select="ProjectRunCloneGen"/>
       </td>
-      <td class="table-column">
+      <td class="table-column" style="text-align: right">
         <xsl:value-of select="format-number(Credit, $NumberFormat)"/>
       </td>
       <td class="table-column">
