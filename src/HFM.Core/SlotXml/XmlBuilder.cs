@@ -129,7 +129,7 @@ namespace HFM.Core.SlotXml
             var maxLogLines = 500;
 
             var slotData = new SlotData();
-            slotData.Status = slot.Status;
+            slotData.Status = slot.Status.ToUserString();
             slotData.StatusColor = ColorTranslator.ToHtml(slot.Status.GetStatusColor());
             slotData.StatusFontColor = ColorTranslator.ToHtml(HtmlBuilder.GetHtmlFontColor(slot.Status));
             slotData.PercentComplete = slot.PercentComplete;

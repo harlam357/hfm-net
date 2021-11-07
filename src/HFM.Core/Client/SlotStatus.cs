@@ -109,5 +109,16 @@ namespace HFM.Core.Client
                     return false;
             }
         }
+
+        public static string ToUserString(this SlotStatus status)
+        {
+            switch (status)
+            {
+                case SlotStatus.RunningNoFrameTimes:
+                    return "Running with Benchmark TPF";
+                default:
+                    return status.ToString();
+            }
+        }
     }
 }

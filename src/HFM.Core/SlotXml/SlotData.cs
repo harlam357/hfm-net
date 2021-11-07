@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-using HFM.Core.Client;
-
 namespace HFM.Core.SlotXml
 {
     [DataContract(Namespace = "")]
     public class SlotData
     {
-        // TODO: Status as string
         [DataMember(Order = 1)]
-        public SlotStatus Status { get; set; }
+        public string Status { get; set; }
 
         [DataMember(Order = 2)]
         public string StatusColor { get; set; }

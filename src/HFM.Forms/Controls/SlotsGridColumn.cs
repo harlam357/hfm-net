@@ -242,7 +242,7 @@ namespace HFM.Forms.Controls
 
         protected override string OnGetMouseOverText(SlotModel slotModel)
         {
-            return slotModel.Status.ToString();
+            return slotModel.Status.ToUserString();
         }
 
         protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
