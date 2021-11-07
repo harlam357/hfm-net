@@ -245,6 +245,9 @@ namespace HFM.Forms.Views
             dataGridView1.Columns.Add(WorkUnitRowColumn.Credit.ToString(), names[(int)WorkUnitRowColumn.Credit]);
             dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DataPropertyName = WorkUnitRowColumn.Credit.ToString();
             dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
+            dataGridView1.Columns.Add(WorkUnitRowColumn.BaseCredit.ToString(), names[(int)WorkUnitRowColumn.BaseCredit]);
+            dataGridView1.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DataPropertyName = WorkUnitRowColumn.BaseCredit.ToString();
+            dataGridView1.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
             dataGridView1.Columns.Add(WorkUnitRowColumn.Frames.ToString(), names[(int)WorkUnitRowColumn.Frames]);
             dataGridView1.Columns[WorkUnitRowColumn.Frames.ToString()].DataPropertyName = WorkUnitRowColumn.Frames.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.FramesCompleted.ToString(), names[(int)WorkUnitRowColumn.FramesCompleted]);

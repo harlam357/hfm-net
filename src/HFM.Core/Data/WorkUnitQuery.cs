@@ -302,7 +302,8 @@ namespace HFM.Core.Data
                 "Atoms",
                 "Slot Type",
                 "PPD",
-                "Credit"
+                "Credit",
+                "Base Credit"
             };
         }
     }

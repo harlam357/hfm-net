@@ -32,7 +32,8 @@ namespace HFM.Core.Data
         Atoms,
         SlotType,
         PPD,
-        Credit
+        Credit,
+        BaseCredit
     }
 
     [PetaPoco.TableName("WuHistory")]

@@ -51,14 +51,16 @@ namespace HFM.Core.Data
                 "Core",
                 "Frames",
                 "Atoms",
-                //"BaseCredit",
                 "PreferredDays",
                 "MaximumDays",
                 "SlotType",
                 "PPD",
-                "Credit"
+                "Credit",
+                "BaseCredit"
             });
             writer.WriteLine(line);
+
+            var provider = CultureInfo.InvariantCulture;
             foreach (var h in value)
             {
                 line = String.Join(",", new object[]
@@ -72,25 +74,25 @@ namespace HFM.Core.Data
                     h.Path,
                     h.Username,
                     h.Team,
-                    h.CoreVersion.ToString(CultureInfo.InvariantCulture),
+                    h.CoreVersion.ToString(provider),
                     h.FramesCompleted,
                     h.FrameTime,
                     //h.FrameTimeValue,
                     h.Result,
                     //h.ResultValue,
-                    h.Assigned.ToString(CultureInfo.InvariantCulture),
-                    h.Finished.ToString(CultureInfo.InvariantCulture),
+                    h.Assigned.ToString(provider),
+                    h.Finished.ToString(provider),
                     h.WorkUnitName,
-                    h.KFactor.ToString(CultureInfo.InvariantCulture),
+                    h.KFactor.ToString(provider),
                     h.Core,
                     h.Frames,
                     h.Atoms,
-                    //h.BaseCredit,
-                    h.PreferredDays.ToString(CultureInfo.InvariantCulture),
-                    h.MaximumDays.ToString(CultureInfo.InvariantCulture),
+                    h.PreferredDays.ToString(provider),
+                    h.MaximumDays.ToString(provider),
                     h.SlotType,
-                    h.PPD.ToString(CultureInfo.InvariantCulture),
-                    h.Credit.ToString(CultureInfo.InvariantCulture)
+                    h.PPD.ToString(provider),
+                    h.Credit.ToString(provider),
+                    h.BaseCredit.ToString(provider)
                 });
                 writer.WriteLine(line);
             }
