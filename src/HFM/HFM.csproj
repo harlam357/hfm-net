@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <Platforms>AnyCPU</Platforms>
-    <TargetFrameworks>net5.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net472</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>hfm_48_48.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
@@ -33,7 +33,7 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <Compile Remove="Forms\TypeDescriptionProviderSetup.cs" />
     <Compile Remove="Hyper\*" />
   </ItemGroup>

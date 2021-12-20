@@ -25,8 +25,8 @@ stages:
       testProjects: '**/*.Tests.csproj'
       buildConfiguration: 'Release'
       netFramework: 'net472'
-      dotnetWindows: 'net5.0-windows'
-      dotnet: 'net5.0'
+      dotnetWindows: 'net6.0-windows'
+      dotnet: 'net6.0'
 
     steps:
     - task: PowerShell@2

@@ -3,8 +3,8 @@ $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
 $EntryProjectPath = ".\HFM\HFM.csproj"
 $NetFramework = 'net472'
-$DotNetWindows = 'net5.0-windows'
-$DotNet = 'net5.0'
+$DotNetWindows = 'net6.0-windows'
+$DotNet = 'net6.0'
 
 # Taken from psake https://github.com/psake/psake
 Function Exec
