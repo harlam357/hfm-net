@@ -138,27 +138,19 @@ Function Deploy-Build
         "HFM.dll", 
         "HFM.dll.config", 
         "HFM.exe", 
-        "HFM.exe.config",
-        "HFM.runtimeconfig.json",
         "HFM.Forms.dll",
-        "System.Resources.Extensions.dll",
         "HFM.Log.dll",
         "HFM.Preferences.dll",
         "HFM.Proteins.dll",
+        "HFM.runtimeconfig.json",
         "LightInject.dll",
         "LightInject.Microsoft.DependencyInjection.dll",
         "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "Newtonsoft.Json.dll",
         "protobuf-net.Core.dll",
-        "System.Collections.Immutable.dll",
         "protobuf-net.dll",
-        "System.Memory.dll",
-        "System.Buffers.dll",
-        "System.Numerics.Vectors.dll",
-        "System.Runtime.CompilerServices.Unsafe.dll",
         "System.Data.SQLite.dll"
         "System.Data.SQLite.EF6.dll"
-        "System.Data.SQLite.Linq.dll"
         "ZedGraph.dll"
         )
 
