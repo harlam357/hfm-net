@@ -13,7 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;HFM.TargetPath=..\Artifacts\$(TargetFramework)\HFM.NET</DefineConstants>
+    <DefineConstants>Debug;HFM.TargetPath=..\Artifacts\net6.0-windows\HFM.NET</DefineConstants>
     <Cultures>en-US</Cultures>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
   </PropertyGroup>
@@ -21,7 +21,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <Cultures>en-US</Cultures>
-    <DefineConstants>HFM.TargetPath=..\Artifacts\$(TargetFramework)\HFM.NET</DefineConstants>
+    <DefineConstants>HFM.TargetPath=..\Artifacts\net6.0-windows\HFM.NET</DefineConstants>
     <WixVariables>WixUILicenseRtf=GPLv2.rtf;WixUIDialogBmp=Background.bmp;WixUIBannerBmp=Banner.bmp</WixVariables>
   </PropertyGroup>
   <ItemGroup>

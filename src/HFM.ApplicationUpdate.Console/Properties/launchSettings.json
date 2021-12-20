@@ -2,7 +2,7 @@
   "profiles": {
     "HFM.ApplicationUpdate.Console": {
       "commandName": "Project",
-      "commandLineArgs": "\"..\\..\\..\\..\\Artifacts\\net472\\Packages\\HFM 9.27.0.0.msi\" \"Windows Installer\" \"..\\..\\..\\..\\Artifacts\\net472\\Packages\\HFM 9.27.0.0.zip\" \"Zip Archive\" \"..\\..\\..\\..\\Artifacts\\net6.0-windows\\Packages\\HFM 9.27.0.0 (net6.0-windows).zip\" \"Zip Archive (net6.0)\""
+      "commandLineArgs": "\"..\\..\\..\\..\\Artifacts\\net6.0-windows\\Packages\\HFM 9.27.0.0.msi\" \"Windows Installer\" \"..\\..\\..\\..\\Artifacts\\net6.0-windows\\Packages\\HFM 9.27.0.0.zip\" \"Zip Archive\""
     }
   }
 }

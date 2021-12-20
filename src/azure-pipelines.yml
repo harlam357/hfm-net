@@ -24,7 +24,6 @@ stages:
         !**/HFM.Setup*.csproj
       testProjects: '**/*.Tests.csproj'
       buildConfiguration: 'Release'
-      netFramework: 'net472'
       dotnetWindows: 'net6.0-windows'
       dotnet: 'net6.0'
 
@@ -104,14 +103,14 @@ stages:
         workingDirectory: '.\src'
 
     - task: VSBuild@1
-      displayName: 'Build Setup ($(netFramework))'
+      displayName: 'Build Setup'
       inputs:
         solution: $(setupSolution)
         platform: x86
         configuration: '$(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'HFM.Build - Deploy-Msi ($(netFramework))'
+      displayName: 'HFM.Build - Deploy-Msi'
       inputs:
         targetType: 'inline'
         script: |
@@ -127,10 +126,9 @@ stages:
         script: |
           . .\HFM.Build.ps1
           Configure-Version -CommitCount
-          $netFrameworkMsi = "Artifacts\$(netFramework)\Packages\HFM.$Global:Version.msi"
-          $netFrameworkZip = "Artifacts\$(netFramework)\Packages\HFM.$Global:Version.zip"
-          $dotnetWindowsZip = "Artifacts\$(dotnetWindows)\Packages\HFM.$Global:Version.$(dotnetWindows).zip"
-          .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$(dotnet)\hfm-app-update.exe $netFrameworkMsi "Windows Installer" $netFrameworkZip "Zip Archive" $dotnetWindowsZip "Zip Archive ($(dotnetWindows))"
+          $dotnetWindowsMsi = "Artifacts\$(dotnetWindows)\Packages\HFM.$Global:Version.msi"
+          $dotnetWindowsZip = "Artifacts\$(dotnetWindows)\Packages\HFM.$Global:Version.zip"
+          .\HFM.ApplicationUpdate.Console\bin\$(buildConfiguration)\$(dotnet)\hfm-app-update.exe $dotnetWindowsMsi "Windows Installer" $dotnetWindowsZip "Zip Archive"
           Copy-Item 'ApplicationUpdate.xml' 'Artifacts\ApplicationUpdate.xml' -Verbose
         workingDirectory: '.\src'
 
