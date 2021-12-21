@@ -21,7 +21,6 @@
   <ItemGroup>
     <PackageReference Include="LightInject" Version="6.4.0" />
     <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.3.6" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
