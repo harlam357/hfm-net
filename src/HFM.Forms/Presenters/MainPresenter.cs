@@ -59,18 +59,13 @@ namespace HFM.Forms.Presenters
             SlotsModel = new SlotCollectionModel(Form, Model.Preferences, clientConfiguration);
             SlotsModel.Load();
 
-            SlotsModel.AfterResetBindings += (s, e) =>
+            SlotsModel.Reset += (s, e) =>
             {
-                // Create a local reference before handing off to BeginInvoke.
-                // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
-                // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
-                var selectedSlot = SlotsModel.SelectedSlot;
-                var slotTotals = SlotsModel.SlotTotals;
                 // run asynchronously so binding operation can finish
                 Form.BeginInvoke(new Action(() =>
                 {
-                    Model.GridModelSelectedSlotChanged(selectedSlot);
-                    Model.GridModelSlotTotalsChanged(slotTotals);
+                    Model.GridModelSelectedSlotChanged(e.SelectedSlot);
+                    Model.GridModelSlotTotalsChanged(e.SlotTotals);
                 }), null);
             };
             SlotsModel.PropertyChanged += (s, e) =>

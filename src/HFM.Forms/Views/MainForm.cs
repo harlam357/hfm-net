@@ -114,17 +114,10 @@ namespace HFM.Forms.Views
             dataGridView1.DataSource = slotsModel.BindingSource;
             dataGridView1.Sorted += (s, e) => slotsModel.ResetSelectedSlot();
 
-            slotsModel.AfterResetBindings += (s, e) =>
+            slotsModel.Reset += (s, e) =>
             {
-                // Create a local reference before handing off to BeginInvoke.
-                // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
-                // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
-                var selectedSlot = slotsModel.SelectedSlot;
-                var workUnitQueue = selectedSlot?.WorkUnitQueue;
-                var logLines = selectedSlot?.CurrentLogLines?.ToList();
-
                 // run asynchronously so binding operation can finish
-                BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
+                BeginInvoke(new Action(() => LoadSelectedSlot(e.SelectedSlot, e.WorkUnitQueue, e.LogLines)));
             };
 
             slotsModel.PropertyChanged += (s, e) =>

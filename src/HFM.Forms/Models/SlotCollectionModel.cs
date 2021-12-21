@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Forms.Internal;
+using HFM.Log;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -146,10 +147,10 @@ namespace HFM.Forms.Models
 
         private SlotTotals _slotTotals;
 
-        public SlotTotals SlotTotals
+        private SlotTotals SlotTotals
         {
             get => _slotTotals;
-            private set
+            set
             {
                 _slotTotals = value;
                 OnPropertyChanged();
@@ -188,7 +189,10 @@ namespace HFM.Forms.Models
 
                 BindingSource.ResetBindings(false);
             }
-            OnAfterResetBindings(EventArgs.Empty);
+            OnReset(new SlotCollectionModelResetEventArgs(SelectedSlot,
+                                                          SelectedSlot?.WorkUnitQueue,
+                                                          SelectedSlot?.CurrentLogLines?.ToList(),
+                                                          SlotTotals));
         }
 
         public bool HideInactiveSlots
@@ -234,8 +238,27 @@ namespace HFM.Forms.Models
             }
         }
 
-        public event EventHandler AfterResetBindings;
+        public event EventHandler<SlotCollectionModelResetEventArgs> Reset;
 
-        private void OnAfterResetBindings(EventArgs e) => AfterResetBindings?.Invoke(this, e);
+        private void OnReset(SlotCollectionModelResetEventArgs e) => Reset?.Invoke(this, e);
+    }
+
+    public class SlotCollectionModelResetEventArgs : EventArgs
+    {
+        public SlotCollectionModelResetEventArgs(SlotModel selectedSlot,
+                                                 WorkUnitQueueItemCollection workUnitQueue,
+                                                 IList<LogLine> logLines,
+                                                 SlotTotals slotTotals)
+        {
+            SelectedSlot = selectedSlot;
+            WorkUnitQueue = workUnitQueue;
+            LogLines = logLines;
+            SlotTotals = slotTotals;
+        }
+
+        public SlotModel SelectedSlot { get; }
+        public WorkUnitQueueItemCollection WorkUnitQueue { get; }
+        public IList<LogLine> LogLines { get; }
+        public SlotTotals SlotTotals { get; }
     }
 }
