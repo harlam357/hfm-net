@@ -39,7 +39,8 @@ namespace HFM.Core.Data
 
             public List<Protein> Deserialize(string path)
             {
-                return _serializer.ReadFile(path).ToList();
+                var result = _serializer.ReadFile(path);
+                return result as List<Protein> ?? result.ToList();
             }
 
             public void Serialize(string path, List<Protein> value)
