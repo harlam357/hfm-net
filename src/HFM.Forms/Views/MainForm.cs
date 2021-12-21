@@ -49,7 +49,7 @@ namespace HFM.Forms.Views
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadData(_presenter.Model);
-            LoadGridData(_presenter.GridModel);
+            LoadSlotsData(_presenter.SlotsModel);
             LoadUserStatsData(_presenter.UserStatsDataModel);
         }
 
@@ -109,17 +109,17 @@ namespace HFM.Forms.Views
             RestoreFormColumns(model.FormColumns);
         }
 
-        private void LoadGridData(MainGridModel gridModel)
+        private void LoadSlotsData(SlotCollectionModel slotsModel)
         {
-            dataGridView1.DataSource = gridModel.BindingSource;
-            dataGridView1.Sorted += (s, e) => gridModel.ResetSelectedSlot();
+            dataGridView1.DataSource = slotsModel.BindingSource;
+            dataGridView1.Sorted += (s, e) => slotsModel.ResetSelectedSlot();
 
-            gridModel.AfterResetBindings += (s, e) =>
+            slotsModel.AfterResetBindings += (s, e) =>
             {
                 // Create a local reference before handing off to BeginInvoke.
-                // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
-                // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
-                var selectedSlot = gridModel.SelectedSlot;
+                // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
+                // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
+                var selectedSlot = slotsModel.SelectedSlot;
                 var workUnitQueue = selectedSlot?.WorkUnitQueue;
                 var logLines = selectedSlot?.CurrentLogLines?.ToList();
 
@@ -127,15 +127,15 @@ namespace HFM.Forms.Views
                 BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
             };
 
-            gridModel.PropertyChanged += (s, e) =>
+            slotsModel.PropertyChanged += (s, e) =>
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(MainGridModel.SelectedSlot):
+                    case nameof(SlotCollectionModel.SelectedSlot):
                         // Create a local reference before handing off to BeginInvoke.
-                        // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
-                        // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
-                        var selectedSlot = gridModel.SelectedSlot;
+                        // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
+                        // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
+                        var selectedSlot = slotsModel.SelectedSlot;
                         var workUnitQueue = selectedSlot?.WorkUnitQueue;
                         var logLines = selectedSlot?.CurrentLogLines?.ToList();
 

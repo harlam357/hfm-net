@@ -34,7 +34,7 @@ namespace HFM.Forms.Presenters
         public IProteinService ProteinService { get; }
         public UserStatsDataModel UserStatsDataModel { get; }
         private IPreferences Preferences { get; }
-        public MainGridModel GridModel { get; }
+        public SlotCollectionModel SlotsModel { get; }
 
         private readonly ClientSettingsManager _settingsManager;
 
@@ -56,16 +56,16 @@ namespace HFM.Forms.Presenters
 
             UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
             Preferences = Model.Preferences;
-            GridModel = new MainGridModel(Form, Model.Preferences, clientConfiguration);
-            GridModel.Load();
+            SlotsModel = new SlotCollectionModel(Form, Model.Preferences, clientConfiguration);
+            SlotsModel.Load();
 
-            GridModel.AfterResetBindings += (s, e) =>
+            SlotsModel.AfterResetBindings += (s, e) =>
             {
                 // Create a local reference before handing off to BeginInvoke.
-                // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
-                // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
-                var selectedSlot = GridModel.SelectedSlot;
-                var slotTotals = GridModel.SlotTotals;
+                // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
+                // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
+                var selectedSlot = SlotsModel.SelectedSlot;
+                var slotTotals = SlotsModel.SlotTotals;
                 // run asynchronously so binding operation can finish
                 Form.BeginInvoke(new Action(() =>
                 {
@@ -73,15 +73,15 @@ namespace HFM.Forms.Presenters
                     Model.GridModelSlotTotalsChanged(slotTotals);
                 }), null);
             };
-            GridModel.PropertyChanged += (s, e) =>
+            SlotsModel.PropertyChanged += (s, e) =>
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(MainGridModel.SelectedSlot):
+                    case nameof(SlotCollectionModel.SelectedSlot):
                         // Create a local reference before handing off to BeginInvoke.
-                        // This ensures that the BeginInvoke action uses the state of GridModel properties available now,
-                        // not the state of GridModel properties when the BeginInvoke action is executed (at a later time).
-                        var selectedSlot = GridModel.SelectedSlot;
+                        // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
+                        // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
+                        var selectedSlot = SlotsModel.SelectedSlot;
                         // run asynchronously so binding operation can finish
                         Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(selectedSlot)), null);
                         break;
@@ -447,7 +447,7 @@ namespace HFM.Forms.Presenters
 
         public void ClientsEditClick(FahClientSettingsPresenterFactory presenterFactory)
         {
-            var selectedSlot = GridModel.SelectedSlot;
+            var selectedSlot = SlotsModel.SelectedSlot;
             if (selectedSlot == null) return;
 
             var originalSettings = selectedSlot.Client.Settings;
@@ -477,17 +477,17 @@ namespace HFM.Forms.Presenters
         public void ClientsDeleteClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            ClientConfiguration.Remove(GridModel.SelectedSlot.Client.Settings.Name);
+            ClientConfiguration.Remove(SlotsModel.SelectedSlot.Client.Settings.Name);
         }
 
         public void ClientsRefreshSelectedClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            Task.Run(GridModel.SelectedSlot.Client.Retrieve);
+            Task.Run(SlotsModel.SelectedSlot.Client.Retrieve);
         }
 
         public void ClientsRefreshAllClick()
@@ -498,9 +498,9 @@ namespace HFM.Forms.Presenters
         public void ClientsViewCachedLogClick(LocalProcessService localProcess)
         {
             // Check for SelectedSlot, and get out if not found
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), GridModel.SelectedSlot.Client.Settings.ClientLogFileName);
+            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), SlotsModel.SelectedSlot.Client.Settings.ClientLogFileName);
             if (File.Exists(path))
             {
                 string errorMessage = String.Format(CultureInfo.CurrentCulture,
@@ -513,7 +513,7 @@ namespace HFM.Forms.Presenters
             }
             else
             {
-                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", GridModel.SelectedSlot.Client.Settings.Name);
+                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", SlotsModel.SelectedSlot.Client.Settings.Name);
                 MessageBox.ShowInformation(Form, message, Core.Application.NameAndVersion);
             }
         }
@@ -521,39 +521,39 @@ namespace HFM.Forms.Presenters
         // Grid Context Menu Handling Methods
         public void ClientsFoldSlotClick()
         {
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
             {
-                client.Fold(GridModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Fold(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
             }
         }
 
         public void ClientsPauseSlotClick()
         {
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
             {
-                client.Pause(GridModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Pause(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
             }
         }
 
         public void ClientsFinishSlotClick()
         {
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            if (GridModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
             {
-                client.Finish(GridModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Finish(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
             }
         }
 
         public void CopyPRCGToClipboardClicked()
         {
-            if (GridModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedSlot == null) return;
 
-            string projectString = GridModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
+            string projectString = SlotsModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
 
             // TODO: Replace ClipboardWrapper.SetText() with abstraction
             ClipboardWrapper.SetText(projectString);
@@ -562,7 +562,7 @@ namespace HFM.Forms.Presenters
         // View Menu Handling Methods
         public void ShowHideInactiveSlots()
         {
-            GridModel.HideInactiveSlots = !GridModel.HideInactiveSlots;
+            SlotsModel.HideInactiveSlots = !SlotsModel.HideInactiveSlots;
         }
 
         private MessagesPresenter _messagesPresenter;
@@ -698,9 +698,9 @@ namespace HFM.Forms.Presenters
             int projectID = 0;
 
             // Check for SelectedSlot, and if found... load its ProjectID.
-            if (GridModel.SelectedSlot != null)
+            if (SlotsModel.SelectedSlot != null)
             {
-                projectID = GridModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
+                projectID = SlotsModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
             }
 
             presenter.Model.DefaultProjectID = projectID;
