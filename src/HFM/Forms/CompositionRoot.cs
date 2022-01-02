@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 
@@ -30,12 +31,13 @@ namespace HFM.Forms
                 {
                     var logger = factory.GetInstance<ILogger>();
                     var messageBox = factory.GetInstance<MessageBoxPresenter>();
+                    var localProcess = factory.GetInstance<LocalProcessService>();
                     var properties = new Dictionary<string, string>
                     {
                         { "Application", Core.Application.NameAndVersion },
                         { "OS Version", Environment.OSVersion.VersionString }
                     };
-                    return new DefaultExceptionPresenterFactory(logger, messageBox, properties, Core.Application.SupportForumUrl);
+                    return new DefaultExceptionPresenterFactory(logger, messageBox, localProcess, properties, Core.Application.SupportForumUrl);
                 }, new PerContainerLifetime());
 
             // Transient Models

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
@@ -262,7 +263,7 @@ namespace HFM
                 properties.Add("Startup Error", message);
             }
 
-            var presenter = new DefaultExceptionPresenterFactory(Logger, MessageBoxPresenter.Default, properties, Core.Application.SupportForumUrl);
+            var presenter = new DefaultExceptionPresenterFactory(Logger, MessageBoxPresenter.Default, LocalProcessService.Default, properties, Core.Application.SupportForumUrl);
             presenter.ShowDialog(null, exception, mustTerminate);
         }
     }
