@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
+using HFM.Core.Client.Mocks;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -335,6 +339,51 @@ namespace HFM.Core.Client
             mockClient.Verify(x => x.Dispose());
         }
 
+        [Test]
+        public void ClientConfiguration_GetSlots_IsThreadSafe()
+        {
+            // Arrange
+            var configuration = CreateConfiguration();
+            configuration.Add("test1", new MockClientRefreshesSlots());
+            configuration.Add("test2", new MockClientRefreshesSlots());
+            configuration.Add("test3", new MockClientRefreshesSlots());
+            var clients = configuration.GetClients();
+
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Parallel.ForEach(clients, x =>
+                    {
+                        var client = (Client)x;
+                        client.RefreshSlots();
+                    });
+                }
+            });
+
+            const int count = 2000;
+
+            var tasks = Enumerable.Range(0, count)
+                .Select(_ => Task.Run(() =>
+                {
+                    Thread.Sleep(10);
+                    foreach (var x in configuration.GetSlots())
+                    {
+                        // enumeration of client slots
+                    }
+                }))
+                .ToArray();
+
+            try
+            {
+                Task.WaitAll(tasks);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Enumeration failed");
+            }
+        }
+
         private static ClientConfiguration CreateConfiguration() =>
             new(null,
                 new InMemoryPreferencesProvider(),
@@ -358,6 +407,27 @@ namespace HFM.Core.Client
             protected override void OnClientConfigurationChanged(object sender, ClientConfigurationChangedEventArgs e)
             {
 
+            }
+        }
+
+        private class MockClientRefreshesSlots : MockClient
+        {
+            public MockClientRefreshesSlots() : base(true)
+            {
+
+            }
+
+            private static readonly Random _Random = new();
+
+            protected override void OnRefreshSlots(ICollection<SlotModel> slots)
+            {
+                slots.Clear();
+
+                int count = _Random.Next(1, 5);
+                for (int i = 0; i < count; i++)
+                {
+                    slots.Add(new SlotModel(this));
+                }
             }
         }
     }
