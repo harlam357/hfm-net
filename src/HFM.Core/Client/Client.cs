@@ -136,7 +136,7 @@ namespace HFM.Core.Client
 
         protected virtual void OnCancel() => IsCancellationRequested = true;
 
-        public virtual bool Connected => false;
+        public virtual bool Connected { get; protected set; }
 
         public async Task Connect()
         {
