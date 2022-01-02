@@ -191,7 +191,7 @@ namespace HFM.Forms.Models
             }
             OnReset(new SlotCollectionModelResetEventArgs(SelectedSlot,
                                                           SelectedSlot?.WorkUnitQueue,
-                                                          SelectedSlot?.CurrentLogLines?.ToList(),
+                                                          SelectedSlot?.CurrentLogLines,
                                                           SlotTotals));
         }
 
@@ -247,7 +247,7 @@ namespace HFM.Forms.Models
     {
         public SlotCollectionModelResetEventArgs(SlotModel selectedSlot,
                                                  WorkUnitQueueItemCollection workUnitQueue,
-                                                 IList<LogLine> logLines,
+                                                 IReadOnlyCollection<LogLine> logLines,
                                                  SlotTotals slotTotals)
         {
             SelectedSlot = selectedSlot;
@@ -258,7 +258,7 @@ namespace HFM.Forms.Models
 
         public SlotModel SelectedSlot { get; }
         public WorkUnitQueueItemCollection WorkUnitQueue { get; }
-        public IList<LogLine> LogLines { get; }
+        public IReadOnlyCollection<LogLine> LogLines { get; }
         public SlotTotals SlotTotals { get; }
     }
 }

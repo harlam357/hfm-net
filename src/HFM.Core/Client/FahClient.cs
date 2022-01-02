@@ -251,26 +251,29 @@ namespace HFM.Core.Client
                 ? slotModel.Processor
                 : systemInfo?.CPU;
 
-        private IEnumerable<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
+        private IReadOnlyCollection<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
         {
-            if (workUnits.Current?.LogLines != null)
+            IEnumerable<LogLine> logLines = workUnits.Current?.LogLines;
+
+            if (logLines is null)
             {
-                return workUnits.Current.LogLines;
+                var slotRun = Messages.GetSlotRun(slotID);
+                if (slotRun != null)
+                {
+                    logLines = LogLineEnumerable.Create(slotRun);
+                }
             }
 
-            var slotRun = Messages.GetSlotRun(slotID);
-            if (slotRun != null)
+            if (logLines is null)
             {
-                return LogLineEnumerable.Create(slotRun);
+                var clientRun = Messages.GetClientRun();
+                if (clientRun != null)
+                {
+                    logLines = LogLineEnumerable.Create(clientRun);
+                }
             }
 
-            var clientRun = Messages.GetClientRun();
-            if (clientRun != null)
-            {
-                return LogLineEnumerable.Create(clientRun);
-            }
-
-            return Array.Empty<LogLine>();
+            return logLines is null ? Array.Empty<LogLine>() : logLines.ToList();
         }
 
         private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
@@ -298,7 +301,7 @@ namespace HFM.Core.Client
 
             slotModel.Processor = slotProcessor;
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
-            slotModel.CurrentLogLines.Reset(EnumerateSlotModelLogLines(slotModel.SlotID, workUnits));
+            slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
 
             var clientRun = Messages.GetClientRun();
             if (WorkUnitRepository != null && WorkUnitRepository.Connected && clientRun != null)

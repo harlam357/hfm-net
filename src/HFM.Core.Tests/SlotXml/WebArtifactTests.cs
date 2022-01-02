@@ -164,7 +164,7 @@ namespace HFM.Core.SlotXml
             {
                 new Log.LogLine { LineType = LogLineType.LogOpen, Index = 1, Raw = "Open" }
             };
-            slot.CurrentLogLines.Reset(logLines);
+            slot.CurrentLogLines = logLines;
             slot.WorkUnitModel.WorkUnit.LogLines = logLines;
             slots.Add(slot);
 

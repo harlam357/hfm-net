@@ -13,7 +13,7 @@ namespace HFM.Forms.Controls
     {
         public object Owner { get; private set; }
 
-        public ICollection<LogLine> LogLines { get; private set; }
+        public IReadOnlyCollection<LogLine> LogLines { get; private set; }
 
         public LogLineRichTextBox()
         {
@@ -35,7 +35,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        public void SetLogLines(object owner, ICollection<LogLine> logLines)
+        public void SetLogLines(object owner, IReadOnlyCollection<LogLine> logLines)
         {
             if (owner != null && logLines != null && logLines.Count > 0)
             {
@@ -67,7 +67,7 @@ namespace HFM.Forms.Controls
             }
         }
 
-        private void SetLogLinesInternal(object owner, ICollection<LogLine> logLines)
+        private void SetLogLinesInternal(object owner, IReadOnlyCollection<LogLine> logLines)
         {
             Owner = owner;
             LogLines = FilterMaxDisplayableLogLines(logLines);
@@ -76,7 +76,7 @@ namespace HFM.Forms.Controls
 
         private const int MaxDisplayableLogLines = 500;
 
-        private static ICollection<LogLine> FilterMaxDisplayableLogLines(ICollection<LogLine> logLines)
+        private static IReadOnlyCollection<LogLine> FilterMaxDisplayableLogLines(IReadOnlyCollection<LogLine> logLines)
         {
             if (logLines != null)
             {

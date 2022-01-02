@@ -130,7 +130,7 @@ namespace HFM.Forms.Views
                         // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
                         var selectedSlot = slotsModel.SelectedSlot;
                         var workUnitQueue = selectedSlot?.WorkUnitQueue;
-                        var logLines = selectedSlot?.CurrentLogLines?.ToList();
+                        var logLines = selectedSlot?.CurrentLogLines;
 
                         // run asynchronously so binding operation can finish
                         BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
@@ -247,7 +247,7 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, IList<LogLine> logLines)
+        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, IReadOnlyCollection<LogLine> logLines)
         {
             queueControl.SetWorkUnitQueue(workUnitQueue);
             txtLogFile.SetLogLines(selectedSlot, logLines);

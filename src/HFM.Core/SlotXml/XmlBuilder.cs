@@ -159,7 +159,8 @@ namespace HFM.Core.SlotXml
             slotData.Username = slot.Username;
             slotData.DownloadTime = slot.Assigned.ToShortStringOrEmpty();
             slotData.PreferredDeadline = slot.PreferredDeadline.ToShortStringOrEmpty();
-            slotData.CurrentLogLines = slot.CurrentLogLines.Skip(slot.CurrentLogLines.Count - maxLogLines).Select(x => _mapper.Map<Log.LogLine, LogLine>(x)).ToList();
+            var logLines = slot.CurrentLogLines;
+            slotData.CurrentLogLines = logLines.Skip(logLines.Count - maxLogLines).Select(x => _mapper.Map<Log.LogLine, LogLine>(x)).ToList();
             slotData.Protein = _mapper.Map<Proteins.Protein, Protein>(slot.WorkUnitModel.CurrentProtein);
             return slotData;
         }
