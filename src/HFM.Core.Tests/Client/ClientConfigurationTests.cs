@@ -335,13 +335,11 @@ namespace HFM.Core.Client
             mockClient.Verify(x => x.Dispose());
         }
 
-        private static ClientConfiguration CreateConfiguration()
-        {
-            return new ClientConfiguration(null,
+        private static ClientConfiguration CreateConfiguration() =>
+            new(null,
                 new InMemoryPreferencesProvider(),
                 new ClientFactory(),
                 (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));
-        }
 
         // a ClientScheduledTasks that does not respond to preference or configuration changed events
         private class ClientScheduledTasksWithoutEvents : ClientScheduledTasks

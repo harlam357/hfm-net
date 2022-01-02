@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using HFM.Core.Logging;
+using HFM.Core.Client.Mocks;
 
 using Moq;
 
@@ -64,7 +64,7 @@ namespace HFM.Core.Client
         [Test]
         public void Client_Slots_ContainsOneOfflineSlot()
         {
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 Assert.AreEqual(1, client.Slots.Count());
                 Assert.AreEqual(SlotStatus.Offline, client.Slots.First().Status);
@@ -75,7 +75,7 @@ namespace HFM.Core.Client
         public void Client_RefreshSlots_RaisesSlotsChangedEvent()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 bool raised = false;
                 client.SlotsChanged += (s, e) => raised = true;
@@ -90,7 +90,7 @@ namespace HFM.Core.Client
         public async Task Client_Connect_ConnectsTheClient()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 // Act
                 await client.Connect();
@@ -103,7 +103,7 @@ namespace HFM.Core.Client
         public async Task Client_Connect_DoesNotConnectTheClientIfTheClientIsDisabled()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 client.Settings = new ClientSettings { Disabled = true };
                 // Act
@@ -128,7 +128,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_ClearsIsCancellationRequested()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 client.Cancel();
                 Assert.IsTrue(client.IsCancellationRequested);
@@ -157,7 +157,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_SetsLastRetrieveTime()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 var expected = client.LastRetrieveTime;
                 // Act
@@ -171,7 +171,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_ConnectsIfNotConnected()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 // Act
                 await client.Retrieve();
@@ -184,7 +184,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_DoesNotConnectTheClientIfTheClientIsDisabled()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 client.Settings = new ClientSettings { Disabled = true };
                 // Act
@@ -226,7 +226,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_OnMultipleRetrieveCallsConnectIsCalledOnce()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 const int count = 10;
                 // Act
@@ -245,7 +245,7 @@ namespace HFM.Core.Client
         public async Task Client_Retrieve_RaisesRetrieveFinishedEvent()
         {
             // Arrange
-            using (var client = new TestClient())
+            using (var client = new MockClient())
             {
                 bool raised = false;
                 client.RetrieveFinished += (s, e) => raised = true;
@@ -318,34 +318,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private class TestClient : Client
-        {
-            public TestClient() : base(Mock.Of<ILogger>(), null, null)
-            {
-
-            }
-
-            protected TestClient(bool connected) : this()
-            {
-                Connected = connected;
-            }
-
-            protected override Task OnConnect()
-            {
-                Connected = true;
-                return Task.CompletedTask;
-            }
-
-            public int RetrieveCount { get; private set; }
-
-            protected override Task OnRetrieve()
-            {
-                RetrieveCount++;
-                return Task.CompletedTask;
-            }
-        }
-
-        private class TestClientSettingsChanged : TestClient
+        private class TestClientSettingsChanged : MockClient
         {
             public ClientSettings OldSettings { get; private set; }
             public ClientSettings NewSettings { get; private set; }
@@ -357,12 +330,12 @@ namespace HFM.Core.Client
             }
         }
 
-        private class TestClientConnectThrows : TestClient
+        private class TestClientConnectThrows : MockClient
         {
             protected override Task OnConnect() => throw new Exception(nameof(OnConnect));
         }
 
-        private class TestClientRetrieveThrows : TestClient
+        private class TestClientRetrieveThrows : MockClient
         {
             public TestClientRetrieveThrows() : base(true)
             {
@@ -372,7 +345,7 @@ namespace HFM.Core.Client
             protected override Task OnRetrieve() => throw new Exception(nameof(OnRetrieve));
         }
 
-        private class TestClientCancelsOnRetrieve : TestClient
+        private class TestClientCancelsOnRetrieve : MockClient
         {
             public TestClientCancelsOnRetrieve() : base(true)
             {
@@ -386,7 +359,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private class TestClientRetrieveOnMultipleThreads : TestClient
+        private class TestClientRetrieveOnMultipleThreads : MockClient
         {
             public TestClientRetrieveOnMultipleThreads() : base(true)
             {
@@ -414,7 +387,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private class TestClientRefreshesSlots : TestClient
+        private class TestClientRefreshesSlots : MockClient
         {
             public TestClientRefreshesSlots() : base(true)
             {

@@ -14,9 +14,7 @@
     <Compile Include="..\HFM.Core.Tests\ArtifactFolder.cs">
       <Link>ArtifactFolder.cs</Link>
     </Compile>
-    <Compile Include="..\HFM.Core.Tests\Mocks\MockLocalProcessService.cs">
-      <Link>Mocks\MockLocalProcessService.cs</Link>
-    </Compile>
+    <Compile Include="..\HFM.Core.Tests\Services\Mocks\MockLocalProcessService.cs" Link="Services\Mocks\MockLocalProcessService.cs" />
   </ItemGroup>
 
   <ItemGroup>

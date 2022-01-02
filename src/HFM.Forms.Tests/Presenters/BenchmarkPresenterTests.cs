@@ -6,8 +6,8 @@ using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
-using HFM.Core.Mocks;
 using HFM.Core.Services;
+using HFM.Core.Services.Mocks;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;

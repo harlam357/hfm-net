@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HFM.Client;
 using HFM.Log;
 
-namespace HFM.Core.Client.Internal
+namespace HFM.Core.Client.Mocks
 {
     internal static class FahClientFactoryForTests
     {

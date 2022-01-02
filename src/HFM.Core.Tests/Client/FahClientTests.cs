@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 using NUnit.Framework;
 
-using static HFM.Core.Client.Internal.FahClientFactoryForTests;
+using static HFM.Core.Client.Mocks.FahClientFactoryForTests;
 
 namespace HFM.Core.Client
 {
