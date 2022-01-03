@@ -98,7 +98,7 @@ namespace HFM.Core.Data
                 var c = new ClientEntity
                 {
                     Name = slotIdentifier.ClientIdentifier.Name,
-                    ConnectionString = r.Path
+                    ConnectionString = slotIdentifier.ClientIdentifier.ToServerPortString()
                 };
                 clients.Add(c);
             }
@@ -128,7 +128,7 @@ namespace HFM.Core.Data
 
                 var c = await context.Clients.FirstAsync(x =>
                     x.Name == slotIdentifier.ClientIdentifier.Name &&
-                    x.ConnectionString == r.Path);
+                    x.ConnectionString == slotIdentifier.ClientIdentifier.ToServerPortString());
 
                 var w = new WorkUnitEntity
                 {
@@ -153,6 +153,19 @@ namespace HFM.Core.Data
 
             context.WorkUnits.AddRange(workUnits);
             Console.WriteLine($"Added {context.WorkUnits.Local.Count} WorkUnits");
+
+            var database = (IWorkUnitDatabase)repository;
+            var table = database.Select("SELECT * FROM [DbVersion]");
+            foreach (System.Data.DataRow row in table.Rows)
+            {
+                var v = new VersionEntity
+                {
+                    Version = row["Version"].ToString(),
+                };
+                context.Versions.Add(v);
+            }
+
+            Console.WriteLine($"Added {context.Versions.Local.Count} Versions");
 
             await context.SaveChangesAsync();
         }

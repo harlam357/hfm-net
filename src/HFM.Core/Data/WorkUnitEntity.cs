@@ -90,4 +90,11 @@ namespace HFM.Core.Data
 
         public TimeSpan Duration { get; set; }
     }
+
+    public record VersionEntity
+    {
+        public long ID { get; set; }
+
+        public string Version { get; set; }
+    }
 }

@@ -8,6 +8,7 @@ namespace HFM.Core.Data
         public DbSet<ProteinEntity> Proteins { get; set; }
         public DbSet<ClientEntity> Clients { get; set; }
         public DbSet<WorkUnitFrameEntity> WorkUnitFrames { get; set; }
+        public DbSet<VersionEntity> Versions { get; set; }
 
         private readonly string _connectionString;
 
