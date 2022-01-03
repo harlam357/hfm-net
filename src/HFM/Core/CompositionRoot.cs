@@ -21,6 +21,15 @@ namespace HFM.Core
             // IWorkUnitRepository - Singleton
             serviceRegistry.Register<Data.IWorkUnitRepository, Data.WorkUnitRepository>(new PerContainerLifetime());
 
+            // WorkUnitContext - Transient
+            serviceRegistry.Register(factory =>
+            {
+                var preferences = factory.GetInstance<Preferences.IPreferences>();
+                string appDataPath = preferences.Get<string>(Preferences.Preference.ApplicationDataFolderPath);
+                string connectionString = $"Data Source={System.IO.Path.Combine(appDataPath, "WorkUnits.db")}";
+                return new Data.WorkUnitContext(connectionString);
+            }, new PerRequestLifeTime());
+
             // ClientConfiguration - Singleton
             serviceRegistry.Register<Client.ClientConfiguration>(new PerContainerLifetime());
 
@@ -34,11 +43,11 @@ namespace HFM.Core
 
             // WorkUnitQueryDataContainer - Singleton
             serviceRegistry.Register<Data.WorkUnitQueryDataContainer>(new PerContainerLifetime());
-            serviceRegistry.Initialize<Data.WorkUnitQueryDataContainer>((factory, instance) => instance.Read());
+            serviceRegistry.Initialize<Data.WorkUnitQueryDataContainer>((_, instance) => instance.Read());
 
             // ProteinBenchmarkDataContainer - Singleton
             serviceRegistry.Register<Data.ProteinBenchmarkDataContainer>(new PerContainerLifetime());
-            serviceRegistry.Initialize<Data.ProteinBenchmarkDataContainer>((factory, instance) => instance.Read());
+            serviceRegistry.Initialize<Data.ProteinBenchmarkDataContainer>((_, instance) => instance.Read());
 
             // IProteinBenchmarkService - Singleton
             serviceRegistry.Register<WorkUnits.IProteinBenchmarkService, WorkUnits.ProteinBenchmarkService>(new PerContainerLifetime());
@@ -48,14 +57,14 @@ namespace HFM.Core
 
             // EocStatsDataContainer - Singleton
             serviceRegistry.Register<Data.EocStatsDataContainer>(new PerContainerLifetime());
-            serviceRegistry.Initialize<Data.EocStatsDataContainer>((factory, instance) => instance.Read());
+            serviceRegistry.Initialize<Data.EocStatsDataContainer>((_, instance) => instance.Read());
 
             // EocStatsScheduledTask - Singleton
             serviceRegistry.Register<ScheduledTasks.EocStatsScheduledTask>(new PerContainerLifetime());
 
             // ProteinDataContainer - Singleton
             serviceRegistry.Register<Data.ProteinDataContainer>(new PerContainerLifetime());
-            serviceRegistry.Initialize<Data.ProteinDataContainer>((factory, instance) => instance.Read());
+            serviceRegistry.Initialize<Data.ProteinDataContainer>((_, instance) => instance.Read());
 
             // IProteinService - Singleton
             serviceRegistry.Register<WorkUnits.IProteinService, WorkUnits.ProteinService>(new PerContainerLifetime());
