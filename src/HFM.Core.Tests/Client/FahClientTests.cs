@@ -237,7 +237,7 @@ namespace HFM.Core.Client
             // Act
             await fahClient.Retrieve();
             // Assert
-            Assert.AreEqual("7.6.21", fahClient.ClientVersion);
+            Assert.IsNull(fahClient.ClientVersion);
             var slot00 = fahClient.Slots.ElementAt(0);
             Assert.AreEqual("AMD Ryzen 7 3700X 8-Core Processor", slot00.Processor);
             Assert.IsNull(slot00.WorkUnitQueue);
