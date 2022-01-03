@@ -1,9 +1,6 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-using HFM.Core.Services;
-
-namespace HFM.Core.Mocks
+namespace HFM.Core.Services.Mocks
 {
     public class MockLocalProcessService : LocalProcessService
     {

@@ -154,14 +154,6 @@ namespace HFM.Core.Client
             OnClientConfigurationChanged(new ClientConfigurationChangedEventArgs(ClientConfigurationChangedAction.Edit, client));
         }
 
-        /// <summary>
-        /// Adds an <see cref="IClient"/> element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
-        /// </summary>
-        /// <remarks>Sets the IsDirty property to true and raises the ConfigurationChanged event.</remarks>
-        /// <param name="key">The string to use as the key of the element to add.</param>
-        /// <param name="value">The <see cref="IClient"/> object to use as the value of the element to add.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">An element with the same key already exists in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.</exception>
         internal void Add(string key, IClient value)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));

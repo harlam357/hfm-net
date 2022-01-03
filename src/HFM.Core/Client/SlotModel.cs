@@ -81,7 +81,7 @@ namespace HFM.Core.Client
 
         public virtual DateTime PreferredDeadline { get; set; }
 
-        public ICollection<LogLine> CurrentLogLines { get; } = new List<LogLine>();
+        public IReadOnlyCollection<LogLine> CurrentLogLines { get; set; } = new List<LogLine>();
 
         public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
 

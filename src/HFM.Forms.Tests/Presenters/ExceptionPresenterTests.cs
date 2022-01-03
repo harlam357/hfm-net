@@ -45,7 +45,7 @@ namespace HFM.Forms.Presenters
 
         private class MockDialogExceptionPresenter : DefaultExceptionPresenter
         {
-            public MockDialogExceptionPresenter(IDictionary<string, string> properties) : base(null, null, properties, null)
+            public MockDialogExceptionPresenter(IDictionary<string, string> properties) : base(null, null, null, properties, null)
             {
             }
 

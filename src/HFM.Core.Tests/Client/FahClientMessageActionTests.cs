@@ -15,11 +15,11 @@ namespace HFM.Core.Client
     public class FahClientMessageActionTests
     {
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsNotSlotInfo()
+        public void DelegateFahClientMessageAction_Execute_DoesNotRunActionWhenMessageTypeDoesNotMatch()
         {
             // Arrange
             bool executed = false;
-            var action = new SlotInfoMessageAction(() => executed = true);
+            var action = new DelegateFahClientMessageAction(FahClientMessageType.SlotInfo, () => executed = true);
             // Act
             action.Execute(null);
             // Assert
@@ -27,11 +27,11 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_RunsActionWhenMessageTypeIsSlotInfo()
+        public void DelegateFahClientMessageAction_Execute_RunsActionWhenMessageTypeMatches()
         {
             // Arrange
             bool executed = false;
-            var action = new SlotInfoMessageAction(() => executed = true);
+            var action = new DelegateFahClientMessageAction(FahClientMessageType.SlotInfo, () => executed = true);
             // Act
             action.Execute(FahClientMessageType.SlotInfo);
             // Assert
@@ -39,7 +39,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsSlotInfoAndLogIsNotRetrieved()
+        public void ExecuteRetrieveMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsSlotInfoAndLogIsNotRetrieved()
         {
             // Arrange
             bool executed = false;
@@ -52,7 +52,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_RunsActionWhenMessageTypeIsSlotInfoAndLogIsRetrieved()
+        public void ExecuteRetrieveMessageAction_Execute_RunsActionWhenMessageTypeIsSlotInfoAndLogIsRetrieved()
         {
             // Arrange
             bool executed = false;
@@ -65,7 +65,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsQueueInfoAndUnitCollectionHasNoItems()
+        public void ExecuteRetrieveMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsQueueInfoAndUnitCollectionHasNoItems()
         {
             // Arrange
             bool executed = false;
@@ -78,7 +78,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsQueueInfoAndLogIsNotRetrieved()
+        public void ExecuteRetrieveMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsQueueInfoAndLogIsNotRetrieved()
         {
             // Arrange
             bool executed = false;
@@ -91,7 +91,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task SlotInfoMessageAction_Execute_RunsActionWhenMessageTypeIsQueueInfoAndUnitCollectionHasItemsAndLogIsRetrieved()
+        public async Task ExecuteRetrieveMessageAction_Execute_RunsActionWhenMessageTypeIsQueueInfoAndUnitCollectionHasItemsAndLogIsRetrieved()
         {
             // Arrange
             bool executed = false;
@@ -106,7 +106,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsLogRestartAndSlotCollectionIsNull()
+        public void ExecuteRetrieveMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsLogRestartAndSlotCollectionIsNull()
         {
             // Arrange
             bool executed = false;
@@ -119,7 +119,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task SlotInfoMessageAction_Execute_RunsActionWhenMessageTypeIsLogRestartAndSlotCollectionIsNotNull()
+        public async Task ExecuteRetrieveMessageAction_Execute_RunsActionWhenMessageTypeIsLogRestartAndSlotCollectionIsNotNull()
         {
             // Arrange
             bool executed = false;
@@ -134,7 +134,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void SlotInfoMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsLogUpdateAndSlotCollectionIsNull()
+        public void ExecuteRetrieveMessageAction_Execute_DoesNotRunActionWhenMessageTypeIsLogUpdateAndSlotCollectionIsNull()
         {
             // Arrange
             bool executed = false;
@@ -147,7 +147,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task SlotInfoMessageAction_Execute_RunsActionWhenMessageTypeIsLogUpdateAndSlotCollectionIsNotNull()
+        public async Task ExecuteRetrieveMessageAction_Execute_RunsActionWhenMessageTypeIsLogUpdateAndSlotCollectionIsNotNull()
         {
             // Arrange
             bool executed = false;
@@ -161,7 +161,7 @@ namespace HFM.Core.Client
             Assert.IsTrue(executed);
         }
 
-        private static FahClientMessages CreateFahClientMessages() => new FahClientMessages(Mock.Of<IFahClient>());
+        private static FahClientMessages CreateFahClientMessages() => new(Mock.Of<IFahClient>());
 
         private static FahClientMessages CreateFahClientMessagesWithLogRetrieved()
         {
@@ -171,6 +171,6 @@ namespace HFM.Core.Client
         }
 
         private static FahClientMessage CreateMessage(string type, string text) =>
-            new FahClientMessage(new FahClientMessageIdentifier(type, DateTime.UtcNow), new StringBuilder(text));
+            new(new FahClientMessageIdentifier(type, DateTime.UtcNow), new StringBuilder(text));
     }
 }

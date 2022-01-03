@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using NUnit.Framework;
 
 using HFM.Core;
-using HFM.Core.Mocks;
 using HFM.Core.Net;
 using HFM.Core.Services;
+using HFM.Core.Services.Mocks;
 using HFM.Core.SlotXml;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;

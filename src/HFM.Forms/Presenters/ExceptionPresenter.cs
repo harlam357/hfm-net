@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 using HFM.Core.Logging;
+using HFM.Core.Services;
 using HFM.Forms.Internal;
 using HFM.Forms.Views;
 
@@ -15,13 +16,19 @@ namespace HFM.Forms.Presenters
     {
         public ILogger Logger { get; }
         public MessageBoxPresenter MessageBox { get; }
+        public LocalProcessService LocalProcess { get; }
         public IDictionary<string, string> Properties { get; }
         public string ReportUrl { get; }
 
-        protected ExceptionPresenterFactory(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+        protected ExceptionPresenterFactory(ILogger logger,
+                                            MessageBoxPresenter messageBox,
+                                            LocalProcessService localProcess,
+                                            IDictionary<string, string> properties,
+                                            string reportUrl)
         {
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            LocalProcess = localProcess ?? NullLocalProcessService.Instance;
             Properties = properties;
             ReportUrl = reportUrl;
         }
@@ -31,15 +38,19 @@ namespace HFM.Forms.Presenters
 
     public class DefaultExceptionPresenterFactory : ExceptionPresenterFactory
     {
-        public DefaultExceptionPresenterFactory(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
-            : base(logger, messageBox, properties, reportUrl)
+        public DefaultExceptionPresenterFactory(ILogger logger,
+                                                MessageBoxPresenter messageBox,
+                                                LocalProcessService localProcess,
+                                                IDictionary<string, string> properties,
+                                                string reportUrl)
+            : base(logger, messageBox, localProcess, properties, reportUrl)
         {
 
         }
 
         public override DialogResult ShowDialog(IWin32Window owner, Exception exception, bool mustTerminate)
         {
-            using (var presenter = new DefaultExceptionPresenter(Logger, MessageBox, Properties, ReportUrl))
+            using (var presenter = new DefaultExceptionPresenter(Logger, MessageBox, LocalProcess, Properties, ReportUrl))
             {
                 return presenter.ShowDialog(owner, exception, mustTerminate);
             }
@@ -50,7 +61,7 @@ namespace HFM.Forms.Presenters
     {
         public static NullExceptionPresenterFactory Instance { get; } = new NullExceptionPresenterFactory();
 
-        protected NullExceptionPresenterFactory() : base(null, null, null, null)
+        protected NullExceptionPresenterFactory() : base(null, null, null, null, null)
         {
 
         }
@@ -66,13 +77,19 @@ namespace HFM.Forms.Presenters
     {
         public ILogger Logger { get; }
         public MessageBoxPresenter MessageBox { get; }
+        public LocalProcessService LocalProcess { get; }
         public IDictionary<string, string> Properties { get; }
         public string ReportUrl { get; }
 
-        protected ExceptionPresenter(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
+        protected ExceptionPresenter(ILogger logger,
+                                     MessageBoxPresenter messageBox,
+                                     LocalProcessService localProcess,
+                                     IDictionary<string, string> properties,
+                                     string reportUrl)
         {
             Logger = logger ?? NullLogger.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
+            LocalProcess = localProcess ?? NullLocalProcessService.Instance;
             Properties = properties;
             ReportUrl = reportUrl;
         }
@@ -96,8 +113,12 @@ namespace HFM.Forms.Presenters
 
     public class DefaultExceptionPresenter : ExceptionPresenter, IDisposable
     {
-        public DefaultExceptionPresenter(ILogger logger, MessageBoxPresenter messageBox, IDictionary<string, string> properties, string reportUrl)
-            : base(logger, messageBox, properties, reportUrl)
+        public DefaultExceptionPresenter(ILogger logger,
+                                         MessageBoxPresenter messageBox,
+                                         LocalProcessService localProcess,
+                                         IDictionary<string, string> properties,
+                                         string reportUrl)
+            : base(logger, messageBox, localProcess, properties, reportUrl)
         {
 
         }
@@ -152,7 +173,7 @@ namespace HFM.Forms.Presenters
             CopyInfoToClipboard(copyToClipboard);
             if (!String.IsNullOrEmpty(ReportUrl))
             {
-                StartUrl(ReportUrl);
+                OpenReportUrl(ReportUrl);
             }
         }
 
@@ -179,18 +200,10 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        private void StartUrl(string url)
+        private void OpenReportUrl(string url)
         {
-            try
-            {
-                // TODO: Replace Process.Start() with abstraction
-                Process.Start(url);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message, ex);
-                MessageBox.ShowError(Dialog, ex.Message, Core.Application.NameAndVersion);
-            }
+            string errorMessage = "An error occurred while attempting to open the reporting page.";
+            LocalProcess.StartAndNotifyError(url, errorMessage, Logger, MessageBox);
         }
 
         public override void ContinueClicked()
@@ -214,7 +227,7 @@ namespace HFM.Forms.Presenters
     {
         public static NullExceptionPresenter Instance { get; } = new NullExceptionPresenter();
 
-        protected NullExceptionPresenter() : base(null, null, null, null)
+        protected NullExceptionPresenter() : base(null, null, null, null, null)
         {
         }
 

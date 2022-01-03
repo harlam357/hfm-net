@@ -6,13 +6,6 @@ namespace HFM.Core.Client
 {
     public abstract class FahClientMessageAction
     {
-        protected Action Action { get; }
-
-        protected FahClientMessageAction(Action action)
-        {
-            Action = action ?? throw new ArgumentNullException(nameof(action));
-        }
-
         public void Execute(string messageType)
         {
             if (ShouldExecute(messageType))
@@ -23,26 +16,34 @@ namespace HFM.Core.Client
 
         protected abstract bool ShouldExecute(string messageType);
 
-        protected virtual void OnExecute(string messageType) => Action();
+        protected abstract void OnExecute(string messageType);
     }
 
-    public class SlotInfoMessageAction : FahClientMessageAction
+    public class DelegateFahClientMessageAction : FahClientMessageAction
     {
-        public SlotInfoMessageAction(Action action) : base(action)
+        protected string MessageType { get; }
+        protected Action Action { get; }
+
+        public DelegateFahClientMessageAction(string messageType, Action action)
         {
+            MessageType = messageType ?? throw new ArgumentNullException(nameof(messageType));
+            Action = action ?? throw new ArgumentNullException(nameof(action));
         }
 
+        protected override bool ShouldExecute(string messageType) => messageType == MessageType;
 
-        protected override bool ShouldExecute(string messageType) => messageType == FahClientMessageType.SlotInfo;
+        protected override void OnExecute(string messageType) => Action();
     }
 
     public class ExecuteRetrieveMessageAction : FahClientMessageAction
     {
-        private readonly FahClientMessages _messages;
+        protected FahClientMessages Messages { get; }
+        protected Action Action { get; }
 
-        public ExecuteRetrieveMessageAction(FahClientMessages messages, Action action) : base(action)
+        public ExecuteRetrieveMessageAction(FahClientMessages messages, Action action)
         {
-            _messages = messages ?? throw new ArgumentNullException(nameof(messages));
+            Messages = messages ?? throw new ArgumentNullException(nameof(messages));
+            Action = action ?? throw new ArgumentNullException(nameof(action));
         }
 
         protected override bool ShouldExecute(string messageType)
@@ -50,15 +51,17 @@ namespace HFM.Core.Client
             switch (messageType)
             {
                 case FahClientMessageType.SlotInfo:
-                    return _messages.LogIsRetrieved;
+                    return Messages.LogIsRetrieved;
                 case FahClientMessageType.QueueInfo:
-                    return _messages.UnitCollection?.Count > 0 && _messages.LogIsRetrieved;
+                    return Messages.UnitCollection?.Count > 0 && Messages.LogIsRetrieved;
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
-                    return _messages.SlotCollection != null;
+                    return Messages.SlotCollection != null;
                 default:
                     return false;
             }
         }
+
+        protected override void OnExecute(string messageType) => Action();
     }
 }
