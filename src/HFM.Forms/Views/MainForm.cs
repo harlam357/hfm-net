@@ -71,7 +71,16 @@ namespace HFM.Forms.Views
                     size = new Size(size.Width, size.Height + model.FormLogWindowHeight);
                 }
                 Size = size;
-                SizeChanged += (s, e) => model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+                SizeChanged += (s, e) =>
+                {
+                    model.FormSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
+                    if (model.FormLogWindowVisible is false && splitContainer1.Panel2Collapsed)
+                    {
+                        // TODO: this pixel offset may need display scaling applied
+                        const int pixelOffset = 92;
+                        model.FormSplitterLocation = Size.Height - pixelOffset;
+                    }
+                };
 
                 // make sure split location is at least the minimum panel size
                 if (model.FormSplitterLocation < splitContainer1.Panel2MinSize)
@@ -79,7 +88,10 @@ namespace HFM.Forms.Views
                     model.FormSplitterLocation = splitContainer1.Panel2MinSize;
                 }
                 splitContainer1.SplitterDistance = model.FormSplitterLocation;
-                splitContainer1.SplitterMoved += (s, e) => model.FormSplitterLocation = splitContainer1.SplitterDistance;
+                splitContainer1.SplitterMoved += (s, e) =>
+                {
+                    model.FormSplitterLocation = splitContainer1.SplitterDistance;
+                };
                 splitContainer2.SplitterMoved += (s, e) =>
                 {
                     if (queueControl.Visible)
@@ -151,8 +163,10 @@ namespace HFM.Forms.Views
             else
             {
                 txtLogFile.Visible = true;
+                int splitterDistance = _presenter.Model.FormSplitterLocation;
                 Size = new Size(Size.Width, Size.Height + _presenter.Model.FormLogWindowHeight);
                 splitContainer1.Panel2Collapsed = false;
+                splitContainer1.SplitterDistance = splitterDistance;
             }
         }
 
