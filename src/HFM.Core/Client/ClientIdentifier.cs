@@ -42,10 +42,7 @@ namespace HFM.Core.Client
             return Name == other.Name && Server == other.Server && Port == other.Port;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is ClientIdentifier other && Equals(other);
-        }
+        public override bool Equals(object obj) => obj is ClientIdentifier other && Equals(other);
 
         public override int GetHashCode()
         {
@@ -64,10 +61,8 @@ namespace HFM.Core.Client
 
         private sealed class ProteinBenchmarkClientIdentifierEqualityComparer : IEqualityComparer<ClientIdentifier>
         {
-            public bool Equals(ClientIdentifier x, ClientIdentifier y)
-            {
-                return x.Name == y.Name && x.Server == y.Server && x.Port == y.Port;
-            }
+            public bool Equals(ClientIdentifier x, ClientIdentifier y) =>
+                x.Name == y.Name && x.Server == y.Server && x.Port == y.Port;
 
             public int GetHashCode(ClientIdentifier obj)
             {
@@ -83,15 +78,9 @@ namespace HFM.Core.Client
 
         public static IEqualityComparer<ClientIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkClientIdentifierEqualityComparer();
 
-        public static bool operator ==(ClientIdentifier left, ClientIdentifier right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(ClientIdentifier left, ClientIdentifier right) => left.Equals(right);
 
-        public static bool operator !=(ClientIdentifier left, ClientIdentifier right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(ClientIdentifier left, ClientIdentifier right) => !left.Equals(right);
 
         public int CompareTo(ClientIdentifier other)
         {
@@ -117,39 +106,25 @@ namespace HFM.Core.Client
             return obj is ClientIdentifier other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(ClientIdentifier)}");
         }
 
-        public static bool operator <(ClientIdentifier left, ClientIdentifier right)
-        {
-            return left.CompareTo(right) < 0;
-        }
+        public static bool operator <(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) < 0;
 
-        public static bool operator >(ClientIdentifier left, ClientIdentifier right)
-        {
-            return left.CompareTo(right) > 0;
-        }
+        public static bool operator >(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) > 0;
 
-        public static bool operator <=(ClientIdentifier left, ClientIdentifier right)
-        {
-            return left.CompareTo(right) <= 0;
-        }
+        public static bool operator <=(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) <= 0;
 
-        public static bool operator >=(ClientIdentifier left, ClientIdentifier right)
-        {
-            return left.CompareTo(right) >= 0;
-        }
+        public static bool operator >=(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) >= 0;
 
-        public string ToServerPortString()
-        {
-            return TcpPort.Validate(Port)
+        public string ToServerPortString() =>
+            TcpPort.Validate(Port)
                 ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port)
                 : Server;
-        }
 
-        internal static readonly Regex ServerPortRegex = new Regex(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
+        internal static readonly Regex ServerPortRegex = new(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
         internal static ClientIdentifier FromPath(string name, string path, Guid guid)
         {
             var match = path is null ? null : ServerPortRegex.Match(path);
-            return match != null && match.Success
+            return match is { Success: true }
                 ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid)
                 : new ClientIdentifier(name, path, ClientSettings.NoPort, guid);
         }

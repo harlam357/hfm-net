@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace HFM.Core.Client
 {
@@ -8,7 +9,7 @@ namespace HFM.Core.Client
     {
         internal const int NoSlotID = -1;
 
-        public static SlotIdentifier AllSlots => new SlotIdentifier(0, "All Slots");
+        public static SlotIdentifier AllSlots => new(0, "All Slots");
 
         private SlotIdentifier(int ordinal, string name)
         {
@@ -32,10 +33,8 @@ namespace HFM.Core.Client
 
         public string Name => AppendSlotID(ClientIdentifier.Name, SlotID);
 
-        private static string AppendSlotID(string name, int slotId)
-        {
-            return slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
-        }
+        private static string AppendSlotID(string name, int slotId) =>
+            slotId >= 0 ? String.Format(CultureInfo.InvariantCulture, "{0} Slot {1:00}", name, slotId) : name;
 
         public override string ToString()
         {
@@ -43,15 +42,10 @@ namespace HFM.Core.Client
             return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ClientIdentifier.ToServerPortString());
         }
 
-        public bool Equals(SlotIdentifier other)
-        {
-            return Ordinal == other.Ordinal && ClientIdentifier.Equals(other.ClientIdentifier) && SlotID == other.SlotID;
-        }
+        public bool Equals(SlotIdentifier other) =>
+            Ordinal == other.Ordinal && ClientIdentifier.Equals(other.ClientIdentifier) && SlotID == other.SlotID;
 
-        public override bool Equals(object obj)
-        {
-            return obj is SlotIdentifier other && Equals(other);
-        }
+        public override bool Equals(object obj) => obj is SlotIdentifier other && Equals(other);
 
         public override int GetHashCode()
         {
@@ -66,10 +60,8 @@ namespace HFM.Core.Client
 
         private sealed class ProteinBenchmarkSlotIdentifierEqualityComparer : IEqualityComparer<SlotIdentifier>
         {
-            public bool Equals(SlotIdentifier x, SlotIdentifier y)
-            {
-                return x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.ClientIdentifier, y.ClientIdentifier) && x.SlotID == y.SlotID;
-            }
+            public bool Equals(SlotIdentifier x, SlotIdentifier y) =>
+                x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.ClientIdentifier, y.ClientIdentifier) && x.SlotID == y.SlotID;
 
             public int GetHashCode(SlotIdentifier obj)
             {
@@ -85,15 +77,9 @@ namespace HFM.Core.Client
 
         public static IEqualityComparer<SlotIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkSlotIdentifierEqualityComparer();
 
-        public static bool operator ==(SlotIdentifier left, SlotIdentifier right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(SlotIdentifier left, SlotIdentifier right) => left.Equals(right);
 
-        public static bool operator !=(SlotIdentifier left, SlotIdentifier right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(SlotIdentifier left, SlotIdentifier right) => !left.Equals(right);
 
         public int CompareTo(SlotIdentifier other)
         {
@@ -110,24 +96,22 @@ namespace HFM.Core.Client
             return obj is SlotIdentifier other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(SlotIdentifier)}");
         }
 
-        public static bool operator <(SlotIdentifier left, SlotIdentifier right)
-        {
-            return left.CompareTo(right) < 0;
-        }
+        public static bool operator <(SlotIdentifier left, SlotIdentifier right) => left.CompareTo(right) < 0;
 
-        public static bool operator >(SlotIdentifier left, SlotIdentifier right)
-        {
-            return left.CompareTo(right) > 0;
-        }
+        public static bool operator >(SlotIdentifier left, SlotIdentifier right) => left.CompareTo(right) > 0;
 
-        public static bool operator <=(SlotIdentifier left, SlotIdentifier right)
-        {
-            return left.CompareTo(right) <= 0;
-        }
+        public static bool operator <=(SlotIdentifier left, SlotIdentifier right) => left.CompareTo(right) <= 0;
 
-        public static bool operator >=(SlotIdentifier left, SlotIdentifier right)
+        public static bool operator >=(SlotIdentifier left, SlotIdentifier right) => left.CompareTo(right) >= 0;
+
+        private static readonly Regex NameSlotRegex = new(@"(?<Name>.+) Slot (?<Slot>\d\d)$", RegexOptions.ExplicitCapture);
+
+        internal static SlotIdentifier FromName(string name, string path, Guid guid)
         {
-            return left.CompareTo(right) >= 0;
+            var match = name is null ? null : NameSlotRegex.Match(name);
+            return match is { Success: true }
+                ? new SlotIdentifier(ClientIdentifier.FromPath(match.Groups["Name"].Value, path, guid), Int32.Parse(match.Groups["Slot"].Value))
+                : new SlotIdentifier(ClientIdentifier.FromPath(name, path, guid), NoSlotID);
         }
     }
 }

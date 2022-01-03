@@ -204,5 +204,66 @@ namespace HFM.Core.Client
             var identifier = new SlotIdentifier(new ClientIdentifier("Foo", null, ClientSettings.NoPort, Guid.Empty), 0);
             Assert.AreEqual("Foo Slot 00", identifier.ToString());
         }
+
+        [Test]
+        public void SlotIdentifier_FromName_ServerDashPort()
+        {
+            const string name = "Foo";
+            const string path = "Server-12345";
+            // Act
+            var identifier = SlotIdentifier.FromName(name, path, Guid.Empty);
+            // Assert
+            Assert.AreEqual(name, identifier.Name);
+            Assert.AreEqual(-1, identifier.SlotID);
+            Assert.AreEqual("Server", identifier.ClientIdentifier.Server);
+            Assert.AreEqual(12345, identifier.ClientIdentifier.Port);
+            Assert.AreEqual(Guid.Empty, identifier.ClientIdentifier.Guid);
+        }
+
+        [Test]
+        public void SlotIdentifier_FromName_ServerColonPort()
+        {
+            const string name = "Foo";
+            const string path = "Server:12345";
+            // Act
+            var identifier = SlotIdentifier.FromName(name, path, Guid.Empty);
+            // Assert
+            Assert.AreEqual(name, identifier.Name);
+            Assert.AreEqual(-1, identifier.SlotID);
+            Assert.AreEqual("Server", identifier.ClientIdentifier.Server);
+            Assert.AreEqual(12345, identifier.ClientIdentifier.Port);
+            Assert.AreEqual(Guid.Empty, identifier.ClientIdentifier.Guid);
+        }
+
+        [Test]
+        public void SlotIdentifier_FromName_FileSystemPath()
+        {
+            const string name = "Bar";
+            const string path = @"\\server\share";
+            var guid = Guid.NewGuid();
+            // Act
+            var identifier = SlotIdentifier.FromName(name, path, guid);
+            // Assert
+            Assert.AreEqual(name, identifier.Name);
+            Assert.AreEqual(-1, identifier.SlotID);
+            Assert.AreEqual(path, identifier.ClientIdentifier.Server);
+            Assert.AreEqual(ClientSettings.NoPort, identifier.ClientIdentifier.Port);
+            Assert.AreEqual(guid, identifier.ClientIdentifier.Guid);
+        }
+
+        [Test]
+        public void SlotIdentifier_FromName_WithSlot()
+        {
+            const string name = "Bar Slot 01";
+            const string path = "Server:12345";
+            // Act
+            var identifier = SlotIdentifier.FromName(name, path, Guid.Empty);
+            // Assert
+            Assert.AreEqual(name, identifier.Name);
+            Assert.AreEqual(1, identifier.SlotID);
+            Assert.AreEqual("Server", identifier.ClientIdentifier.Server);
+            Assert.AreEqual(12345, identifier.ClientIdentifier.Port);
+            Assert.AreEqual(Guid.Empty, identifier.ClientIdentifier.Guid);
+        }
     }
 }

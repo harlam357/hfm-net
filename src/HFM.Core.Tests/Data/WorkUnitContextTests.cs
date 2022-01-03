@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 
 using Microsoft.EntityFrameworkCore;
@@ -92,9 +93,11 @@ namespace HFM.Core.Data
                 };
                 proteins.Add(p);
 
+                var slotIdentifier = SlotIdentifier.FromName(r.Name, r.Path, Guid.Empty);
+
                 var c = new ClientEntity
                 {
-                    Name = r.Name,
+                    Name = slotIdentifier.ClientIdentifier.Name,
                     ConnectionString = r.Path
                 };
                 clients.Add(c);
@@ -111,6 +114,8 @@ namespace HFM.Core.Data
             var workUnits = new HashSet<WorkUnitEntity>();
             foreach (var r in rows)
             {
+                var slotIdentifier = SlotIdentifier.FromName(r.Name, r.Path, Guid.Empty);
+
                 var p = await context.Proteins.FirstAsync(x =>
                     x.ProjectID == r.ProjectID &&
                     Math.Abs(x.Credit - r.BaseCredit) < 0.001 &&
@@ -122,7 +127,7 @@ namespace HFM.Core.Data
                     Math.Abs(x.ExpirationDays - r.MaximumDays) < 0.001);
 
                 var c = await context.Clients.FirstAsync(x =>
-                    x.Name == r.Name &&
+                    x.Name == slotIdentifier.ClientIdentifier.Name &&
                     x.ConnectionString == r.Path);
 
                 var w = new WorkUnitEntity
@@ -141,7 +146,7 @@ namespace HFM.Core.Data
                     HexID = null,
                     FramesCompleted = r.FramesCompleted,
                     FrameTimeInSeconds = r.FrameTimeValue,
-                    ClientSlot = null
+                    ClientSlot = slotIdentifier.SlotID >= 0 ? slotIdentifier.SlotID : null
                 };
                 workUnits.Add(w);
             }
