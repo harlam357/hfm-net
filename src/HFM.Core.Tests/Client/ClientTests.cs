@@ -66,7 +66,7 @@ namespace HFM.Core.Client
         {
             using (var client = new MockClient())
             {
-                Assert.AreEqual(1, client.Slots.Count());
+                Assert.AreEqual(1, client.Slots.Count);
                 Assert.AreEqual(SlotStatus.Offline, client.Slots.First().Status);
             }
         }

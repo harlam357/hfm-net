@@ -13,12 +13,12 @@ namespace HFM.Core.Client
     public interface IClient
     {
         /// <summary>
-        /// Fired when the client slot layout has changed.
+        /// Fired when the client slot collection has changed.
         /// </summary>
         event EventHandler SlotsChanged;
 
         /// <summary>
-        /// Fired when the Retrieve method finishes.
+        /// Fired when the client data retrieval process is finished.
         /// </summary>
         event EventHandler RetrieveFinished;
 
@@ -39,9 +39,9 @@ namespace HFM.Core.Client
         string ClientVersion { get; }
 
         /// <summary>
-        /// Enumeration of client slots.
+        /// Gets the collection of client slots.
         /// </summary>
-        IEnumerable<SlotModel> Slots { get; }
+        IReadOnlyCollection<SlotModel> Slots { get; }
 
         /// <summary>
         /// Cancels the retrieval process.
@@ -54,12 +54,12 @@ namespace HFM.Core.Client
         bool Connected { get; }
 
         /// <summary>
-        /// Asynchronously connects the client to the resources defined by the <see cref="ClientSettings"/>.
+        /// Asynchronously connects the client to the resources defined by <see cref="Settings"/>.
         /// </summary>
         Task Connect();
 
         /// <summary>
-        /// Starts the retrieval process.
+        /// Starts the client data retrieval process.
         /// </summary>
         Task Retrieve();
     }
@@ -111,9 +111,9 @@ namespace HFM.Core.Client
         public string ClientVersion { get; set; }
 
         // Slots
-        private List<SlotModel> _slots = new List<SlotModel>();
+        private List<SlotModel> _slots = new();
 
-        public IEnumerable<SlotModel> Slots => _slots.ToArray();
+        public IReadOnlyCollection<SlotModel> Slots => _slots.ToArray();
 
         public void RefreshSlots()
         {
@@ -190,7 +190,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private bool ClientCannotConnectOrRetrieve() => Settings != null && Settings.Disabled;
+        private bool ClientCannotConnectOrRetrieve() => Settings is { Disabled: true };
 
         protected virtual void OnRetrieveInProgress() =>
             Debug.WriteLine(Logging.Logger.NameFormat, Settings?.Name, "Retrieval already in progress...");

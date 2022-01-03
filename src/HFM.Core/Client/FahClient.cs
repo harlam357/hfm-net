@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using HFM.Client;
-using HFM.Client.ObjectModel;
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -28,7 +27,6 @@ namespace HFM.Core.Client
         {
             Debug.Assert(newSettings.ClientType == ClientType.FahClient);
 
-            // settings already exist
             if (oldSettings != null)
             {
                 if (oldSettings.Server != newSettings.Server ||
@@ -41,7 +39,6 @@ namespace HFM.Core.Client
                 }
                 else
                 {
-                    // refresh the slots with the updated settings
                     RefreshSlots();
                 }
             }
@@ -64,7 +61,8 @@ namespace HFM.Core.Client
             Messages = new FahClientMessages(this);
             _messageActions = new List<FahClientMessageAction>
             {
-                new SlotInfoMessageAction(RefreshSlots),
+                new DelegateFahClientMessageAction(FahClientMessageType.SlotInfo, RefreshSlots),
+                new DelegateFahClientMessageAction(FahClientMessageType.Info, RefreshClientInfo),
                 new ExecuteRetrieveMessageAction(Messages, async () => await Retrieve().ConfigureAwait(false))
             };
         }
@@ -102,10 +100,9 @@ namespace HFM.Core.Client
         protected override void OnRefreshSlots(ICollection<SlotModel> slots)
         {
             var slotCollection = Messages?.SlotCollection;
-            if (slotCollection != null && slotCollection.Count > 0)
+            if (slotCollection is { Count: > 0 })
             {
-                // iterate through slot collection
-                foreach (var slot in Messages.SlotCollection)
+                foreach (var slot in slotCollection)
                 {
                     var slotDescription = SlotDescription.Parse(slot.Description);
                     var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
@@ -130,6 +127,8 @@ namespace HFM.Core.Client
             }
         }
 
+        private void RefreshClientInfo() => ClientVersion = Messages.Info?.Client.Version;
+
         protected override void OnCancel()
         {
             base.OnCancel();
@@ -140,14 +139,14 @@ namespace HFM.Core.Client
             }
         }
 
-        public override bool Connected => Connection != null && Connection.Connected;
+        public override bool Connected => Connection is { Connected: true };
 
         protected override async Task OnConnect()
         {
             await CreateAndOpenConnection().ConfigureAwait(false);
 
             _ = Task.Run(async () => await ReadMessagesFromConnection().ConfigureAwait(false))
-                .ContinueWith(async t => await CloseConnection().ConfigureAwait(false),
+                .ContinueWith(async _ => await CloseConnection().ConfigureAwait(false),
                     CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
         }
 
@@ -199,12 +198,10 @@ namespace HFM.Core.Client
         {
             if (Messages.IsHeartbeatOverdue())
             {
-                // haven't seen a heartbeat
                 Cancel();
                 return Task.CompletedTask;
             }
 
-            // Process the retrieved data
             Process();
             return Task.CompletedTask;
         }
@@ -217,8 +214,6 @@ namespace HFM.Core.Client
         private void Process()
         {
             var sw = Stopwatch.StartNew();
-
-            ClientVersion = Messages.Info?.Client.Version;
 
             var workUnitsBuilder = new WorkUnitCollectionBuilder(
                 Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
@@ -245,11 +240,6 @@ namespace HFM.Core.Client
             string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
             Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
         }
-
-        private static string GetSlotProcessor(SystemInfo systemInfo, SlotModel slotModel) =>
-            slotModel.SlotType == SlotType.GPU
-                ? slotModel.Processor
-                : systemInfo?.CPU;
 
         private IReadOnlyCollection<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
         {
@@ -281,30 +271,32 @@ namespace HFM.Core.Client
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnit != null);
 
-            Protein protein = ProteinService?.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
-
-            // update the data
-            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
-            workUnitModel.CurrentProtein = protein;
-            return workUnitModel;
+            var protein = ProteinService?.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
+            return new WorkUnitModel(slotModel, workUnit)
+            {
+                CurrentProtein = protein
+            };
         }
 
-        private void PopulateSlotModel(FahClientSlotModel slotModel, WorkUnitCollection workUnits,
-            WorkUnitModelCollection workUnitModels, WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
+        private void PopulateSlotModel(FahClientSlotModel slotModel,
+                                       WorkUnitCollection workUnits,
+                                       WorkUnitModelCollection workUnitModels,
+                                       WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
         {
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnits != null);
             Debug.Assert(workUnitModels != null);
             Debug.Assert(workUnitQueueBuilder != null);
 
-            var slotProcessor = GetSlotProcessor(Messages.Info?.System, slotModel);
-
-            slotModel.Processor = slotProcessor;
+            if (slotModel.SlotType == SlotType.CPU)
+            {
+                slotModel.Processor = Messages.Info?.System?.CPU;
+            }
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
             slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
 
             var clientRun = Messages.GetClientRun();
-            if (WorkUnitRepository != null && WorkUnitRepository.Connected && clientRun != null)
+            if (WorkUnitRepository is { Connected: true } && clientRun != null)
             {
                 slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
@@ -352,7 +344,7 @@ namespace HFM.Core.Client
 
         private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
         {
-            if (WorkUnitRepository != null && WorkUnitRepository.Connected)
+            if (WorkUnitRepository is { Connected: true })
             {
                 try
                 {
@@ -372,14 +364,12 @@ namespace HFM.Core.Client
             }
         }
 
-        private static ICollection<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count)
-        {
-            return Enumerable.Range(nextFrame, count)
+        private static ICollection<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count) =>
+            Enumerable.Range(nextFrame, count)
                 .Select(workUnit.GetFrame)
                 .Where(f => f != null)
                 .Select(f => f.Duration)
                 .ToList();
-        }
 
         public void Fold(int? slotId)
         {
