@@ -2,7 +2,7 @@
 
 namespace HFM.Core.Data
 {
-    public class WorkUnitContext : DbContext
+    public partial class WorkUnitContext : DbContext
     {
         public DbSet<WorkUnitEntity> WorkUnits { get; set; }
         public DbSet<ProteinEntity> Proteins { get; set; }
