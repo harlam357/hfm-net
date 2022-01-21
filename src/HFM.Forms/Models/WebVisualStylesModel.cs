@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
-using HFM.Core;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models
@@ -67,7 +66,7 @@ namespace HFM.Forms.Models
             get
             {
                 var list = new List<ListItem>();
-                var di = new DirectoryInfo(Path.Combine(ApplicationPath, Application.CssFolderName));
+                var di = new DirectoryInfo(Path.Combine(ApplicationPath, Core.Application.CssFolderName));
                 if (di.Exists)
                 {
                     list.AddRange(di.EnumerateFiles(CssPattern)

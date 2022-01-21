@@ -94,7 +94,7 @@ namespace HFM.Forms.Internal
             }
             catch (ExternalException)
             {
-                var timer = new Timer();
+                var timer = new System.Windows.Forms.Timer();
                 timer.Interval = 100;
                 timer.Tick += delegate
                 {
