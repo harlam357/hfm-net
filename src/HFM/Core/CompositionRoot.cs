@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using LightInject;
+﻿using LightInject;
 
 namespace HFM.Core
 {
@@ -21,14 +19,8 @@ namespace HFM.Core
             // IWorkUnitRepository - Singleton
             serviceRegistry.Register<Data.IWorkUnitRepository, Data.WorkUnitRepository>(new PerContainerLifetime());
 
-            // WorkUnitContext - Transient
-            serviceRegistry.Register(factory =>
-            {
-                var preferences = factory.GetInstance<Preferences.IPreferences>();
-                string appDataPath = preferences.Get<string>(Preferences.Preference.ApplicationDataFolderPath);
-                string connectionString = $"Data Source={System.IO.Path.Combine(appDataPath, "WorkUnits.db")}";
-                return new Data.WorkUnitContext(connectionString);
-            }, new PerRequestLifeTime());
+            // WorkUnitContext - Scoped
+            serviceRegistry.AddDbContext(CreateWorkUnitContext);
 
             // ClientConfiguration - Singleton
             serviceRegistry.Register<Client.ClientConfiguration>(new PerContainerLifetime());
@@ -78,5 +70,20 @@ namespace HFM.Core
             // ApplicationUpdateService - Scoped
             serviceRegistry.Register<ApplicationUpdateService>(new PerScopeLifetime());
         }
+
+        private static Data.WorkUnitContext CreateWorkUnitContext(IServiceFactory factory)
+        {
+            var preferences = factory.GetInstance<Preferences.IPreferences>();
+            string appDataPath = preferences.Get<string>(Preferences.Preference.ApplicationDataFolderPath);
+            string connectionString = $"Data Source={Path.Combine(appDataPath, "WorkUnits.db")}";
+            return new Data.WorkUnitContext(connectionString);
+        }
+    }
+
+    internal static class ServiceRegistryExtensions
+    {
+        internal static IServiceRegistry AddDbContext<TContext>(this IServiceRegistry serviceRegistry, Func<IServiceFactory, TContext> factory)
+            where TContext : Microsoft.EntityFrameworkCore.DbContext =>
+            serviceRegistry.Register(factory, new PerScopeLifetime());
     }
 }

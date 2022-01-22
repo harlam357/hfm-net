@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Globalization;
 
 using HFM.Core.Data;
 using HFM.Core.Logging;
@@ -16,6 +9,8 @@ using HFM.Forms.Views;
 using HFM.Preferences;
 
 using LightInject;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM
 {
@@ -33,7 +28,7 @@ namespace HFM
             Container = container;
         }
 
-        internal void Execute()
+        internal async Task Execute()
         {
             var arguments = Arguments.Parse(Args);
             var errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error).ToList();
@@ -48,7 +43,7 @@ namespace HFM
                 Logger = InitializeLogging();
                 Preferences = InitializePreferences(arguments);
                 ClearCacheFolder();
-                MainForm = InitializeMainForm(arguments);
+                MainForm = await InitializeMainForm(arguments).ConfigureAwait(true);
                 RegisterForUnhandledExceptions();
 
                 Application.ApplicationExit += (s, e) => Preferences.Save();
@@ -188,7 +183,7 @@ namespace HFM
             }
         }
 
-        private MainForm InitializeMainForm(ICollection<Argument> arguments)
+        private async Task<MainForm> InitializeMainForm(ICollection<Argument> arguments)
         {
             MainPresenter mainPresenter;
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
@@ -223,6 +218,13 @@ namespace HFM
                     }
                 }
 
+                // TODO: Extract to its own class
+                string databaseVersion = await GetDatabaseVersionFromWorkUnitContext().ConfigureAwait(true);
+                if (ShouldMigrateToWorkUnitContext(databaseVersion))
+                {
+                    MigrateToWorkUnitContext(repository);
+                }
+
                 mainForm.WorkUnitHistoryMenuItemEnabled = repository.Connected;
             }
             catch (Exception ex)
@@ -231,6 +233,34 @@ namespace HFM
             }
 
             return mainForm;
+        }
+
+        private async Task<string> GetDatabaseVersionFromWorkUnitContext()
+        {
+            using (Container.BeginScope())
+            {
+                await using var context = Container.GetInstance<WorkUnitContext>();
+                await context.Database.EnsureCreatedAsync().ConfigureAwait(true);
+                return await context.GetDatabaseVersion().ConfigureAwait(true);
+            }
+        }
+
+        private static bool ShouldMigrateToWorkUnitContext(string databaseVersion) =>
+            databaseVersion is not null && Version.Parse(databaseVersion) < Version.Parse(Core.Application.Version);
+
+        private void MigrateToWorkUnitContext(IWorkUnitRepository repository)
+        {
+            var toWorkUnitContext = new MigrateToWorkUnitContext(Logger, Container.GetInstance<IServiceScopeFactory>(), repository);
+            using (var dialog = new ProgressDialog((progress, _) => toWorkUnitContext.ExecuteAsync(progress).ConfigureAwait(true), false))
+            {
+                dialog.Text = Core.Application.NameAndVersion;
+                dialog.StartPosition = FormStartPosition.CenterScreen;
+                dialog.ShowDialog();
+                if (dialog.Exception != null)
+                {
+                    ShowStartupException(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
+                }
+            }
         }
 
         public void RegisterForUnhandledExceptions()

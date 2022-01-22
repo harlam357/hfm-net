@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Windows.Forms;
-using Application = System.Windows.Forms.Application;
+﻿using System.Reflection;
 
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Application = System.Windows.Forms.Application;
+
 namespace HFM
 {
     internal static class Program
     {
         [STAThread]
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
-#if NET5_0
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
-#endif
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
@@ -28,7 +24,7 @@ namespace HFM
 #endif
             Core.Application.SetPaths(
                 Application.StartupPath,
-                System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HFM"));
 
             using (var container = new ServiceContainer())
             {
@@ -38,10 +34,7 @@ namespace HFM
                     container.RegisterAssembly(Assembly.GetExecutingAssembly());
                     // wires up IServiceProvider and IServiceScopeFactory
                     _ = container.CreateServiceProvider(new EmptyServiceCollection());
-#if NETFRAMEWORK
-                    Forms.TypeDescriptionProviderSetup.Execute();
-#endif
-                    bootStrapper.Execute();
+                    await bootStrapper.Execute().ConfigureAwait(true);
                 }
                 catch (Exception ex)
                 {

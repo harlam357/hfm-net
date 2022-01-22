@@ -71,7 +71,10 @@ namespace HFM.Forms.Views
                 }
 
                 progressBar.Value = value;
-                messageLabel.Text = progressInfo.Message;
+                if (progressInfo.Message is not null)
+                {
+                    messageLabel.Text = progressInfo.Message;
+                }
             };
 
             await RunProgressFunction(progress);
