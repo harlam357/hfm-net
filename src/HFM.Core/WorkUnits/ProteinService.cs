@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-
-using HFM.Core.Data;
+﻿using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Proteins;
@@ -68,15 +62,9 @@ namespace HFM.Core.WorkUnits
             return collection;
         }
 
-        public Protein Get(int projectID)
-        {
-            return _collection.TryGetValue(projectID, out Protein p) ? p : null;
-        }
+        public Protein Get(int projectID) => _collection.TryGetValue(projectID, out Protein p) ? p : null;
 
-        public ICollection<int> GetProjects()
-        {
-            return _collection.Select(x => x.ProjectNumber).ToList();
-        }
+        public ICollection<int> GetProjects() => _collection.Select(x => x.ProjectNumber).ToList();
 
         public Protein GetOrRefresh(int projectID)
         {
@@ -108,14 +96,11 @@ namespace HFM.Core.WorkUnits
             return null;
         }
 
-        private static bool ProjectIDIsNotValid(int projectID)
-        {
-            return projectID <= 0;
-        }
+        private static bool ProjectIDIsNotValid(int projectID) => projectID <= 0;
 
         public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress)
         {
-            _logger.Info("Downloading new project data from Stanford...");
+            _logger.Info("Downloading new project data...");
             var proteins = _projectSummaryService.GetProteins(progress);
 
             IReadOnlyCollection<ProteinChange> changes = null;
@@ -194,26 +179,14 @@ namespace HFM.Core.WorkUnits
 
     public class NullProteinService : IProteinService
     {
-        public static NullProteinService Instance { get; } = new NullProteinService();
+        public static NullProteinService Instance { get; } = new();
 
-        public Protein Get(int projectID)
-        {
-            return null;
-        }
+        public Protein Get(int projectID) => null;
 
-        public Protein GetOrRefresh(int projectID)
-        {
-            return null;
-        }
+        public Protein GetOrRefresh(int projectID) => null;
 
-        public ICollection<int> GetProjects()
-        {
-            return new List<int>(0);
-        }
+        public ICollection<int> GetProjects() => new List<int>(0);
 
-        public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress)
-        {
-            return new List<ProteinChange>();
-        }
+        public IReadOnlyCollection<ProteinChange> Refresh(IProgress<ProgressInfo> progress) => new List<ProteinChange>();
     }
 }
