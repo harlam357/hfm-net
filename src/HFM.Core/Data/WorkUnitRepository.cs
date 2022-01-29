@@ -119,8 +119,9 @@ namespace HFM.Core.Data
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
-
                 Connected = false;
+
+                throw;
             }
         }
 

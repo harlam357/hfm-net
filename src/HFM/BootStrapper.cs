@@ -198,7 +198,6 @@ namespace HFM
             }
 
             var mainForm = (MainForm)mainPresenter.Form;
-            mainForm.WorkUnitHistoryMenuItemEnabled = false;
             var repository = (WorkUnitRepository)Container.GetInstance<IWorkUnitRepository>();
             try
             {
@@ -206,33 +205,34 @@ namespace HFM
                 repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
                 if (repository.RequiresUpgrade())
                 {
-                    using (var dialog = new ProgressDialog((progress, token) => repository.Upgrade(progress), false))
-                    {
-                        dialog.Text = Core.Application.NameAndVersion;
-                        dialog.StartPosition = FormStartPosition.CenterScreen;
-                        dialog.ShowDialog();
-                        if (dialog.Exception != null)
-                        {
-                            ShowStartupException(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
-                        }
-                    }
+                    UpgradeWorkUnitRepository(repository);
                 }
 
-                // TODO: Extract to its own class
                 string databaseVersion = await GetDatabaseVersionFromWorkUnitContext().ConfigureAwait(true);
                 if (ShouldMigrateToWorkUnitContext(databaseVersion))
                 {
                     MigrateToWorkUnitContext(repository);
                 }
-
-                mainForm.WorkUnitHistoryMenuItemEnabled = repository.Connected;
             }
             catch (Exception ex)
             {
+                mainForm.WorkUnitHistoryMenuItemEnabled = false;
                 ShowStartupException(ex, Properties.Resources.WuHistoryUpgradeFailed, false);
             }
 
             return mainForm;
+        }
+
+        private static void UpgradeWorkUnitRepository(WorkUnitRepository repository)
+        {
+            using var dialog = new ProgressDialog((progress, _) => repository.Upgrade(progress), false);
+            dialog.Text = Core.Application.NameAndVersion;
+            dialog.StartPosition = FormStartPosition.CenterScreen;
+            dialog.ShowDialog();
+            if (dialog.Exception != null)
+            {
+                throw dialog.Exception;
+            }
         }
 
         private async Task<string> GetDatabaseVersionFromWorkUnitContext()
@@ -251,15 +251,14 @@ namespace HFM
         private void MigrateToWorkUnitContext(IWorkUnitRepository repository)
         {
             var toWorkUnitContext = new MigrateToWorkUnitContext(Logger, Container.GetInstance<IServiceScopeFactory>(), repository);
-            using (var dialog = new ProgressDialog((progress, _) => toWorkUnitContext.ExecuteAsync(progress).ConfigureAwait(true), false))
+
+            using var dialog = new ProgressDialog((progress, _) => toWorkUnitContext.ExecuteAsync(progress).ConfigureAwait(true), false);
+            dialog.Text = Core.Application.NameAndVersion;
+            dialog.StartPosition = FormStartPosition.CenterScreen;
+            dialog.ShowDialog();
+            if (dialog.Exception != null)
             {
-                dialog.Text = Core.Application.NameAndVersion;
-                dialog.StartPosition = FormStartPosition.CenterScreen;
-                dialog.ShowDialog();
-                if (dialog.Exception != null)
-                {
-                    ShowStartupException(dialog.Exception, Properties.Resources.WuHistoryUpgradeFailed, false);
-                }
+                throw dialog.Exception;
             }
         }
 
