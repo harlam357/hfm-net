@@ -30,7 +30,7 @@ namespace HFM.Core.Data
 
         public async Task ExecuteAsync(IProgress<ProgressInfo> progress)
         {
-            ReportProgressMessage(progress, "Getting existing work unit data... hang tight");
+            ReportProgressMessage(progress, "Getting existing work unit data...");
             var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
 
             _total = rows.Count * 2;
@@ -43,7 +43,7 @@ namespace HFM.Core.Data
 
         private async Task AddClientsAndProjects(IProgress<ProgressInfo> progress, IEnumerable<WorkUnitRow> rows)
         {
-            ReportProgressMessage(progress, "Finding clients and projects... this should be quick");
+            ReportProgressMessage(progress, "Finding clients and projects...");
             var proteins = new HashSet<ProteinEntity>();
             var clients = new HashSet<ClientEntity>();
 
@@ -126,6 +126,7 @@ namespace HFM.Core.Data
                 }
             }
 
+            ReportProgressMessage(progress, "Saving work unit data...");
             await AddRange(workUnits).ConfigureAwait(false);
         }
 
