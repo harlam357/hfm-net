@@ -30,13 +30,13 @@ namespace HFM.Core.Data
 
         public async Task ExecuteAsync(IProgress<ProgressInfo> progress)
         {
-            progress.Report(new ProgressInfo(0, "Getting existing work unit data... hang tight"));
+            ReportProgressMessage(progress, "Getting existing work unit data... hang tight");
             var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
 
             _total = rows.Count * 2;
             _workUnitTotal = rows.Count;
 
-            progress.Report(new ProgressInfo(0, "Finding clients and projects... this should be quick"));
+            ReportProgressMessage(progress, "Finding clients and projects... this should be quick");
             var proteins = new HashSet<ProteinEntity>();
             var clients = new HashSet<ClientEntity>();
 
@@ -132,6 +132,12 @@ namespace HFM.Core.Data
             await AddRange(workUnits).ConfigureAwait(false);
         }
 
+        private void ReportProgressMessage(IProgress<ProgressInfo> progress, string message)
+        {
+            _logger.Info(message);
+            progress.Report(new ProgressInfo(_lastPercent, message));
+        }
+
         private void ReportClientAndProjectProgress(IProgress<ProgressInfo> progress)
         {
             int percent = CalculatePercent(++_count, _total);
@@ -149,7 +155,9 @@ namespace HFM.Core.Data
             if (percent != _lastPercent || _workUnitCount == _workUnitTotal)
             {
                 _lastPercent = percent;
-                progress.Report(new ProgressInfo(_lastPercent, $"Migrating work unit {_workUnitCount} of {_workUnitTotal}"));
+                string message = $"Migrating work unit {_workUnitCount} of {_workUnitTotal}";
+                _logger.Info(message);
+                progress.Report(new ProgressInfo(_lastPercent, message));
             }
         }
 
