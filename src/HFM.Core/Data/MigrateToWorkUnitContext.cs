@@ -36,6 +36,13 @@ namespace HFM.Core.Data
             _total = rows.Count * 2;
             _workUnitTotal = rows.Count;
 
+            await AddClientsAndProjects(progress, rows).ConfigureAwait(false);
+            await AddWorkUnits(progress, rows).ConfigureAwait(false);
+            await AddVersions().ConfigureAwait(false);
+        }
+
+        private async Task AddClientsAndProjects(IProgress<ProgressInfo> progress, IEnumerable<WorkUnitRow> rows)
+        {
             ReportProgressMessage(progress, "Finding clients and projects... this should be quick");
             var proteins = new HashSet<ProteinEntity>();
             var clients = new HashSet<ClientEntity>();
@@ -44,7 +51,7 @@ namespace HFM.Core.Data
             {
                 ReportClientAndProjectProgress(progress);
 
-                var p = new ProteinEntity
+                proteins.Add(new ProteinEntity
                 {
                     ProjectID = r.ProjectID,
                     Atoms = r.Atoms,
@@ -54,22 +61,23 @@ namespace HFM.Core.Data
                     KFactor = r.KFactor,
                     TimeoutDays = r.PreferredDays,
                     ExpirationDays = r.MaximumDays
-                };
-                proteins.Add(p);
+                });
 
                 var slotIdentifier = SlotIdentifier.FromName(r.Name, r.Path, Guid.Empty);
 
-                var c = new ClientEntity
+                clients.Add(new ClientEntity
                 {
                     Name = slotIdentifier.ClientIdentifier.Name,
                     ConnectionString = slotIdentifier.ClientIdentifier.ToServerPortString()
-                };
-                clients.Add(c);
+                });
             }
 
             await AddRange(proteins).ConfigureAwait(false);
             await AddRange(clients).ConfigureAwait(false);
+        }
 
+        private async Task AddWorkUnits(IProgress<ProgressInfo> progress, IEnumerable<WorkUnitRow> rows)
+        {
             var workUnits = new HashSet<WorkUnitEntity>();
 
             using (var scope = _serviceScopeFactory.CreateScope())
@@ -97,7 +105,7 @@ namespace HFM.Core.Data
                             x.ConnectionString == slotIdentifier.ClientIdentifier.ToServerPortString())
                         .ConfigureAwait(false);
 
-                    var w = new WorkUnitEntity
+                    workUnits.Add(new WorkUnitEntity
                     {
                         ProteinID = p.ID,
                         ClientID = c.ID,
@@ -114,22 +122,27 @@ namespace HFM.Core.Data
                         FramesCompleted = r.FramesCompleted,
                         FrameTimeInSeconds = r.FrameTimeValue,
                         ClientSlot = slotIdentifier.SlotID >= 0 ? slotIdentifier.SlotID : null
-                    };
-                    workUnits.Add(w);
+                    });
                 }
-
-                var database = (IWorkUnitDatabase)_repository;
-                var table = database.Select("SELECT * FROM [DbVersion]");
-                foreach (System.Data.DataRow row in table.Rows)
-                {
-                    context.Versions.Add(new VersionEntity { Version = row["Version"].ToString() });
-                }
-                context.Versions.Add(new VersionEntity { Version = Application.Version });
-
-                await context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             await AddRange(workUnits).ConfigureAwait(false);
+        }
+
+        private async Task AddVersions()
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+
+            var database = (IWorkUnitDatabase)_repository;
+            var table = database.Select("SELECT * FROM [DbVersion]");
+            foreach (System.Data.DataRow row in table.Rows)
+            {
+                context.Versions.Add(new VersionEntity { Version = row["Version"].ToString() });
+            }
+            context.Versions.Add(new VersionEntity { Version = Application.Version });
+
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private void ReportProgressMessage(IProgress<ProgressInfo> progress, string message)
