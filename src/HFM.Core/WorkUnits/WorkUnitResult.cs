@@ -41,33 +41,37 @@ namespace HFM.Core.WorkUnits
         public const string GpuMemtestError = "GPU_MEMTEST_ERROR";
         public const string UnknownEnum = "UNKNOWN_ENUM";
         public const string BadFrameChecksum = "BAD_FRAME_CHECKSUM";
+        public const string Unknown = "UNKNOWN";
 
-        internal static WorkUnitResult ToWorkUnitResult(string result)
-        {
-            switch (result)
+        internal static WorkUnitResult ToWorkUnitResult(string result) =>
+            result switch
             {
-                case FinishedUnit:
-                    return WorkUnitResult.FinishedUnit;
-                case EarlyUnitEnd:
-                    return WorkUnitResult.EarlyUnitEnd;
-                case UnstableMachine:
-                    return WorkUnitResult.UnstableMachine;
-                case Interrupted:
-                    return WorkUnitResult.Interrupted;
-                case BadWorkUnit:
-                    return WorkUnitResult.BadWorkUnit;
-                case CoreOutdated:
-                    return WorkUnitResult.CoreOutdated;
-                case GpuMemtestError:
-                    return WorkUnitResult.GpuMemtestError;
-                case UnknownEnum:
-                    return WorkUnitResult.UnknownEnum;
-                case BadFrameChecksum:
-                    return WorkUnitResult.BadFrameChecksum;
-                default:
-                    return WorkUnitResult.Unknown;
-            }
-        }
+                FinishedUnit => WorkUnitResult.FinishedUnit,
+                EarlyUnitEnd => WorkUnitResult.EarlyUnitEnd,
+                UnstableMachine => WorkUnitResult.UnstableMachine,
+                Interrupted => WorkUnitResult.Interrupted,
+                BadWorkUnit => WorkUnitResult.BadWorkUnit,
+                CoreOutdated => WorkUnitResult.CoreOutdated,
+                GpuMemtestError => WorkUnitResult.GpuMemtestError,
+                UnknownEnum => WorkUnitResult.UnknownEnum,
+                BadFrameChecksum => WorkUnitResult.BadFrameChecksum,
+                _ => WorkUnitResult.Unknown
+            };
+
+        internal static string FromWorkUnitResult(WorkUnitResult result) =>
+            result switch
+            {
+                WorkUnitResult.FinishedUnit => FinishedUnit,
+                WorkUnitResult.EarlyUnitEnd => EarlyUnitEnd,
+                WorkUnitResult.UnstableMachine => UnstableMachine,
+                WorkUnitResult.Interrupted => Interrupted,
+                WorkUnitResult.BadWorkUnit => BadWorkUnit,
+                WorkUnitResult.CoreOutdated => CoreOutdated,
+                WorkUnitResult.GpuMemtestError => GpuMemtestError,
+                WorkUnitResult.UnknownEnum => UnknownEnum,
+                WorkUnitResult.BadFrameChecksum => BadFrameChecksum,
+                _ => Unknown
+            };
     }
 
     internal static class WorkUnitResultExtensions
