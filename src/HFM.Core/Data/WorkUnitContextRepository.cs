@@ -110,6 +110,13 @@ namespace HFM.Core.Data
         {
             var protein = new ProteinEntity();
             protein.ProjectID = workUnitModel.CurrentProtein.ProjectNumber;
+            protein.Credit = workUnitModel.CurrentProtein.Credit;
+            protein.KFactor = workUnitModel.CurrentProtein.KFactor;
+            protein.Frames = workUnitModel.CurrentProtein.Frames;
+            protein.Core = workUnitModel.CurrentProtein.Core;
+            protein.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
+            protein.TimeoutDays = workUnitModel.CurrentProtein.PreferredDays;
+            protein.ExpirationDays = workUnitModel.CurrentProtein.MaximumDays;
 
             context.Proteins.Add(protein);
             context.SaveChanges();
@@ -120,9 +127,17 @@ namespace HFM.Core.Data
         private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel, long clientID, long proteinID)
         {
             var workUnit = new WorkUnitEntity();
+            workUnit.DonorName = workUnitModel.WorkUnit.FoldingID;
+            workUnit.DonorTeam = workUnitModel.WorkUnit.Team;
+            workUnit.CoreVersion = workUnitModel.WorkUnit.CoreVersion?.ToString();
             workUnit.Result = WorkUnitResultString.FromWorkUnitResult(workUnitModel.WorkUnit.UnitResult);
             workUnit.Assigned = workUnitModel.WorkUnit.Assigned;
             workUnit.Finished = workUnitModel.WorkUnit.Finished;
+            workUnit.ProjectRun = workUnitModel.WorkUnit.ProjectRun;
+            workUnit.ProjectClone = workUnitModel.WorkUnit.ProjectClone;
+            workUnit.ProjectGen = workUnitModel.WorkUnit.ProjectGen;
+            workUnit.FramesCompleted = workUnitModel.FramesComplete;
+            workUnit.FrameTimeInSeconds = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
             workUnit.ProteinID = proteinID;
             workUnit.ClientID = clientID;
 
@@ -154,6 +169,12 @@ namespace HFM.Core.Data
                     .Where(x => x.ClientSlot == slotIdentifier.SlotID);
             }
 
+            if (clientStartTime.HasValue)
+            {
+                query = query
+                    .Where(x => x.Finished > clientStartTime.Value);
+            }
+
             return query.Count();
         }
 
@@ -171,6 +192,12 @@ namespace HFM.Core.Data
             {
                 query = query
                     .Where(x => x.ClientSlot == slotIdentifier.SlotID);
+            }
+
+            if (clientStartTime.HasValue)
+            {
+                query = query
+                    .Where(x => x.Finished > clientStartTime.Value);
             }
 
             return query.Count();

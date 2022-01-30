@@ -1,5 +1,6 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.WorkUnits;
+using HFM.Log;
 using HFM.Proteins;
 
 using NUnit.Framework;
@@ -16,6 +17,7 @@ namespace HFM.Core.Data
             private string _connectionString;
             private readonly Guid _clientGuid = Guid.NewGuid();
             private IWorkUnitRepository _repository;
+            private readonly DateTime _assigned = DateTime.UtcNow;
             private bool _insertResult;
 
             [SetUp]
@@ -32,17 +34,35 @@ namespace HFM.Core.Data
                     Port = ClientSettings.DefaultPort,
                     Guid = _clientGuid
                 };
-                var assigned = DateTime.UtcNow;
                 var workUnit = new WorkUnit
                 {
+                    FoldingID = "harlam357",
+                    Team = 32,
+                    CoreVersion = new Version("0.0.18"),
                     ProjectID = 1,
-                    ProjectRun = 1,
-                    ProjectClone = 1,
-                    ProjectGen = 1,
-                    Assigned = assigned,
-                    Finished = assigned.AddHours(6)
+                    ProjectRun = 2,
+                    ProjectClone = 3,
+                    ProjectGen = 4,
+                    UnitResult = WorkUnitResult.FinishedUnit,
+                    Assigned = _assigned,
+                    Finished = _assigned.AddHours(6),
+                    FramesObserved = 1,
+                    Frames = new Dictionary<int, LogLineFrameData>
+                    {
+                        { 100, new LogLineFrameData { ID = 100, Duration = TimeSpan.FromSeconds(28) } }
+                    }
                 };
-                var protein = new Protein();
+                var protein = new Protein
+                {
+                    ProjectNumber = 1,
+                    NumberOfAtoms = 350000,
+                    PreferredDays = 1.0,
+                    MaximumDays = 3.0,
+                    Credit = 25000.0,
+                    Frames = 100,
+                    Core = "GRO_A8",
+                    KFactor = 0.3
+                };
 
                 var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
                 _insertResult = _repository.Insert(workUnitModel);
@@ -52,7 +72,7 @@ namespace HFM.Core.Data
             public void AfterEach() => _artifacts?.Dispose();
 
             [Test]
-            public void ThenNewClientIsCreated()
+            public void ThenNewClientIsInserted()
             {
                 Assert.IsTrue(_insertResult);
 
@@ -63,6 +83,49 @@ namespace HFM.Core.Data
                 Assert.AreEqual("gtx3090.awesome.com:36330", client.ConnectionString);
                 Assert.AreEqual(_clientGuid.ToString(), client.Guid);
             }
+
+            [Test]
+            public void ThenNewProteinIsInserted()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                var protein = context.Proteins.First();
+                Assert.AreNotEqual(0, protein.ID);
+                Assert.AreEqual(1, protein.ProjectID);
+                Assert.AreEqual(25000.0, protein.Credit);
+                Assert.AreEqual(0.3, protein.KFactor);
+                Assert.AreEqual(100, protein.Frames);
+                Assert.AreEqual("GRO_A8", protein.Core);
+                Assert.AreEqual(350000, protein.Atoms);
+                Assert.AreEqual(1.0, protein.TimeoutDays);
+                Assert.AreEqual(3.0, protein.ExpirationDays);
+            }
+
+            [Test]
+            public void ThenNewWorkUnitIsInserted()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                var workUnit = context.WorkUnits.First();
+                Assert.AreNotEqual(0, workUnit.ID);
+                Assert.AreEqual("harlam357", workUnit.DonorName);
+                Assert.AreEqual(32, workUnit.DonorTeam);
+                Assert.AreEqual("0.0.18", workUnit.CoreVersion);
+                Assert.AreEqual(WorkUnitResultString.FinishedUnit, workUnit.Result);
+                Assert.AreEqual(_assigned, workUnit.Assigned);
+                Assert.AreEqual(_assigned.AddHours(6), workUnit.Finished);
+                Assert.AreEqual(2, workUnit.ProjectRun);
+                Assert.AreEqual(3, workUnit.ProjectClone);
+                Assert.AreEqual(4, workUnit.ProjectGen);
+                Assert.AreEqual(null, workUnit.HexID);
+                Assert.AreEqual(100, workUnit.FramesCompleted);
+                Assert.AreEqual(28, workUnit.FrameTimeInSeconds);
+                Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
+                Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
+                Assert.AreEqual(null, workUnit.ClientSlot);
+            }
         }
 
         [TestFixture]
@@ -72,6 +135,7 @@ namespace HFM.Core.Data
             private string _connectionString;
             private readonly Guid _clientGuid = Guid.NewGuid();
             private IWorkUnitRepository _repository;
+            private readonly DateTime _utcNow = DateTime.UtcNow;
 
             [SetUp]
             public void BeforeEach()
@@ -87,8 +151,14 @@ namespace HFM.Core.Data
                     Port = ClientSettings.DefaultPort,
                     Guid = _clientGuid
                 };
-                var assigned = DateTime.UtcNow;
-                var finishedworkUnit = new WorkUnit
+                InsertFinishedAndFailedAssignedAt(_utcNow, settings);
+                InsertFinishedAndFailedAssignedAt(new DateTime(2020, 1, 1), settings);
+            }
+
+            private void InsertFinishedAndFailedAssignedAt(DateTime assigned, ClientSettings settings)
+            {
+                var protein = new Protein();
+                var finishedWorkUnit = new WorkUnit
                 {
                     ProjectID = 1,
                     ProjectRun = 1,
@@ -109,9 +179,8 @@ namespace HFM.Core.Data
                     Finished = assigned.AddHours(6),
                     UnitResult = WorkUnitResult.BadWorkUnit
                 };
-                var protein = new Protein();
 
-                var workUnitModel = CreateWorkUnitModel(settings, finishedworkUnit, protein);
+                var workUnitModel = CreateWorkUnitModel(settings, finishedWorkUnit, protein);
                 _repository.Insert(workUnitModel);
                 workUnitModel = CreateWorkUnitModel(settings, failedWorkUnit, protein);
                 _repository.Insert(workUnitModel);
@@ -121,10 +190,19 @@ namespace HFM.Core.Data
             public void AfterEach() => _artifacts?.Dispose();
 
             [Test]
-            public void ThenRepositoryReturnsCounts()
+            public void WhenClientStartTimeIsNullThenRepositoryReturnsAllFinishedAndFailedCounts()
             {
                 long finished = _repository.CountCompleted("GTX3090", null);
                 long failed = _repository.CountFailed("GTX3090", null);
+                Assert.AreEqual(2, finished);
+                Assert.AreEqual(2, failed);
+            }
+
+            [Test]
+            public void WhenClientStartTimeIsNotNullThenRepositoryReturnsCountsFinishedAfterDateTime()
+            {
+                long finished = _repository.CountCompleted("GTX3090", _utcNow);
+                long failed = _repository.CountFailed("GTX3090", _utcNow);
                 Assert.AreEqual(1, finished);
                 Assert.AreEqual(1, failed);
             }
