@@ -172,6 +172,283 @@ namespace HFM.Core.Data
         }
 
         [TestFixture]
+        public class WhenInsertingExistingWorkUnit : WorkUnitContextRepositoryTests
+        {
+            private ArtifactFolder _artifacts;
+            private string _connectionString;
+            private IWorkUnitRepository _repository;
+            private readonly DateTime _assigned = DateTime.UtcNow;
+            private bool _insertResult;
+
+            [SetUp]
+            public void BeforeEach()
+            {
+                _artifacts = new ArtifactFolder();
+                _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+                var settings = new ClientSettings();
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = 1,
+                    ProjectRun = 2,
+                    ProjectClone = 3,
+                    ProjectGen = 4,
+                    Assigned = _assigned,
+                    Finished = _assigned.AddHours(6)
+                };
+                var protein = new Protein
+                {
+                    ProjectNumber = 1
+                };
+
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _repository.Insert(workUnitModel);
+                _insertResult = _repository.Insert(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _artifacts?.Dispose();
+
+            [Test]
+            public void ThenInsertReturnsFalse() => Assert.IsFalse(_insertResult);
+        }
+
+        [TestFixture]
+        public class WhenInsertingInvalidWorkUnit : WorkUnitContextRepositoryTests
+        {
+            private ArtifactFolder _artifacts;
+            private string _connectionString;
+            private IWorkUnitRepository _repository;
+            private bool _insertResult;
+
+            [SetUp]
+            public void BeforeEach()
+            {
+                _artifacts = new ArtifactFolder();
+                _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+                var settings = new ClientSettings();
+                var workUnit = new WorkUnit();
+                var protein = new Protein();
+
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _insertResult = _repository.Insert(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _artifacts?.Dispose();
+
+            [Test]
+            public void ThenInsertReturnsFalse() => Assert.IsFalse(_insertResult);
+        }
+
+        [TestFixture]
+        public class WhenInsertingWithExistingClientGuid : WorkUnitContextRepositoryTests
+        {
+            private ArtifactFolder _artifacts;
+            private string _connectionString;
+            private readonly Guid _clientGuid = Guid.NewGuid();
+            private IWorkUnitRepository _repository;
+            private readonly DateTime _assigned = DateTime.UtcNow;
+            private bool _insertResult;
+
+            [SetUp]
+            public void BeforeEach()
+            {
+                _artifacts = new ArtifactFolder();
+                _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+                var settings = new ClientSettings
+                {
+                    Name = "GTX3090",
+                    Server = "gtx3090.awesome.com",
+                    Port = ClientSettings.DefaultPort,
+                    Guid = _clientGuid
+                };
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = 1,
+                    ProjectRun = 2,
+                    ProjectClone = 3,
+                    ProjectGen = 4,
+                    Assigned = _assigned,
+                    Finished = _assigned.AddHours(6)
+                };
+                var protein = new Protein
+                {
+                    ProjectNumber = 1
+                };
+
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _repository.Insert(workUnitModel);
+
+                workUnit.Assigned = _assigned.AddHours(24);
+                workUnit.Finished = _assigned.AddHours(30);
+
+                workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _insertResult = _repository.Insert(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _artifacts?.Dispose();
+
+            [Test]
+            public void ThenExistingClientIsReferenced()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                Assert.AreEqual(1, context.Clients.Count());
+                Assert.AreEqual(2, context.WorkUnits.Count());
+
+                var workUnit = context.WorkUnits.OrderByDescending(x => x.ID).First();
+                Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
+            }
+        }
+
+        [TestFixture]
+        public class WhenInsertingWithExistingClientGuidAndNameOrConnectionChanged : WorkUnitContextRepositoryTests
+        {
+            private ArtifactFolder _artifacts;
+            private string _connectionString;
+            private readonly Guid _clientGuid = Guid.NewGuid();
+            private IWorkUnitRepository _repository;
+            private readonly DateTime _assigned = DateTime.UtcNow;
+            private bool _insertResult;
+
+            [SetUp]
+            public void BeforeEach()
+            {
+                _artifacts = new ArtifactFolder();
+                _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+                var settings = new ClientSettings
+                {
+                    Name = "GTX3090",
+                    Server = "gtx3090.awesome.com",
+                    Port = ClientSettings.DefaultPort,
+                    Guid = _clientGuid
+                };
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = 1,
+                    ProjectRun = 2,
+                    ProjectClone = 3,
+                    ProjectGen = 4,
+                    Assigned = _assigned,
+                    Finished = _assigned.AddHours(6)
+                };
+                var protein = new Protein
+                {
+                    ProjectNumber = 1
+                };
+
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _repository.Insert(workUnitModel);
+
+                settings.Name = "GTX4080";
+                settings.Server = "gtx4080.awesome.com";
+
+                workUnit.Assigned = _assigned.AddHours(24);
+                workUnit.Finished = _assigned.AddHours(30);
+
+                workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _insertResult = _repository.Insert(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _artifacts?.Dispose();
+
+            [Test]
+            public void ThenNewClientIsInserted()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                Assert.AreEqual(2, context.Clients.Count());
+                Assert.AreEqual(2, context.WorkUnits.Count());
+
+                var client = context.Clients.OrderByDescending(x => x.ID).First();
+                Assert.AreNotEqual(0, client.ID);
+                Assert.AreEqual("GTX4080", client.Name);
+                Assert.AreEqual("gtx4080.awesome.com:36330", client.ConnectionString);
+                Assert.AreEqual(_clientGuid.ToString(), client.Guid);
+            }
+        }
+
+        [TestFixture]
+        public class WhenInsertingWithExistingClientNameAndConnection : WorkUnitContextRepositoryTests
+        {
+            private ArtifactFolder _artifacts;
+            private string _connectionString;
+            private readonly Guid _clientGuid = Guid.NewGuid();
+            private IWorkUnitRepository _repository;
+            private readonly DateTime _assigned = DateTime.UtcNow;
+            private bool _insertResult;
+
+            [SetUp]
+            public void BeforeEach()
+            {
+                _artifacts = new ArtifactFolder();
+                _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+                var settings = new ClientSettings
+                {
+                    Name = "GTX3090",
+                    Server = "gtx3090.awesome.com",
+                    Port = ClientSettings.DefaultPort
+                };
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = 1,
+                    ProjectRun = 2,
+                    ProjectClone = 3,
+                    ProjectGen = 4,
+                    Assigned = _assigned,
+                    Finished = _assigned.AddHours(6)
+                };
+                var protein = new Protein
+                {
+                    ProjectNumber = 1
+                };
+
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _repository.Insert(workUnitModel);
+
+                settings.Guid = _clientGuid;
+
+                workUnit.Assigned = _assigned.AddHours(24);
+                workUnit.Finished = _assigned.AddHours(30);
+
+                workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                _insertResult = _repository.Insert(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _artifacts?.Dispose();
+
+            [Test]
+            public void ThenExistingClientIsReferencedAndUpdatedWithGuidValue()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                Assert.AreEqual(1, context.Clients.Count());
+                Assert.AreEqual(2, context.WorkUnits.Count());
+
+                var workUnit = context.WorkUnits.OrderByDescending(x => x.ID).First();
+                var client = context.Clients.First();
+                Assert.AreEqual(client.ID, workUnit.ClientID);
+                Assert.AreEqual(client.Guid, _clientGuid.ToString());
+            }
+        }
+
+        [TestFixture]
         public class GivenFinishedAndFailedWorkUnits : WorkUnitContextRepositoryTests
         {
             private ArtifactFolder _artifacts;

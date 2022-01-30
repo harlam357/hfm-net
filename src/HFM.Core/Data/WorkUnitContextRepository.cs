@@ -36,7 +36,6 @@ namespace HFM.Core.Data
                 return false;
             }
 
-            // ensure the given work unit is not written more than once
             if (WorkUnitExists(workUnitModel.WorkUnit))
             {
                 return false;
@@ -75,16 +74,33 @@ namespace HFM.Core.Data
             ClientEntity client = null;
 
             var identifier = workUnitModel.SlotModel.SlotIdentifier.ClientIdentifier;
-            if (identifier.HasGuid)
+            string connectionString = identifier.ToServerPortString();
+            string guid = identifier.HasGuid ? identifier.Guid.ToString() : null;
+
+            if (guid is not null)
             {
-                client = context.Clients
-                    .FirstOrDefault(x => x.Guid == identifier.Guid.ToString());
+                client = context.Clients.OrderByDescending(x => x.ID).FirstOrDefault(x => x.Guid == guid);
+                if (client is not null && (client.Name != identifier.Name || client.ConnectionString != connectionString))
+                {
+                    client = new ClientEntity
+                    {
+                        Name = identifier.Name,
+                        ConnectionString = connectionString,
+                        Guid = guid
+                    };
+                    context.Clients.Add(client);
+                    context.SaveChanges();
+                }
             }
 
             if (client is null)
             {
-                client = context.Clients
-                    .FirstOrDefault(x => x.Name == identifier.Name && x.ConnectionString == identifier.ToServerPortString());
+                client = context.Clients.FirstOrDefault(x => x.Name == identifier.Name && x.ConnectionString == connectionString);
+                if (client is not null && client.Guid is null && guid is not null)
+                {
+                    client.Guid = guid;
+                    context.SaveChanges();
+                }
             }
 
             if (client is null)
@@ -92,15 +108,10 @@ namespace HFM.Core.Data
                 client = new ClientEntity
                 {
                     Name = identifier.Name,
-                    ConnectionString = identifier.ToServerPortString(),
-                    Guid = identifier.Guid.ToString()
+                    ConnectionString = connectionString,
+                    Guid = guid
                 };
                 context.Clients.Add(client);
-                context.SaveChanges();
-            }
-            else if (client.Guid is null)
-            {
-                client.Guid = identifier.Guid.ToString();
                 context.SaveChanges();
             }
 
