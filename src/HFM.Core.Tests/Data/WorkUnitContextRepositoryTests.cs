@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace HFM.Core.Data
 {
+    [Ignore("Hanging on CI build")]
     [TestFixture]
     public class WorkUnitContextRepositoryTests
     {
