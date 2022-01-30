@@ -44,8 +44,8 @@ namespace HFM.Core.Data
 
             using var context = CreateWorkUnitContext();
 
-            var client = GetOrCreateClientEntity(context, workUnitModel);
-            var protein = GetOrCreateProteinEntity(context, workUnitModel);
+            var client = GetOrInsertClientEntity(context, workUnitModel);
+            var protein = GetOrInsertProteinEntity(context, workUnitModel);
             var workUnit = InsertWorkUnitEntity(context, workUnitModel, client.ID, protein.ID);
 
             return true;
@@ -69,7 +69,7 @@ namespace HFM.Core.Data
                           x.Assigned == workUnit.Assigned);
         }
 
-        private static ClientEntity GetOrCreateClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+        private static ClientEntity GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
         {
             ClientEntity client = null;
 
@@ -106,7 +106,7 @@ namespace HFM.Core.Data
             return client;
         }
 
-        private static ProteinEntity GetOrCreateProteinEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+        private static ProteinEntity GetOrInsertProteinEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
         {
             var protein = new ProteinEntity();
             protein.ProjectID = workUnitModel.CurrentProtein.ProjectNumber;
@@ -163,18 +163,8 @@ namespace HFM.Core.Data
                 .Include(x => x.Client)
                 .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result == WorkUnitResultString.FinishedUnit);
 
-            if (slotIdentifier.SlotID != SlotIdentifier.NoSlotID)
-            {
-                query = query
-                    .Where(x => x.ClientSlot == slotIdentifier.SlotID);
-            }
-
-            if (clientStartTime.HasValue)
-            {
-                query = query
-                    .Where(x => x.Finished > clientStartTime.Value);
-            }
-
+            query = WhereClientSlot(query, slotIdentifier.SlotID);
+            query = WhereFinishedAfterClientStart(query, clientStartTime);
             return query.Count();
         }
 
@@ -188,19 +178,27 @@ namespace HFM.Core.Data
                 .Include(x => x.Client)
                 .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result != WorkUnitResultString.FinishedUnit);
 
-            if (slotIdentifier.SlotID != SlotIdentifier.NoSlotID)
-            {
-                query = query
-                    .Where(x => x.ClientSlot == slotIdentifier.SlotID);
-            }
+            query = WhereClientSlot(query, slotIdentifier.SlotID);
+            query = WhereFinishedAfterClientStart(query, clientStartTime);
+            return query.Count();
+        }
 
+        private static IQueryable<WorkUnitEntity> WhereClientSlot(IQueryable<WorkUnitEntity> query, int slotID)
+        {
+            if (slotID != SlotIdentifier.NoSlotID)
+            {
+                query = query.Where(x => x.ClientSlot == slotID);
+            }
+            return query;
+        }
+
+        private static IQueryable<WorkUnitEntity> WhereFinishedAfterClientStart(IQueryable<WorkUnitEntity> query, DateTime? clientStartTime)
+        {
             if (clientStartTime.HasValue)
             {
-                query = query
-                    .Where(x => x.Finished > clientStartTime.Value);
+                query = query.Where(x => x.Finished > clientStartTime.Value);
             }
-
-            return query.Count();
+            return query;
         }
 
         protected abstract WorkUnitContext CreateWorkUnitContext();
