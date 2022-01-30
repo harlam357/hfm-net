@@ -47,6 +47,7 @@ namespace HFM.Core.Data
             var client = GetOrInsertClientEntity(context, workUnitModel);
             var protein = GetOrInsertProteinEntity(context, workUnitModel);
             var workUnit = InsertWorkUnitEntity(context, workUnitModel, client.ID, protein.ID);
+            InsertWorkUnitFrameEntities(context, workUnitModel, workUnit.ID);
 
             return true;
         }
@@ -145,6 +146,28 @@ namespace HFM.Core.Data
             context.SaveChanges();
 
             return workUnit;
+        }
+
+        private static void InsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, long workUnitID)
+        {
+            if (workUnitModel.WorkUnit.Frames is null)
+            {
+                return;
+            }
+
+            foreach (var f in workUnitModel.WorkUnit.Frames.Values)
+            {
+                var frame = new WorkUnitFrameEntity();
+                frame.WorkUnitID = workUnitID;
+                frame.FrameID = f.ID;
+                frame.RawFramesComplete = f.RawFramesComplete;
+                frame.RawFramesTotal = f.RawFramesTotal;
+                frame.TimeStamp = f.TimeStamp;
+                frame.Duration = f.Duration;
+                context.WorkUnitFrames.Add(frame);
+            }
+
+            context.SaveChanges();
         }
 
         public int Delete(WorkUnitRow row) => throw new NotImplementedException();

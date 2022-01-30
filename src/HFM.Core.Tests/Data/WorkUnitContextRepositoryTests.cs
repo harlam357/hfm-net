@@ -49,7 +49,26 @@ namespace HFM.Core.Data
                     FramesObserved = 1,
                     Frames = new Dictionary<int, LogLineFrameData>
                     {
-                        { 100, new LogLineFrameData { ID = 100, Duration = TimeSpan.FromSeconds(28) } }
+                        {
+                            99, new LogLineFrameData
+                            {
+                                ID = 99,
+                                RawFramesComplete = 990_000,
+                                RawFramesTotal = 1_000_000,
+                                TimeStamp = TimeSpan.FromSeconds(10),
+                                Duration = TimeSpan.Zero
+                            }
+                        },
+                        {
+                            100, new LogLineFrameData
+                            {
+                                ID = 100,
+                                RawFramesComplete = 1_000_000,
+                                RawFramesTotal = 1_000_000,
+                                TimeStamp = TimeSpan.FromSeconds(38),
+                                Duration = TimeSpan.FromSeconds(28)
+                            }
+                        }
                     }
                 };
                 var protein = new Protein
@@ -125,6 +144,30 @@ namespace HFM.Core.Data
                 Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
                 Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
                 Assert.AreEqual(null, workUnit.ClientSlot);
+            }
+
+            [Test]
+            public void ThenNewWorkUnitFramesAreInserted()
+            {
+                Assert.IsTrue(_insertResult);
+
+                using var context = new WorkUnitContext(_connectionString);
+                long workUnitID = context.WorkUnits.First().ID;
+                var frames = context.WorkUnitFrames.Where(x => x.WorkUnitID == workUnitID).ToDictionary(x => x.FrameID);
+
+                var f = frames[99];
+                Assert.AreEqual(99, f.FrameID);
+                Assert.AreEqual(990_000, f.RawFramesComplete);
+                Assert.AreEqual(1_000_000, f.RawFramesTotal);
+                Assert.AreEqual(TimeSpan.FromSeconds(10), f.TimeStamp);
+                Assert.AreEqual(TimeSpan.Zero, f.Duration);
+
+                f = frames[100];
+                Assert.AreEqual(100, f.FrameID);
+                Assert.AreEqual(1_000_000, f.RawFramesComplete);
+                Assert.AreEqual(1_000_000, f.RawFramesTotal);
+                Assert.AreEqual(TimeSpan.FromSeconds(38), f.TimeStamp);
+                Assert.AreEqual(TimeSpan.FromSeconds(28), f.Duration);
             }
         }
 
