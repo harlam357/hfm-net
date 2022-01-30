@@ -1,6 +1,8 @@
 ﻿using System.Data.Entity;
+using System.Diagnostics;
 
 using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +13,7 @@ public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ScopedWorkUnitContextRepository(IServiceScopeFactory serviceScopeFactory)
+    public ScopedWorkUnitContextRepository(ILogger logger, IServiceScopeFactory serviceScopeFactory) : base(logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
     }
@@ -25,6 +27,18 @@ public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
 
 public abstract class WorkUnitContextRepository : IWorkUnitRepository
 {
+    public ILogger Logger { get; }
+
+    protected WorkUnitContextRepository()
+    {
+
+    }
+
+    protected WorkUnitContextRepository(ILogger logger)
+    {
+        Logger = logger;
+    }
+
     public bool Connected => true;
 
     public long Insert(WorkUnitModel workUnitModel)
@@ -201,9 +215,41 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return context.SaveChanges();
     }
 
-    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation) => throw new NotImplementedException();
+    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            return FetchInternal(query, bonusCalculation);
+        }
+        finally
+        {
+            Logger.Debug($"Database Fetch ({query}) completed in {sw.GetExecTime()}");
+        }
+    }
 
-    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation) => throw new NotImplementedException();
+    private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        return null;
+    }
+
+    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            return PageInternal(page, itemsPerPage, query, bonusCalculation);
+        }
+        finally
+        {
+            Logger.Debug($"Database Page Fetch ({query}) completed in {sw.GetExecTime()}");
+        }
+    }
+
+    private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        return null;
+    }
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
     {
