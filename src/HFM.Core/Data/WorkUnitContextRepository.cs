@@ -5,8 +5,6 @@ using HFM.Core.WorkUnits;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using PetaPoco;
-
 namespace HFM.Core.Data;
 
 public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
