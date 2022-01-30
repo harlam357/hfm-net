@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.WorkUnits;
@@ -24,7 +19,7 @@ namespace HFM.Forms.Models
 
         private readonly List<WorkUnitQuery> _queryList;
         private readonly WorkUnitRowSortableBindingList _workUnitList;
-        private PetaPoco.Page<WorkUnitRow> _page;
+        private Page<WorkUnitRow> _page;
 
         public WorkUnitHistoryModel(IPreferences preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
         {
@@ -52,7 +47,7 @@ namespace HFM.Forms.Models
             HistoryBindingSource = new BindingSource();
             HistoryBindingSource.DataSource = _workUnitList;
 
-            _page = new PetaPoco.Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
+            _page = new Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
 
         public override void Load()

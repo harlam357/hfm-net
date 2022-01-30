@@ -17,6 +17,36 @@ namespace HFM.Core.Data
         Version
     }
 
+    public class Page<T>
+    {
+        public Page()
+        {
+
+        }
+
+        public Page(PetaPoco.Page<T> page)
+        {
+            CurrentPage = page.CurrentPage;
+            TotalPages = page.TotalPages;
+            TotalItems = page.TotalItems;
+            ItemsPerPage = page.ItemsPerPage;
+            Items = page.Items;
+            Context = page.Context;
+        }
+
+        public long CurrentPage { get; set; }
+
+        public long TotalPages { get; set; }
+
+        public long TotalItems { get; set; }
+
+        public long ItemsPerPage { get; set; }
+
+        public List<T> Items { get; set; }
+
+        public object Context { get; set; }
+    }
+
     public interface IWorkUnitRepository
     {
         /// <summary>
@@ -31,7 +61,7 @@ namespace HFM.Core.Data
 
         IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-        PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
+        Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -358,12 +388,12 @@ namespace HFM.Core.Data
             }
         }
 
-        public PetaPoco.Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+        public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                return PageInternal(page, itemsPerPage, query, bonusCalculation);
+                return new Page<WorkUnitRow>(PageInternal(page, itemsPerPage, query, bonusCalculation));
             }
             finally
             {

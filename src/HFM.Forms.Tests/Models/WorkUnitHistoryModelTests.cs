@@ -1,6 +1,4 @@
-﻿using System;
-
-using HFM.Core.Data;
+﻿using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -144,7 +142,7 @@ namespace HFM.Forms.Models
                 .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
             Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-            _mockRepository.Setup(x => x.Page(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new PetaPoco.Page<WorkUnitRow>());
+            _mockRepository.Setup(x => x.Page(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new Page<WorkUnitRow>());
             // Act
             _model.ResetBindings(true);
             // Assert
