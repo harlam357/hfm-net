@@ -120,18 +120,32 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private static ProteinEntity GetOrInsertProteinEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
-        var protein = new ProteinEntity();
-        protein.ProjectID = workUnitModel.CurrentProtein.ProjectNumber;
-        protein.Credit = workUnitModel.CurrentProtein.Credit;
-        protein.KFactor = workUnitModel.CurrentProtein.KFactor;
-        protein.Frames = workUnitModel.CurrentProtein.Frames;
-        protein.Core = workUnitModel.CurrentProtein.Core;
-        protein.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
-        protein.TimeoutDays = workUnitModel.CurrentProtein.PreferredDays;
-        protein.ExpirationDays = workUnitModel.CurrentProtein.MaximumDays;
+        var p = workUnitModel.CurrentProtein;
+        var protein = context.Proteins
+            .FirstOrDefault(x => x.ProjectID == p.ProjectNumber &&
+                                 Math.Abs(x.Credit - p.Credit) < 0.001 &&
+                                 Math.Abs(x.KFactor - p.KFactor) < 0.001 &&
+                                 x.Frames == p.Frames &&
+                                 x.Core == p.Core &&
+                                 x.Atoms == p.NumberOfAtoms &&
+                                 Math.Abs(x.TimeoutDays - p.PreferredDays) < 0.001 &&
+                                 Math.Abs(x.ExpirationDays - p.MaximumDays) < 0.001);
 
-        context.Proteins.Add(protein);
-        context.SaveChanges();
+        if (protein is null)
+        {
+            protein = new ProteinEntity();
+            protein.ProjectID = workUnitModel.CurrentProtein.ProjectNumber;
+            protein.Credit = workUnitModel.CurrentProtein.Credit;
+            protein.KFactor = workUnitModel.CurrentProtein.KFactor;
+            protein.Frames = workUnitModel.CurrentProtein.Frames;
+            protein.Core = workUnitModel.CurrentProtein.Core;
+            protein.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
+            protein.TimeoutDays = workUnitModel.CurrentProtein.PreferredDays;
+            protein.ExpirationDays = workUnitModel.CurrentProtein.MaximumDays;
+
+            context.Proteins.Add(protein);
+            context.SaveChanges();
+        }
 
         return protein;
     }

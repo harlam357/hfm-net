@@ -450,6 +450,71 @@ public class WorkUnitContextRepositoryTests
     }
 
     [TestFixture]
+    public class WhenInsertingExistingProtein : WorkUnitContextRepositoryTests
+    {
+        private ArtifactFolder _artifacts;
+        private string _connectionString;
+        private IWorkUnitRepository _repository;
+        private readonly DateTime _assigned = DateTime.UtcNow;
+        private bool _insertResult;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _artifacts = new ArtifactFolder();
+            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+            _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+            var settings = new ClientSettings();
+            var workUnit = new WorkUnit
+            {
+                ProjectID = 1,
+                ProjectRun = 2,
+                ProjectClone = 3,
+                ProjectGen = 4,
+                Assigned = _assigned,
+                Finished = _assigned.AddHours(6)
+            };
+            var protein = new Protein
+            {
+                ProjectNumber = 1,
+                NumberOfAtoms = 350000,
+                PreferredDays = 1.0,
+                MaximumDays = 3.0,
+                Credit = 25000.0,
+                Frames = 100,
+                Core = "GRO_A8",
+                KFactor = 0.3
+            };
+
+            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+            _repository.Insert(workUnitModel);
+
+            workUnit.Assigned = _assigned.AddHours(24);
+            workUnit.Finished = _assigned.AddHours(30);
+
+            workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+            _insertResult = _repository.Insert(workUnitModel);
+        }
+
+        [TearDown]
+        public void AfterEach() => _artifacts?.Dispose();
+
+        [Test]
+        public void ThenExistingProteinIsReferenced()
+        {
+            Assert.IsTrue(_insertResult);
+
+            using var context = new WorkUnitContext(_connectionString);
+            Assert.AreEqual(1, context.Proteins.Count());
+            Assert.AreEqual(2, context.WorkUnits.Count());
+
+            var workUnit = context.WorkUnits.OrderByDescending(x => x.ID).First();
+            Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
+        }
+    }
+
+    [TestFixture]
     public class GivenFinishedAndFailedWorkUnits : WorkUnitContextRepositoryTests
     {
         private ArtifactFolder _artifacts;
