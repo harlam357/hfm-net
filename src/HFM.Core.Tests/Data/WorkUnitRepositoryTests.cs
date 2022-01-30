@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -215,7 +210,7 @@ namespace HFM.Core.Data
         {
             _repository.Initialize(_testScratchFile);
 
-            var slotModel = new WorkUnitRepositorySlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
+            var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
 
@@ -229,17 +224,6 @@ namespace HFM.Core.Data
             // verify
             rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(1, rows.Count);
-        }
-
-        private class WorkUnitRepositorySlotModel : SlotModel
-        {
-            public WorkUnitRepositorySlotModel(IClient client) : base(client)
-            {
-            }
-
-            public override SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotID);
-
-            public int SlotID { get; set; }
         }
 
         private static WorkUnit BuildWorkUnit1()

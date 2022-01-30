@@ -84,7 +84,7 @@ namespace HFM.Core.Data
                     KFactor = 0.3
                 };
 
-                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+                var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, 1);
                 _insertResult = _repository.Insert(workUnitModel);
             }
 
@@ -144,7 +144,7 @@ namespace HFM.Core.Data
                 Assert.AreEqual(28, workUnit.FrameTimeInSeconds);
                 Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
                 Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
-                Assert.AreEqual(null, workUnit.ClientSlot);
+                Assert.AreEqual(1, workUnit.ClientSlot);
             }
 
             [Test]
@@ -501,9 +501,9 @@ namespace HFM.Core.Data
                     UnitResult = WorkUnitResult.BadWorkUnit
                 };
 
-                var workUnitModel = CreateWorkUnitModel(settings, finishedWorkUnit, protein);
+                var workUnitModel = CreateWorkUnitModel(settings, finishedWorkUnit, protein, 1);
                 _repository.Insert(workUnitModel);
-                workUnitModel = CreateWorkUnitModel(settings, failedWorkUnit, protein);
+                workUnitModel = CreateWorkUnitModel(settings, failedWorkUnit, protein, 1);
                 _repository.Insert(workUnitModel);
             }
 
@@ -513,8 +513,8 @@ namespace HFM.Core.Data
             [Test]
             public void WhenClientStartTimeIsNullThenRepositoryReturnsAllFinishedAndFailedCounts()
             {
-                long finished = _repository.CountCompleted("GTX3090", null);
-                long failed = _repository.CountFailed("GTX3090", null);
+                long finished = _repository.CountCompleted("GTX3090 Slot 01", null);
+                long failed = _repository.CountFailed("GTX3090 Slot 01", null);
                 Assert.AreEqual(2, finished);
                 Assert.AreEqual(2, failed);
             }
@@ -522,16 +522,16 @@ namespace HFM.Core.Data
             [Test]
             public void WhenClientStartTimeIsNotNullThenRepositoryReturnsCountsFinishedAfterDateTime()
             {
-                long finished = _repository.CountCompleted("GTX3090", _utcNow);
-                long failed = _repository.CountFailed("GTX3090", _utcNow);
+                long finished = _repository.CountCompleted("GTX3090 Slot 01", _utcNow);
+                long failed = _repository.CountFailed("GTX3090 Slot 01", _utcNow);
                 Assert.AreEqual(1, finished);
                 Assert.AreEqual(1, failed);
             }
         }
 
-        private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein)
+        private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein, int slotID = SlotIdentifier.NoSlotID)
         {
-            var slotModel = new SlotModel(new NullClient { Settings = settings });
+            var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
             return workUnitModel;

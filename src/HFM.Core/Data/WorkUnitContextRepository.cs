@@ -152,6 +152,7 @@ namespace HFM.Core.Data
             workUnit.FrameTimeInSeconds = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
             workUnit.ProteinID = proteinID;
             workUnit.ClientID = clientID;
+            workUnit.ClientSlot = workUnitModel.SlotModel.SlotID;
 
             context.WorkUnits.Add(workUnit);
             context.SaveChanges();
@@ -219,10 +220,8 @@ namespace HFM.Core.Data
 
         private static IQueryable<WorkUnitEntity> WhereClientSlot(IQueryable<WorkUnitEntity> query, int slotID)
         {
-            if (slotID != SlotIdentifier.NoSlotID)
-            {
-                query = query.Where(x => x.ClientSlot == slotID);
-            }
+            int? clientSlot = slotID == SlotIdentifier.NoSlotID ? null : slotID;
+            query = query.Where(x => x.ClientSlot == clientSlot);
             return query;
         }
 

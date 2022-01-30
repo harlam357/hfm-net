@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 
 using HFM.Core.WorkUnits;
@@ -25,7 +22,7 @@ namespace HFM.Core.Client
 
     public class SlotModel
     {
-        public virtual SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotIdentifier.NoSlotID);
+        public SlotIdentifier SlotIdentifier => new(Client.Settings.ClientIdentifier, SlotID);
 
         public IClient Client { get; }
 
@@ -36,6 +33,8 @@ namespace HFM.Core.Client
             Client = client ?? throw new ArgumentNullException(nameof(client));
             WorkUnitModel = new WorkUnitModel(this);
         }
+
+        public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
 
         public virtual SlotStatus Status { get; set; }
 
@@ -120,8 +119,6 @@ namespace HFM.Core.Client
 
         private int DecimalPlaces => Client.Preferences.Get<int>(Preference.DecimalPlaces);
 
-        public override SlotIdentifier SlotIdentifier => new SlotIdentifier(Client.Settings.ClientIdentifier, SlotID);
-
         private readonly SlotStatus _status;
 
         public FahClientSlotModel(IClient client, SlotStatus status, int slotID, SlotType slotType) : base(client)
@@ -145,8 +142,6 @@ namespace HFM.Core.Client
             Status.IsRunning() || Status == SlotStatus.Paused
                 ? WorkUnitModel.PercentComplete
                 : 0;
-
-        public int SlotID { get; }
 
         public override string SlotTypeString
         {
