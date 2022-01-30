@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.Threading;
 
 using AutoMapper;
 
@@ -28,7 +25,7 @@ namespace HFM.Core.Data
         bool Connected { get; }
 
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
-        bool Insert(WorkUnitModel workUnitModel);
+        long Insert(WorkUnitModel workUnitModel);
 
         int Delete(WorkUnitRow row);
 
@@ -250,17 +247,17 @@ namespace HFM.Core.Data
 
         #region Insert
 
-        public bool Insert(WorkUnitModel workUnitModel)
+        public long Insert(WorkUnitModel workUnitModel)
         {
             if (!ValidateWorkUnit(workUnitModel.WorkUnit))
             {
-                return false;
+                return -1;
             }
 
             // ensure the given work unit is not written more than once
             if (WorkUnitExists(workUnitModel.WorkUnit))
             {
-                return false;
+                return -1;
             }
 
             var entry = _mapper.Map<WorkUnitRow>(workUnitModel);
@@ -282,11 +279,9 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    database.Insert(entry);
+                    return (long)database.Insert(entry);
                 }
             }
-
-            return true;
         }
 
         private static bool ValidateWorkUnit(WorkUnit workUnit)

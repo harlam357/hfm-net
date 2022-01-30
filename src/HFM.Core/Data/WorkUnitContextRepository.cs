@@ -29,16 +29,16 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 {
     public bool Connected => true;
 
-    public bool Insert(WorkUnitModel workUnitModel)
+    public long Insert(WorkUnitModel workUnitModel)
     {
         if (!ValidateWorkUnit(workUnitModel.WorkUnit))
         {
-            return false;
+            return -1;
         }
 
         if (WorkUnitExists(workUnitModel.WorkUnit))
         {
-            return false;
+            return -1;
         }
 
         using var context = CreateWorkUnitContext();
@@ -48,7 +48,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var workUnit = InsertWorkUnitEntity(context, workUnitModel, client.ID, protein.ID);
         InsertWorkUnitFrameEntities(context, workUnitModel, workUnit.ID);
 
-        return true;
+        return workUnit.ID;
     }
 
     private static bool ValidateWorkUnit(WorkUnit workUnit) =>
@@ -196,7 +196,12 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         context.SaveChanges();
     }
 
-    public int Delete(WorkUnitRow row) => throw new NotImplementedException();
+    public int Delete(WorkUnitRow row)
+    {
+        using var context = CreateWorkUnitContext();
+        context.WorkUnits.Remove(new WorkUnitEntity { ID = row.ID });
+        return context.SaveChanges();
+    }
 
     public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation) => throw new NotImplementedException();
 

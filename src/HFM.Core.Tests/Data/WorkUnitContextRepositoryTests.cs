@@ -19,7 +19,7 @@ public class WorkUnitContextRepositoryTests
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -94,7 +94,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenNewClientIsInserted()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(1, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             var client = context.Clients.First();
@@ -107,7 +107,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenNewProteinIsInserted()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(1, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             var protein = context.Proteins.First();
@@ -125,7 +125,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenNewWorkUnitIsInserted()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(1, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             var workUnit = context.WorkUnits.First();
@@ -150,7 +150,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenNewWorkUnitFramesAreInserted()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(1, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             long workUnitID = context.WorkUnits.First().ID;
@@ -179,7 +179,7 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -212,7 +212,7 @@ public class WorkUnitContextRepositoryTests
         public void AfterEach() => _artifacts?.Dispose();
 
         [Test]
-        public void ThenInsertReturnsFalse() => Assert.IsFalse(_insertResult);
+        public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _insertResult);
     }
 
     [TestFixture]
@@ -221,7 +221,7 @@ public class WorkUnitContextRepositoryTests
         private ArtifactFolder _artifacts;
         private string _connectionString;
         private IWorkUnitRepository _repository;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -242,7 +242,7 @@ public class WorkUnitContextRepositoryTests
         public void AfterEach() => _artifacts?.Dispose();
 
         [Test]
-        public void ThenInsertReturnsFalse() => Assert.IsFalse(_insertResult);
+        public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _insertResult);
     }
 
     [TestFixture]
@@ -253,7 +253,7 @@ public class WorkUnitContextRepositoryTests
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -299,7 +299,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenExistingClientIsReferenced()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(2, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             Assert.AreEqual(1, context.Clients.Count());
@@ -318,7 +318,7 @@ public class WorkUnitContextRepositoryTests
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -367,7 +367,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenNewClientIsInserted()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(2, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             Assert.AreEqual(2, context.Clients.Count());
@@ -389,7 +389,7 @@ public class WorkUnitContextRepositoryTests
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -436,7 +436,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenExistingClientIsReferencedAndUpdatedWithGuidValue()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(2, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             Assert.AreEqual(1, context.Clients.Count());
@@ -456,7 +456,7 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private IWorkUnitRepository _repository;
         private readonly DateTime _assigned = DateTime.UtcNow;
-        private bool _insertResult;
+        private long _insertResult;
 
         [SetUp]
         public void BeforeEach()
@@ -503,7 +503,7 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenExistingProteinIsReferenced()
         {
-            Assert.IsTrue(_insertResult);
+            Assert.AreEqual(2, _insertResult);
 
             using var context = new WorkUnitContext(_connectionString);
             Assert.AreEqual(1, context.Proteins.Count());
@@ -591,6 +591,79 @@ public class WorkUnitContextRepositoryTests
             long failed = _repository.CountFailed("GTX3090 Slot 01", _utcNow);
             Assert.AreEqual(1, finished);
             Assert.AreEqual(1, failed);
+        }
+    }
+
+    [TestFixture]
+    public class WhenDeletingExistingWorkUnit : WorkUnitContextRepositoryTests
+    {
+        private ArtifactFolder _artifacts;
+        private string _connectionString;
+        private IWorkUnitRepository _repository;
+        private readonly DateTime _assigned = DateTime.UtcNow;
+        private int _deleteResult;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _artifacts = new ArtifactFolder();
+            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+            _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+            var settings = new ClientSettings();
+            var workUnit = new WorkUnit
+            {
+                ProjectID = 1,
+                ProjectRun = 2,
+                ProjectClone = 3,
+                ProjectGen = 4,
+                Assigned = _assigned,
+                Finished = _assigned.AddHours(6),
+                Frames = new Dictionary<int, LogLineFrameData>
+                {
+                    {
+                        99, new LogLineFrameData
+                        {
+                            ID = 99,
+                            RawFramesComplete = 990_000,
+                            RawFramesTotal = 1_000_000,
+                            TimeStamp = TimeSpan.FromSeconds(10),
+                            Duration = TimeSpan.Zero
+                        }
+                    },
+                    {
+                        100, new LogLineFrameData
+                        {
+                            ID = 100,
+                            RawFramesComplete = 1_000_000,
+                            RawFramesTotal = 1_000_000,
+                            TimeStamp = TimeSpan.FromSeconds(38),
+                            Duration = TimeSpan.FromSeconds(28)
+                        }
+                    }
+                }
+            };
+            var protein = new Protein();
+
+            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+            long workUnitID = _repository.Insert(workUnitModel);
+
+            _deleteResult = _repository.Delete(new WorkUnitRow { ID = workUnitID });
+        }
+
+        [TearDown]
+        public void AfterEach() => _artifacts?.Dispose();
+
+        [Test]
+        public void ThenWorkUnitAndWorkUnitFramesAreDeleted()
+        {
+            Assert.AreEqual(1, _deleteResult);
+
+            using var context = new WorkUnitContext(_connectionString);
+            Assert.AreEqual(1, context.Clients.Count());
+            Assert.AreEqual(1, context.Proteins.Count());
+            Assert.AreEqual(0, context.WorkUnits.Count());
+            Assert.AreEqual(0, context.WorkUnitFrames.Count());
         }
     }
 

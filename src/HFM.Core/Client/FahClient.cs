@@ -348,7 +348,7 @@ namespace HFM.Core.Client
             {
                 try
                 {
-                    if (WorkUnitRepository.Insert(workUnitModel))
+                    if (WorkUnitRepository.Insert(workUnitModel) > 0)
                     {
                         if (Logger.IsDebugEnabled)
                         {
