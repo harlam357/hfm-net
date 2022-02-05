@@ -701,6 +701,26 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TestFixture]
+        public class WhenFetchingSomeWorkUnits : GivenWorkUnitsInTheDatabase
+        {
+            private IList<WorkUnitRow> _result;
+
+            [SetUp]
+            public override void BeforeEach()
+            {
+                base.BeforeEach();
+                var query = new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600);
+                _result = _repository.Fetch(query, BonusCalculation.None);
+            }
+
+            [Test]
+            public void ThenSomeWorkUnitsAreReturned()
+            {
+                Assert.AreEqual(1947, _result.Count);
+            }
+        }
+
+        [TestFixture]
         public class WhenFetchingFirstPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
             private Page<WorkUnitRow> _result;

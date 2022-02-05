@@ -236,10 +236,20 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
-        var q = context.WorkUnits
+        IQueryable<WorkUnitEntity> q = context.WorkUnits
             .Include(x => x.Client)
             .Include(x => x.Protein)
             .Include(x => x.Frames);
+
+        foreach (var p in query.Parameters)
+        {
+            switch (p.Column)
+            {
+                case WorkUnitRowColumn.ProjectID:
+                    q = q.Where(x => x.Protein.ProjectID == Int32.Parse((string)p.Value));
+                    break;
+            }
+        }
 
         return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
     }

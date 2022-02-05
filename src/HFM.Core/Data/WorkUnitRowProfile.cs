@@ -41,13 +41,8 @@ public class WorkUnitRowProfile : Profile
             .ForMember(dest => dest.Credit, opt => opt.Ignore());
 
         CreateMap<WorkUnitEntity, WorkUnitRow>()
-            .ForMember(x => x.Name, opt => opt.MapFrom(src =>
-                new SlotIdentifier(
-                    new ClientIdentifier(src.Client.Name, String.Empty, ClientSettings.DefaultPort, Guid.Empty),
-                    src.ClientSlot ?? SlotIdentifier.NoSlotID).Name))
-            .ForMember(x => x.Path, opt => opt.MapFrom(src =>
-                new ClientIdentifier(src.Client.Name, String.Empty, ClientSettings.DefaultPort, Guid.Empty)
-                    .ToServerPortString()))
+            .ForMember(x => x.Name, opt => opt.MapFrom<WorkUnitRowNameValueResolver>())
+            .ForMember(x => x.Path, opt => opt.MapFrom<WorkUnitRowPathValueResolver>())
             .ForMember(x => x.Username, opt => opt.MapFrom(src => src.DonorName))
             .ForMember(x => x.Team, opt => opt.MapFrom(src => src.DonorTeam))
             .ForMember(x => x.FrameTimeValue, opt => opt.MapFrom(src => src.FrameTimeInSeconds))
@@ -65,6 +60,28 @@ public class WorkUnitRowProfile : Profile
             .ForMember(x => x.SlotType, opt => opt.MapFrom(src => ConvertToSlotType.FromCoreName(src.Protein.Core)))
             .ForMember(x => x.ProductionView, opt => opt.Ignore())
             .ForMember(x => x.PPD, opt => opt.Ignore());
+    }
+
+    private class WorkUnitRowNameValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
+    {
+        public string Resolve(WorkUnitEntity source, WorkUnitRow destination, string destMember, ResolutionContext context)
+        {
+            var guid = source.Client.Guid is null ? Guid.Empty : Guid.Parse(source.Client.Guid);
+            var identifier = new SlotIdentifier(
+                ClientIdentifier.FromConnectionString(source.Client.Name, source.Client.ConnectionString, guid),
+                source.ClientSlot ?? SlotIdentifier.NoSlotID);
+            return identifier.Name;
+        }
+    }
+
+    private class WorkUnitRowPathValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
+    {
+        public string Resolve(WorkUnitEntity source, WorkUnitRow destination, string destMember, ResolutionContext context)
+        {
+            var guid = source.Client.Guid is null ? Guid.Empty : Guid.Parse(source.Client.Guid);
+            var identifier = ClientIdentifier.FromConnectionString(source.Client.Name, source.Client.ConnectionString, guid);
+            return identifier.ToConnectionString();
+        }
     }
 
     private static float ConvertVersionToFloat(Version version)

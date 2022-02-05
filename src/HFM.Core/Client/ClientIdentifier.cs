@@ -114,19 +114,25 @@ namespace HFM.Core.Client
 
         public static bool operator >=(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) >= 0;
 
-        public string ToServerPortString() =>
+        [Obsolete]
+        public string ToServerPortString() => ToConnectionString();
+
+        public string ToConnectionString() =>
             TcpPort.Validate(Port)
                 ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port)
                 : Server;
 
         internal static readonly Regex ServerPortRegex = new(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
-        internal static ClientIdentifier FromPath(string name, string path, Guid guid)
+        [Obsolete]
+        internal static ClientIdentifier FromPath(string name, string path, Guid guid) => FromConnectionString(name, path, guid);
+
+        internal static ClientIdentifier FromConnectionString(string name, string connectionString, Guid guid)
         {
-            var match = path is null ? null : ServerPortRegex.Match(path);
+            var match = connectionString is null ? null : ServerPortRegex.Match(connectionString);
             return match is { Success: true }
                 ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid)
-                : new ClientIdentifier(name, path, ClientSettings.NoPort, guid);
+                : new ClientIdentifier(name, connectionString, ClientSettings.NoPort, guid);
         }
     }
 }
