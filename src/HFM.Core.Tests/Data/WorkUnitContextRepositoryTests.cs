@@ -692,7 +692,7 @@ public class WorkUnitContextRepositoryTests
     }
 
     [TestFixture]
-    public class WhenFetchingFirstPageOfWorkUnits: WorkUnitContextRepositoryTests
+    public class WhenFetchingFirstPageOfWorkUnits : WorkUnitContextRepositoryTests
     {
         private string _connectionString;
         private IWorkUnitRepository _repository;
@@ -711,7 +711,39 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public void ThenThePageOfWorkUnitsIsReturned()
         {
+            Assert.AreEqual(1, _result.CurrentPage);
+            Assert.AreEqual(90, _result.TotalPages);
+            Assert.AreEqual(89674, _result.TotalItems);
+            Assert.AreEqual(1000, _result.ItemsPerPage);
             Assert.AreEqual(1000, _result.Items.Count);
+        }
+    }
+
+    [TestFixture]
+    public class WhenFetchingLastPageOfWorkUnits : WorkUnitContextRepositoryTests
+    {
+        private string _connectionString;
+        private IWorkUnitRepository _repository;
+        private Page<WorkUnitRow> _result;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            string path = Path.GetFullPath(@"TestFiles\WorkUnits.db");
+            _connectionString = $"Data Source={path}";
+            _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+            _result = _repository.Page(90, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
+        }
+
+        [Test]
+        public void ThenThePageOfWorkUnitsIsReturned()
+        {
+            Assert.AreEqual(90, _result.CurrentPage);
+            Assert.AreEqual(90, _result.TotalPages);
+            Assert.AreEqual(89674, _result.TotalItems);
+            Assert.AreEqual(1000, _result.ItemsPerPage);
+            Assert.AreEqual(674, _result.Items.Count);
         }
     }
 

@@ -268,11 +268,17 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             .Take((int)itemsPerPage);
 
         long count = context.WorkUnits.LongCount();
+        long totalPages = count / itemsPerPage;
+        if (count % itemsPerPage != 0)
+        {
+            totalPages++;
+        }
+
         var items = _mapper.Map<IList<WorkUnitRow>>(q.ToList());
         return new Page<WorkUnitRow>
         {
             CurrentPage = page,
-            TotalPages = (count / itemsPerPage) + 1,
+            TotalPages = totalPages,
             TotalItems = count,
             ItemsPerPage = itemsPerPage,
             Items = items
