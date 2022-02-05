@@ -243,12 +243,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
         foreach (var p in query.Parameters)
         {
-            switch (p.Column)
-            {
-                case WorkUnitRowColumn.ProjectID:
-                    q = q.Where(x => x.Protein.ProjectID == Int32.Parse((string)p.Value));
-                    break;
-            }
+            q = q.Where(p);
         }
 
         return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
