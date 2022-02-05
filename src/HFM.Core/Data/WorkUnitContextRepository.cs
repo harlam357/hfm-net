@@ -1,10 +1,12 @@
-﻿using System.Data.Entity;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+
+using AutoMapper;
 
 using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Core.Data;
@@ -29,15 +31,18 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 {
     public ILogger Logger { get; }
 
-    protected WorkUnitContextRepository()
+    protected WorkUnitContextRepository() : this(null)
     {
 
     }
 
     protected WorkUnitContextRepository(ILogger logger)
     {
-        Logger = logger;
+        Logger = logger ?? NullLogger.Instance;
+        _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
     }
+
+    private readonly IMapper _mapper;
 
     public bool Connected => true;
 
@@ -230,7 +235,13 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
-        return null;
+        using var context = CreateWorkUnitContext();
+        var q = context.WorkUnits
+            .Include(x => x.Client)
+            .Include(x => x.Protein)
+            .Include(x => x.Frames);
+
+        return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
     }
 
     public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
@@ -248,7 +259,24 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
-        return null;
+        using var context = CreateWorkUnitContext();
+        var q = context.WorkUnits
+            .Include(x => x.Client)
+            .Include(x => x.Protein)
+            .Include(x => x.Frames)
+            .Skip((int)((page - 1) * itemsPerPage))
+            .Take((int)itemsPerPage);
+
+        long count = context.WorkUnits.LongCount();
+        var items = _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        return new Page<WorkUnitRow>
+        {
+            CurrentPage = page,
+            TotalPages = (count / itemsPerPage) + 1,
+            TotalItems = count,
+            ItemsPerPage = itemsPerPage,
+            Items = items
+        };
     }
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
@@ -284,8 +312,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     private static IQueryable<WorkUnitEntity> WhereClientSlot(IQueryable<WorkUnitEntity> query, int slotID)
     {
         int? clientSlot = slotID == SlotIdentifier.NoSlotID ? null : slotID;
-        query = query.Where(x => x.ClientSlot == clientSlot);
-        return query;
+        return query.Where(x => x.ClientSlot == clientSlot);
     }
 
     private static IQueryable<WorkUnitEntity> WhereFinishedAfterClientStart(IQueryable<WorkUnitEntity> query, DateTime? clientStartTime)

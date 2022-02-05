@@ -667,6 +667,54 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
+    [TestFixture]
+    public class WhenFetchingAllWorkUnits : WorkUnitContextRepositoryTests
+    {
+        private string _connectionString;
+        private IWorkUnitRepository _repository;
+        private IList<WorkUnitRow> _result;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            string path = Path.GetFullPath(@"TestFiles\WorkUnits.db");
+            _connectionString = $"Data Source={path}";
+            _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+            _result = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+        }
+
+        [Test]
+        public void ThenAllWorkUnitsAreReturned()
+        {
+            Assert.AreEqual(89674, _result.Count);
+        }
+    }
+
+    [TestFixture]
+    public class WhenFetchingFirstPageOfWorkUnits: WorkUnitContextRepositoryTests
+    {
+        private string _connectionString;
+        private IWorkUnitRepository _repository;
+        private Page<WorkUnitRow> _result;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            string path = Path.GetFullPath(@"TestFiles\WorkUnits.db");
+            _connectionString = $"Data Source={path}";
+            _repository = new TestableWorkUnitContextRepository(_connectionString);
+
+            _result = _repository.Page(1, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
+        }
+
+        [Test]
+        public void ThenThePageOfWorkUnitsIsReturned()
+        {
+            Assert.AreEqual(1000, _result.Items.Count);
+        }
+    }
+
     private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein, int slotID = SlotIdentifier.NoSlotID)
     {
         var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };

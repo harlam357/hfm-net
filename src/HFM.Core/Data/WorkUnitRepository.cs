@@ -31,7 +31,6 @@ namespace HFM.Core.Data
             TotalItems = page.TotalItems;
             ItemsPerPage = page.ItemsPerPage;
             Items = page.Items;
-            Context = page.Context;
         }
 
         public long CurrentPage { get; set; }
@@ -42,9 +41,7 @@ namespace HFM.Core.Data
 
         public long ItemsPerPage { get; set; }
 
-        public List<T> Items { get; set; }
-
-        public object Context { get; set; }
+        public IList<T> Items { get; set; }
     }
 
     public interface IWorkUnitRepository
