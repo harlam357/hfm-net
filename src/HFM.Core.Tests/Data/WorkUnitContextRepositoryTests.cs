@@ -741,14 +741,16 @@ public class WorkUnitContextRepositoryTests
             public override void BeforeEach()
             {
                 base.BeforeEach();
-                var query = new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600);
+                var query = new WorkUnitQuery()
+                    .AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600)
+                    .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 0);
                 _result = _repository.Fetch(query, BonusCalculation.None);
             }
 
             [Test]
             public void ThenSomeWorkUnitsAreReturned()
             {
-                Assert.AreEqual(1947, _result.Count);
+                Assert.AreEqual(195, _result.Count);
             }
         }
 
@@ -825,7 +827,7 @@ public class TestableWorkUnitContextRepository : WorkUnitContextRepository
 
     protected override WorkUnitContext CreateWorkUnitContext()
     {
-        var context = new WorkUnitContext(_connectionString);
+        var context = new WorkUnitContext(_connectionString, Console.WriteLine);
         context.Database.EnsureCreated();
         return context;
     }

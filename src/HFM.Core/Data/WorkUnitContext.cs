@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace HFM.Core.Data
 {
@@ -11,16 +12,27 @@ namespace HFM.Core.Data
         public DbSet<VersionEntity> Versions { get; set; }
 
         private readonly string _connectionString;
+        private readonly Action<string> _logTo;
 
-        public WorkUnitContext(string connectionString)
+        public WorkUnitContext(string connectionString) : this(connectionString, null)
+        {
+
+        }
+
+        public WorkUnitContext(string connectionString, Action<string> logTo)
         {
             _connectionString = connectionString;
+            _logTo = logTo;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlite("Data Source=WorkUnits.db");
             optionsBuilder.UseSqlite(_connectionString);
+            if (_logTo is not null)
+            {
+                optionsBuilder.LogTo(_logTo, LogLevel.Information);
+            }
 
             base.OnConfiguring(optionsBuilder);
         }
