@@ -112,9 +112,6 @@ namespace HFM.Core.Client
 
         public static bool operator >=(ClientIdentifier left, ClientIdentifier right) => left.CompareTo(right) >= 0;
 
-        [Obsolete]
-        public string ToServerPortString() => ToConnectionString();
-
         public string ToConnectionString() =>
             TcpPort.Validate(Port)
                 ? String.Format(CultureInfo.InvariantCulture, "{0}:{1}", Server, Port)

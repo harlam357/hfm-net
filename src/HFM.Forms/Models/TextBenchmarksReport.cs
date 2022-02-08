@@ -78,7 +78,7 @@ namespace HFM.Forms.Models
         private static IEnumerable<string> EnumerateBenchmarkInformation(Protein protein, ProteinBenchmark benchmark, string numberFormat, bool calculateBonus)
         {
             yield return $" Name: {benchmark.SlotIdentifier.Name}";
-            yield return $" Path: {benchmark.SlotIdentifier.ClientIdentifier.ToServerPortString()}";
+            yield return $" Path: {benchmark.SlotIdentifier.ClientIdentifier.ToConnectionString()}";
             if (benchmark.BenchmarkIdentifier.HasProcessor)
             {
                 var slotType = ConvertToSlotType.FromCoreName(protein.Core);

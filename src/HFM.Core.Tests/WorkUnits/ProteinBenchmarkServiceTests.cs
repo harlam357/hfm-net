@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
@@ -415,7 +410,7 @@ namespace HFM.Core.WorkUnits
             // Assert
             Assert.IsNotNull(benchmark);
             Assert.AreEqual(slotIdentifier.ClientIdentifier.Name, benchmark.SourceName);
-            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToServerPortString(), benchmark.SourcePath);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToConnectionString(), benchmark.SourcePath);
             Assert.AreNotEqual(slotIdentifier.ClientIdentifier.Guid, benchmark.SourceGuid);
             Assert.AreEqual(slotIdentifier.SlotID, benchmark.SourceSlotID);
             Assert.AreEqual(guid, benchmark.SourceGuid);
@@ -450,7 +445,7 @@ namespace HFM.Core.WorkUnits
             // Assert
             Assert.IsNotNull(benchmark);
             Assert.AreEqual(slotIdentifier.ClientIdentifier.Name, benchmark.SourceName);
-            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToServerPortString(), benchmark.SourcePath);
+            Assert.AreEqual(slotIdentifier.ClientIdentifier.ToConnectionString(), benchmark.SourcePath);
             Assert.AreNotEqual(slotIdentifier.ClientIdentifier.Guid, benchmark.SourceGuid);
             Assert.AreEqual(slotIdentifier.SlotID, benchmark.SourceSlotID);
             Assert.AreEqual(benchmarkIdentifier, benchmark.BenchmarkIdentifier);

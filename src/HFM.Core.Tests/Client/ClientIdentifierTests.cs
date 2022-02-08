@@ -1,7 +1,4 @@
-﻿
-using System;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace HFM.Core.Client
 {
@@ -271,25 +268,25 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientIdentifier_ToServerAndPortString_WithServerAndPort()
+        public void ClientIdentifier_ToConnectionString_WithServerAndPort()
         {
             var identifier = new ClientIdentifier("Foo", "Bar", ClientSettings.DefaultPort, Guid.Empty);
-            Assert.AreEqual($"Bar:{ClientSettings.DefaultPort}", identifier.ToServerPortString());
+            Assert.AreEqual($"Bar:{ClientSettings.DefaultPort}", identifier.ToConnectionString());
         }
 
         [Test]
-        public void ClientIdentifier_ToServerAndPortString_WithServer()
+        public void ClientIdentifier_ToConnectionString_WithServer()
         {
             var identifier = new ClientIdentifier("Foo", "Bar", ClientSettings.NoPort, Guid.Empty);
-            Assert.AreEqual("Bar", identifier.ToServerPortString());
+            Assert.AreEqual("Bar", identifier.ToConnectionString());
         }
 
         [Test]
-        public void ClientIdentifier_FromPath_ServerDashPort()
+        public void ClientIdentifier_FromConnectionString_ServerDashPort()
         {
             const string path = "Server-12345";
             // Act
-            var identifier = ClientIdentifier.FromPath("Foo", path, Guid.Empty);
+            var identifier = ClientIdentifier.FromConnectionString("Foo", path, Guid.Empty);
             // Assert
             Assert.AreEqual("Foo", identifier.Name);
             Assert.AreEqual("Server", identifier.Server);
@@ -298,11 +295,11 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientIdentifier_FromPath_ServerColonPort()
+        public void ClientIdentifier_FromConnectionString_ServerColonPort()
         {
             const string path = "Server:12345";
             // Act
-            var identifier = ClientIdentifier.FromPath("Foo", path, Guid.Empty);
+            var identifier = ClientIdentifier.FromConnectionString("Foo", path, Guid.Empty);
             // Assert
             Assert.AreEqual("Foo", identifier.Name);
             Assert.AreEqual("Server", identifier.Server);
@@ -311,12 +308,12 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientIdentifier_FromPath_FileSystemPath()
+        public void ClientIdentifier_FromConnectionString_FileSystemPath()
         {
             const string path = @"\\server\share";
             var guid = Guid.NewGuid();
             // Act
-            var identifier = ClientIdentifier.FromPath("Bar", path, guid);
+            var identifier = ClientIdentifier.FromConnectionString("Bar", path, guid);
             // Assert
             Assert.AreEqual("Bar", identifier.Name);
             Assert.AreEqual(path, identifier.Server);

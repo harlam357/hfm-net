@@ -1,8 +1,4 @@
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.Serialization;
 
 using HFM.Core.Client;
@@ -16,9 +12,9 @@ namespace HFM.Core.WorkUnits
     {
         private const int DefaultMaxFrames = 300;
 
-        private static readonly object FrameTimesListLock = new object();
+        private static readonly object FrameTimesListLock = new();
 
-        public SlotIdentifier SlotIdentifier => new SlotIdentifier(ClientIdentifier.FromPath(SourceName, SourcePath, SourceGuid), SourceSlotID);
+        public SlotIdentifier SlotIdentifier => new(ClientIdentifier.FromConnectionString(SourceName, SourcePath, SourceGuid), SourceSlotID);
 
         /// <summary>
         /// Gets or sets the source client name.
@@ -87,7 +83,7 @@ namespace HFM.Core.WorkUnits
         public ProteinBenchmark UpdateFromClientIdentifier(ClientIdentifier clientIdentifier)
         {
             SourceName = clientIdentifier.Name;
-            SourcePath = clientIdentifier.ToServerPortString();
+            SourcePath = clientIdentifier.ToConnectionString();
             SourceGuid = clientIdentifier.Guid;
             return this;
         }

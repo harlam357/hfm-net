@@ -18,7 +18,7 @@ public class WorkUnitRowProfile : Profile
             .ForMember(dest => dest.ProjectClone, opt => opt.MapFrom(src => src.WorkUnit.ProjectClone))
             .ForMember(dest => dest.ProjectGen, opt => opt.MapFrom(src => src.WorkUnit.ProjectGen))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.SlotModel.SlotIdentifier.Name))
-            .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.SlotModel.SlotIdentifier.ClientIdentifier.ToServerPortString()))
+            .ForMember(dest => dest.Path, opt => opt.MapFrom(src => src.SlotModel.SlotIdentifier.ClientIdentifier.ToConnectionString()))
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.WorkUnit.FoldingID))
             .ForMember(dest => dest.Team, opt => opt.MapFrom(src => src.WorkUnit.Team))
             .ForMember(dest => dest.CoreVersion, opt => opt.MapFrom(src => ConvertVersionToFloat(src.WorkUnit.CoreVersion)))

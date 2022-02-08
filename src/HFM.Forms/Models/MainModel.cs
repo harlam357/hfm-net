@@ -84,7 +84,7 @@ namespace HFM.Forms.Models
             }
             else
             {
-                ClientDetails = selectedSlot.SlotIdentifier.ClientIdentifier.ToServerPortString();
+                ClientDetails = selectedSlot.SlotIdentifier.ClientIdentifier.ToConnectionString();
                 var settings = selectedSlot.Client?.Settings;
                 if (settings != null && settings.Disabled)
                 {
