@@ -236,10 +236,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
-        IQueryable<WorkUnitEntity> q = context.WorkUnits
-            .Include(x => x.Client)
-            .Include(x => x.Protein)
-            .Include(x => x.Frames);
+        IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
 
         foreach (var p in query.Parameters)
         {
@@ -265,10 +262,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
-        IQueryable<WorkUnitEntity> q = context.WorkUnits
-            .Include(x => x.Client)
-            .Include(x => x.Protein)
-            .Include(x => x.Frames);
+        IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
 
         foreach (var p in query.Parameters)
         {
@@ -297,6 +291,42 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             Items = items
         };
     }
+
+    private static IQueryable<WorkUnitEntity> WorkUnitQuery(WorkUnitContext context, BonusCalculation bonusCalculation) =>
+        context.WorkUnits
+            .Include(x => x.Client)
+            .Include(x => x.Protein)
+            .Include(x => x.Frames)
+            .Select(x => new WorkUnitEntity
+            {
+                ID = x.ID,
+                DonorName = x.DonorName,
+                DonorTeam = x.DonorTeam,
+                CoreVersion = x.CoreVersion,
+                Result = x.Result,
+                Assigned = x.Assigned,
+                Finished = x.Finished,
+                ProjectRun = x.ProjectRun,
+                ProjectClone = x.ProjectClone,
+                ProjectGen = x.ProjectGen,
+                HexID = x.HexID,
+                FramesCompleted = x.FramesCompleted,
+                FrameTimeInSeconds = x.FrameTimeInSeconds,
+                ProteinID = x.ProteinID,
+                ClientID = x.ClientID,
+                ClientSlot = x.ClientSlot,
+                Protein = x.Protein,
+                Client = x.Client,
+                Frames = x.Frames,
+                PPD = WorkUnitContext.CalculatePPD(x.FrameTimeInSeconds.GetValueOrDefault(),
+                    x.Protein.Frames,
+                    x.Protein.Credit,
+                    x.Protein.KFactor,
+                    x.Protein.TimeoutDays,
+                    x.Protein.ExpirationDays,
+                    (int)bonusCalculation),
+                Credit = 0.0
+            });
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
     {

@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HFM.Proteins;
+
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace HFM.Core.Data;
@@ -25,9 +28,43 @@ public partial class WorkUnitContext : DbContext
         _logTo = logTo;
     }
 
+    [DbFunction]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "DbFunction")]
+    public static double CalculatePPD(int frameTime,
+                                      int frames,
+                                      double credit,
+                                      double kFactor,
+                                      double timeoutDays,
+                                      double expirationDays,
+                                      int bonus) => throw new NotImplementedException();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite(_connectionString);
+        var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        connection.CreateFunction(
+            nameof(CalculatePPD),
+            (Func<int, int, double, double, double, double, int, double>)((frameTime, frames, credit, kFactor, timeoutDays, expirationDays, bonus) =>
+            {
+                const double oneDayInSeconds = 86400.0;
+                double unitTime = bonus switch
+                {
+                    2 => frameTime * frames / oneDayInSeconds,
+                    1 => frameTime * frames / oneDayInSeconds,
+                    0 => expirationDays
+                };
+
+                return ProductionCalculator.GetBonusPPD(TimeSpan.FromSeconds(frameTime),
+                                                        frames,
+                                                        credit,
+                                                        kFactor,
+                                                        timeoutDays,
+                                                        expirationDays,
+                                                        TimeSpan.FromDays(unitTime));
+            })
+            );
+
+        optionsBuilder.UseSqlite(connection);
         if (_logTo is not null)
         {
             optionsBuilder.LogTo(_logTo, LogLevel.Information);
@@ -42,6 +79,10 @@ public partial class WorkUnitContext : DbContext
             .HasOne(x => x.Protein)
             .WithMany()
             .HasForeignKey(x => x.ProteinID);
+
+        modelBuilder.Entity<WorkUnitEntity>()
+            .Ignore(x => x.PPD)
+            .Ignore(x => x.Credit);
 
         modelBuilder.Entity<WorkUnitEntity>()
             .HasOne(x => x.Client)
