@@ -272,7 +272,12 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             .Skip((int)((page - 1) * itemsPerPage))
             .Take((int)itemsPerPage);
 
-        long count = context.WorkUnits.LongCount();
+        foreach (var p in query.Parameters)
+        {
+            q = q.Where(p);
+        }
+
+        long count = q.LongCount();
         long totalPages = count / itemsPerPage;
         if (count % itemsPerPage != 0)
         {

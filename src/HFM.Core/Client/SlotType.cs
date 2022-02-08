@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HFM.Core.Client
+﻿namespace HFM.Core.Client
 {
     /// <summary>
     /// Represents the FAHClient slot type.
@@ -14,48 +12,63 @@ namespace HFM.Core.Client
 
     public static class ConvertToSlotType
     {
+        public static IEnumerable<string> CPUCoreNames { get; } = new[]
+        {
+            "GROMACS",
+            "DGROMACS",
+            "GBGROMACS",
+            "AMBER",
+            "GROMACS33",
+            "GROST",
+            "GROSIMT",
+            "DGROMACSB",
+            "DGROMACSC",
+            "GRO-A4",
+            "GRO_A4",
+            "PROTOMOL",
+            "GRO-SMP",
+            "GROCVS",
+            "GRO-A3",
+            "GRO_A3",
+            "GRO-A5",
+            "GRO_A5",
+            "GRO-A6",
+            "GRO_A7",
+            "GRO_A8"
+        };
+
+        public static IEnumerable<string> GPUCoreNames { get; } = new[]
+        {
+            "GROGPU2",
+            "GROGPU2-MT",
+            "OPENMM_21",
+            "OPENMM_22",
+            "OPENMMGPU",
+            "OPENMM_OPENCL",
+            "ATI-DEV",
+            "NVIDIA-DEV",
+            "ZETA",
+            "ZETA_DEV"
+        };
+
         public static SlotType FromCoreName(string coreName)
         {
-            if (String.IsNullOrEmpty(coreName)) return SlotType.Unknown;
-
-            switch (coreName.ToUpperInvariant())
+            if (String.IsNullOrEmpty(coreName))
             {
-                case "GROMACS":
-                case "DGROMACS":
-                case "GBGROMACS":
-                case "AMBER":
-                case "GROMACS33":
-                case "GROST":
-                case "GROSIMT":
-                case "DGROMACSB":
-                case "DGROMACSC":
-                case "GRO-A4":
-                case "GRO_A4":
-                case "PROTOMOL":
-                case "GRO-SMP":
-                case "GROCVS":
-                case "GRO-A3":
-                case "GRO_A3":
-                case "GRO-A5":
-                case "GRO_A5":
-                case "GRO-A6":
-                case "GRO_A7":
-                case "GRO_A8":
-                    return SlotType.CPU;
-                case "GROGPU2":
-                case "GROGPU2-MT":
-                case "OPENMM_21":
-                case "OPENMM_22":
-                case "OPENMMGPU":
-                case "OPENMM_OPENCL":
-                case "ATI-DEV":
-                case "NVIDIA-DEV":
-                case "ZETA":
-                case "ZETA_DEV":
-                    return SlotType.GPU;
-                default:
-                    return SlotType.Unknown;
+                return SlotType.Unknown;
             }
+
+            if (GPUCoreNames.Contains(coreName, StringComparer.OrdinalIgnoreCase))
+            {
+                return SlotType.GPU;
+            }
+
+            if (CPUCoreNames.Contains(coreName, StringComparer.OrdinalIgnoreCase))
+            {
+                return SlotType.CPU;
+            }
+
+            return SlotType.Unknown;
         }
 
         public static SlotType FromCoreID(string coreID)
