@@ -1,5 +1,8 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.WorkUnits;
+
+using Microsoft.EntityFrameworkCore;
+
 // ReSharper disable StringCompareToIsCultureSpecific
 
 namespace HFM.Core.Data;
@@ -205,15 +208,15 @@ public static class WorkUnitQueryable
         return parameter.Column switch
         {
             WorkUnitRowColumn.ID => throw new NotImplementedException(),
-            WorkUnitRowColumn.ProjectID => throw new InvalidOperationException("Like is not supported by numeric columns"),
+            WorkUnitRowColumn.ProjectID => q.Where(x => EF.Functions.Like(x.Protein.ProjectID.ToString(), stringValue)),
             WorkUnitRowColumn.ProjectRun => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.ProjectClone => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.ProjectGen => throw new InvalidOperationException("Like is not supported by numeric columns"),
-            WorkUnitRowColumn.Name => q.Where(x => x.Client.Name.Contains(stringValue)),
-            WorkUnitRowColumn.Path => q.Where(x => x.Client.ConnectionString.Contains(stringValue)),
-            WorkUnitRowColumn.Username => q.Where(x => x.DonorName.Contains(stringValue)),
+            WorkUnitRowColumn.Name => q.Where(x => EF.Functions.Like(x.Client.Name, stringValue)),
+            WorkUnitRowColumn.Path => q.Where(x => EF.Functions.Like(x.Client.ConnectionString, stringValue)),
+            WorkUnitRowColumn.Username => q.Where(x => EF.Functions.Like(x.DonorName, stringValue)),
             WorkUnitRowColumn.Team => throw new InvalidOperationException("Like is not supported by numeric columns"),
-            WorkUnitRowColumn.CoreVersion => q.Where(x => x.CoreVersion.Contains(stringValue)),
+            WorkUnitRowColumn.CoreVersion => q.Where(x => EF.Functions.Like(x.CoreVersion, stringValue)),
             WorkUnitRowColumn.FramesCompleted => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.FrameTime => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.Result => throw new InvalidOperationException("Like is not supported by work unit result column"),
@@ -221,7 +224,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Finished => throw new InvalidOperationException("Like is not supported by date time columns"),
             WorkUnitRowColumn.WorkUnitName => throw new NotImplementedException(),
             WorkUnitRowColumn.KFactor => throw new InvalidOperationException("Like is not supported by numeric columns"),
-            WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core.Contains(stringValue)),
+            WorkUnitRowColumn.Core => q.Where(x => EF.Functions.Like(x.Protein.Core, stringValue)),
             WorkUnitRowColumn.Frames => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.Atoms => throw new InvalidOperationException("Like is not supported by numeric columns"),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Like is not supported by slot type column"),
@@ -239,15 +242,15 @@ public static class WorkUnitQueryable
         return parameter.Column switch
         {
             WorkUnitRowColumn.ID => throw new NotImplementedException(),
-            WorkUnitRowColumn.ProjectID => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
+            WorkUnitRowColumn.ProjectID => q.Where(x => !EF.Functions.Like(x.Protein.ProjectID.ToString(), stringValue)),
             WorkUnitRowColumn.ProjectRun => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.ProjectClone => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.ProjectGen => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
-            WorkUnitRowColumn.Name => q.Where(x => !x.Client.Name.Contains(stringValue)),
-            WorkUnitRowColumn.Path => q.Where(x => !x.Client.ConnectionString.Contains(stringValue)),
-            WorkUnitRowColumn.Username => q.Where(x => !x.DonorName.Contains(stringValue)),
+            WorkUnitRowColumn.Name => q.Where(x => !EF.Functions.Like(x.Client.Name, stringValue)),
+            WorkUnitRowColumn.Path => q.Where(x => !EF.Functions.Like(x.Client.ConnectionString, stringValue)),
+            WorkUnitRowColumn.Username => q.Where(x => !EF.Functions.Like(x.DonorName, stringValue)),
             WorkUnitRowColumn.Team => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
-            WorkUnitRowColumn.CoreVersion => q.Where(x => !x.CoreVersion.Contains(stringValue)),
+            WorkUnitRowColumn.CoreVersion => q.Where(x => !EF.Functions.Like(x.CoreVersion, stringValue)),
             WorkUnitRowColumn.FramesCompleted => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.FrameTime => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.Result => throw new InvalidOperationException("Not Like is not supported by work unit result column"),
@@ -255,7 +258,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Finished => throw new InvalidOperationException("Not Like is not supported by date time columns"),
             WorkUnitRowColumn.WorkUnitName => throw new NotImplementedException(),
             WorkUnitRowColumn.KFactor => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
-            WorkUnitRowColumn.Core => q.Where(x => !x.Protein.Core.Contains(stringValue)),
+            WorkUnitRowColumn.Core => q.Where(x => !EF.Functions.Like(x.Protein.Core, stringValue)),
             WorkUnitRowColumn.Frames => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.Atoms => throw new InvalidOperationException("Not Like is not supported by numeric columns"),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Not Like is not supported by slot type column"),
