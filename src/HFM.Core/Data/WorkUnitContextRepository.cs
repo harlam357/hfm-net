@@ -265,12 +265,10 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
-        var q = context.WorkUnits
+        IQueryable<WorkUnitEntity> q = context.WorkUnits
             .Include(x => x.Client)
             .Include(x => x.Protein)
-            .Include(x => x.Frames)
-            .Skip((int)((page - 1) * itemsPerPage))
-            .Take((int)itemsPerPage);
+            .Include(x => x.Frames);
 
         foreach (var p in query.Parameters)
         {
@@ -278,6 +276,11 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         }
 
         long count = q.LongCount();
+
+        q = q
+            .Skip((int)((page - 1) * itemsPerPage))
+            .Take((int)itemsPerPage);
+
         long totalPages = count / itemsPerPage;
         if (count % itemsPerPage != 0)
         {
