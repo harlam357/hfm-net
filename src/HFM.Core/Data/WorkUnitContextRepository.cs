@@ -91,7 +91,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         ClientEntity client = null;
 
         var identifier = workUnitModel.SlotModel.SlotIdentifier.ClientIdentifier;
-        string connectionString = identifier.ToServerPortString();
+        string connectionString = identifier.ToConnectionString();
         string guid = identifier.HasGuid ? identifier.Guid.ToString() : null;
 
         if (guid is not null)

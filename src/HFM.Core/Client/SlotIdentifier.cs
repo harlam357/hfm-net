@@ -39,7 +39,7 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(ClientIdentifier.Server)) return Name;
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ClientIdentifier.ToServerPortString());
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ClientIdentifier.ToConnectionString());
         }
 
         public bool Equals(SlotIdentifier other) =>
@@ -106,12 +106,12 @@ namespace HFM.Core.Client
 
         private static readonly Regex NameSlotRegex = new(@"(?<Name>.+) Slot (?<Slot>\d\d)$", RegexOptions.ExplicitCapture);
 
-        internal static SlotIdentifier FromName(string name, string path, Guid guid)
+        internal static SlotIdentifier FromName(string name, string connectionString, Guid guid)
         {
             var match = name is null ? null : NameSlotRegex.Match(name);
             return match is { Success: true }
-                ? new SlotIdentifier(ClientIdentifier.FromPath(match.Groups["Name"].Value, path, guid), Int32.Parse(match.Groups["Slot"].Value))
-                : new SlotIdentifier(ClientIdentifier.FromPath(name, path, guid), NoSlotID);
+                ? new SlotIdentifier(ClientIdentifier.FromConnectionString(match.Groups["Name"].Value, connectionString, guid), Int32.Parse(match.Groups["Slot"].Value))
+                : new SlotIdentifier(ClientIdentifier.FromConnectionString(name, connectionString, guid), NoSlotID);
         }
     }
 }

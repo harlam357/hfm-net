@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 using HFM.Core.Net;
@@ -30,7 +28,7 @@ namespace HFM.Core.Client
         public override string ToString()
         {
             if (String.IsNullOrWhiteSpace(Server)) return Name;
-            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ToServerPortString());
+            return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", Name, ToConnectionString());
         }
 
         public bool Equals(ClientIdentifier other)
