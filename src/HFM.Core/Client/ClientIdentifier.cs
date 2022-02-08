@@ -119,9 +119,6 @@ namespace HFM.Core.Client
 
         internal static readonly Regex ServerPortRegex = new(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
-        [Obsolete]
-        internal static ClientIdentifier FromPath(string name, string path, Guid guid) => FromConnectionString(name, path, guid);
-
         internal static ClientIdentifier FromConnectionString(string name, string connectionString, Guid guid)
         {
             var match = connectionString is null ? null : ServerPortRegex.Match(connectionString);
