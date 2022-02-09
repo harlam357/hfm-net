@@ -58,7 +58,7 @@ public static class WorkUnitQueryable
                 ? ConvertToSlotType.GPUCoreNames.Contains(x.Protein.Core)
                 : ConvertToSlotType.CPUCoreNames.Contains(x.Protein.Core)),
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) < 0.001),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) < 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) < 0.001),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -93,7 +93,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms > Int32.Parse(stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Greater than is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD > Double.Parse(stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => x.Credit > Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit > Double.Parse(stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -128,7 +128,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms >= Int32.Parse(stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Greater than or equal is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD >= Double.Parse(stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => x.Credit >= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit >= Double.Parse(stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -163,7 +163,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms < Int32.Parse(stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Less than is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD < Double.Parse(stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => x.Credit < Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit < Double.Parse(stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -198,7 +198,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms <= Int32.Parse(stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Less than or equal is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD <= Double.Parse(stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => x.Credit <= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit <= Double.Parse(stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -232,7 +232,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => EF.Functions.Like(x.Protein.Atoms.ToString(), stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Like is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => EF.Functions.Like(x.PPD.ToString(), stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -266,7 +266,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Atoms => q.Where(x => !EF.Functions.Like(x.Protein.Atoms.ToString(), stringValue)),
             WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Not Like is not supported by slot type column"),
             WorkUnitRowColumn.PPD => q.Where(x => !EF.Functions.Like(x.PPD.ToString(), stringValue)),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => !EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => !EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
@@ -302,7 +302,7 @@ public static class WorkUnitQueryable
                 ? !ConvertToSlotType.GPUCoreNames.Contains(x.Protein.Core)
                 : !ConvertToSlotType.CPUCoreNames.Contains(x.Protein.Core)),
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) > 0.001),
-            WorkUnitRowColumn.Credit => throw new NotImplementedException(),
+            WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) > 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) > 0.001),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };

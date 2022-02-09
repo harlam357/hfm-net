@@ -318,14 +318,26 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 Protein = x.Protein,
                 Client = x.Client,
                 Frames = x.Frames,
-                PPD = WorkUnitContext.CalculatePPD(x.FrameTimeInSeconds.GetValueOrDefault(),
+                PPD = WorkUnitContext.CalculatePPD(
+                    x.FrameTimeInSeconds.GetValueOrDefault(),
                     x.Protein.Frames,
                     x.Protein.Credit,
                     x.Protein.KFactor,
                     x.Protein.TimeoutDays,
                     x.Protein.ExpirationDays,
+                    x.Assigned.ToString(),
+                    x.Finished.ToString(),
                     (int)bonusCalculation),
-                Credit = 0.0
+                Credit = WorkUnitContext.CalculateCredit(
+                    x.FrameTimeInSeconds.GetValueOrDefault(),
+                    x.Protein.Frames,
+                    x.Protein.Credit,
+                    x.Protein.KFactor,
+                    x.Protein.TimeoutDays,
+                    x.Protein.ExpirationDays,
+                    x.Assigned.ToString(),
+                    x.Finished.ToString(),
+                    (int)bonusCalculation)
             });
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
