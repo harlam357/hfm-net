@@ -30,6 +30,7 @@ public partial class WorkUnitContext : DbContext
     {
         var connection = new SqliteConnection(_connectionString);
         connection.Open();
+        connection.CreateFunction(nameof(ToSlotName), (Func<string, int?, string>)ToSlotName);
         connection.CreateFunction(nameof(CalculatePPD),
             (Func<int, int, double, double, double, double, string, string, int, double>)CalculatePPD);
         connection.CreateFunction(nameof(CalculateCredit),
@@ -52,6 +53,7 @@ public partial class WorkUnitContext : DbContext
             .HasForeignKey(x => x.ProteinID);
 
         modelBuilder.Entity<WorkUnitEntity>()
+            .Ignore(x => x.SlotName)
             .Ignore(x => x.PPD)
             .Ignore(x => x.Credit);
 

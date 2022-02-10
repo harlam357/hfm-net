@@ -83,7 +83,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                       x.ProjectRun == workUnit.ProjectRun &&
                       x.ProjectClone == workUnit.ProjectClone &&
                       x.ProjectGen == workUnit.ProjectGen &&
-                      x.Assigned == workUnit.Assigned);
+                      x.Assigned == workUnit.Assigned.Normalize());
     }
 
     private static ClientEntity GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
@@ -318,6 +318,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 Protein = x.Protein,
                 Client = x.Client,
                 Frames = x.Frames,
+                SlotName = WorkUnitContext.ToSlotName(x.Client.Name, x.ClientSlot),
                 PPD = WorkUnitContext.CalculatePPD(
                     x.FrameTimeInSeconds.GetValueOrDefault(),
                     x.Protein.Frames,

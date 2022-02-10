@@ -10,6 +10,8 @@ namespace HFM.Core.Data;
 [TestFixture]
 public class WorkUnitContextRepositoryTests
 {
+    private readonly DateTime _assigned = DateTime.UtcNow.Normalize();
+
 #if !DEBUG
     [Ignore("Hanging on CI build")]
 #endif
@@ -20,7 +22,6 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -263,7 +264,6 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -331,7 +331,6 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -405,7 +404,6 @@ public class WorkUnitContextRepositoryTests
         private string _connectionString;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -475,7 +473,6 @@ public class WorkUnitContextRepositoryTests
         private ArtifactFolder _artifacts;
         private string _connectionString;
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -626,7 +623,6 @@ public class WorkUnitContextRepositoryTests
         private ArtifactFolder _artifacts;
         private string _connectionString;
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private int _deleteResult;
 
         [SetUp]

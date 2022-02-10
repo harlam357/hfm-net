@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 
+using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Proteins;
 
@@ -20,6 +21,19 @@ public partial class WorkUnitContext
 
         var versionRow = await Versions.OrderByDescending(x => x.ID).FirstOrDefaultAsync().ConfigureAwait(false);
         return versionRow?.Version ?? VersionStringDefault;
+    }
+
+    [DbFunction]
+    public static string ToSlotName(string name, int? slotID)
+    {
+        if (!slotID.HasValue)
+        {
+            return name;
+        }
+
+        var client = new ClientIdentifier(name, null, ClientSettings.NoPort, Guid.Empty);
+        var slot = new SlotIdentifier(client, slotID.Value);
+        return slot.Name;
     }
 
     [DbFunction]

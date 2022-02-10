@@ -11,7 +11,7 @@ namespace HFM.Core.Data
         public void WorkUnitContext_CanAddWorkUnitEntity()
         {
             using var artifacts = new ArtifactFolder();
-            string connectionString = $"Data Source={Path.Combine(artifacts.Path, "WorkUnits.db")}";
+            string connectionString = $"Data Source={artifacts.GetRandomFilePath()}";
             using var context = new WorkUnitContext(connectionString);
             context.Database.EnsureCreated();
 
@@ -49,8 +49,6 @@ namespace HFM.Core.Data
             Assert.IsNotNull(workUnit.Client);
             Assert.IsNotNull(workUnit.Protein);
             Assert.AreEqual(2, workUnit.Frames.Count);
-
-            context.Database.EnsureDeleted();
         }
     }
 }
