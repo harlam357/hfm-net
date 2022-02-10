@@ -162,7 +162,7 @@ namespace HFM.Core.Data
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A3") },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThan, 99) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan, 0) },
-            //new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
             new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThan, 9482.92683) },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThan, 450) }
         };
@@ -196,7 +196,7 @@ namespace HFM.Core.Data
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A3") },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThanOrEqual, 99) },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThanOrEqual, 0) },
-            //new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
             new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThanOrEqual, 9482.92683) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThanOrEqual, 450) }
         };
@@ -230,7 +230,7 @@ namespace HFM.Core.Data
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A3") },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThan, 99) },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThan, 0) },
-            //new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
             new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThan, 9482.92683) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThan, 450) }
         };
@@ -264,7 +264,7 @@ namespace HFM.Core.Data
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A3") },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThanOrEqual, 99) },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual, 0) },
-            //new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
             new object[] { 38,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThanOrEqual, 9482.92683) },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThanOrEqual, 450) }
         };
@@ -298,7 +298,7 @@ namespace HFM.Core.Data
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Like, "1%") },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Like, "0%") },
-            //new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
+            new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
             new object[] { 9,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Like, "9%") },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Like, "6%") }
         };
@@ -332,7 +332,7 @@ namespace HFM.Core.Data
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
             new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotLike, "1%") },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotLike, "0%") },
-            //new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
+            new object[] { 28,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
             new object[] { 35,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotLike, "9%") },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotLike, "6%") }
         };
@@ -462,7 +462,7 @@ namespace HFM.Core.Data
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThan, "GRO-A4") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThan, 100) },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan, 9000) },
-            //new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
+            new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThan, "CPU") },
             new object[] { 5,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThan, 486876.03173) },
             new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThan, 869.4797) }
         };
@@ -496,7 +496,7 @@ namespace HFM.Core.Data
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.GreaterThanOrEqual, "GRO-A4") },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThanOrEqual, 9000) },
-            //new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.GreaterThanOrEqual, "CPU") },
             new object[] { 6,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.GreaterThanOrEqual, 486876.03173) },
             new object[] { 16,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.GreaterThanOrEqual, 869.4797) }
         };
@@ -530,7 +530,7 @@ namespace HFM.Core.Data
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThan, "GRO-A4") },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThan, 100) },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThan, 11000) },
-            //new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThan, "CPU") },
             new object[] { 247,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThan, 486876.03173) },
             new object[] { 237,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThan, 869.4797) }
         };
@@ -564,7 +564,7 @@ namespace HFM.Core.Data
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.LessThanOrEqual, "GRO-A4") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.LessThanOrEqual, 100) },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual, 11000) },
-            //new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
+            new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.LessThanOrEqual, "CPU") },
             new object[] { 248,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.LessThanOrEqual, 486876.03173) },
             new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.LessThanOrEqual, 869.4797) }
         };
@@ -598,7 +598,7 @@ namespace HFM.Core.Data
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.Like, "GRO%") },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.Like, "0%") },
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.Like, "0%") },
-            //new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
+            new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.Like, "%U") },
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.Like, "1%") },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.Like, "9%") }
         };
@@ -632,7 +632,7 @@ namespace HFM.Core.Data
             new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Core, WorkUnitQueryOperator.NotLike, "GRO%") },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Frames, WorkUnitQueryOperator.NotLike, "0%") },
             new object[] { 20,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.NotLike, "0%") },
-            //new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
+            new object[] { 233,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.SlotType, WorkUnitQueryOperator.NotLike, "%U") },
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.PPD, WorkUnitQueryOperator.NotLike, "1%") },
             new object[] { 250,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Credit, WorkUnitQueryOperator.NotLike, "9%") }
         };

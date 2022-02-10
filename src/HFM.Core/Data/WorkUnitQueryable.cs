@@ -1,5 +1,4 @@
-﻿using HFM.Core.Client;
-using HFM.Core.WorkUnits;
+﻿using HFM.Core.WorkUnits;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -54,9 +53,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core == stringValue),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames == Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms == Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => q.Where(x => stringValue == "GPU"
-                ? ConvertToSlotType.GPUCoreNames.Contains(x.Protein.Core)
-                : ConvertToSlotType.CPUCoreNames.Contains(x.Protein.Core)),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType == stringValue),
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) < 0.001),
             WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) < 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) < 0.001),
@@ -91,7 +88,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core.CompareTo(stringValue) > 0),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames > Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms > Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Greater than is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType.CompareTo(stringValue) > 0),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD > Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit > Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit > Double.Parse(stringValue)),
@@ -126,7 +123,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core.CompareTo(stringValue) >= 0),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames >= Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms >= Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Greater than or equal is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType.CompareTo(stringValue) >= 0),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD >= Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit >= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit >= Double.Parse(stringValue)),
@@ -161,7 +158,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core.CompareTo(stringValue) < 0),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames < Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms < Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Less than is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType.CompareTo(stringValue) < 0),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD < Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit < Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit < Double.Parse(stringValue)),
@@ -196,7 +193,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core.CompareTo(stringValue) <= 0),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames <= Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms <= Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Less than or equal is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType.CompareTo(stringValue) <= 0),
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD <= Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit <= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit <= Double.Parse(stringValue)),
@@ -230,7 +227,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => EF.Functions.Like(x.Protein.Core, stringValue)),
             WorkUnitRowColumn.Frames => q.Where(x => EF.Functions.Like(x.Protein.Frames.ToString(), stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => EF.Functions.Like(x.Protein.Atoms.ToString(), stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Like is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => EF.Functions.Like(x.SlotType, stringValue)),
             WorkUnitRowColumn.PPD => q.Where(x => EF.Functions.Like(x.PPD.ToString(), stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
@@ -264,7 +261,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => !EF.Functions.Like(x.Protein.Core, stringValue)),
             WorkUnitRowColumn.Frames => q.Where(x => !EF.Functions.Like(x.Protein.Frames.ToString(), stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => !EF.Functions.Like(x.Protein.Atoms.ToString(), stringValue)),
-            WorkUnitRowColumn.SlotType => throw new InvalidOperationException("Not Like is not supported by slot type column"),
+            WorkUnitRowColumn.SlotType => q.Where(x => !EF.Functions.Like(x.SlotType, stringValue)),
             WorkUnitRowColumn.PPD => q.Where(x => !EF.Functions.Like(x.PPD.ToString(), stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => !EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => !EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
@@ -298,9 +295,7 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.Core => q.Where(x => x.Protein.Core != stringValue),
             WorkUnitRowColumn.Frames => q.Where(x => x.Protein.Frames != Int32.Parse(stringValue)),
             WorkUnitRowColumn.Atoms => q.Where(x => x.Protein.Atoms != Int32.Parse(stringValue)),
-            WorkUnitRowColumn.SlotType => q.Where(x => stringValue == "GPU"
-                ? !ConvertToSlotType.GPUCoreNames.Contains(x.Protein.Core)
-                : !ConvertToSlotType.CPUCoreNames.Contains(x.Protein.Core)),
+            WorkUnitRowColumn.SlotType => q.Where(x => x.SlotType != stringValue),
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) > 0.001),
             WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) > 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) > 0.001),

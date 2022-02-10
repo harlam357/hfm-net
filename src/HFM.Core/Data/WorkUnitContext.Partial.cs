@@ -37,6 +37,10 @@ public partial class WorkUnitContext
     }
 
     [DbFunction]
+    public static string ToSlotType(string core) =>
+        String.IsNullOrEmpty(core) ? String.Empty : ConvertToSlotType.FromCoreName(core).ToString();
+
+    [DbFunction]
     public static double CalculatePPD(int frameTime,
                                       int frames,
                                       double credit,

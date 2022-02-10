@@ -319,6 +319,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 Client = x.Client,
                 Frames = x.Frames,
                 SlotName = WorkUnitContext.ToSlotName(x.Client.Name, x.ClientSlot),
+                SlotType = WorkUnitContext.ToSlotType(x.Protein.Core),
                 PPD = WorkUnitContext.CalculatePPD(
                     x.FrameTimeInSeconds.GetValueOrDefault(),
                     x.Protein.Frames,
