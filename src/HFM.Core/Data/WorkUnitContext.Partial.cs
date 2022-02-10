@@ -76,12 +76,8 @@ public partial class WorkUnitContext
         const string format = "yyyy-MM-dd HH:mm:ss";
         const DateTimeStyles style = DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
 
-        bool parsed = DateTime.TryParseExact(assigned, format, CultureInfo.InvariantCulture, style, out var assignedDateTime);
-        parsed |= DateTime.TryParseExact(finished, format, CultureInfo.InvariantCulture, style, out var finishedDateTime);
-        if (!parsed)
-        {
-            System.Diagnostics.Debugger.Break();
-        }
+        DateTime.TryParseExact(assigned, format, CultureInfo.InvariantCulture, style, out var assignedDateTime);
+        DateTime.TryParseExact(finished, format, CultureInfo.InvariantCulture, style, out var finishedDateTime);
 
         const double oneDayInSeconds = 86400.0;
         var bonusCalculation = (BonusCalculation)bonus;
