@@ -12,9 +12,6 @@ public class WorkUnitContextRepositoryTests
 {
     private readonly DateTime _assigned = DateTime.UtcNow.Normalize();
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingNewWorkUnit : WorkUnitContextRepositoryTests
     {
@@ -175,9 +172,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingExistingWorkUnit : WorkUnitContextRepositoryTests
     {
@@ -221,9 +215,6 @@ public class WorkUnitContextRepositoryTests
         public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _insertResult);
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingInvalidWorkUnit : WorkUnitContextRepositoryTests
     {
@@ -254,9 +245,6 @@ public class WorkUnitContextRepositoryTests
         public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _insertResult);
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingWithExistingClientGuid : WorkUnitContextRepositoryTests
     {
@@ -321,9 +309,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingWithExistingClientGuidAndNameOrConnectionChanged : WorkUnitContextRepositoryTests
     {
@@ -394,9 +379,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingWithExistingClientNameAndConnection : WorkUnitContextRepositoryTests
     {
@@ -464,9 +446,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenInsertingExistingProtein : WorkUnitContextRepositoryTests
     {
@@ -531,9 +510,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class GivenFinishedAndFailedWorkUnits : WorkUnitContextRepositoryTests
     {
@@ -614,9 +590,6 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-#if !DEBUG
-    [Ignore("Hanging on CI build")]
-#endif
     [TestFixture]
     public class WhenDeletingExistingWorkUnit : WorkUnitContextRepositoryTests
     {
@@ -703,9 +676,6 @@ public class WorkUnitContextRepositoryTests
             _repository = new TestableWorkUnitContextRepository(_connectionString);
         }
 
-#if !DEBUG
-        [Ignore("Hanging on CI build")]
-#endif
         [TestFixture]
         public class WhenFetchingAllWorkUnits : GivenWorkUnitsInTheDatabase
         {
@@ -725,9 +695,6 @@ public class WorkUnitContextRepositoryTests
             }
         }
 
-#if !DEBUG
-        [Ignore("Hanging on CI build")]
-#endif
         [TestFixture]
         public class WhenFetchingSomeWorkUnits : GivenWorkUnitsInTheDatabase
         {
@@ -750,9 +717,6 @@ public class WorkUnitContextRepositoryTests
             }
         }
 
-#if !DEBUG
-        [Ignore("Hanging on CI build")]
-#endif
         [TestFixture]
         public class WhenFetchingFirstPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
@@ -776,9 +740,6 @@ public class WorkUnitContextRepositoryTests
             }
         }
 
-#if !DEBUG
-        [Ignore("Hanging on CI build")]
-#endif
         [TestFixture]
         public class WhenFetchingLastPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {

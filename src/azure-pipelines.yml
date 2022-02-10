@@ -23,7 +23,7 @@ stages:
         **/*.csproj
         !**/HFM.Setup*.csproj
       testProjects: '**/*.Tests.csproj'
-      buildConfiguration: 'Debug'
+      buildConfiguration: 'Release'
       dotnetWindows: 'net6.0-windows'
       dotnet: 'net6.0'
 
