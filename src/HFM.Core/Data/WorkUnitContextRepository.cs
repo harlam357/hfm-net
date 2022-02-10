@@ -174,8 +174,8 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.DonorTeam = workUnitModel.WorkUnit.Team;
         workUnit.CoreVersion = workUnitModel.WorkUnit.CoreVersion?.ToString();
         workUnit.Result = WorkUnitResultString.FromWorkUnitResult(workUnitModel.WorkUnit.UnitResult);
-        workUnit.Assigned = workUnitModel.WorkUnit.Assigned;
-        workUnit.Finished = workUnitModel.WorkUnit.Finished;
+        workUnit.Assigned = workUnitModel.WorkUnit.Assigned.Normalize();
+        workUnit.Finished = workUnitModel.WorkUnit.Finished.Normalize();
         workUnit.ProjectRun = workUnitModel.WorkUnit.ProjectRun;
         workUnit.ProjectClone = workUnitModel.WorkUnit.ProjectClone;
         workUnit.ProjectGen = workUnitModel.WorkUnit.ProjectGen;

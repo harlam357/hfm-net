@@ -83,7 +83,7 @@ namespace HFM.Core.Data
             new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Equal, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Equal, "harlam357") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Equal, 32) },
-            new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, 2.09) },
+            new object[] { 11,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, "2.09") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
             new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
@@ -117,7 +117,7 @@ namespace HFM.Core.Data
             new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotEqual, @"\\win7i7\Users\harlarw\AppData\Roaming\Folding@home-gpu\") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotEqual, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotEqual, 32) },
-            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, 2.09) },
+            new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, "2.09") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
             new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
@@ -151,7 +151,7 @@ namespace HFM.Core.Data
             new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThan, @"\\Mainworkstation\Folding@home-gpu\") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThan, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThan, 32) },
-            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, 2.09) },
+            new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, "2.09") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
             new object[] { 23,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
@@ -185,7 +185,7 @@ namespace HFM.Core.Data
             new object[] { 43,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThanOrEqual, "harlam357") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThanOrEqual, 32) },
-            new object[] { 15,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, 2.09) },
+            new object[] { 15,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, "2.09") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
             new object[] { 35,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
@@ -219,7 +219,7 @@ namespace HFM.Core.Data
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThan, @"\\Mainworkstation\Folding@home-gpu\") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThan, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThan, 32) },
-            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, 2.09) },
+            new object[] { 29,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, "2.09") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
             new object[] { 9,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 41)},   // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
@@ -253,7 +253,7 @@ namespace HFM.Core.Data
             new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThanOrEqual, @"\\Mainworkstation\Folding@home-gpu\") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThanOrEqual, "harlam357") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThanOrEqual, 32) },
-            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, 2.09) },
+            new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, "2.09") },
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
             new object[] { 21,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 41)},   // not a TimeSpan value
             new object[] { 44,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
@@ -383,7 +383,7 @@ namespace HFM.Core.Data
             new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.Equal, "192.168.0.172:36330") },
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.Equal, "harlam357") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.Equal, 32) },
-            new object[] { 63,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, 2.27) },
+            new object[] { 166,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.Equal, "2.27") },
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.Equal, 100) },
             new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.Equal, 100)},  // not a TimeSpan value
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.Equal, 1) },   // not a String value
@@ -417,7 +417,7 @@ namespace HFM.Core.Data
             new object[] { 223,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.NotEqual, "192.168.0.172:36330") },
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.NotEqual, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.NotEqual, 32) },
-            new object[] { 190,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, 2.27) },
+            new object[] { 87,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.NotEqual, "2.27") },
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.NotEqual, 100) },
             new object[] { 239,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.NotEqual, 100)},  // not a TimeSpan value
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.NotEqual, 1) },   // not a String value
@@ -451,7 +451,7 @@ namespace HFM.Core.Data
             new object[] { 197,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThan, @"\\192.168.0.133\FAH\") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThan, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThan, 32) },
-            new object[] { 166,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, 2.15) },
+            new object[] { 166,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThan, "2.15") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThan, 100) },
             new object[] { 150,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThan, 100)},  // not a TimeSpan value
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThan, 1) },   // not a String value
@@ -485,7 +485,7 @@ namespace HFM.Core.Data
             new object[] { 205,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.GreaterThanOrEqual, @"\\192.168.0.133\FAH\") },
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.GreaterThanOrEqual, "harlam357") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.GreaterThanOrEqual, 32) },
-            new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, 2.15) },
+            new object[] { 226,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.GreaterThanOrEqual, "2.15") },
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.GreaterThanOrEqual, 100) },
             new object[] { 164,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.GreaterThanOrEqual, 100)},  // not a TimeSpan value
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.GreaterThanOrEqual, 1) },   // not a String value
@@ -519,7 +519,7 @@ namespace HFM.Core.Data
             new object[] { 48,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThan, @"\\192.168.0.133\FAH\") },
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThan, "harlam357") },
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThan, 32) },
-            new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, 2.15) },
+            new object[] { 27,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThan, "2.15") },
             new object[] { 1,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThan, 100) },
             new object[] { 89,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThan, 100)},  // not a TimeSpan value
             new object[] { 0,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThan, 1) },   // not a String value
@@ -553,7 +553,7 @@ namespace HFM.Core.Data
             new object[] { 56,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Path, WorkUnitQueryOperator.LessThanOrEqual, @"\\192.168.0.133\FAH\") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Username, WorkUnitQueryOperator.LessThanOrEqual, "harlam357") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Team, WorkUnitQueryOperator.LessThanOrEqual, 32) },
-            new object[] { 87,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, 2.15) },
+            new object[] { 87,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.CoreVersion, WorkUnitQueryOperator.LessThanOrEqual, "2.15") },
             new object[] { 253,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FramesCompleted, WorkUnitQueryOperator.LessThanOrEqual, 100) },
             new object[] { 103,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.FrameTime, WorkUnitQueryOperator.LessThanOrEqual, 100)},  // not a TimeSpan value
             new object[] { 252,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.Result, WorkUnitQueryOperator.LessThanOrEqual, 1) },   // not a String value
