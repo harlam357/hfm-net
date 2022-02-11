@@ -747,12 +747,95 @@ namespace HFM.Core.Data
             PageTestData(expected, query);
         }
 
+        [Test]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_All_Test2()
+        {
+            // Select All
+            PageTestData2(253, WorkUnitQuery.SelectAll);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchEqualCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_Equal_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchNotEqualCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_NotEqual_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchGreaterThanCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_GreaterThan_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchLessThanCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_LessThan_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchLikeCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_Like_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(FetchNotLikeCases2))]
+        [Category("HFM.Core.WorkUnitRepository.Page")]
+        public void WorkUnitRepository_Page_NotLike_Test2(int expected, WorkUnitQuery query)
+        {
+            PageTestData2(expected, query);
+        }
+
         private void PageTestData(long totalItems, WorkUnitQuery query)
         {
             const long itemsPerPage = 10;
 
             Initialize(_testDataFileCopy);
             var page = _repository.Page(1, itemsPerPage, query, BonusCalculation.DownloadTime);
+            int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
+            Assert.AreEqual(totalItems, page.TotalItems);
+            Assert.AreEqual(expectedPages, page.TotalPages);
+        }
+
+        private void PageTestData2(long totalItems, WorkUnitQuery query)
+        {
+            const long itemsPerPage = 10;
+
+            Initialize(_testData2FileCopy);
+            var page = _repository.Page(1, itemsPerPage, query, BonusCalculation.FrameTime);
             int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
             Assert.AreEqual(totalItems, page.TotalItems);
             Assert.AreEqual(expectedPages, page.TotalPages);
