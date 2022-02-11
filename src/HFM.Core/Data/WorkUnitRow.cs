@@ -1,7 +1,4 @@
-﻿
-using System;
-
-using HFM.Core.WorkUnits;
+﻿using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data
 {
@@ -36,9 +33,7 @@ namespace HFM.Core.Data
         BaseCredit
     }
 
-    [PetaPoco.TableName("WuHistory")]
-    [PetaPoco.PrimaryKey("ID")]
-    public class WorkUnitRow : IProjectInfo
+    public abstract class WorkUnitRow : IProjectInfo
     {
         public long ID { get; set; }
 
@@ -50,19 +45,38 @@ namespace HFM.Core.Data
 
         public int ProjectGen { get; set; }
 
+        public string Username { get; set; }
+
+        public int Team { get; set; }
+
+        public int FramesCompleted { get; set; }
+
+        public string WorkUnitName { get; set; }
+
+        public double KFactor { get; set; }
+
+        public string Core { get; set; }
+
+        public int Frames { get; set; }
+
+        public int Atoms { get; set; }
+
+        public double PreferredDays { get; set; }
+
+        public double MaximumDays { get; set; }
+    }
+
+    [PetaPoco.TableName("WuHistory")]
+    [PetaPoco.PrimaryKey("ID")]
+    public class PetaPocoWorkUnitRow : WorkUnitRow
+    {
         [PetaPoco.Column("InstanceName")]
         public string Name { get; set; }
 
         [PetaPoco.Column("InstancePath")]
         public string Path { get; set; }
 
-        public string Username { get; set; }
-
-        public int Team { get; set; }
-
         public float CoreVersion { get; set; }
-
-        public int FramesCompleted { get; set; }
 
         [PetaPoco.Ignore]
         public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeValue);
@@ -107,22 +121,8 @@ namespace HFM.Core.Data
         [PetaPoco.Column("CompletionDateTime")]
         public DateTime Finished { get; set; }
 
-        public string WorkUnitName { get; set; }
-
-        public double KFactor { get; set; }
-
-        public string Core { get; set; }
-
-        public int Frames { get; set; }
-
-        public int Atoms { get; set; }
-
         [PetaPoco.Column("Credit")]
         public double BaseCredit { get; set; }
-
-        public double PreferredDays { get; set; }
-
-        public double MaximumDays { get; set; }
 
         [PetaPoco.ResultColumn]
         public string SlotType { get; set; }
@@ -134,6 +134,35 @@ namespace HFM.Core.Data
         public double PPD { get; set; }
 
         [PetaPoco.ResultColumn("CalcCredit")]
+        public double Credit { get; set; }
+    }
+
+    public class WorkUnitEntityRow : WorkUnitRow
+    {
+        public string Name { get; set; }
+
+        public string Path { get; set; }
+
+        public string CoreVersion { get; set; }
+
+        public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeInSeconds);
+
+        public int FrameTimeInSeconds { get; set; }
+
+        public string Result { get; set; }
+
+        public DateTime Assigned { get; set; }
+
+        public DateTime Finished { get; set; }
+
+        public double BaseCredit { get; set; }
+
+        public string SlotType { get; set; }
+
+        public int ProductionView { get; set; }
+
+        public double PPD { get; set; }
+
         public double Credit { get; set; }
     }
 }

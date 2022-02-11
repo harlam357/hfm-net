@@ -1,23 +1,19 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 
 using HFM.Core.Serializers;
 
 namespace HFM.Core.Data
 {
-    public class WorkUnitRowCsvFileSerializer : IFileSerializer<List<WorkUnitRow>>
+    public class WorkUnitRowCsvFileSerializer : IFileSerializer<List<WorkUnitEntityRow>>
     {
         public string FileExtension => "csv";
 
         public string FileTypeFilter => "Comma Separated Value Files|*.csv";
 
-        public List<WorkUnitRow> Deserialize(string path) =>
+        public List<WorkUnitEntityRow> Deserialize(string path) =>
             throw new NotSupportedException("History entry csv deserialization is not supported.");
 
-        public void Serialize(string path, List<WorkUnitRow> value)
+        public void Serialize(string path, List<WorkUnitEntityRow> value)
         {
             using (var writer = new StreamWriter(path, false))
             {
@@ -25,7 +21,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal static void Serialize(TextWriter writer, List<WorkUnitRow> value)
+        internal static void Serialize(TextWriter writer, List<WorkUnitEntityRow> value)
         {
             string line = String.Join(",", new[]
             {
@@ -74,7 +70,7 @@ namespace HFM.Core.Data
                     h.Path,
                     h.Username,
                     h.Team,
-                    h.CoreVersion.ToString(provider),
+                    h.CoreVersion,
                     h.FramesCompleted,
                     h.FrameTime,
                     //h.FrameTimeValue,

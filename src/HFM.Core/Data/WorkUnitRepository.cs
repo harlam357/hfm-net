@@ -287,7 +287,7 @@ namespace HFM.Core.Data
                 return -1;
             }
 
-            var entry = _mapper.Map<WorkUnitRow>(workUnitModel);
+            var entry = _mapper.Map<PetaPocoWorkUnitRow>(workUnitModel);
             // cannot map these two properties from a WorkUnit instance
             // they only live at the WorkUnitModel level
             entry.FramesCompleted = workUnitModel.FramesComplete;
@@ -380,7 +380,7 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Fetch<WorkUnitRow>(select);
+                    return database.Fetch<PetaPocoWorkUnitRow>(select).Cast<WorkUnitRow>().ToList();
                 }
             }
         }
@@ -410,7 +410,16 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Page<WorkUnitRow>(page, itemsPerPage, select);
+                    var result = database.Page<PetaPocoWorkUnitRow>(page, itemsPerPage, select);
+                    return new PetaPoco.Page<WorkUnitRow>
+                    {
+                        Context = result.Context,
+                        CurrentPage = result.CurrentPage,
+                        Items = result.Items.Cast<WorkUnitRow>().ToList(),
+                        ItemsPerPage = result.ItemsPerPage,
+                        TotalItems = result.TotalItems,
+                        TotalPages = result.TotalPages
+                    };
                 }
             }
         }

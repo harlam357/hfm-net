@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Data.SQLite;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 
 using NUnit.Framework;
@@ -13,23 +11,18 @@ using HFM.Proteins;
 namespace HFM.Core.Data
 {
     [TestFixture]
-    public class WorkUnitRepositoryTests
+    public class WorkUnitContextRepositoryLegacyTests
     {
-        private const string TestDataFile = "TestFiles\\TestData.db3";
+        private const string TestDataFile = "TestFiles\\TestData.db";
         private string _testDataFileCopy;
 
-        private const string TestData2File = "TestFiles\\TestData2.db3";
+        private const string TestData2File = "TestFiles\\TestData2.db";
         private string _testData2FileCopy;
-
-        // this file is the same as TestDataFile but has already had UpgradeWuHistory1() run on it
-        private const string TestDataFileUpgraded = "TestFiles\\TestData_1.db3";
-        private string _testDataFileUpgradedCopy;
 
         private string _testScratchFile;
 
         private ArtifactFolder _artifacts;
-        private WorkUnitRepository _repository;
-        private readonly IProteinService _proteinService = CreateProteinService();
+        private IWorkUnitRepository _repository;
 
         #region Setup and TearDown
 
@@ -37,8 +30,6 @@ namespace HFM.Core.Data
         public void Init()
         {
             SetupTestDataFileCopies();
-
-            _repository = new WorkUnitRepository(null, _proteinService);
         }
 
         private void SetupTestDataFileCopies()
@@ -59,10 +50,6 @@ namespace HFM.Core.Data
             File.Copy(TestData2File, _testData2FileCopy, true);
             Thread.Sleep(100);
 
-            _testDataFileUpgradedCopy = _artifacts.GetRandomFilePath();
-            File.Copy(TestDataFileUpgraded, _testDataFileUpgradedCopy, true);
-            Thread.Sleep(100);
-
             _testScratchFile = _artifacts.GetRandomFilePath();
         }
 
@@ -70,7 +57,7 @@ namespace HFM.Core.Data
         public void Destroy()
         {
             _artifacts?.Dispose();
-            _repository?.Dispose();
+            (_repository as IDisposable)?.Dispose();
         }
 
         #endregion
@@ -78,95 +65,22 @@ namespace HFM.Core.Data
         [Test]
         public void WorkUnitRepository_MultiThread_Test()
         {
-            _repository.Initialize(_testScratchFile);
+            Initialize(_testScratchFile);
 
             Parallel.For(0, 100, i =>
-                                 {
-                                     Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
+            {
+                Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
 
-                                     var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-                                     var slotModel = new SlotModel(new NullClient { Settings = settings });
-                                     var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
-                                     workUnitModel.CurrentProtein = BuildProtein1();
+                var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
+                var slotModel = new SlotModel(new NullClient { Settings = settings });
+                var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
+                workUnitModel.CurrentProtein = BuildProtein1();
 
-                                     _repository.Insert(workUnitModel);
-                                 });
+                _repository.Insert(workUnitModel);
+            });
 
             Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Count);
         }
-
-        #region Connected
-
-        [Test]
-        public void WorkUnitRepository_Connected_Test1()
-        {
-            _repository.Initialize(_testScratchFile);
-            VerifyWuHistoryTableSchema(_testScratchFile);
-            Assert.AreEqual(Application.Version, _repository.GetDatabaseVersion());
-            Assert.AreEqual(true, _repository.Connected);
-        }
-
-        #endregion
-
-        #region Upgrade
-
-        [Test]
-        public void WorkUnitRepository_Upgrade_v092_Test1()
-        {
-            // Assert (pre-condition)
-            Assert.AreEqual(15, GetWuHistoryColumnCount(_testDataFileCopy));
-            Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-            // Arrange
-            _repository.Initialize(_testDataFileCopy);
-            // Act
-            if (_repository.RequiresUpgrade())
-            {
-                _repository.Upgrade();
-            }
-            // Assert
-            VerifyWuHistoryTableSchema(_testDataFileCopy);
-            Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileCopy));
-            Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
-        }
-
-        [Test]
-        public void WorkUnitRepository_Upgrade_v092_AlreadyUpgraded_Test()
-        {
-            // Assert (pre-condition)
-            VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
-            Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
-            // Arrange
-            _repository.Initialize(_testDataFileUpgradedCopy);
-            // Act
-            var result = _repository.RequiresUpgrade();
-            // Assert
-            Assert.IsFalse(result);
-            VerifyWuHistoryTableSchema(_testDataFileUpgradedCopy);
-            Assert.AreEqual(44, GetWuHistoryRowCount(_testDataFileUpgradedCopy));
-            Assert.IsTrue(Version.Parse("0.9.2") <= Version.Parse(_repository.GetDatabaseVersion()));
-        }
-
-        [Test]
-        public void WorkUnitRepository_Upgrade_v092_Test2()
-        {
-            // Assert (pre-condition)
-            Assert.AreEqual(15, GetWuHistoryColumnCount(_testData2FileCopy));
-            Assert.AreEqual(285, GetWuHistoryRowCount(_testData2FileCopy));
-            // Arrange
-            _repository.Initialize(_testData2FileCopy);
-            // Act
-            if (_repository.RequiresUpgrade())
-            {
-                _repository.Upgrade();
-            }
-            // Assert
-            VerifyWuHistoryTableSchema(_testData2FileCopy);
-            // 32 duplicates deleted
-            Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
-            Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
-        }
-
-        #endregion
 
         #region Insert
 
@@ -206,9 +120,9 @@ namespace HFM.Core.Data
             InsertTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<PetaPocoWorkUnitRow>> verifyAction)
+        private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitEntityRow>> verifyAction)
         {
-            _repository.Initialize(_testScratchFile);
+            Initialize(_testScratchFile);
 
             var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
@@ -216,13 +130,13 @@ namespace HFM.Core.Data
 
             _repository.Insert(workUnitModel);
 
-            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<PetaPocoWorkUnitRow>().ToList();
+            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<WorkUnitEntityRow>().ToList();
             verifyAction(rows);
 
             // test code to ensure this unit is NOT written again
             _repository.Insert(workUnitModel);
             // verify
-            rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<PetaPocoWorkUnitRow>().ToList();
+            rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<WorkUnitEntityRow>().ToList();
             Assert.AreEqual(1, rows.Count);
         }
 
@@ -262,7 +176,8 @@ namespace HFM.Core.Data
         {
             return new Protein
             {
-                WorkUnitName = "TestUnit1",
+                ProjectNumber = 2669,
+                WorkUnitName = "",
                 KFactor = 1.0,
                 Core = "GRO-A3",
                 Frames = 100,
@@ -273,12 +188,12 @@ namespace HFM.Core.Data
             };
         }
 
-        private static Action<IList<PetaPocoWorkUnitRow>> BuildWorkUnit1VerifyAction()
+        private static Action<IList<WorkUnitEntityRow>> BuildWorkUnit1VerifyAction()
         {
             return rows =>
             {
                 Assert.AreEqual(1, rows.Count);
-                PetaPocoWorkUnitRow row = rows[0];
+                WorkUnitEntityRow row = rows[0];
                 Assert.AreEqual(2669, row.ProjectID);
                 Assert.AreEqual(1, row.ProjectRun);
                 Assert.AreEqual(2, row.ProjectClone);
@@ -287,13 +202,13 @@ namespace HFM.Core.Data
                 Assert.AreEqual("Path", row.Path);
                 Assert.AreEqual("harlam357", row.Username);
                 Assert.AreEqual(32, row.Team);
-                Assert.AreEqual(2.9f, row.CoreVersion);
+                Assert.AreEqual("0.2.9", row.CoreVersion);
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(600), row.FrameTime);
-                Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
+                Assert.AreEqual(WorkUnitResultString.FinishedUnit, row.Result);
                 Assert.AreEqual(new DateTime(2010, 1, 1), row.Assigned);
                 Assert.AreEqual(new DateTime(2010, 1, 2), row.Finished);
-                Assert.AreEqual("TestUnit1", row.WorkUnitName);
+                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(1.0, row.KFactor);
                 Assert.AreEqual("GRO-A3", row.Core);
                 Assert.AreEqual(100, row.Frames);
@@ -336,7 +251,8 @@ namespace HFM.Core.Data
         {
             return new Protein
             {
-                WorkUnitName = "TestUnit2",
+                ProjectNumber = 6900,
+                WorkUnitName = "",
                 KFactor = 2.0,
                 Core = "GRO-A4",
                 Frames = 200,
@@ -347,12 +263,12 @@ namespace HFM.Core.Data
             };
         }
 
-        private static Action<IList<PetaPocoWorkUnitRow>> BuildWorkUnit2VerifyAction()
+        private static Action<IList<WorkUnitEntityRow>> BuildWorkUnit2VerifyAction()
         {
             return rows =>
             {
                 Assert.AreEqual(1, rows.Count);
-                PetaPocoWorkUnitRow row = rows[0];
+                WorkUnitEntityRow row = rows[0];
                 Assert.AreEqual(6900, row.ProjectID);
                 Assert.AreEqual(4, row.ProjectRun);
                 Assert.AreEqual(5, row.ProjectClone);
@@ -361,13 +277,13 @@ namespace HFM.Core.Data
                 Assert.AreEqual("The Path's", row.Path);
                 Assert.AreEqual("harlam357's", row.Username);
                 Assert.AreEqual(100, row.Team);
-                Assert.AreEqual(2.27f, row.CoreVersion);
+                Assert.AreEqual("2.27", row.CoreVersion);
                 Assert.AreEqual(56, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.FromSeconds(1000), row.FrameTime);
-                Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
+                Assert.AreEqual(WorkUnitResultString.EarlyUnitEnd, row.Result);
                 Assert.AreEqual(new DateTime(2009, 5, 5), row.Assigned);
                 Assert.AreEqual(new DateTime(2009, 5, 6), row.Finished);
-                Assert.AreEqual("TestUnit2", row.WorkUnitName);
+                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(2.0, row.KFactor);
                 Assert.AreEqual("GRO-A4", row.Core);
                 Assert.AreEqual(200, row.Frames);
@@ -410,7 +326,8 @@ namespace HFM.Core.Data
         {
             return new Protein
             {
-                WorkUnitName = "TestUnit3",
+                ProjectNumber = 2670,
+                WorkUnitName = "",
                 KFactor = 3.0,
                 Core = "GRO-A5",
                 Frames = 300,
@@ -421,12 +338,12 @@ namespace HFM.Core.Data
             };
         }
 
-        private static Action<IList<PetaPocoWorkUnitRow>> BuildWorkUnit3VerifyAction()
+        private static Action<IList<WorkUnitEntityRow>> BuildWorkUnit3VerifyAction()
         {
             return rows =>
             {
                 Assert.AreEqual(1, rows.Count);
-                PetaPocoWorkUnitRow row = rows[0];
+                WorkUnitEntityRow row = rows[0];
                 Assert.AreEqual(2670, row.ProjectID);
                 Assert.AreEqual(2, row.ProjectRun);
                 Assert.AreEqual(3, row.ProjectClone);
@@ -435,13 +352,13 @@ namespace HFM.Core.Data
                 Assert.AreEqual("Path", row.Path);
                 Assert.AreEqual("harlam357", row.Username);
                 Assert.AreEqual(32, row.Team);
-                Assert.AreEqual(2.9f, row.CoreVersion);
+                Assert.AreEqual("0.2.9", row.CoreVersion);
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
-                Assert.AreEqual((int)WorkUnitResult.EarlyUnitEnd, row.ResultValue);
+                Assert.AreEqual(WorkUnitResultString.EarlyUnitEnd, row.Result);
                 Assert.AreEqual(new DateTime(2010, 2, 2), row.Assigned);
                 Assert.AreEqual(new DateTime(2010, 2, 3), row.Finished);
-                Assert.AreEqual("TestUnit3", row.WorkUnitName);
+                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(3.0, row.KFactor);
                 Assert.AreEqual("GRO-A5", row.Core);
                 Assert.AreEqual(300, row.Frames);
@@ -484,7 +401,8 @@ namespace HFM.Core.Data
         {
             return new Protein
             {
-                WorkUnitName = "TestUnit4",
+                ProjectNumber = 6903,
+                WorkUnitName = "",
                 KFactor = 4.0,
                 Core = "OPENMMGPU",
                 Frames = 400,
@@ -495,12 +413,12 @@ namespace HFM.Core.Data
             };
         }
 
-        private static Action<IList<PetaPocoWorkUnitRow>> BuildWorkUnit4VerifyAction()
+        private static Action<IList<WorkUnitEntityRow>> BuildWorkUnit4VerifyAction()
         {
             return rows =>
             {
                 Assert.AreEqual(1, rows.Count);
-                PetaPocoWorkUnitRow row = rows[0];
+                WorkUnitEntityRow row = rows[0];
                 Assert.AreEqual(6903, row.ProjectID);
                 Assert.AreEqual(2, row.ProjectRun);
                 Assert.AreEqual(3, row.ProjectClone);
@@ -509,13 +427,13 @@ namespace HFM.Core.Data
                 Assert.AreEqual("Path2", row.Path);
                 Assert.AreEqual("harlam357", row.Username);
                 Assert.AreEqual(32, row.Team);
-                Assert.AreEqual(2.27f, row.CoreVersion);
+                Assert.AreEqual("2.27", row.CoreVersion);
                 Assert.AreEqual(100, row.FramesCompleted);
                 Assert.AreEqual(TimeSpan.Zero, row.FrameTime);
-                Assert.AreEqual((int)WorkUnitResult.FinishedUnit, row.ResultValue);
+                Assert.AreEqual(WorkUnitResultString.FinishedUnit, row.Result);
                 Assert.AreEqual(new DateTime(2012, 1, 2), row.Assigned);
                 Assert.AreEqual(new DateTime(2012, 1, 5), row.Finished);
-                Assert.AreEqual("TestUnit4", row.WorkUnitName);
+                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(4.0, row.KFactor);
                 Assert.AreEqual("OPENMMGPU", row.Core);
                 Assert.AreEqual(400, row.Frames);
@@ -535,8 +453,7 @@ namespace HFM.Core.Data
         public void WorkUnitRepository_Delete_Test()
         {
             // Arrange
-            _repository.Initialize(_testDataFileCopy);
-            _repository.Upgrade();
+            Initialize(_testDataFileCopy);
             var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             // Assert (pre-condition)
             Assert.AreEqual(44, entries.Count);
@@ -550,135 +467,16 @@ namespace HFM.Core.Data
         [Test]
         public void WorkUnitRepository_Delete_NotExist_Test()
         {
-            _repository.Initialize(_testDataFileCopy);
-            Assert.AreEqual(0, _repository.Delete(new PetaPocoWorkUnitRow { ID = 100 }));
+            Initialize(_testDataFileCopy);
+            Assert.AreEqual(0, _repository.Delete(new WorkUnitEntityRow { ID = 100 }));
         }
 
         #endregion
 
-        #region Static Helpers
-
-        private static int GetWuHistoryColumnCount(string dataSource)
+        private void Initialize(string path)
         {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
-            {
-                con.Open();
-                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
-                using (var table = new DataTable())
-                {
-                    adapter.Fill(table);
-                    foreach (DataRow row in table.Rows)
-                    {
-                        Debug.WriteLine(row[1].ToString());
-                    }
-                    return table.Rows.Count;
-                }
-            }
+            string connectionString = $"Data Source={path}";
+            _repository = new TestableWorkUnitContextRepository(connectionString);
         }
-
-        private static void VerifyWuHistoryTableSchema(string dataSource)
-        {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
-            {
-                con.Open();
-                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
-                using (var table = new DataTable())
-                {
-                    adapter.Fill(table);
-                    Assert.AreEqual(23, table.Rows.Count);
-
-                    for (int i = 0; i < table.Rows.Count; i++)
-                    {
-                        var row = table.Rows[i];
-                        // notnull check
-                        Assert.AreEqual(1, row[3]);
-                        // dflt_value check
-                        if (i < 15)
-                        {
-                            Assert.IsTrue(row[4].Equals(DBNull.Value));
-                        }
-                        else
-                        {
-                            Assert.IsFalse(row[4].Equals(DBNull.Value));
-                        }
-                        // pk check
-                        Assert.AreEqual(i == 0 ? 1 : 0, row[5]);
-                    }
-
-                }
-            }
-        }
-
-        private static int GetWuHistoryRowCount(string dataSource)
-        {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
-            {
-                con.Open();
-                using (var cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT COUNT(*) FROM WuHistory";
-                    return Convert.ToInt32(cmd.ExecuteScalar());
-                }
-            }
-        }
-
-        public static IProteinService CreateProteinService()
-        {
-            var collection = new List<Protein>();
-
-            var protein = new Protein();
-            protein.ProjectNumber = 6600;
-            protein.WorkUnitName = "WorkUnitName";
-            protein.Core = "GROGPU2";
-            protein.Credit = 450;
-            protein.KFactor = 0;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 5000;
-            protein.PreferredDays = 2;
-            protein.MaximumDays = 3;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 5797;
-            protein.WorkUnitName = "WorkUnitName2";
-            protein.Core = "GROGPU2";
-            protein.Credit = 675;
-            protein.KFactor = 2.3;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 7000;
-            protein.PreferredDays = 2;
-            protein.MaximumDays = 3;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 8011;
-            protein.WorkUnitName = "WorkUnitName3";
-            protein.Core = "GRO-A4";
-            protein.Credit = 106.6;
-            protein.KFactor = 0.75;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 9000;
-            protein.PreferredDays = 2.13;
-            protein.MaximumDays = 4.62;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 6903;
-            protein.WorkUnitName = "WorkUnitName4";
-            protein.Core = "GRO-A5";
-            protein.Credit = 22706;
-            protein.KFactor = 38.05;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 11000;
-            protein.PreferredDays = 5;
-            protein.MaximumDays = 12;
-            collection.Add(protein);
-
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data = collection;
-            return new ProteinService(dataContainer, null, null);
-        }
-
-        #endregion
     }
 }

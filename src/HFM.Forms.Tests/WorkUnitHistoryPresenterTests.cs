@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Core.Serializers;
@@ -216,7 +212,7 @@ namespace HFM.Forms
             // Arrange
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             var presenter = CreatePresenter(messageBox);
-            presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
+            presenter.Model.HistoryBindingSource.Add(new WorkUnitEntityRow { ID = 1 });
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
             var mockRepository = Mock.Get(presenter.Model.Repository);
@@ -245,33 +241,33 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var workUnitRows = new[] { new WorkUnitRow() };
+            var workUnitRows = new[] { new WorkUnitEntityRow() };
             var mockRepository = Mock.Get(presenter.Model.Repository);
             mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(workUnitRows);
             var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { serializer });
             // Assert
             Assert.AreEqual("test.csv", serializer.FileName);
             Assert.IsTrue(workUnitRows.SequenceEqual(serializer.Rows));
         }
 
-        private class WorkUnitRowFileSerializerSavesFileNameAndRows : IFileSerializer<List<WorkUnitRow>>
+        private class WorkUnitRowFileSerializerSavesFileNameAndRows : IFileSerializer<List<WorkUnitEntityRow>>
         {
             public string FileExtension { get; }
             public string FileTypeFilter { get; }
 
-            public List<WorkUnitRow> Deserialize(string path)
+            public List<WorkUnitEntityRow> Deserialize(string path)
             {
                 throw new NotImplementedException();
             }
 
             public string FileName { get; set; }
 
-            public List<WorkUnitRow> Rows { get; set; }
+            public List<WorkUnitEntityRow> Rows { get; set; }
 
-            public void Serialize(string path, List<WorkUnitRow> value)
+            public void Serialize(string path, List<WorkUnitEntityRow> value)
             {
                 FileName = path;
                 Rows = value;
@@ -287,23 +283,23 @@ namespace HFM.Forms
             mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitRow>());
             var saveFile = CreateSaveFileDialogView();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
-        private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitRow>>
+        private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitEntityRow>>
         {
             public string FileExtension { get; }
             public string FileTypeFilter { get; }
 
-            public List<WorkUnitRow> Deserialize(string path)
+            public List<WorkUnitEntityRow> Deserialize(string path)
             {
                 throw new NotImplementedException();
             }
 
-            public void Serialize(string path, List<WorkUnitRow> value)
+            public void Serialize(string path, List<WorkUnitEntityRow> value)
             {
                 throw new IOException();
             }

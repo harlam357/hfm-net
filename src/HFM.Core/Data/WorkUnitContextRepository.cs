@@ -183,7 +183,9 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.FrameTimeInSeconds = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
         workUnit.ProteinID = proteinID;
         workUnit.ClientID = clientID;
-        workUnit.ClientSlot = workUnitModel.SlotModel.SlotID;
+        workUnit.ClientSlot = workUnitModel.SlotModel.SlotID == SlotIdentifier.NoSlotID
+            ? null
+            : workUnitModel.SlotModel.SlotID;
 
         context.WorkUnits.Add(workUnit);
         context.SaveChanges();
@@ -216,7 +218,12 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     public int Delete(WorkUnitRow row)
     {
         using var context = CreateWorkUnitContext();
-        context.WorkUnits.Remove(new WorkUnitEntity { ID = row.ID });
+        var workUnit = context.WorkUnits.Find(row.ID);
+        if (workUnit is null)
+        {
+            return 0;
+        }
+        context.WorkUnits.Remove(workUnit);
         return context.SaveChanges();
     }
 
@@ -243,7 +250,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             q = q.Where(p);
         }
 
-        return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        return _mapper.Map<IList<WorkUnitEntityRow>>(q.ToList()).Cast<WorkUnitRow>().ToList();
     }
 
     public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
@@ -281,14 +288,14 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             totalPages++;
         }
 
-        var items = _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        var items = _mapper.Map<IList<WorkUnitEntityRow>>(q.ToList());
         return new Page<WorkUnitRow>
         {
             CurrentPage = page,
             TotalPages = totalPages,
             TotalItems = count,
             ItemsPerPage = itemsPerPage,
-            Items = items
+            Items = items.Cast<WorkUnitRow>().ToList()
         };
     }
 

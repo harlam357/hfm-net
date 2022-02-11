@@ -178,7 +178,6 @@ public class WorkUnitContextRepositoryTests
         private ArtifactFolder _artifacts;
         private string _connectionString;
         private IWorkUnitRepository _repository;
-        private readonly DateTime _assigned = DateTime.UtcNow;
         private long _insertResult;
 
         [SetUp]
@@ -643,7 +642,7 @@ public class WorkUnitContextRepositoryTests
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
             long workUnitID = _repository.Insert(workUnitModel);
 
-            _deleteResult = _repository.Delete(new WorkUnitRow { ID = workUnitID });
+            _deleteResult = _repository.Delete(new WorkUnitEntityRow { ID = workUnitID });
         }
 
         [TearDown]
@@ -782,10 +781,15 @@ public class TestableWorkUnitContextRepository : WorkUnitContextRepository
         _connectionString = connectionString;
     }
 
+    private static readonly object _CreateLock = new();
+
     protected override WorkUnitContext CreateWorkUnitContext()
     {
         var context = new WorkUnitContext(_connectionString, Console.WriteLine);
-        context.Database.EnsureCreated();
+        lock (_CreateLock)
+        {
+            context.Database.EnsureCreated();
+        }
         return context;
     }
 }

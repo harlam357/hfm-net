@@ -47,7 +47,7 @@ public class MigrateToWorkUnitContext
         var proteins = new HashSet<ProteinEntity>();
         var clients = new HashSet<ClientEntity>();
 
-        foreach (var r in rows)
+        foreach (var r in rows.Cast<PetaPocoWorkUnitRow>())
         {
             ReportClientAndProjectProgress(progress);
 
@@ -83,7 +83,7 @@ public class MigrateToWorkUnitContext
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-            foreach (var r in rows)
+            foreach (var r in rows.Cast<PetaPocoWorkUnitRow>())
             {
                 ReportWorkUnitProgress(progress);
 

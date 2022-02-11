@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading;
+﻿using System.Globalization;
 
 using NUnit.Framework;
 
@@ -11,17 +7,17 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRowCsvFileSerializerTests
     {
-        private List<WorkUnitRow> _value;
+        private List<WorkUnitEntityRow> _value;
         private string _expected;
 
         [SetUp]
         public void BeforeEach()
         {
             // Arrange
-            _value = new List<WorkUnitRow> { new WorkUnitRow() };
+            _value = new List<WorkUnitEntityRow> { new() };
             _expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit,BaseCredit";
             _expected += Environment.NewLine;
-            _expected += "0,0,0,0,0,,,,0,0,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0,0";
+            _expected += "0,0,0,0,0,,,,0,,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0,0";
             _expected += Environment.NewLine;
         }
 

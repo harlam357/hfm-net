@@ -11,7 +11,7 @@ public class WorkUnitRowProfile : Profile
 {
     public WorkUnitRowProfile()
     {
-        CreateMap<WorkUnitModel, WorkUnitRow>()
+        CreateMap<WorkUnitModel, PetaPocoWorkUnitRow>()
             .ForMember(dest => dest.ID, opt => opt.Ignore())
             .ForMember(dest => dest.ProjectID, opt => opt.MapFrom(src => src.WorkUnit.ProjectID))
             .ForMember(dest => dest.ProjectRun, opt => opt.MapFrom(src => src.WorkUnit.ProjectRun))
@@ -40,13 +40,11 @@ public class WorkUnitRowProfile : Profile
             .ForMember(dest => dest.PPD, opt => opt.Ignore())
             .ForMember(dest => dest.Credit, opt => opt.Ignore());
 
-        CreateMap<WorkUnitEntity, WorkUnitRow>()
+        CreateMap<WorkUnitEntity, WorkUnitEntityRow>()
             .ForMember(x => x.Name, opt => opt.MapFrom<WorkUnitRowNameValueResolver>())
             .ForMember(x => x.Path, opt => opt.MapFrom<WorkUnitRowPathValueResolver>())
             .ForMember(x => x.Username, opt => opt.MapFrom(src => src.DonorName))
             .ForMember(x => x.Team, opt => opt.MapFrom(src => src.DonorTeam))
-            .ForMember(x => x.FrameTimeValue, opt => opt.MapFrom(src => src.FrameTimeInSeconds))
-            .ForMember(x => x.ResultValue, opt => opt.MapFrom(src => WorkUnitResultString.ToWorkUnitResult(src.Result)))
             .ForMember(x => x.WorkUnitName, opt => opt.MapFrom(src => ""))
             .ForMember(x => x.ProjectID, opt => opt.MapFrom(src => src.Protein.ProjectID))
             .ForMember(x => x.KFactor, opt => opt.MapFrom(src => src.Protein.KFactor))
