@@ -58,19 +58,18 @@ namespace HFM.Core.Data
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_All_Test()
         {
-            // Select All
             FetchTestData(44, WorkUnitQuery.SelectAll);
         }
 
         [Test]
-        [TestCaseSource("FetchEqualCases")]
+        [TestCaseSource(nameof(FetchEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_Equal_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchEqualCases =
+        private static readonly object[] FetchEqualCases =
         {
             new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600) },
             new object[] { 4,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 7) },
@@ -97,14 +96,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchNotEqualCases")]
+        [TestCaseSource(nameof(FetchNotEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_NotEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchNotEqualCases =
+        private static readonly object[] FetchNotEqualCases =
         {
             new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotEqual, 6600) },
             new object[] { 40,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotEqual, 7) },
@@ -131,14 +130,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchGreaterThanCases")]
+        [TestCaseSource(nameof(FetchGreaterThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchGreaterThanCases =
+        private static readonly object[] FetchGreaterThanCases =
         {
             new object[] { 12,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThan, 10502) },
             new object[] { 3,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThan, 79) },
@@ -165,14 +164,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchGreaterThanOrEqualCases")]
+        [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchGreaterThanOrEqualCases =
+        private static readonly object[] FetchGreaterThanOrEqualCases =
         {
             new object[] { 13,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThanOrEqual, 10502) },
             new object[] { 5,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThanOrEqual, 79) },
@@ -199,14 +198,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLessThanCases")]
+        [TestCaseSource(nameof(FetchLessThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_LessThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchLessThanCases =
+        private static readonly object[] FetchLessThanCases =
         {
             new object[] { 31,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThan, 10502) },
             new object[] { 39,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThan, 79) },
@@ -233,14 +232,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLessThanOrEqualCases")]
+        [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchLessThanOrEqualCases =
+        private static readonly object[] FetchLessThanOrEqualCases =
         {
             new object[] { 32,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThanOrEqual, 10502) },
             new object[] { 41,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThanOrEqual, 79) },
@@ -267,14 +266,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLikeCases")]
+        [TestCaseSource(nameof(FetchLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_Like_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchLikeCases =
+        private static readonly object[] FetchLikeCases =
         {
             new object[] { 14,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Like, "10%") },
             new object[] { 8,    new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Like, "1%") },
@@ -301,14 +300,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchNotLikeCases")]
+        [TestCaseSource(nameof(FetchNotLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_NotLike_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
 
-        private static object[] FetchNotLikeCases =
+        private static readonly object[] FetchNotLikeCases =
         {
             new object[] { 30,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotLike, "10%") },
             new object[] { 36,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotLike, "1%") },
@@ -363,14 +362,14 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchEqualCases2")]
+        [TestCaseSource(nameof(FetchEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_Equal_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchEqualCases2 =
+        private static readonly object[] FetchEqualCases2 =
         {
             new object[] { 10,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 8011) },
             new object[] { 72,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 0) },
@@ -397,14 +396,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchNotEqualCases2")]
+        [TestCaseSource(nameof(FetchNotEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchNotEqualCases2 =
+        private static readonly object[] FetchNotEqualCases2 =
         {
             new object[] { 243,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotEqual, 8011) },
             new object[] { 181,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotEqual, 0) },
@@ -431,14 +430,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchGreaterThanCases2")]
+        [TestCaseSource(nameof(FetchGreaterThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchGreaterThanCases2 =
+        private static readonly object[] FetchGreaterThanCases2 =
         {
             new object[] { 75,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThan, 7137) },
             new object[] { 47,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThan, 18) },
@@ -465,14 +464,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchGreaterThanOrEqualCases2")]
+        [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchGreaterThanOrEqualCases2 =
+        private static readonly object[] FetchGreaterThanOrEqualCases2 =
         {
             new object[] { 78,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.GreaterThanOrEqual, 7137) },
             new object[] { 51,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.GreaterThanOrEqual, 18) },
@@ -499,14 +498,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLessThanCases2")]
+        [TestCaseSource(nameof(FetchLessThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_LessThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchLessThanCases2 =
+        private static readonly object[] FetchLessThanCases2 =
         {
             new object[] { 175,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThan, 7137) },
             new object[] { 202,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThan, 18) },
@@ -533,14 +532,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLessThanOrEqualCases2")]
+        [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchLessThanOrEqualCases2 =
+        private static readonly object[] FetchLessThanOrEqualCases2 =
         {
             new object[] { 178,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.LessThanOrEqual, 7137) },
             new object[] { 206,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.LessThanOrEqual, 18) },
@@ -567,14 +566,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchLikeCases2")]
+        [TestCaseSource(nameof(FetchLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_Like_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchLikeCases2 =
+        private static readonly object[] FetchLikeCases2 =
         {
             new object[] { 33,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Like, "8%") },
             new object[] { 70,   new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Like, "1%") },
@@ -601,14 +600,14 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        [TestCaseSource("FetchNotLikeCases2")]
+        [TestCaseSource(nameof(FetchNotLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
         public void WorkUnitRepository_Fetch_NotLike_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
 
-        private static object[] FetchNotLikeCases2 =
+        private static readonly object[] FetchNotLikeCases2 =
         {
             new object[] { 220,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.NotLike, "8%") },
             new object[] { 183,  new WorkUnitQuery().AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.NotLike, "1%") },
@@ -685,7 +684,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchEqualCases")]
+        [TestCaseSource(nameof(FetchEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_Equal_Test(int expected, WorkUnitQuery query)
         {
@@ -693,7 +692,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchNotEqualCases")]
+        [TestCaseSource(nameof(FetchNotEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_NotEqual_Test(int expected, WorkUnitQuery query)
         {
@@ -701,7 +700,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchGreaterThanCases")]
+        [TestCaseSource(nameof(FetchGreaterThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
@@ -709,7 +708,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchGreaterThanOrEqualCases")]
+        [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
@@ -717,7 +716,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchLessThanCases")]
+        [TestCaseSource(nameof(FetchLessThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_LessThan_Test(int expected, WorkUnitQuery query)
         {
@@ -725,7 +724,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchLessThanOrEqualCases")]
+        [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
@@ -733,7 +732,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchLikeCases")]
+        [TestCaseSource(nameof(FetchLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_Like_Test(int expected, WorkUnitQuery query)
         {
@@ -741,7 +740,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [TestCaseSource("FetchNotLikeCases")]
+        [TestCaseSource(nameof(FetchNotLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
         public void WorkUnitRepository_Page_NotLike_Test(int expected, WorkUnitQuery query)
         {
