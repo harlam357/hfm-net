@@ -678,7 +678,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingAllWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private IList<WorkUnitRow> _result;
+            private IList<WorkUnitEntityRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -697,7 +697,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingSomeWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private IList<WorkUnitRow> _result;
+            private IList<WorkUnitEntityRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -719,7 +719,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingFirstPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private Page<WorkUnitRow> _result;
+            private Page<WorkUnitEntityRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -742,7 +742,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingLastPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private Page<WorkUnitRow> _result;
+            private Page<WorkUnitEntityRow> _result;
 
             [SetUp]
             public override void BeforeEach()

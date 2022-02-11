@@ -113,8 +113,6 @@ namespace HFM.Core.Client
 
             var workUnitModels = new[] { new WorkUnitModel(new SlotModel(new NullClient { Settings = settings }), workUnitCopy) };
 
-            mockWorkUnitRepository.SetupGet(x => x.Connected).Returns(true);
-
             var benchmarkIdentifier = new ProteinBenchmarkIdentifier(2669);
 
             // Assert (pre-condition)

@@ -18,7 +18,6 @@ namespace HFM.Forms.Models
         public void Init()
         {
             _mockRepository = new Mock<IWorkUnitRepository>();
-            _mockRepository.SetupGet(x => x.Connected).Returns(true);
             _model = new WorkUnitHistoryModel(new InMemoryPreferencesProvider(), new WorkUnitQueryDataContainer(), _mockRepository.Object);
         }
 
@@ -142,7 +141,13 @@ namespace HFM.Forms.Models
                 .AddParameter(new WorkUnitQueryParameter { Value = 6606 }));
             Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
-            _mockRepository.Setup(x => x.Page(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(new Page<WorkUnitRow>());
+            _mockRepository
+                .Setup(x => x.Page(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<WorkUnitQuery>(),
+                    It.IsAny<BonusCalculation>()))
+                .Returns(new Page<WorkUnitEntityRow>());
             // Act
             _model.ResetBindings(true);
             // Assert

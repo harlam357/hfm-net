@@ -296,7 +296,7 @@ namespace HFM.Core.Client
             slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
 
             var clientRun = Messages.GetClientRun();
-            if (WorkUnitRepository is { Connected: true } && clientRun != null)
+            if (WorkUnitRepository is not null && clientRun is not null)
             {
                 slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
                 slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
@@ -344,7 +344,7 @@ namespace HFM.Core.Client
 
         private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
         {
-            if (WorkUnitRepository is { Connected: true })
+            if (WorkUnitRepository is not null)
             {
                 try
                 {

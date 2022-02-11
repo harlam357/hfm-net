@@ -216,7 +216,7 @@ namespace HFM.Forms
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitRow>())).Returns(1);
+            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitEntityRow>())).Returns(1);
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
@@ -280,7 +280,7 @@ namespace HFM.Forms
             // Arrange
             var presenter = CreatePresenter();
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitRow>());
+            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitEntityRow>());
             var saveFile = CreateSaveFileDialogView();
             // Act
             presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { new WorkUnitRowFileSerializerThrows() });

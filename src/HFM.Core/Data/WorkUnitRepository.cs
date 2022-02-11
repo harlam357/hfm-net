@@ -46,19 +46,14 @@ namespace HFM.Core.Data
 
     public interface IWorkUnitRepository
     {
-        /// <summary>
-        /// Flag that notes if the Database is safe to call.
-        /// </summary>
-        bool Connected { get; }
-
         // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
         long Insert(WorkUnitModel workUnitModel);
 
-        int Delete(WorkUnitRow row);
+        int Delete(WorkUnitEntityRow row);
 
-        IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
+        IList<WorkUnitEntityRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-        Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
+        Page<WorkUnitEntityRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
         long CountCompleted(string clientName, DateTime? clientStartTime);
 
