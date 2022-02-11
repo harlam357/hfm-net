@@ -13,9 +13,9 @@ public class MigrateToWorkUnitContext
 {
     private readonly ILogger _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IWorkUnitRepository _repository;
+    private readonly WorkUnitRepository _repository;
 
-    public MigrateToWorkUnitContext(ILogger logger, IServiceScopeFactory serviceScopeFactory, IWorkUnitRepository repository)
+    public MigrateToWorkUnitContext(ILogger logger, IServiceScopeFactory serviceScopeFactory, WorkUnitRepository repository)
     {
         _logger = logger ?? NullLogger.Instance;
         _serviceScopeFactory = serviceScopeFactory;

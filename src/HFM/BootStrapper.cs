@@ -249,7 +249,7 @@ namespace HFM
         private static bool ShouldMigrateToWorkUnitContext(string databaseVersion) =>
             databaseVersion is not null && Version.Parse(databaseVersion) < Version.Parse(Core.Application.Version);
 
-        private void MigrateToWorkUnitContext(IWorkUnitRepository repository)
+        private void MigrateToWorkUnitContext(WorkUnitRepository repository)
         {
             var toWorkUnitContext = new MigrateToWorkUnitContext(Logger, Container.GetInstance<IServiceScopeFactory>(), repository);
 

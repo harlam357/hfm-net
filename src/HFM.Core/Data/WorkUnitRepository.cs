@@ -79,7 +79,7 @@ namespace HFM.Core.Data
         int Execute(SQLiteConnection connection, string sql, params object[] args);
     }
 
-    public partial class WorkUnitRepository : IWorkUnitRepository, IWorkUnitDatabase, IDisposable
+    public partial class WorkUnitRepository : IWorkUnitDatabase, IDisposable
     {
         private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
