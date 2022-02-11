@@ -159,8 +159,6 @@ namespace HFM.Core.Data
 
         public string SlotType { get; set; }
 
-        public int ProductionView { get; set; }
-
         public double PPD { get; set; }
 
         public double Credit { get; set; }

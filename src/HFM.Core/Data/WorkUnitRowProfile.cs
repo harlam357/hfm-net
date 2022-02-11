@@ -49,15 +49,12 @@ public class WorkUnitRowProfile : Profile
             .ForMember(x => x.ProjectID, opt => opt.MapFrom(src => src.Protein.ProjectID))
             .ForMember(x => x.KFactor, opt => opt.MapFrom(src => src.Protein.KFactor))
             .ForMember(x => x.Core, opt => opt.MapFrom(src => src.Protein.Core))
-            .ForMember(x => x.Credit, opt => opt.MapFrom(src => src.Protein.Credit))
             .ForMember(x => x.Frames, opt => opt.MapFrom(src => src.Protein.Frames))
             .ForMember(x => x.Atoms, opt => opt.MapFrom(src => src.Protein.Atoms))
             .ForMember(x => x.BaseCredit, opt => opt.MapFrom(src => src.Protein.Credit))
             .ForMember(x => x.PreferredDays, opt => opt.MapFrom(src => src.Protein.TimeoutDays))
             .ForMember(x => x.MaximumDays, opt => opt.MapFrom(src => src.Protein.ExpirationDays))
-            .ForMember(x => x.SlotType, opt => opt.MapFrom(src => ConvertToSlotType.FromCoreName(src.Protein.Core)))
-            .ForMember(x => x.ProductionView, opt => opt.Ignore())
-            .ForMember(x => x.PPD, opt => opt.Ignore());
+            .ForMember(x => x.SlotType, opt => opt.MapFrom(src => ConvertToSlotType.FromCoreName(src.Protein.Core)));
     }
 
     private class WorkUnitRowNameValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>

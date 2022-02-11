@@ -12,14 +12,14 @@ public partial class WorkUnitContext
 {
     private const string VersionStringDefault = "0.0.0";
 
-    public async Task<string> GetDatabaseVersion()
+    public string GetDatabaseVersion()
     {
-        if (!await Database.CanConnectAsync().ConfigureAwait(false))
+        if (!Database.CanConnect())
         {
             return null;
         }
 
-        var versionRow = await Versions.OrderByDescending(x => x.ID).FirstOrDefaultAsync().ConfigureAwait(false);
+        var versionRow = Versions.OrderByDescending(x => x.ID).FirstOrDefault();
         return versionRow?.Version ?? VersionStringDefault;
     }
 

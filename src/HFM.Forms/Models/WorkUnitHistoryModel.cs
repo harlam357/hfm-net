@@ -19,7 +19,7 @@ namespace HFM.Forms.Models
 
         private readonly List<WorkUnitQuery> _queryList;
         private readonly WorkUnitRowSortableBindingList _workUnitList;
-        private Page<WorkUnitRow> _page;
+        private Page<WorkUnitEntityRow> _page;
 
         public WorkUnitHistoryModel(IPreferences preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
         {
@@ -47,7 +47,7 @@ namespace HFM.Forms.Models
             HistoryBindingSource = new BindingSource();
             HistoryBindingSource.DataSource = _workUnitList;
 
-            _page = new Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
+            _page = new Page<WorkUnitEntityRow> { Items = new List<WorkUnitEntityRow>() };
         }
 
         public override void Load()
@@ -154,7 +154,7 @@ namespace HFM.Forms.Models
             QueryBindingSource.ResetBindings(false);
         }
 
-        public void DeleteHistoryEntry(WorkUnitRow row)
+        public void DeleteHistoryEntry(WorkUnitEntityRow row)
         {
             if (Repository.Delete(row) != 0)
             {
@@ -170,7 +170,15 @@ namespace HFM.Forms.Models
 
             if (executeQuery)
             {
-                _page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
+                var page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
+                _page = page is null ? null : new Page<WorkUnitEntityRow>
+                {
+                    CurrentPage = page.CurrentPage,
+                    Items = page.Items.Cast<WorkUnitEntityRow>().ToList(),
+                    ItemsPerPage = page.ItemsPerPage,
+                    TotalItems = page.TotalItems,
+                    TotalPages = page.TotalPages
+                };
             }
             if (_page == null)
             {
@@ -194,7 +202,7 @@ namespace HFM.Forms.Models
             OnPropertyChanged(nameof(CurrentPage));
         }
 
-        private void RefreshHistoryList(IEnumerable<WorkUnitRow> historyEntries)
+        private void RefreshHistoryList(IEnumerable<WorkUnitEntityRow> historyEntries)
         {
             HistoryBindingSource.Clear();
             if (historyEntries != null)
@@ -220,13 +228,13 @@ namespace HFM.Forms.Models
             }
         }
 
-        public WorkUnitRow SelectedWorkUnitRow
+        public WorkUnitEntityRow SelectedWorkUnitRow
         {
             get
             {
                 if (HistoryBindingSource.Current != null)
                 {
-                    return (WorkUnitRow)HistoryBindingSource.Current;
+                    return (WorkUnitEntityRow)HistoryBindingSource.Current;
                 }
                 return null;
             }
@@ -247,7 +255,6 @@ namespace HFM.Forms.Models
                 if (_bonusCalculation != value)
                 {
                     _bonusCalculation = value;
-                    OnPropertyChanged("ProductionView");
                     ResetBindings(true);
                 }
             }
@@ -332,8 +339,8 @@ namespace HFM.Forms.Models
             }
         }
 
-        // SortColumnName stores the actual WorkUnitRow property name
-        // this method guards against WorkUnitRow property name changes
+        // SortColumnName stores the actual WorkUnitEntityRow property name
+        // this method guards against WorkUnitEntityRow property name changes
         private string ValidateSortColumnNameOrDefault(string name)
         {
             var properties = HistoryBindingSource.CurrencyManager.GetItemProperties();

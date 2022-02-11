@@ -5,7 +5,7 @@ using HFM.Core.Data;
 
 namespace HFM.Forms
 {
-    internal class WorkUnitRowSortableBindingList : SortableBindingList<WorkUnitRow>
+    internal class WorkUnitRowSortableBindingList : SortableBindingList<WorkUnitEntityRow>
     {
         public WorkUnitRowSortableBindingList()
         {
@@ -14,9 +14,9 @@ namespace HFM.Forms
 
         #region WorkUnitHistoryRowSortComparer
 
-        private class WorkUnitHistoryRowSortComparer : SortComparer<WorkUnitRow>
+        private class WorkUnitHistoryRowSortComparer : SortComparer<WorkUnitEntityRow>
         {
-            protected override int CompareInternal(WorkUnitRow xVal, WorkUnitRow yVal)
+            protected override int CompareInternal(WorkUnitEntityRow xVal, WorkUnitEntityRow yVal)
             {
                 /* Get property values */
                 object xValue = GetPropertyValue(xVal, Property);
@@ -45,7 +45,7 @@ namespace HFM.Forms
                 return result;
             }
 
-            protected override int RecursiveCompareInternal(WorkUnitRow xVal, WorkUnitRow yVal, int index)
+            protected override int RecursiveCompareInternal(WorkUnitEntityRow xVal, WorkUnitEntityRow yVal, int index)
             {
                 if (index >= SortDescriptions.Count)
                 {

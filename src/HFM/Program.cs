@@ -12,7 +12,7 @@ namespace HFM
     internal static class Program
     {
         [STAThread]
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
@@ -34,7 +34,7 @@ namespace HFM
                     container.RegisterAssembly(Assembly.GetExecutingAssembly());
                     // wires up IServiceProvider and IServiceScopeFactory
                     _ = container.CreateServiceProvider(new EmptyServiceCollection());
-                    await bootStrapper.Execute().ConfigureAwait(true);
+                    bootStrapper.Execute();
                 }
                 catch (Exception ex)
                 {

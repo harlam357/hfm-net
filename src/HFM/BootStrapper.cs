@@ -3,12 +3,10 @@
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Services;
-using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 using HFM.Preferences;
-using HFM.Proteins;
 
 using LightInject;
 
@@ -30,7 +28,7 @@ namespace HFM
             Container = container;
         }
 
-        internal async Task Execute()
+        internal void Execute()
         {
             var arguments = Arguments.Parse(Args);
             var errorArguments = arguments.Where(x => x.Type == ArgumentType.Unknown || x.Type == ArgumentType.Error).ToList();
@@ -45,7 +43,7 @@ namespace HFM
                 Logger = InitializeLogging();
                 Preferences = InitializePreferences(arguments);
                 ClearCacheFolder();
-                MainForm = await InitializeMainForm(arguments).ConfigureAwait(true);
+                MainForm = InitializeMainForm(arguments);
                 RegisterForUnhandledExceptions();
 
                 Application.ApplicationExit += (s, e) => Preferences.Save();
@@ -185,7 +183,7 @@ namespace HFM
             }
         }
 
-        private async Task<MainForm> InitializeMainForm(ICollection<Argument> arguments)
+        private MainForm InitializeMainForm(ICollection<Argument> arguments)
         {
             MainPresenter mainPresenter;
             string openFile = arguments.FirstOrDefault(x => x.Type == ArgumentType.OpenFile)?.Data;
@@ -200,8 +198,7 @@ namespace HFM
             }
 
             var mainForm = (MainForm)mainPresenter.Form;
-            //var repository = (WorkUnitRepository)Container.GetInstance<IWorkUnitRepository>();
-            var repository = new WorkUnitRepository(null, CreateProteinService());
+            var repository = Container.GetInstance<WorkUnitRepository>();
             try
             {
                 string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
@@ -211,7 +208,7 @@ namespace HFM
                     UpgradeWorkUnitRepository(repository);
                 }
 
-                string databaseVersion = await GetDatabaseVersionFromWorkUnitContext().ConfigureAwait(true);
+                string databaseVersion = GetDatabaseVersionFromWorkUnitContext();
                 if (ShouldMigrateToWorkUnitContext(databaseVersion))
                 {
                     MigrateToWorkUnitContext(repository);
@@ -226,63 +223,6 @@ namespace HFM
             return mainForm;
         }
 
-        private static IProteinService CreateProteinService()
-        {
-            var collection = new List<Protein>();
-
-            var protein = new Protein();
-            protein.ProjectNumber = 6600;
-            protein.WorkUnitName = "WorkUnitName";
-            protein.Core = "GROGPU2";
-            protein.Credit = 450;
-            protein.KFactor = 0;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 5000;
-            protein.PreferredDays = 2;
-            protein.MaximumDays = 3;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 5797;
-            protein.WorkUnitName = "WorkUnitName2";
-            protein.Core = "GROGPU2";
-            protein.Credit = 675;
-            protein.KFactor = 2.3;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 7000;
-            protein.PreferredDays = 2;
-            protein.MaximumDays = 3;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 8011;
-            protein.WorkUnitName = "WorkUnitName3";
-            protein.Core = "GRO-A4";
-            protein.Credit = 106.6;
-            protein.KFactor = 0.75;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 9000;
-            protein.PreferredDays = 2.13;
-            protein.MaximumDays = 4.62;
-            collection.Add(protein);
-
-            protein = new Protein();
-            protein.ProjectNumber = 6903;
-            protein.WorkUnitName = "WorkUnitName4";
-            protein.Core = "GRO-A5";
-            protein.Credit = 22706;
-            protein.KFactor = 38.05;
-            protein.Frames = 100;
-            protein.NumberOfAtoms = 11000;
-            protein.PreferredDays = 5;
-            protein.MaximumDays = 12;
-            collection.Add(protein);
-
-            var dataContainer = new ProteinDataContainer();
-            dataContainer.Data = collection;
-            return new ProteinService(dataContainer, null, null);
-        }
-
         private static void UpgradeWorkUnitRepository(WorkUnitRepository repository)
         {
             using var dialog = new ProgressDialog((progress, _) => repository.Upgrade(progress), false);
@@ -295,13 +235,14 @@ namespace HFM
             }
         }
 
-        private async Task<string> GetDatabaseVersionFromWorkUnitContext()
+        private string GetDatabaseVersionFromWorkUnitContext()
         {
             using (Container.BeginScope())
             {
-                await using var context = Container.GetInstance<WorkUnitContext>();
-                await context.Database.EnsureCreatedAsync().ConfigureAwait(true);
-                return await context.GetDatabaseVersion().ConfigureAwait(true);
+                using var context = Container.GetInstance<WorkUnitContext>();
+                // TODO: Replace EnsureCreated() with EF Migration
+                context.Database.EnsureCreated();
+                return context.GetDatabaseVersion();
             }
         }
 
