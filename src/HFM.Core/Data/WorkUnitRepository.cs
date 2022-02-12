@@ -17,49 +17,6 @@ namespace HFM.Core.Data
         Version
     }
 
-    public class Page<T>
-    {
-        public Page()
-        {
-
-        }
-
-        public Page(PetaPoco.Page<T> page)
-        {
-            CurrentPage = page.CurrentPage;
-            TotalPages = page.TotalPages;
-            TotalItems = page.TotalItems;
-            ItemsPerPage = page.ItemsPerPage;
-            Items = page.Items;
-        }
-
-        public long CurrentPage { get; set; }
-
-        public long TotalPages { get; set; }
-
-        public long TotalItems { get; set; }
-
-        public long ItemsPerPage { get; set; }
-
-        public IList<T> Items { get; set; }
-    }
-
-    public interface IWorkUnitRepository
-    {
-        // TODO: Idea rename to Upsert and also capture frame data (i.e. benchmark data)
-        long Insert(WorkUnitModel workUnitModel);
-
-        int Delete(WorkUnitEntityRow row);
-
-        IList<WorkUnitEntityRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
-
-        Page<WorkUnitEntityRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
-
-        long CountCompleted(string clientName, DateTime? clientStartTime);
-
-        long CountFailed(string clientName, DateTime? clientStartTime);
-    }
-
     /// <summary>
     /// Represents a general interface to the work unit history database capable of selecting and executing via ad hoc sql statements.
     /// </summary>

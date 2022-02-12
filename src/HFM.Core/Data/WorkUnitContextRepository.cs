@@ -11,6 +11,49 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Core.Data;
 
+public class Page<T>
+{
+    public Page()
+    {
+
+    }
+
+    public Page(PetaPoco.Page<T> page)
+    {
+        CurrentPage = page.CurrentPage;
+        TotalPages = page.TotalPages;
+        TotalItems = page.TotalItems;
+        ItemsPerPage = page.ItemsPerPage;
+        Items = page.Items;
+    }
+
+    public long CurrentPage { get; set; }
+
+    public long TotalPages { get; set; }
+
+    public long TotalItems { get; set; }
+
+    public long ItemsPerPage { get; set; }
+
+    public IList<T> Items { get; set; }
+}
+
+public interface IWorkUnitRepository
+{
+    // TODO: rename to Upsert
+    long Insert(WorkUnitModel workUnitModel);
+
+    int Delete(WorkUnitEntityRow row);
+
+    IList<WorkUnitEntityRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
+
+    Page<WorkUnitEntityRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
+
+    long CountCompleted(string clientName, DateTime? clientStartTime);
+
+    long CountFailed(string clientName, DateTime? clientStartTime);
+}
+
 public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
