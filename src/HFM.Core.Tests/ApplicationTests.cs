@@ -16,7 +16,7 @@ namespace HFM.Core
         {
             var version = Application.VersionNumber;
             Assert.AreNotEqual(0, version.Major);
-            Assert.AreNotEqual(0, version.Minor);
+            Assert.AreNotEqual(-1, version.Minor);
             Assert.AreNotEqual(-1, version.Build);
             Assert.AreEqual(-1, version.Revision);
         }
