@@ -4,8 +4,6 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 
-using AutoMapper;
-
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
@@ -26,8 +24,6 @@ namespace HFM.Core.Data
 
         DataTable Select(SQLiteConnection connection, string sql, params object[] args);
 
-        int Execute(string sql, params object[] args);
-
         int Execute(SQLiteConnection connection, string sql, params object[] args);
     }
 
@@ -46,8 +42,6 @@ namespace HFM.Core.Data
 
         public IProteinService ProteinService { get; }
 
-        private readonly IMapper _mapper;
-
         private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> _SqlTableCommandDictionary =
             new Dictionary<WorkUnitRepositoryTable, SqlTableCommands>
             {
@@ -63,7 +57,6 @@ namespace HFM.Core.Data
         {
             Logger = logger ?? NullLogger.Instance;
             ProteinService = proteinService ?? NullProteinService.Instance;
-            _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
 
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
@@ -117,12 +110,7 @@ namespace HFM.Core.Data
             return RequiresUpgrade(Version.Parse(version), VersionString092);
         }
 
-        public void Upgrade()
-        {
-            Upgrade(null);
-        }
-
-        public void Upgrade(IProgress<ProgressInfo> progress)
+        public void Upgrade(IProgress<ProgressInfo> progress = null)
         {
             if (!Connected) return;
 
@@ -224,90 +212,9 @@ namespace HFM.Core.Data
 
         #endregion
 
-        #region Insert
-
-        public long Insert(WorkUnitModel workUnitModel)
-        {
-            if (!ValidateWorkUnit(workUnitModel.WorkUnit))
-            {
-                return -1;
-            }
-
-            // ensure the given work unit is not written more than once
-            if (WorkUnitExists(workUnitModel.WorkUnit))
-            {
-                return -1;
-            }
-
-            var entry = _mapper.Map<PetaPocoWorkUnitRow>(workUnitModel);
-            // cannot map these two properties from a WorkUnit instance
-            // they only live at the WorkUnitModel level
-            entry.FramesCompleted = workUnitModel.FramesComplete;
-            entry.FrameTimeValue = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
-            // copy protein values for insert
-            entry.WorkUnitName = workUnitModel.CurrentProtein.WorkUnitName;
-            entry.KFactor = workUnitModel.CurrentProtein.KFactor;
-            entry.Core = workUnitModel.CurrentProtein.Core;
-            entry.Frames = workUnitModel.CurrentProtein.Frames;
-            entry.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
-            entry.BaseCredit = workUnitModel.CurrentProtein.Credit;
-            entry.PreferredDays = workUnitModel.CurrentProtein.PreferredDays;
-            entry.MaximumDays = workUnitModel.CurrentProtein.MaximumDays;
-            using (var connection = CreateConnection())
-            {
-                connection.Open();
-                using (var database = new PetaPoco.Database(connection))
-                {
-                    return (long)database.Insert(entry);
-                }
-            }
-        }
-
-        private static bool ValidateWorkUnit(WorkUnit workUnit)
-        {
-            return workUnit.HasProject() &&
-                   !workUnit.Assigned.IsMinValue() &&
-                   !workUnit.Finished.IsMinValue();
-        }
-
-        private bool WorkUnitExists(WorkUnit workUnit)
-        {
-            var rows = Fetch(CreateWorkUnitQuery(workUnit), BonusCalculation.None);
-            return rows.Count != 0;
-        }
-
-        private static WorkUnitQuery CreateWorkUnitQuery(WorkUnit workUnit)
-        {
-            return new WorkUnitQuery($"Query for existing {workUnit.ToProjectString()}")
-                .AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, workUnit.ProjectID)
-                .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, workUnit.ProjectRun)
-                .AddParameter(WorkUnitRowColumn.ProjectClone, WorkUnitQueryOperator.Equal, workUnit.ProjectClone)
-                .AddParameter(WorkUnitRowColumn.ProjectGen, WorkUnitQueryOperator.Equal, workUnit.ProjectGen)
-                .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.Equal, workUnit.Assigned);
-        }
-
-        #endregion
-
-        #region Delete
-
-        public int Delete(WorkUnitRow row)
-        {
-            Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
-            using (var connection = CreateConnection())
-            {
-                connection.Open();
-                using (var database = new PetaPoco.Database(connection))
-                {
-                    return database.Delete(row);
-                }
-            }
-        }
-
-        #endregion
-
         #region Fetch
 
-        public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+        public IList<PetaPocoWorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -320,7 +227,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
+        private IList<PetaPocoWorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
@@ -332,17 +239,17 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    return database.Fetch<PetaPocoWorkUnitRow>(select).Cast<WorkUnitRow>().ToList();
+                    return database.Fetch<PetaPocoWorkUnitRow>(select);
                 }
             }
         }
 
-        public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+        public Page<PetaPocoWorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                return new Page<WorkUnitRow>(PageInternal(page, itemsPerPage, query, bonusCalculation));
+                return new Page<PetaPocoWorkUnitRow>(PageInternal(page, itemsPerPage, query, bonusCalculation));
             }
             finally
             {
@@ -350,7 +257,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+        private PetaPoco.Page<PetaPocoWorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
@@ -362,16 +269,7 @@ namespace HFM.Core.Data
                 connection.Open();
                 using (var database = new PetaPoco.Database(connection))
                 {
-                    var result = database.Page<PetaPocoWorkUnitRow>(page, itemsPerPage, select);
-                    return new PetaPoco.Page<WorkUnitRow>
-                    {
-                        Context = result.Context,
-                        CurrentPage = result.CurrentPage,
-                        Items = result.Items.Cast<WorkUnitRow>().ToList(),
-                        ItemsPerPage = result.ItemsPerPage,
-                        TotalItems = result.TotalItems,
-                        TotalPages = result.TotalPages
-                    };
+                    return database.Page<PetaPocoWorkUnitRow>(page, itemsPerPage, select);
                 }
             }
         }
@@ -420,15 +318,6 @@ namespace HFM.Core.Data
             }
         }
 
-        public int Execute(string sql, params object[] args)
-        {
-            using (var connection = CreateConnection())
-            {
-                connection.Open();
-                return Execute(connection, sql, args);
-            }
-        }
-
         public int Execute(SQLiteConnection connection, string sql, params object[] args)
         {
             var operatingConnection = connection;
@@ -450,46 +339,6 @@ namespace HFM.Core.Data
                 if (connection is null)
                 {
                     operatingConnection?.Dispose();
-                }
-            }
-        }
-
-        #endregion
-
-        #region Count
-
-        public long CountCompleted(string clientName, DateTime? clientStartTime)
-        {
-            return Count(clientName, true, clientStartTime);
-        }
-
-        public long CountFailed(string clientName, DateTime? clientStartTime)
-        {
-            return Count(clientName, false, clientStartTime);
-        }
-
-        private long Count(string clientName, bool finished, DateTime? clientStartTime)
-        {
-            var query = new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, clientName)
-                .AddParameter(WorkUnitRowColumn.Result, finished ? WorkUnitQueryOperator.Equal : WorkUnitQueryOperator.NotEqual, (int)WorkUnitResult.FinishedUnit);
-
-            if (clientStartTime.HasValue)
-            {
-                query.AddParameter(finished ? WorkUnitRowColumn.Finished : WorkUnitRowColumn.Assigned,
-                    WorkUnitQueryOperator.GreaterThan, clientStartTime.Value);
-            }
-
-            var countSql = PetaPoco.Sql.Builder.Select("COUNT(*)")
-               .From("WuHistory")
-               .Append(query);
-
-            using (var connection = CreateConnection())
-            {
-                connection.Open();
-                using (var database = new PetaPoco.Database(connection))
-                {
-                    return database.ExecuteScalar<long>(countSql);
                 }
             }
         }
