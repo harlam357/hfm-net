@@ -45,7 +45,7 @@ Function Update-AssemblyVersion
     Write-Host "---------------------------------------------------"
 
     Update-AssemblyVersionContent -Path 'ExeAssemblyVersion.cs' -AssemblyVersion $AssemblyVersion -AssemblyFileVersion $AssemblyFileVersion
-    Update-AssemblyVersionContent -Path 'AssemblyVersion.cs' -AssemblyVersion '1.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
+    Update-AssemblyVersionContent -Path 'AssemblyVersion.cs' -AssemblyVersion '10.0.0.0' -AssemblyFileVersion $AssemblyFileVersion
 }
 
 Function Build-Solution
@@ -287,6 +287,6 @@ Function Configure-Configuration
     Write-Host "---------------------------------------------------"
 }
 
-Configure-Version -Version '9.28'
+Configure-Version -Version '10.0'
 Configure-Artifacts -Path "$PSScriptRoot\Artifacts"
 Configure-Configuration -Configuration 'Release'
