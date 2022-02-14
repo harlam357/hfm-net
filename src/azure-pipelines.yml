@@ -13,7 +13,7 @@ stages:
   - job: Build
 
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'windows-2022'
 
     variables:
       solution: '**/HFM.All.sln'
