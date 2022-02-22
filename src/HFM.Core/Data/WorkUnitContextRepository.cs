@@ -386,8 +386,9 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var query = context.WorkUnits
             .AsNoTracking()
             .Include(x => x.Client)
-            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result == WorkUnitResultString.FinishedUnit);
+            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name);
 
+        query = WhereResultIsFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
         return query.Count();
@@ -402,12 +403,19 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var query = context.WorkUnits
             .AsNoTracking()
             .Include(x => x.Client)
-            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result != WorkUnitResultString.FinishedUnit);
+            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name);
 
+        query = WhereResultIsNotFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
         return query.Count();
     }
+
+    private static IQueryable<WorkUnitEntity> WhereResultIsFinishedUnit(IQueryable<WorkUnitEntity> query) =>
+        query.Where(x => x.Result == WorkUnitResultString.FinishedUnit);
+
+    private static IQueryable<WorkUnitEntity> WhereResultIsNotFinishedUnit(IQueryable<WorkUnitEntity> query) =>
+        query.Where(x => x.Result != null && x.Result != WorkUnitResultString.FinishedUnit);
 
     private static IQueryable<WorkUnitEntity> WhereClientSlot(IQueryable<WorkUnitEntity> query, int slotID)
     {
