@@ -31,11 +31,8 @@ namespace HFM.Core.Data
     {
         private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
 
-        public string FilePath { get; private set; }
+        private string FilePath { get; set; }
 
-        /// <summary>
-        /// Flag that notes if the Database is safe to call
-        /// </summary>
         public bool Connected { get; private set; }
 
         public ILogger Logger { get; }
@@ -43,15 +40,13 @@ namespace HFM.Core.Data
         public IProteinService ProteinService { get; }
 
         private static readonly Dictionary<WorkUnitRepositoryTable, SqlTableCommands> _SqlTableCommandDictionary =
-            new Dictionary<WorkUnitRepositoryTable, SqlTableCommands>
+            new()
             {
                 { WorkUnitRepositoryTable.WuHistory, new WuHistorySqlTableCommands() },
                 { WorkUnitRepositoryTable.Version, new VersionSqlTableCommands() }
             };
 
         public const string DefaultFileName = "WuHistory.db3";
-
-        #region Constructor
 
         public WorkUnitRepository(ILogger logger, IProteinService proteinService)
         {
@@ -61,10 +56,6 @@ namespace HFM.Core.Data
             SQLiteFunction.RegisterFunction(typeof(ToSlotType));
             SQLiteFunction.RegisterFunction(typeof(GetProduction));
         }
-
-        #endregion
-
-        #region Methods
 
         public void Initialize(string filePath)
         {
@@ -94,12 +85,7 @@ namespace HFM.Core.Data
             }
         }
 
-        public SQLiteConnection CreateConnection()
-        {
-            return new SQLiteConnection(ConnectionString);
-        }
-
-        #region Upgrade
+        private SQLiteConnection CreateConnection() => new(ConnectionString);
 
         public bool RequiresUpgrade()
         {
@@ -210,10 +196,6 @@ namespace HFM.Core.Data
             }
         }
 
-        #endregion
-
-        #region Fetch
-
         public IList<PetaPocoWorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var sw = Stopwatch.StartNew();
@@ -282,10 +264,6 @@ namespace HFM.Core.Data
             }
         }
 
-        #endregion
-
-        #region Select
-
         public DataTable Select(string sql, params object[] args)
         {
             using (var connection = CreateConnection())
@@ -351,10 +329,6 @@ namespace HFM.Core.Data
             }
         }
 
-        #endregion
-
-        #region IDisposable Members
-
         private bool _disposed;
 
         public void Dispose()
@@ -375,11 +349,7 @@ namespace HFM.Core.Data
             _disposed = true;
         }
 
-        #endregion
-
-        #region Table Helpers
-
-        internal bool TableExists(WorkUnitRepositoryTable databaseTable)
+        private bool TableExists(WorkUnitRepositoryTable databaseTable)
         {
             using (var connection = CreateConnection())
             {
@@ -396,7 +366,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal void CreateTable(WorkUnitRepositoryTable databaseTable)
+        private void CreateTable(WorkUnitRepositoryTable databaseTable)
         {
             using (var connection = CreateConnection())
             {
@@ -432,10 +402,6 @@ namespace HFM.Core.Data
 
             return VersionStringDefault;
         }
-
-        #endregion
-
-        #endregion
 
         #region Private Helper Classes
 
