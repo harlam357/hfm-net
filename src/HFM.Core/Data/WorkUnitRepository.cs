@@ -249,7 +249,15 @@ namespace HFM.Core.Data
             var sw = Stopwatch.StartNew();
             try
             {
-                return new Page<PetaPocoWorkUnitRow>(PageInternal(page, itemsPerPage, query, bonusCalculation));
+                var p = PageInternal(page, itemsPerPage, query, bonusCalculation);
+                return new Page<PetaPocoWorkUnitRow>
+                {
+                    CurrentPage = p.CurrentPage,
+                    TotalPages = p.TotalPages,
+                    TotalItems = p.TotalItems,
+                    ItemsPerPage = p.ItemsPerPage,
+                    Items = p.Items
+                };
             }
             finally
             {

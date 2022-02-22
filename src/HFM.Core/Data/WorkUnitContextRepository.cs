@@ -13,20 +13,6 @@ namespace HFM.Core.Data;
 
 public class Page<T>
 {
-    public Page()
-    {
-
-    }
-
-    public Page(PetaPoco.Page<T> page)
-    {
-        CurrentPage = page.CurrentPage;
-        TotalPages = page.TotalPages;
-        TotalItems = page.TotalItems;
-        ItemsPerPage = page.ItemsPerPage;
-        Items = page.Items;
-    }
-
     public long CurrentPage { get; set; }
 
     public long TotalPages { get; set; }
@@ -342,6 +328,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private static IQueryable<WorkUnitEntity> WorkUnitQuery(WorkUnitContext context, BonusCalculation bonusCalculation) =>
         context.WorkUnits
+            .AsNoTracking()
             .Include(x => x.Client)
             .Include(x => x.Protein)
             .Include(x => x.Frames)
@@ -397,6 +384,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
         var query = context.WorkUnits
+            .AsNoTracking()
             .Include(x => x.Client)
             .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result == WorkUnitResultString.FinishedUnit);
 
@@ -412,6 +400,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
         var query = context.WorkUnits
+            .AsNoTracking()
             .Include(x => x.Client)
             .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name && x.Result != WorkUnitResultString.FinishedUnit);
 
