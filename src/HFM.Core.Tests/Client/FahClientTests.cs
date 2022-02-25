@@ -128,7 +128,7 @@ namespace HFM.Core.Client
             Assert.IsTrue(benchmarkService.GetBenchmarkProjects(slotIdentifier).Contains(2669));
             Assert.AreEqual(TimeSpan.FromMinutes(5), benchmarkService.GetBenchmark(slotIdentifier, benchmarkIdentifier).AverageFrameTime);
 
-            mockWorkUnitRepository.Verify(x => x.Insert(It.IsAny<WorkUnitModel>()), Times.Once);
+            mockWorkUnitRepository.Verify(x => x.Update(It.IsAny<WorkUnitModel>()), Times.Once);
         }
 
         [Test]

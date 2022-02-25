@@ -76,7 +76,7 @@ namespace HFM.Core.Data
                 var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
                 workUnitModel.CurrentProtein = BuildProtein1();
 
-                _repository.Insert(workUnitModel);
+                _repository.Update(workUnitModel);
             });
 
             Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Count);
@@ -85,42 +85,42 @@ namespace HFM.Core.Data
         #region Insert
 
         [Test]
-        public void WorkUnitRepository_Insert_Test1()
+        public void WorkUnitRepository_Update_Test1()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Insert_Test1_CzechCulture()
+        public void WorkUnitRepository_Update_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Insert_Test2()
+        public void WorkUnitRepository_Update_Test2()
         {
             var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
-            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
+            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Insert_Test3()
+        public void WorkUnitRepository_Update_Test3()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            InsertTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
+            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Insert_Test4()
+        public void WorkUnitRepository_Update_Test4()
         {
             var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
-            InsertTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
+            UpdateTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private void InsertTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitEntityRow>> verifyAction)
+        private void UpdateTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitEntityRow>> verifyAction)
         {
             Initialize(_testScratchFile);
 
@@ -128,13 +128,13 @@ namespace HFM.Core.Data
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
 
-            _repository.Insert(workUnitModel);
+            _repository.Update(workUnitModel);
 
             var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<WorkUnitEntityRow>().ToList();
             verifyAction(rows);
 
             // test code to ensure this unit is NOT written again
-            _repository.Insert(workUnitModel);
+            _repository.Update(workUnitModel);
             // verify
             rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Cast<WorkUnitEntityRow>().ToList();
             Assert.AreEqual(1, rows.Count);

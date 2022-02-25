@@ -348,11 +348,11 @@ namespace HFM.Core.Client
             {
                 try
                 {
-                    if (WorkUnitRepository.Insert(workUnitModel) > 0)
+                    if (WorkUnitRepository.Update(workUnitModel) > 0)
                     {
                         if (Logger.IsDebugEnabled)
                         {
-                            string message = $"Inserted {workUnitModel.WorkUnit.ToProjectString()} into database.";
+                            string message = $"Updated {workUnitModel.WorkUnit.ToProjectString()} in database.";
                             Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.SlotModel.SlotIdentifier.Name, message));
                         }
                     }

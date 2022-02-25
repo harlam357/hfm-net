@@ -26,8 +26,7 @@ public class Page<T>
 
 public interface IWorkUnitRepository
 {
-    // TODO: rename to Upsert
-    long Insert(WorkUnitModel workUnitModel);
+    long Update(WorkUnitModel workUnitModel);
 
     int Delete(WorkUnitEntityRow row);
 
@@ -73,7 +72,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private readonly IMapper _mapper;
 
-    public long Insert(WorkUnitModel workUnitModel)
+    public long Update(WorkUnitModel workUnitModel)
     {
         if (!ValidateWorkUnit(workUnitModel.WorkUnit))
         {
