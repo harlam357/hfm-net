@@ -355,6 +355,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 Frames = x.Frames,
                 SlotName = WorkUnitContext.ToSlotName(x.Client.Name, x.ClientSlot),
                 SlotType = WorkUnitContext.ToSlotType(x.Protein.Core),
+                // ReSharper disable SpecifyACultureInStringConversionExplicitly
                 PPD = WorkUnitContext.CalculatePPD(
                     x.FrameTimeInSeconds.GetValueOrDefault(),
                     x.Protein.Frames,
@@ -375,6 +376,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                     x.Assigned.ToString(),
                     x.Finished.ToString(),
                     (int)bonusCalculation)
+                // ReSharper restore SpecifyACultureInStringConversionExplicitly
             });
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
