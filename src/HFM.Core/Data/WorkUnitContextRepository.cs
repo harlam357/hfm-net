@@ -379,15 +379,10 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     public long CountCompleted(string clientName, DateTime? clientStartTime)
     {
-        using var context = CreateWorkUnitContext();
-
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        var query = context.WorkUnits
-            .AsNoTracking()
-            .Include(x => x.Client)
-            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name);
-
+        using var context = CreateWorkUnitContext();
+        var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
         query = WhereResultIsFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
@@ -396,20 +391,21 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     public long CountFailed(string clientName, DateTime? clientStartTime)
     {
-        using var context = CreateWorkUnitContext();
-
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        var query = context.WorkUnits
-            .AsNoTracking()
-            .Include(x => x.Client)
-            .Where(x => x.Client.Name == slotIdentifier.ClientIdentifier.Name);
-
+        using var context = CreateWorkUnitContext();
+        var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
         query = WhereResultIsNotFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
         return query.Count();
     }
+
+    private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientName(WorkUnitContext context, string clientName) =>
+        context.WorkUnits
+            .AsNoTracking()
+            .Include(x => x.Client)
+            .Where(x => x.Client.Name == clientName);
 
     private static IQueryable<WorkUnitEntity> WhereResultIsFinishedUnit(IQueryable<WorkUnitEntity> query) =>
         query.Where(x => x.Result == WorkUnitResultString.FinishedUnit);
