@@ -20,7 +20,7 @@
     <PackageReference Include="HFM.Client" Version="0.6.0" />
     <PackageReference Include="HFM.Log" Version="0.3.2" />
     <PackageReference Include="HFM.Proteins" Version="0.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
     <PackageReference Include="PetaPoco.Core" Version="5.1.306" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
