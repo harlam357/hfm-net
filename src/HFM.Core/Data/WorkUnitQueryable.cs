@@ -1,6 +1,4 @@
-﻿using HFM.Core.WorkUnits;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 // ReSharper disable SpecifyACultureInStringConversionExplicitly
 // ReSharper disable StringCompareToIsCultureSpecific

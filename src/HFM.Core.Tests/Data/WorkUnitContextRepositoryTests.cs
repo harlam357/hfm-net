@@ -3,6 +3,9 @@ using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
 
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+
 using NUnit.Framework;
 
 namespace HFM.Core.Data;
@@ -15,8 +18,7 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingNewWorkUnit : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private long _updateResult;
@@ -24,9 +26,9 @@ public class WorkUnitContextRepositoryTests
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings
             {
@@ -89,14 +91,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenNewClientIsInserted()
         {
             Assert.AreEqual(1, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             var client = context.Clients.First();
             Assert.AreNotEqual(0, client.ID);
             Assert.AreEqual("GTX3090", client.Name);
@@ -109,7 +111,7 @@ public class WorkUnitContextRepositoryTests
         {
             Assert.AreEqual(1, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             var protein = context.Proteins.First();
             Assert.AreNotEqual(0, protein.ID);
             Assert.AreEqual(1, protein.ProjectID);
@@ -127,7 +129,7 @@ public class WorkUnitContextRepositoryTests
         {
             Assert.AreEqual(1, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             var workUnit = context.WorkUnits.First();
             Assert.AreNotEqual(0, workUnit.ID);
             Assert.AreEqual("harlam357", workUnit.DonorName);
@@ -152,7 +154,7 @@ public class WorkUnitContextRepositoryTests
         {
             Assert.AreEqual(1, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             long workUnitID = context.WorkUnits.First().ID;
             var frames = context.WorkUnitFrames.Where(x => x.WorkUnitID == workUnitID).ToDictionary(x => x.FrameID);
 
@@ -175,17 +177,16 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingExistingWorkUnit : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private IWorkUnitRepository _repository;
         private long _updateResult;
 
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings();
             var workUnit = new WorkUnit
@@ -208,7 +209,7 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _updateResult);
@@ -217,17 +218,16 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingInvalidWorkUnit : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private IWorkUnitRepository _repository;
         private long _updateResult;
 
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings();
             var workUnit = new WorkUnit();
@@ -238,7 +238,7 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _updateResult);
@@ -247,8 +247,7 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingWithExistingClientGuid : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private long _updateResult;
@@ -256,9 +255,9 @@ public class WorkUnitContextRepositoryTests
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings
             {
@@ -292,14 +291,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenExistingClientIsReferenced()
         {
             Assert.AreEqual(2, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(1, context.Clients.Count());
             Assert.AreEqual(2, context.WorkUnits.Count());
 
@@ -311,8 +310,7 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingWithExistingClientGuidAndNameOrConnectionChanged : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private long _updateResult;
@@ -320,9 +318,9 @@ public class WorkUnitContextRepositoryTests
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings
             {
@@ -359,14 +357,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenNewClientIsInserted()
         {
             Assert.AreEqual(2, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(2, context.Clients.Count());
             Assert.AreEqual(2, context.WorkUnits.Count());
 
@@ -381,8 +379,7 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingWithExistingClientNameAndConnection : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private long _updateResult;
@@ -390,9 +387,9 @@ public class WorkUnitContextRepositoryTests
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings
             {
@@ -427,14 +424,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenExistingClientIsReferencedAndUpdatedWithGuidValue()
         {
             Assert.AreEqual(2, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(1, context.Clients.Count());
             Assert.AreEqual(2, context.WorkUnits.Count());
 
@@ -448,17 +445,16 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenUpdatingExistingProtein : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private IWorkUnitRepository _repository;
         private long _updateResult;
 
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings();
             var workUnit = new WorkUnit
@@ -493,14 +489,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenExistingProteinIsReferenced()
         {
             Assert.AreEqual(2, _updateResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(1, context.Proteins.Count());
             Assert.AreEqual(2, context.WorkUnits.Count());
 
@@ -512,8 +508,7 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class GivenFinishedAndFailedWorkUnits : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private readonly Guid _clientGuid = Guid.NewGuid();
         private IWorkUnitRepository _repository;
         private readonly DateTime _utcNow = DateTime.UtcNow;
@@ -521,9 +516,9 @@ public class WorkUnitContextRepositoryTests
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings
             {
@@ -568,7 +563,7 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void WhenClientStartTimeIsNullThenRepositoryReturnsAllFinishedAndFailedCounts()
@@ -592,17 +587,16 @@ public class WorkUnitContextRepositoryTests
     [TestFixture]
     public class WhenDeletingExistingWorkUnit : WorkUnitContextRepositoryTests
     {
-        private ArtifactFolder _artifacts;
-        private string _connectionString;
+        private SqliteConnection _connection;
         private IWorkUnitRepository _repository;
         private int _deleteResult;
 
         [SetUp]
         public void BeforeEach()
         {
-            _artifacts = new ArtifactFolder();
-            _connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
-            _repository = new TestableWorkUnitContextRepository(_connectionString);
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
 
             var settings = new ClientSettings();
             var workUnit = new WorkUnit
@@ -646,14 +640,14 @@ public class WorkUnitContextRepositoryTests
         }
 
         [TearDown]
-        public void AfterEach() => _artifacts?.Dispose();
+        public void AfterEach() => _connection?.Dispose();
 
         [Test]
         public void ThenWorkUnitAndWorkUnitFramesAreDeleted()
         {
             Assert.AreEqual(1, _deleteResult);
 
-            using var context = new WorkUnitContext(_connectionString);
+            using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(1, context.Clients.Count());
             Assert.AreEqual(1, context.Proteins.Count());
             Assert.AreEqual(0, context.WorkUnits.Count());
@@ -662,7 +656,7 @@ public class WorkUnitContextRepositoryTests
     }
 
     [TestFixture]
-    public class GivenWorkUnitsInTheDatabase
+    public class GivenWorkUnitsInTheDatabase : WorkUnitContextRepositoryTests
     {
         private string _connectionString;
         private IWorkUnitRepository _repository;
@@ -774,7 +768,13 @@ public class WorkUnitContextRepositoryTests
 
 public class TestableWorkUnitContextRepository : WorkUnitContextRepository
 {
+    private readonly SqliteConnection _connection;
     private readonly string _connectionString;
+
+    public TestableWorkUnitContextRepository(SqliteConnection connection)
+    {
+        _connection = connection;
+    }
 
     public TestableWorkUnitContextRepository(string connectionString)
     {
@@ -785,7 +785,18 @@ public class TestableWorkUnitContextRepository : WorkUnitContextRepository
 
     protected override WorkUnitContext CreateWorkUnitContext()
     {
-        var context = new WorkUnitContext(_connectionString, Console.WriteLine);
+        var context = new WorkUnitContext(builder =>
+        {
+            if (_connection is null)
+            {
+                builder.UseConnectionString(_connectionString);
+            }
+            else
+            {
+                builder.UseConnection(_connection);
+            }
+            builder.LogTo(Console.WriteLine, LogLevel.Information);
+        });
         lock (_CreateLock)
         {
             context.Database.EnsureCreated();

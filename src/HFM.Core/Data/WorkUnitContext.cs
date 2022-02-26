@@ -1,8 +1,45 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Data;
+
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace HFM.Core.Data;
+
+public class WorkUnitContextOptions
+{
+    public SqliteConnection Connection { get; set; }
+
+    public string ConnectionString { get; set; }
+
+    public Action<string> LogTo { get; set; }
+
+    public LogLevel LogLevel { get; set; } = LogLevel.Debug;
+}
+
+public class WorkUnitContextOptionsBuilder
+{
+    public WorkUnitContextOptions Options { get; } = new();
+
+    public WorkUnitContextOptionsBuilder UseConnection(SqliteConnection connection)
+    {
+        Options.Connection = connection;
+        return this;
+    }
+
+    public WorkUnitContextOptionsBuilder UseConnectionString(string connectionString)
+    {
+        Options.ConnectionString = connectionString;
+        return this;
+    }
+
+    public WorkUnitContextOptionsBuilder LogTo(Action<string> action, LogLevel minimumLevel = LogLevel.Debug)
+    {
+        Options.LogTo = action;
+        Options.LogLevel = minimumLevel;
+        return this;
+    }
+}
 
 public partial class WorkUnitContext : DbContext
 {
@@ -12,38 +49,67 @@ public partial class WorkUnitContext : DbContext
     public DbSet<WorkUnitFrameEntity> WorkUnitFrames { get; set; }
     public DbSet<VersionEntity> Versions { get; set; }
 
-    private readonly string _connectionString;
-    private readonly Action<string> _logTo;
+    private readonly WorkUnitContextOptions _options;
+    private SqliteConnection _connection;
+    private bool _contextOwnsConnection;
 
-    public WorkUnitContext(string connectionString) : this(connectionString, null)
+    public WorkUnitContext(SqliteConnection connection)
     {
-
+        _options = new WorkUnitContextOptions { Connection = connection };
     }
 
-    public WorkUnitContext(string connectionString, Action<string> logTo)
+    public WorkUnitContext(string connectionString)
     {
-        _connectionString = connectionString;
-        _logTo = logTo;
+        _options = new WorkUnitContextOptions { ConnectionString = connectionString };
+    }
+
+    public WorkUnitContext(Action<WorkUnitContextOptionsBuilder> configureOptions)
+    {
+        ArgumentNullException.ThrowIfNull(configureOptions);
+
+        var builder = new WorkUnitContextOptionsBuilder();
+        configureOptions(builder);
+        _options = builder.Options;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-        connection.CreateFunction(nameof(ToSlotName), (Func<string, int?, string>)ToSlotName);
-        connection.CreateFunction(nameof(ToSlotType), (Func<string, string>)ToSlotType);
-        connection.CreateFunction(nameof(CalculatePPD),
+        _connection = _options.Connection;
+        if (_connection is null)
+        {
+            _connection = new SqliteConnection(_options.ConnectionString);
+            _connection.Open();
+            _contextOwnsConnection = true;
+        }
+        else if (_connection.State == ConnectionState.Closed)
+        {
+            _connection.Open();
+            _contextOwnsConnection = true;
+        }
+
+        _connection.CreateFunction(nameof(ToSlotName), (Func<string, int?, string>)ToSlotName);
+        _connection.CreateFunction(nameof(ToSlotType), (Func<string, string>)ToSlotType);
+        _connection.CreateFunction(nameof(CalculatePPD),
             (Func<int, int, double, double, double, double, string, string, int, double>)CalculatePPD);
-        connection.CreateFunction(nameof(CalculateCredit),
+        _connection.CreateFunction(nameof(CalculateCredit),
             (Func<int, int, double, double, double, double, string, string, int, double>)CalculateCredit);
 
-        optionsBuilder.UseSqlite(connection);
-        if (_logTo is not null)
+        optionsBuilder.UseSqlite(_connection);
+        if (_options.LogTo is not null)
         {
-            optionsBuilder.LogTo(_logTo, LogLevel.Information);
+            optionsBuilder.LogTo(_options.LogTo, _options.LogLevel);
         }
 
         base.OnConfiguring(optionsBuilder);
+    }
+
+    public override void Dispose()
+    {
+        if (_contextOwnsConnection)
+        {
+            _connection.Dispose();
+        }
+        base.Dispose();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
