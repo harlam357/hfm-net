@@ -71,7 +71,7 @@ stages:
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
-      timeoutInMinutes: 5
+      timeoutInMinutes: 10
       inputs:
         command: 'test'
         projects: '$(testProjects)'
