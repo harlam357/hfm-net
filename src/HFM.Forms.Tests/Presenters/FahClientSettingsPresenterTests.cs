@@ -1,15 +1,14 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows.Forms;
 
-using NUnit.Framework;
-
 using HFM.Client;
+using HFM.Core.Client.Mocks;
 using HFM.Forms.Mocks;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
+
+using NUnit.Framework;
 
 namespace HFM.Forms.Presenters
 {
@@ -180,39 +179,6 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        private class MockFahClientConnection : FahClientConnection
-        {
-            private bool _connected;
-
-            public override bool Connected => _connected;
-
-            public MockFahClientConnection()
-                : base("foo", 2000)
-            {
-
-            }
-
-            public override void Open()
-            {
-                _connected = true;
-            }
-
-            public override void Close()
-            {
-                _connected = false;
-            }
-
-            protected override FahClientCommand OnCreateCommand()
-            {
-                return new MockFahClientCommand(this);
-            }
-
-            protected override FahClientReader OnCreateReader()
-            {
-                return new MockFahClientReader(this);
-            }
-        }
-
         private class MockFahClientConnectionWithMessages : MockFahClientConnection
         {
             public FahClientCommand LastCommand { get; private set; }
@@ -225,41 +191,6 @@ namespace HFM.Forms.Presenters
             protected override FahClientReader OnCreateReader()
             {
                 return new MockFahClientReaderWithMessages(this);
-            }
-        }
-
-        private class MockFahClientCommand : FahClientCommand
-        {
-            public MockFahClientCommand(FahClientConnection connection) : base(connection)
-            {
-
-            }
-
-            public override int Execute()
-            {
-                return 0;
-            }
-
-            public override Task<int> ExecuteAsync()
-            {
-                return Task.FromResult(0);
-            }
-        }
-
-        private class MockFahClientReader : FahClientReader
-        {
-            public MockFahClientReader(FahClientConnection connection) : base(connection)
-            {
-            }
-
-            public override bool Read()
-            {
-                return false;
-            }
-
-            public override Task<bool> ReadAsync()
-            {
-                return Task.FromResult(false);
             }
         }
 

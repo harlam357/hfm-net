@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 using HFM.Client;
+using HFM.Core.Client.Mocks;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -300,46 +296,6 @@ namespace HFM.Core.Client
             var connection = new MockFahClientConnection();
             mockClient.SetupGet(x => x.Connection).Returns(connection);
             return mockClient.Object;
-        }
-
-        private class MockFahClientConnection : FahClientConnection
-        {
-            public MockFahClientConnection()
-                : base("foo", 2000)
-            {
-
-            }
-
-            public IList<MockFahClientCommand> Commands { get; } = new List<MockFahClientCommand>();
-
-            protected override FahClientCommand OnCreateCommand()
-            {
-                var command = new MockFahClientCommand(this);
-                Commands.Add(command);
-                return command;
-            }
-        }
-
-        private class MockFahClientCommand : FahClientCommand
-        {
-            public MockFahClientCommand(FahClientConnection connection) : base(connection)
-            {
-
-            }
-
-            public bool Executed { get; private set; }
-
-            public override int Execute()
-            {
-                Executed = true;
-                return 0;
-            }
-
-            public override Task<int> ExecuteAsync()
-            {
-                Executed = true;
-                return Task.FromResult(0);
-            }
         }
     }
 }
