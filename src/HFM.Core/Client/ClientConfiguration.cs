@@ -190,7 +190,7 @@ namespace HFM.Core.Client
                     client = _clientDictionary[key];
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
-                    client.Cancel();
+                    client.Close();
                 }
                 result = _clientDictionary.Remove(key);
                 if (client is IDisposable disposable)
@@ -238,7 +238,7 @@ namespace HFM.Core.Client
                 {
                     client.SlotsChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
-                    client.Cancel();
+                    client.Close();
                 }
                 _clientDictionary.Clear();
                 foreach (var client in clients)

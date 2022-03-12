@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 using HFM.Client;
 using HFM.Core.Data;
@@ -129,14 +124,26 @@ namespace HFM.Core.Client
 
         private void RefreshClientInfo() => ClientVersion = Messages.Info?.Client.Version;
 
-        protected override void OnCancel()
+        protected override void OnClose()
         {
-            base.OnCancel();
+            base.OnClose();
 
             if (Connected)
             {
-                Connection.Close();
+                try
+                {
+                    Connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
+                }
             }
+
+            // reset messages
+            Messages.Clear();
+            // refresh (clear) the slots
+            RefreshSlots();
         }
 
         public override bool Connected => Connection is { Connected: true };
@@ -146,7 +153,7 @@ namespace HFM.Core.Client
             await CreateAndOpenConnection().ConfigureAwait(false);
 
             _ = Task.Run(async () => await ReadMessagesFromConnection().ConfigureAwait(false))
-                .ContinueWith(async _ => await CloseConnection().ConfigureAwait(false),
+                .ContinueWith(_ => Close(),
                     CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
         }
 
@@ -158,7 +165,10 @@ namespace HFM.Core.Client
             {
                 await Connection.CreateCommand("auth " + Settings.Password).ExecuteAsync().ConfigureAwait(false);
             }
-            await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
+            if (Connected)
+            {
+                await Messages.SetupClientToSendMessageUpdatesAsync().ConfigureAwait(false);
+            }
         }
 
         private async Task ReadMessagesFromConnection()
@@ -181,24 +191,11 @@ namespace HFM.Core.Client
             }
         }
 
-        private async Task CloseConnection()
-        {
-            try
-            {
-                Connection.Close();
-                await OnConnectedChanged(Connection.Connected).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(String.Format(Logging.Logger.NameFormat, Settings.Name, ex.Message), ex);
-            }
-        }
-
         protected override Task OnRetrieve()
         {
             if (Messages.IsHeartbeatOverdue())
             {
-                Cancel();
+                Close();
                 return Task.CompletedTask;
             }
 
@@ -373,7 +370,7 @@ namespace HFM.Core.Client
 
         public void Fold(int? slotId)
         {
-            if (!Connection.Connected)
+            if (!Connected)
             {
                 return;
             }
@@ -383,7 +380,7 @@ namespace HFM.Core.Client
 
         public void Pause(int? slotId)
         {
-            if (!Connection.Connected)
+            if (!Connected)
             {
                 return;
             }
@@ -393,7 +390,7 @@ namespace HFM.Core.Client
 
         public void Finish(int? slotId)
         {
-            if (!Connection.Connected)
+            if (!Connected)
             {
                 return;
             }

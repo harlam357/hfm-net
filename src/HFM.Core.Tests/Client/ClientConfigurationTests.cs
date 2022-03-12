@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using HFM.Core.Client.Mocks;
+﻿using HFM.Core.Client.Mocks;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -242,7 +236,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientConfiguration_Remove_CallsClientCancel()
+        public void ClientConfiguration_Remove_CallsClientClose()
         {
             // Arrange
             var mockClient = new Mock<IFahClient>();
@@ -251,7 +245,7 @@ namespace HFM.Core.Client
             // Act
             configuration.Remove("test");
             // Assert
-            mockClient.Verify(x => x.Cancel());
+            mockClient.Verify(x => x.Close());
         }
 
         [Test]
@@ -314,7 +308,7 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientConfiguration_Clear_CallsClientCancel()
+        public void ClientConfiguration_Clear_CallsClientClose()
         {
             // Arrange
             var mockClient = new Mock<IFahClient>();
@@ -323,7 +317,7 @@ namespace HFM.Core.Client
             // Act
             configuration.Clear();
             // Assert
-            mockClient.Verify(x => x.Cancel());
+            mockClient.Verify(x => x.Close());
         }
 
         [Test]

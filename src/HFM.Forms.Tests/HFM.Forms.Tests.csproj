@@ -33,8 +33,4 @@
     <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Client\Mocks\" />
-  </ItemGroup>
-
 </Project>

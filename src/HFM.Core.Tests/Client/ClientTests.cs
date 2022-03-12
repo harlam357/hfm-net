@@ -131,7 +131,7 @@ namespace HFM.Core.Client
             // Arrange
             using (var client = new MockClient())
             {
-                client.Cancel();
+                client.Close();
                 Assert.IsTrue(client.IsCancellationRequested);
                 // Act
                 await client.Retrieve();
@@ -141,10 +141,10 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task Client_Retrieve_CancelIsCalledDuringRetrieve()
+        public async Task Client_Retrieve_CloseIsCalledDuringRetrieve()
         {
             // Arrange
-            using (var client = new TestClientCancelsOnRetrieve())
+            using (var client = new TestClientClosesOnRetrieve())
             {
                 Assert.IsFalse(client.IsCancellationRequested);
                 // Act
@@ -351,16 +351,16 @@ namespace HFM.Core.Client
             protected override Task OnRetrieve() => throw new Exception(nameof(OnRetrieve));
         }
 
-        private class TestClientCancelsOnRetrieve : MockClient
+        private class TestClientClosesOnRetrieve : MockClient
         {
-            public TestClientCancelsOnRetrieve()
+            public TestClientClosesOnRetrieve()
             {
                 Connected = true;
             }
 
             protected override Task OnRetrieve()
             {
-                Cancel();
+                Close();
                 return Task.CompletedTask;
             }
         }

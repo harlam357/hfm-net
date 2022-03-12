@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
@@ -43,10 +39,7 @@ namespace HFM.Core.Client
         /// </summary>
         IReadOnlyCollection<SlotModel> Slots { get; }
 
-        /// <summary>
-        /// Cancels the retrieval process.
-        /// </summary>
-        void Cancel();
+        void Close();
 
         /// <summary>
         /// Gets a value indicating whether the client is connected.
@@ -132,9 +125,9 @@ namespace HFM.Core.Client
 
         public bool IsCancellationRequested { get; private set; }
 
-        public void Cancel() => OnCancel();
+        public void Close() => OnClose();
 
-        protected virtual void OnCancel() => IsCancellationRequested = true;
+        protected virtual void OnClose() => IsCancellationRequested = true;
 
         public virtual bool Connected { get; protected set; }
 

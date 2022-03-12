@@ -29,4 +29,10 @@ public class MockClient : Client
         RetrieveCount++;
         return Task.CompletedTask;
     }
+
+    protected override void OnClose()
+    {
+        base.OnClose();
+        Connected = false;
+    }
 }
