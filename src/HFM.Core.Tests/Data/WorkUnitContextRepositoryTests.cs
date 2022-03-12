@@ -840,7 +840,9 @@ public class TestableWorkUnitContextRepository : WorkUnitContextRepository
             {
                 builder.UseConnection(_connection);
             }
+#if DEBUG
             builder.LogTo(Console.WriteLine, LogLevel.Information);
+#endif
         });
         lock (_CreateLock)
         {
