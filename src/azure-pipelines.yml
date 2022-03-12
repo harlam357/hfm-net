@@ -71,11 +71,18 @@ stages:
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
-      timeoutInMinutes: 10
+      #timeoutInMinutes: 10
       inputs:
         command: 'test'
         projects: '$(testProjects)'
-        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage" --blame'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage" --blame-hang-timeout 10min'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Test Blame'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
 
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish Code Coverage'
