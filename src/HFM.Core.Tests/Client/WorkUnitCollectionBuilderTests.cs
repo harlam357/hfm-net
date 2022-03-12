@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-using HFM.Client.ObjectModel;
+﻿using HFM.Client.ObjectModel;
+using HFM.Core.Client.Mocks;
 using HFM.Core.WorkUnits;
 
 using NUnit.Framework;
-
-using static HFM.Core.Client.Mocks.FahClientFactoryForTests;
 
 namespace HFM.Core.Client
 {
@@ -31,7 +26,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_BuildForSlot_DoesNotPopulateFoldingIDAndTeamWhenOptionsIsNull()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var fahClient = MockFahClient.Create("Client_v7_10");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, null, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -45,7 +41,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var fahClient = MockFahClient.Create("Client_v7_10");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
@@ -88,7 +85,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_0_ClientDataOnly()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var fahClient = MockFahClient.Create("Client_v7_10");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
             // clear the log data so this test operates only on data provided by FahClient
             fahClient.Messages.Log.Clear();
 
@@ -130,7 +128,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_1()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var fahClient = MockFahClient.Create("Client_v7_10");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
@@ -173,7 +172,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_Client_v7_10_SlotID_1_CompletesPreviousUnit()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_10", @"..\..\..\..\TestFiles\Client_v7_10");
+            var fahClient = MockFahClient.Create("Client_v7_10");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act
@@ -216,7 +216,8 @@ namespace HFM.Core.Client
         public async Task WorkUnitCollectionBuilder_Client_v7_11_SlotID_0()
         {
             // Arrange
-            var fahClient = await CreateClientWithMessagesLoadedFrom("Client_v7_11", @"..\..\..\..\TestFiles\Client_v7_11");
+            var fahClient = MockFahClient.Create("Client_v7_11");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_11");
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
 
             // Act

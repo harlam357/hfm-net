@@ -77,21 +77,6 @@ namespace HFM.Core.Client
             }
         }
 
-        protected virtual async Task OnConnectedChanged(bool connected)
-        {
-            if (connected)
-            {
-                await Messages.SetupClientToSendMessageUpdatesAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                // reset messages
-                Messages.Clear();
-                // refresh (clear) the slots
-                RefreshSlots();
-            }
-        }
-
         protected override void OnRefreshSlots(ICollection<SlotModel> slots)
         {
             var slotCollection = Messages?.SlotCollection;
@@ -308,7 +293,7 @@ namespace HFM.Core.Client
             }
         }
 
-        internal void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels, WorkUnitModel previousWorkUnitModel)
+        private void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels, WorkUnitModel previousWorkUnitModel)
         {
             foreach (var m in workUnitModels)
             {
@@ -317,10 +302,7 @@ namespace HFM.Core.Client
                 {
                     UpdateBenchmarkFrameTimes(previousWorkUnitModel, m);
                 }
-                if (m.WorkUnit.UnitResult != WorkUnitResult.Unknown)
-                {
-                    InsertCompletedWorkUnitIntoRepository(m);
-                }
+                UpdateWorkUnitRepository(m);
             }
         }
 
@@ -339,7 +321,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private void InsertCompletedWorkUnitIntoRepository(WorkUnitModel workUnitModel)
+        private void UpdateWorkUnitRepository(WorkUnitModel workUnitModel)
         {
             if (WorkUnitRepository is not null)
             {
