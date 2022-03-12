@@ -75,14 +75,15 @@ stages:
       inputs:
         command: 'test'
         projects: '$(testProjects)'
-        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage" --blame-hang-timeout 10min'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage" --blame-hang-timeout 1min'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Test Blame'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
+        PathtoPublish: '.\src\**\TestResults\**\Sequence_*.xml'
+        ArtifactName: 'test-blame'
         publishLocation: 'Container'
+      condition: always()
 
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish Code Coverage'
