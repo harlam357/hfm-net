@@ -80,7 +80,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Test Blame'
       inputs:
-        PathtoPublish: '.\src\**\TestResults\**\Sequence_*.xml'
+        PathtoPublish: '.\src\HFM.Core.Tests\TestResults'
         ArtifactName: 'test-blame'
         publishLocation: 'Container'
       condition: always()
