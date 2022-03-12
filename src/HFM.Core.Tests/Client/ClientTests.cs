@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using HFM.Core.Client.Mocks;
+using HFM.Core.Logging;
 
 using Moq;
 
@@ -332,14 +333,19 @@ namespace HFM.Core.Client
 
         private class TestClientConnectThrows : MockClient
         {
+            public TestClientConnectThrows() : base(Mock.Of<ILogger>())
+            {
+
+            }
+
             protected override Task OnConnect() => throw new Exception(nameof(OnConnect));
         }
 
         private class TestClientRetrieveThrows : MockClient
         {
-            public TestClientRetrieveThrows() : base(true)
+            public TestClientRetrieveThrows() : base(Mock.Of<ILogger>())
             {
-
+                Connected = true;
             }
 
             protected override Task OnRetrieve() => throw new Exception(nameof(OnRetrieve));
@@ -347,9 +353,9 @@ namespace HFM.Core.Client
 
         private class TestClientCancelsOnRetrieve : MockClient
         {
-            public TestClientCancelsOnRetrieve() : base(true)
+            public TestClientCancelsOnRetrieve()
             {
-
+                Connected = true;
             }
 
             protected override Task OnRetrieve()
@@ -361,9 +367,9 @@ namespace HFM.Core.Client
 
         private class TestClientRetrieveOnMultipleThreads : MockClient
         {
-            public TestClientRetrieveOnMultipleThreads() : base(true)
+            public TestClientRetrieveOnMultipleThreads()
             {
-
+                Connected = true;
             }
 
             private int _retrieveInProgressCount;
@@ -389,9 +395,9 @@ namespace HFM.Core.Client
 
         private class TestClientRefreshesSlots : MockClient
         {
-            public TestClientRefreshesSlots() : base(true)
+            public TestClientRefreshesSlots()
             {
-
+                Connected = true;
             }
 
             private static readonly Random _Random = new();

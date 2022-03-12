@@ -412,9 +412,9 @@ namespace HFM.Core.Client
 
         private class MockClientRefreshesSlots : MockClient
         {
-            public MockClientRefreshesSlots() : base(true)
+            public MockClientRefreshesSlots()
             {
-
+                Connected = true;
             }
 
             private static readonly Random _Random = new();

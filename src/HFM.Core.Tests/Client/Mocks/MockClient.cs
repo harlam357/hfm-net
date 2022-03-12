@@ -1,35 +1,32 @@
-﻿using System.Threading.Tasks;
+﻿using HFM.Core.Logging;
 
-using HFM.Core.Logging;
+namespace HFM.Core.Client.Mocks;
 
-using Moq;
-
-namespace HFM.Core.Client.Mocks
+public class MockClient : Client
 {
-    public class MockClient : Client
+    public MockClient() : base(null, null, null)
     {
-        public MockClient() : base(Mock.Of<ILogger>(), null, null)
-        {
 
-        }
+    }
 
-        protected MockClient(bool connected) : this()
-        {
-            Connected = connected;
-        }
+    public MockClient(ILogger logger) : base(logger, null, null)
+    {
 
-        protected override Task OnConnect()
-        {
-            Connected = true;
-            return Task.CompletedTask;
-        }
+    }
 
-        public int RetrieveCount { get; private set; }
+    public sealed override bool Connected { get; protected set; }
 
-        protected override Task OnRetrieve()
-        {
-            RetrieveCount++;
-            return Task.CompletedTask;
-        }
+    protected override Task OnConnect()
+    {
+        Connected = true;
+        return Task.CompletedTask;
+    }
+
+    public int RetrieveCount { get; private set; }
+
+    protected override Task OnRetrieve()
+    {
+        RetrieveCount++;
+        return Task.CompletedTask;
     }
 }
