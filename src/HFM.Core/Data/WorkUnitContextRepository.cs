@@ -79,38 +79,30 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             return -1;
         }
 
-        if (WorkUnitExists(workUnitModel.WorkUnit))
-        {
-            return -1;
-        }
-
         using var context = CreateWorkUnitContext();
 
+        var workUnit = GetExistingWorkUnit(context, workUnitModel.WorkUnit);
         var client = GetOrInsertClientEntity(context, workUnitModel);
         var protein = GetOrInsertProteinEntity(context, workUnitModel);
-        var workUnit = InsertWorkUnitEntity(context, workUnitModel, client.ID, protein.ID);
-        InsertWorkUnitFrameEntities(context, workUnitModel, workUnit.ID);
+        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID);
+        InsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
 
         return workUnit.ID;
     }
 
     private static bool ValidateWorkUnit(WorkUnit workUnit) =>
         workUnit.HasProject() &&
-        !workUnit.Assigned.IsMinValue() &&
-        !workUnit.Finished.IsMinValue();
+        !workUnit.Assigned.IsMinValue();
 
-    private bool WorkUnitExists(WorkUnit workUnit)
-    {
-        using var context = CreateWorkUnitContext();
-
-        return context.WorkUnits
+    private static WorkUnitEntity GetExistingWorkUnit(WorkUnitContext context, WorkUnit workUnit) =>
+        context.WorkUnits
             .Include(x => x.Protein)
-            .Any(x => x.Protein.ProjectID == workUnit.ProjectID &&
-                      x.ProjectRun == workUnit.ProjectRun &&
-                      x.ProjectClone == workUnit.ProjectClone &&
-                      x.ProjectGen == workUnit.ProjectGen &&
-                      x.Assigned == workUnit.Assigned.Normalize());
-    }
+            .Include(x => x.Frames)
+            .FirstOrDefault(x => x.Protein.ProjectID == workUnit.ProjectID &&
+                                 x.ProjectRun == workUnit.ProjectRun &&
+                                 x.ProjectClone == workUnit.ProjectClone &&
+                                 x.ProjectGen == workUnit.ProjectGen &&
+                                 x.Assigned == workUnit.Assigned.Normalize());
 
     private static ClientEntity GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
@@ -193,15 +185,21 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return protein;
     }
 
-    private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel, long clientID, long proteinID)
+    private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit, long clientID, long proteinID)
     {
-        var workUnit = new WorkUnitEntity();
+        bool insert = workUnit is null;
+
+        workUnit ??= new WorkUnitEntity();
         workUnit.DonorName = workUnitModel.WorkUnit.FoldingID;
         workUnit.DonorTeam = workUnitModel.WorkUnit.Team;
         workUnit.CoreVersion = workUnitModel.WorkUnit.CoreVersion?.ToString();
-        workUnit.Result = WorkUnitResultString.FromWorkUnitResult(workUnitModel.WorkUnit.UnitResult);
+        workUnit.Result = workUnitModel.WorkUnit.UnitResult == WorkUnitResult.Unknown
+            ? null
+            : WorkUnitResultString.FromWorkUnitResult(workUnitModel.WorkUnit.UnitResult);
         workUnit.Assigned = workUnitModel.WorkUnit.Assigned.Normalize();
-        workUnit.Finished = workUnitModel.WorkUnit.Finished.Normalize();
+        workUnit.Finished = workUnitModel.WorkUnit.Finished.IsMinValue()
+            ? null
+            : workUnitModel.WorkUnit.Finished.Normalize();
         workUnit.ProjectRun = workUnitModel.WorkUnit.ProjectRun;
         workUnit.ProjectClone = workUnitModel.WorkUnit.ProjectClone;
         workUnit.ProjectGen = workUnitModel.WorkUnit.ProjectGen;
@@ -213,13 +211,16 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             ? null
             : workUnitModel.SlotModel.SlotID;
 
-        context.WorkUnits.Add(workUnit);
+        if (insert)
+        {
+            context.WorkUnits.Add(workUnit);
+        }
         context.SaveChanges();
 
         return workUnit;
     }
 
-    private static void InsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, long workUnitID)
+    private static void InsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit)
     {
         if (workUnitModel.WorkUnit.Frames is null)
         {
@@ -228,14 +229,19 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
         foreach (var f in workUnitModel.WorkUnit.Frames.Values)
         {
-            var frame = new WorkUnitFrameEntity();
-            frame.WorkUnitID = workUnitID;
+            var frame = workUnit.Frames?.FirstOrDefault(x => x.FrameID == f.ID);
+            bool insert = frame is null;
+            frame ??= new WorkUnitFrameEntity();
+            frame.WorkUnitID = workUnit.ID;
             frame.FrameID = f.ID;
             frame.RawFramesComplete = f.RawFramesComplete;
             frame.RawFramesTotal = f.RawFramesTotal;
             frame.TimeStamp = f.TimeStamp;
             frame.Duration = f.Duration;
-            context.WorkUnitFrames.Add(frame);
+            if (insert)
+            {
+                context.WorkUnitFrames.Add(frame);
+            }
         }
 
         context.SaveChanges();

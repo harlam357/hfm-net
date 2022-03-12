@@ -175,11 +175,12 @@ public class WorkUnitContextRepositoryTests
     }
 
     [TestFixture]
-    public class WhenUpdatingExistingWorkUnit : WorkUnitContextRepositoryTests
+    public class WhenUpdatingExistingIncompleteWorkUnit : WorkUnitContextRepositoryTests
     {
         private SqliteConnection _connection;
         private IWorkUnitRepository _repository;
-        private long _updateResult;
+        private long _firstUpdateResult;
+        private long _secondUpdateResult;
 
         [SetUp]
         public void BeforeEach()
@@ -196,7 +197,10 @@ public class WorkUnitContextRepositoryTests
                 ProjectClone = 3,
                 ProjectGen = 4,
                 Assigned = _assigned,
-                Finished = _assigned.AddHours(6)
+                Frames = new Dictionary<int, LogLineFrameData>
+                {
+                    { 1, CreateLogLineFrameData(1) }
+                }
             };
             var protein = new Protein
             {
@@ -204,15 +208,56 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _repository.Update(workUnitModel);
-            _updateResult = _repository.Update(workUnitModel);
+            _firstUpdateResult = _repository.Update(workUnitModel);
+
+            workUnit.Frames[2] = CreateLogLineFrameData(2);
+            workUnit.Frames[3] = CreateLogLineFrameData(3);
+            workUnit.Frames[4] = CreateLogLineFrameData(4);
+
+            workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+            _secondUpdateResult = _repository.Update(workUnitModel);
         }
+
+        private static LogLineFrameData CreateLogLineFrameData(int id) =>
+            new()
+            {
+                ID = id,
+                RawFramesComplete = 10_000 * id,
+                RawFramesTotal = 1_000_000,
+                TimeStamp = TimeSpan.FromMinutes(1 * id),
+                Duration = TimeSpan.FromMinutes(1)
+            };
 
         [TearDown]
         public void AfterEach() => _connection?.Dispose();
 
         [Test]
-        public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _updateResult);
+        public void ThenUpdateReturnsTheSameWorkUnitID() => Assert.AreEqual(_firstUpdateResult, _secondUpdateResult);
+
+        [Test]
+        public void ThenNewWorkUnitFramesAreInserted()
+        {
+            using var context = new WorkUnitContext(_connection);
+            long workUnitID = context.WorkUnits.First().ID;
+            int count = context.WorkUnitFrames.Count(x => x.WorkUnitID == workUnitID);
+            Assert.AreEqual(4, count);
+        }
+
+        [Test]
+        public void ThenFinishedValueIsNull()
+        {
+            using var context = new WorkUnitContext(_connection);
+            var workUnit = context.WorkUnits.First();
+            Assert.IsNull(workUnit.Finished);
+        }
+
+        [Test]
+        public void ThenResultIsNull()
+        {
+            using var context = new WorkUnitContext(_connection);
+            var workUnit = context.WorkUnits.First();
+            Assert.IsNull(workUnit.Result);
+        }
     }
 
     [TestFixture]
@@ -241,7 +286,7 @@ public class WorkUnitContextRepositoryTests
         public void AfterEach() => _connection?.Dispose();
 
         [Test]
-        public void ThenInsertReturnsNegativeOne() => Assert.AreEqual(-1, _updateResult);
+        public void ThenUpdateReturnsNegativeOne() => Assert.AreEqual(-1, _updateResult);
     }
 
     [TestFixture]
