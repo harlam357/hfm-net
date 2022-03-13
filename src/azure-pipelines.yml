@@ -13,7 +13,7 @@ stages:
   - job: Build
 
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'windows-2019'
 
     variables:
       solution: '**/HFM.All.sln'
@@ -71,10 +71,11 @@ stages:
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
+      #timeoutInMinutes: 10
       inputs:
         command: 'test'
         projects: '$(testProjects)'
-        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage"'
+        arguments: '--no-build -c $(buildConfiguration) --collect:"XPlat Code Coverage" --blame-hang-timeout 1min --logger "console;verbosity=detailed"'
 
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish Code Coverage'
