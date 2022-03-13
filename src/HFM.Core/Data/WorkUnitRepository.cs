@@ -226,44 +226,6 @@ namespace HFM.Core.Data
             }
         }
 
-        public Page<PetaPocoWorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
-        {
-            var sw = Stopwatch.StartNew();
-            try
-            {
-                var p = PageInternal(page, itemsPerPage, query, bonusCalculation);
-                return new Page<PetaPocoWorkUnitRow>
-                {
-                    CurrentPage = p.CurrentPage,
-                    TotalPages = p.TotalPages,
-                    TotalItems = p.TotalItems,
-                    ItemsPerPage = p.ItemsPerPage,
-                    Items = p.Items
-                };
-            }
-            finally
-            {
-                Logger.Debug($"Database Page Fetch ({query}) completed in {sw.GetExecTime()}");
-            }
-        }
-
-        private PetaPoco.Page<PetaPocoWorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
-        {
-            Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
-
-            var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
-            select.Append(query);
-            GetProduction.BonusCalculation = bonusCalculation;
-            using (var connection = CreateConnection())
-            {
-                connection.Open();
-                using (var database = new PetaPoco.Database(connection))
-                {
-                    return database.Page<PetaPocoWorkUnitRow>(page, itemsPerPage, select);
-                }
-            }
-        }
-
         public DataTable Select(string sql, params object[] args)
         {
             using (var connection = CreateConnection())
