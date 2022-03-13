@@ -55,7 +55,7 @@ namespace HFM.Core.Data
         public void WorkUnitRepository_Fetch_All_Test()
         {
             Initialize(_testDataFileCopy);
-            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.DownloadTime);
+            var rows = _repository.Fetch();
             Assert.AreEqual(44, rows.Count);
         }
 
@@ -63,7 +63,7 @@ namespace HFM.Core.Data
         public void WorkUnitRepository_Fetch_All_Test2()
         {
             Initialize(_testData2FileCopy);
-            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.FrameTime);
+            var rows = _repository.Fetch();
             Assert.AreEqual(253, rows.Count);
         }
 

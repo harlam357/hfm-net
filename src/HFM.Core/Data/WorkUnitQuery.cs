@@ -138,57 +138,6 @@ namespace HFM.Core.Data
         }
     }
 
-    internal static class WorkUnitQueryExtensions
-    {
-        internal static PetaPoco.Sql Append(this PetaPoco.Sql sql, WorkUnitQuery query)
-        {
-            return sql.Append(query.ToSql());
-        }
-
-        internal static PetaPoco.Sql ToSql(this WorkUnitQuery query)
-        {
-            if (query.Parameters.Count == 0)
-            {
-                return null;
-            }
-
-            bool appendAnd = false;
-
-            PetaPoco.Sql sql = PetaPoco.Sql.Builder.Append("WHERE ");
-            foreach (var field in query.Parameters)
-            {
-                sql = sql.Append(appendAnd ? "AND " : String.Empty);
-                sql = BuildWhereCondition(sql, field);
-                appendAnd = true;
-            }
-
-            return appendAnd ? sql.Append(" ORDER BY [ID] ASC") : null;
-        }
-
-        private static PetaPoco.Sql BuildWhereCondition(PetaPoco.Sql sql, WorkUnitQueryParameter parameter)
-        {
-            string format = "[{0}] {1} @0";
-            if (parameter.Column.Equals(WorkUnitRowColumn.Assigned) ||
-                parameter.Column.Equals(WorkUnitRowColumn.Finished))
-            {
-                format = "datetime([{0}]) {1} datetime(@0)";
-            }
-            sql = sql.Append(String.Format(CultureInfo.InvariantCulture, format,
-                ColumnNameOverrides.ContainsKey(parameter.Column) ? ColumnNameOverrides[parameter.Column] : parameter.Column.ToString(),
-                parameter.GetOperatorString()), parameter.Value);
-            return sql;
-        }
-
-        private static readonly Dictionary<WorkUnitRowColumn, string> ColumnNameOverrides = new Dictionary<WorkUnitRowColumn, string>
-        {
-            { WorkUnitRowColumn.Name, "InstanceName" },
-            { WorkUnitRowColumn.Path, "InstancePath" },
-            { WorkUnitRowColumn.Assigned, "DownloadDateTime" },
-            { WorkUnitRowColumn.Finished, "CompletionDateTime" },
-            { WorkUnitRowColumn.Credit, "CalcCredit" },
-        };
-    }
-
     [DataContract]
     public class WorkUnitQueryParameter
     {

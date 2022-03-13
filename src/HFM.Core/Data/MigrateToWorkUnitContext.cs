@@ -31,7 +31,7 @@ public class MigrateToWorkUnitContext
     public async Task ExecuteAsync(IProgress<ProgressInfo> progress)
     {
         ReportProgressMessage(progress, "Getting existing work unit data...");
-        var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+        var rows = _repository.Fetch();
 
         _total = rows.Count * 2;
         _workUnitTotal = rows.Count;

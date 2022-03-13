@@ -196,26 +196,12 @@ namespace HFM.Core.Data
             }
         }
 
-        public IList<PetaPocoWorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
-        {
-            var sw = Stopwatch.StartNew();
-            try
-            {
-                return FetchInternal(query, bonusCalculation);
-            }
-            finally
-            {
-                Logger.Debug($"Database Fetch ({query}) completed in {sw.GetExecTime()}");
-            }
-        }
-
-        private IList<PetaPocoWorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
+        public IList<PetaPocoWorkUnitRow> Fetch()
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
             var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
-            select.Append(query);
-            GetProduction.BonusCalculation = bonusCalculation;
+            GetProduction.BonusCalculation = BonusCalculation.None;
             using (var connection = CreateConnection())
             {
                 connection.Open();
