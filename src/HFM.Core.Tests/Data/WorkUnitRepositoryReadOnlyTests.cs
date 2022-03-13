@@ -18,7 +18,7 @@ namespace HFM.Core.Data
         private readonly IProteinService _proteinService = WorkUnitRepositoryTests.CreateProteinService();
 
         [OneTimeSetUp]
-        public void FixtureInit()
+        public void BeforeAll()
         {
             SetupTestDataFileCopies();
 
@@ -45,34 +45,26 @@ namespace HFM.Core.Data
         }
 
         [OneTimeTearDown]
-        public void FixtureDestroy()
+        public void AfterAll()
         {
             _artifacts?.Dispose();
             _repository?.Dispose();
         }
 
         [Test]
-        public void WorkUnitRepository_Fetch_All_Test() => FetchTestData(44);
-
-        [Test]
-        public void WorkUnitRepository_Fetch_All_Test2() => FetchTestData2(253);
-
-        private void FetchTestData(int count)
+        public void WorkUnitRepository_Fetch_All_Test()
         {
             Initialize(_testDataFileCopy);
-            FetchInternal(count, BonusCalculation.DownloadTime);
+            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.DownloadTime);
+            Assert.AreEqual(44, rows.Count);
         }
 
-        private void FetchTestData2(int count)
+        [Test]
+        public void WorkUnitRepository_Fetch_All_Test2()
         {
             Initialize(_testData2FileCopy);
-            FetchInternal(count, BonusCalculation.FrameTime);
-        }
-
-        private void FetchInternal(int count, BonusCalculation bonusCalculation)
-        {
-            var entries = _repository.Fetch(WorkUnitQuery.SelectAll, bonusCalculation);
-            Assert.AreEqual(count, entries.Count);
+            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.FrameTime);
+            Assert.AreEqual(253, rows.Count);
         }
 
         private void Initialize(string path)
