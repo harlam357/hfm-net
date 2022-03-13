@@ -63,7 +63,7 @@ namespace HFM.Core.Data
         #endregion
 
         [Test]
-        public void WorkUnitRepository_MultiThread_Test()
+        public void WorkUnitContextRepository_MultiThread_Test()
         {
             Initialize(_testScratchFile);
 
@@ -85,14 +85,14 @@ namespace HFM.Core.Data
         #region Insert
 
         [Test]
-        public void WorkUnitRepository_Update_Test1()
+        public void WorkUnitContextRepository_Update_Test1()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Update_Test1_CzechCulture()
+        public void WorkUnitContextRepository_Update_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
@@ -100,21 +100,21 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_Update_Test2()
+        public void WorkUnitContextRepository_Update_Test2()
         {
             var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
             UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Update_Test3()
+        public void WorkUnitContextRepository_Update_Test3()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
             UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
-        public void WorkUnitRepository_Update_Test4()
+        public void WorkUnitContextRepository_Update_Test4()
         {
             var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
             UpdateTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
@@ -450,7 +450,7 @@ namespace HFM.Core.Data
         #region Delete
 
         [Test]
-        public void WorkUnitRepository_Delete_Test()
+        public void WorkUnitContextRepository_Delete_Test()
         {
             // Arrange
             Initialize(_testDataFileCopy);
@@ -465,7 +465,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_Delete_NotExist_Test()
+        public void WorkUnitContextRepository_Delete_NotExist_Test()
         {
             Initialize(_testDataFileCopy);
             Assert.AreEqual(0, _repository.Delete(new WorkUnitEntityRow { ID = 100 }));

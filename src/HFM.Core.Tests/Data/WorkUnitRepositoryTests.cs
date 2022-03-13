@@ -5,7 +5,6 @@ using System.Diagnostics;
 using NUnit.Framework;
 
 using HFM.Core.WorkUnits;
-using HFM.Log;
 using HFM.Proteins;
 
 namespace HFM.Core.Data
@@ -29,10 +28,8 @@ namespace HFM.Core.Data
         private WorkUnitRepository _repository;
         private readonly IProteinService _proteinService = CreateProteinService();
 
-        #region Setup and TearDown
-
         [SetUp]
-        public void Init()
+        public void BeforeEach()
         {
             SetupTestDataFileCopies();
 
@@ -65,15 +62,11 @@ namespace HFM.Core.Data
         }
 
         [TearDown]
-        public void Destroy()
+        public void AfterEach()
         {
             _artifacts?.Dispose();
             _repository?.Dispose();
         }
-
-        #endregion
-
-        #region Connected
 
         [Test]
         public void WorkUnitRepository_Connected_Test1()
@@ -83,10 +76,6 @@ namespace HFM.Core.Data
             Assert.AreEqual(Application.Version, _repository.GetDatabaseVersion());
             Assert.AreEqual(true, _repository.Connected);
         }
-
-        #endregion
-
-        #region Upgrade
 
         [Test]
         public void WorkUnitRepository_Upgrade_v092_Test1()
@@ -143,10 +132,6 @@ namespace HFM.Core.Data
             Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
             Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
         }
-
-        #endregion
-
-        #region Static Helpers
 
         private static int GetWuHistoryColumnCount(string dataSource)
         {
@@ -268,7 +253,5 @@ namespace HFM.Core.Data
             dataContainer.Data = collection;
             return new ProteinService(dataContainer, null, null);
         }
-
-        #endregion
     }
 }

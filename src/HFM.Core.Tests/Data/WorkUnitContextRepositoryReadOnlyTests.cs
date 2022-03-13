@@ -56,7 +56,7 @@ namespace HFM.Core.Data
 
         [Test]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_All_Test()
+        public void WorkUnitContextRepository_Fetch_All_Test()
         {
             FetchTestData(44, WorkUnitQuery.SelectAll);
         }
@@ -64,7 +64,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_Equal_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_Equal_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -98,7 +98,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_NotEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_NotEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -132,7 +132,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_GreaterThan_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -166,7 +166,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -200,7 +200,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_LessThan_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_LessThan_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -234,7 +234,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -268,7 +268,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_Like_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_Like_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -302,7 +302,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_NotLike_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_NotLike_Test(int expected, WorkUnitQuery query)
         {
             FetchTestData(expected, query);
         }
@@ -334,7 +334,7 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        public void WorkUnitRepository_Fetch_Complex_Test1()
+        public void WorkUnitContextRepository_Fetch_Complex_Test1()
         {
             FetchTestData(33, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
@@ -344,7 +344,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_Fetch_Complex_Test2()
+        public void WorkUnitContextRepository_Fetch_Complex_Test2()
         {
             FetchTestData(3, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan,
@@ -355,7 +355,7 @@ namespace HFM.Core.Data
 
         [Test]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_All_Test2()
+        public void WorkUnitContextRepository_Fetch_All_Test2()
         {
             // Select All
             FetchTestData2(253, WorkUnitQuery.SelectAll);
@@ -364,7 +364,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_Equal_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_Equal_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -398,7 +398,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_NotEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -432,7 +432,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_GreaterThan_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -466,7 +466,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -500,7 +500,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_LessThan_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_LessThan_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -534,7 +534,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -568,7 +568,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_Like_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_Like_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -602,7 +602,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitRepository_Fetch_NotLike_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Fetch_NotLike_Test2(int expected, WorkUnitQuery query)
         {
             FetchTestData2(expected, query);
         }
@@ -634,7 +634,7 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        public void WorkUnitRepository_Fetch_Complex_Test3()
+        public void WorkUnitContextRepository_Fetch_Complex_Test3()
         {
             FetchTestData2(52, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
@@ -644,7 +644,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_Fetch_Complex_Test4()
+        public void WorkUnitContextRepository_Fetch_Complex_Test4()
         {
             FetchTestData2(77, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.GreaterThanOrEqual,
@@ -677,7 +677,7 @@ namespace HFM.Core.Data
 
         [Test]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_All_Test1()
+        public void WorkUnitContextRepository_Page_All_Test1()
         {
             // Select All
             PageTestData(44, WorkUnitQuery.SelectAll);
@@ -686,7 +686,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_Equal_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_Equal_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -694,7 +694,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_NotEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_NotEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -702,7 +702,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_GreaterThan_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -710,7 +710,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -718,7 +718,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_LessThan_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_LessThan_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -726,7 +726,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -734,7 +734,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_Like_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_Like_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
@@ -742,14 +742,14 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_NotLike_Test(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_NotLike_Test(int expected, WorkUnitQuery query)
         {
             PageTestData(expected, query);
         }
 
         [Test]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_All_Test2()
+        public void WorkUnitContextRepository_Page_All_Test2()
         {
             // Select All
             PageTestData2(253, WorkUnitQuery.SelectAll);
@@ -758,7 +758,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_Equal_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_Equal_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -766,7 +766,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_NotEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -774,7 +774,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_GreaterThan_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -782,7 +782,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -790,7 +790,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_LessThan_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_LessThan_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -798,7 +798,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -806,7 +806,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_Like_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_Like_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -814,7 +814,7 @@ namespace HFM.Core.Data
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases2))]
         [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitRepository_Page_NotLike_Test2(int expected, WorkUnitQuery query)
+        public void WorkUnitContextRepository_Page_NotLike_Test2(int expected, WorkUnitQuery query)
         {
             PageTestData2(expected, query);
         }
@@ -846,7 +846,7 @@ namespace HFM.Core.Data
         #region Count
 
         [Test]
-        public void WorkUnitRepository_CountCompleted_Test1()
+        public void WorkUnitContextRepository_CountCompleted_Test1()
         {
             Initialize(_testDataFileCopy);
             long count = _repository.CountCompleted("nVidia GPU - GTX285 - 1", null);
@@ -854,7 +854,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_CountCompleted_Test2()
+        public void WorkUnitContextRepository_CountCompleted_Test2()
         {
             Initialize(_testDataFileCopy);
             long count = _repository.CountCompleted("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
@@ -862,7 +862,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_CountFailed_Test1()
+        public void WorkUnitContextRepository_CountFailed_Test1()
         {
             Initialize(_testData2FileCopy);
             long count = _repository.CountFailed("nVidia GPU - GTX470", null);
@@ -870,7 +870,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitRepository_CountFailed_Test2()
+        public void WorkUnitContextRepository_CountFailed_Test2()
         {
             Initialize(_testData2FileCopy);
             long count = _repository.CountFailed("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
