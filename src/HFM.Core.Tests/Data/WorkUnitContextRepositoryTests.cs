@@ -1,11 +1,9 @@
 ﻿using HFM.Core.Client;
-using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
 
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
 
 using NUnit.Framework;
 
@@ -809,46 +807,5 @@ public class WorkUnitContextRepositoryTests
         var workUnitModel = new WorkUnitModel(slotModel, workUnit);
         workUnitModel.CurrentProtein = protein;
         return workUnitModel;
-    }
-}
-
-public class TestableWorkUnitContextRepository : WorkUnitContextRepository
-{
-    private readonly SqliteConnection _connection;
-    private readonly string _connectionString;
-
-    public TestableWorkUnitContextRepository(SqliteConnection connection)
-    {
-        _connection = connection;
-    }
-
-    public TestableWorkUnitContextRepository(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
-    private static readonly object _CreateLock = new();
-
-    protected override WorkUnitContext CreateWorkUnitContext()
-    {
-        var context = new WorkUnitContext(builder =>
-        {
-            if (_connection is null)
-            {
-                builder.UseConnectionString(_connectionString);
-            }
-            else
-            {
-                builder.UseConnection(_connection);
-            }
-#if DEBUG
-            builder.LogTo(TestLogger.Instance.Debug, LogLevel.Information);
-#endif
-        });
-        lock (_CreateLock)
-        {
-            context.Database.EnsureCreated();
-        }
-        return context;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace HFM.Core.Client
@@ -10,6 +8,8 @@ namespace HFM.Core.Client
         internal const int NoSlotID = -1;
 
         public static SlotIdentifier AllSlots => new(0, "All Slots");
+
+        public bool IsAllSlots() => Equals(AllSlots);
 
         private SlotIdentifier(int ordinal, string name)
         {
