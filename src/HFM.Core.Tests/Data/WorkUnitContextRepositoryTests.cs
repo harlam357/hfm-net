@@ -1,4 +1,5 @@
 ﻿using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
 using HFM.Proteins;
@@ -841,7 +842,7 @@ public class TestableWorkUnitContextRepository : WorkUnitContextRepository
                 builder.UseConnection(_connection);
             }
 #if DEBUG
-            builder.LogTo(Console.WriteLine, LogLevel.Information);
+            builder.LogTo(TestLogger.Instance.Debug, LogLevel.Information);
 #endif
         });
         lock (_CreateLock)

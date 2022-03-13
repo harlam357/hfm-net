@@ -153,7 +153,6 @@ namespace HFM.Core.Data
             foreach (WorkUnitQueryOperator op in Enum.GetValues(typeof(WorkUnitQueryOperator)))
             {
                 parameter.Operator = op;
-                Console.WriteLine(parameter.GetOperatorString());
             }
         }
 

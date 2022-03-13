@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using HFM.Core.Client.Mocks;
+﻿using HFM.Core.Client.Mocks;
 using HFM.Core.Logging;
 
 using Moq;
@@ -16,6 +10,8 @@ namespace HFM.Core.Client
     [TestFixture]
     public class ClientTests
     {
+        private static ILogger Logger { get; } = TestLogger.Instance;
+
         [Test]
         public void Client_Settings_CallsOnSettingsChanged_OldIsNullAndCurrentIsSame()
         {
@@ -236,7 +232,7 @@ namespace HFM.Core.Client
                     await client.Retrieve();
                 }
                 // Assert
-                Console.WriteLine($"Retrieve Count: {client.RetrieveCount}");
+                Logger.Debug($"Retrieve Count: {client.RetrieveCount}");
                 Assert.IsTrue(client.Connected);
                 Assert.AreEqual(count - 1, client.RetrieveCount);
             }
@@ -271,8 +267,8 @@ namespace HFM.Core.Client
                     .ToArray();
                 Task.WaitAll(tasks);
                 // Assert
-                Console.WriteLine($"Retrieve In Progress Count: {client.RetrieveInProgressCount}");
-                Console.WriteLine($"Retrieve Count: {client.RetrieveCount}");
+                Logger.Debug($"Retrieve In Progress Count: {client.RetrieveInProgressCount}");
+                Logger.Debug($"Retrieve Count: {client.RetrieveCount}");
                 Assert.IsTrue(client.RetrieveInProgressCount > 0);
                 Assert.IsTrue(client.RetrieveCount > 0);
                 Assert.AreEqual(count, client.RetrieveInProgressCount + client.RetrieveCount);

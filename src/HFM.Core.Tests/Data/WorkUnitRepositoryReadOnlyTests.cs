@@ -676,13 +676,6 @@ namespace HFM.Core.Data
         private void FetchInternal(int count, WorkUnitQuery query, BonusCalculation bonusCalculation)
         {
             var entries = _repository.Fetch(query, bonusCalculation);
-//#if DEBUG
-//          //Debug.WriteLine(query.Parameters[0].Column);
-//          foreach (var entry in entries)
-//          {
-//              Console.WriteLine(entry.ID);
-//          }
-//#endif
             Assert.AreEqual(count, entries.Count);
         }
 

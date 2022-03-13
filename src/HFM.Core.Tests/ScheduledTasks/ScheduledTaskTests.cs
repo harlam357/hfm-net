@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using HFM.Core.Logging;
 
 using NUnit.Framework;
 
@@ -12,6 +7,8 @@ namespace HFM.Core.ScheduledTasks
     [TestFixture]
     public class ScheduledTaskTests
     {
+        private static ILogger Logger { get; } = TestLogger.Instance;
+
         [Test]
         public async Task DelegateScheduledTask_Test()
         {
@@ -66,7 +63,7 @@ namespace HFM.Core.ScheduledTasks
             }
             catch (OperationCanceledException ex)
             {
-                Console.WriteLine(ex);
+                Logger.Debug(ex.ToString());
             }
         }
 
@@ -125,7 +122,7 @@ namespace HFM.Core.ScheduledTasks
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.Debug(ex.ToString());
             }
 
             Assert.IsTrue(task.RunCount > 1, "RunCount should be greater than 1");
@@ -133,7 +130,7 @@ namespace HFM.Core.ScheduledTasks
 
         private static void TaskChanged(object sender, ScheduledTaskChangedEventArgs e)
         {
-            Console.WriteLine(e.ToString());
+            Logger.Debug(e.ToString());
         }
 
         private class DelegateScheduledTaskWithRunCount : DelegateScheduledTask

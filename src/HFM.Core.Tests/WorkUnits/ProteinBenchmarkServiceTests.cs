@@ -2,12 +2,15 @@
 
 using HFM.Core.Client;
 using HFM.Core.Data;
+using HFM.Core.Logging;
 
 namespace HFM.Core.WorkUnits
 {
     [TestFixture]
     public class ProteinBenchmarkServiceTests
     {
+        private static ILogger Logger { get; } = TestLogger.Instance;
+
         [Test]
         public void ProteinBenchmarkService_GetSlotIdentifiers_ReturnsDistinctValuesFromAllBenchmarks()
         {
@@ -632,7 +635,7 @@ namespace HFM.Core.WorkUnits
                 var benchmarksWithGuidIdentifiers = benchmarksWithGuid.Select(x => x.SlotIdentifier).Distinct().ToList();
                 foreach (var identifier in benchmarksWithGuidIdentifiers)
                 {
-                    Console.WriteLine(identifier);
+                    Logger.Debug(identifier.ToString());
                 }
 
                 var identifierMatchesWhenGuidIsNotConsidered = new Func<ProteinBenchmark, bool>(b =>
@@ -641,9 +644,9 @@ namespace HFM.Core.WorkUnits
                 var allBenchmarks = container.Data.Where(b => identifierMatchesWhenGuidIsNotConsidered(b)).ToList();
                 var benchmarksWithoutGuid = allBenchmarks.Where(b => !b.SlotIdentifier.ClientIdentifier.HasGuid).ToList();
 
-                Console.WriteLine($"Benchmarks with Guid: {benchmarksWithGuid.Count}");
-                Console.WriteLine($"Benchmarks without Guid: {benchmarksWithoutGuid.Count}");
-                Console.WriteLine($"All Benchmarks: {allBenchmarks.Count}");
+                Logger.Debug($"Benchmarks with Guid: {benchmarksWithGuid.Count}");
+                Logger.Debug($"Benchmarks without Guid: {benchmarksWithoutGuid.Count}");
+                Logger.Debug($"All Benchmarks: {allBenchmarks.Count}");
 
                 Assert.AreEqual(benchmarksWithGuid.Count + benchmarksWithoutGuid.Count, allBenchmarks.Count);
             }
@@ -657,25 +660,25 @@ namespace HFM.Core.WorkUnits
             var dataContainer = new ProteinBenchmarkDataContainer { FilePath = path };
             dataContainer.Read();
 #if DEBUG
-            Console.WriteLine($"Loaded {dataContainer.Data.Count} benchmarks");
+            Logger.Debug($"Loaded {dataContainer.Data.Count} benchmarks");
 
-            Console.WriteLine("Group By Slot");
+            Logger.Debug("Group By Slot");
             foreach (var g in dataContainer.Data.GroupBy(x => x.SlotIdentifier))
             {
-                Console.WriteLine(g.Key);
+                Logger.Debug(g.Key.ToString());
                 foreach (var b in g)
                 {
-                    Console.WriteLine("\t" + b.BenchmarkIdentifier);
+                    Logger.Debug("\t" + b.BenchmarkIdentifier);
                 }
             }
 
-            Console.WriteLine("Group By Benchmark");
+            Logger.Debug("Group By Benchmark");
             foreach (var g in dataContainer.Data.GroupBy(x => x.BenchmarkIdentifier))
             {
-                Console.WriteLine(g.Key);
+                Logger.Debug(g.Key.ToString());
                 foreach (var b in g)
                 {
-                    Console.WriteLine("\t" + b.SlotIdentifier);
+                    Logger.Debug("\t" + b.SlotIdentifier);
                 }
             }
 #endif
