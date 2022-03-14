@@ -1,10 +1,9 @@
-﻿using System;
-using System.Data;
-using System.Data.SQLite;
+﻿using System.Data;
 using System.Globalization;
-using System.Threading;
 
 using HFM.Core.WorkUnits;
+
+using Microsoft.Data.Sqlite;
 
 namespace HFM.Core.Data
 {
@@ -20,14 +19,14 @@ namespace HFM.Core.Data
     {
         private readonly IWorkUnitDatabase _database;
         private readonly IProteinService _proteinService;
-        private readonly SQLiteConnection _connection;
+        private readonly SqliteConnection _connection;
 
         public ProteinDataUpdater(IWorkUnitDatabase database, IProteinService proteinService) : this(database, proteinService, null)
         {
 
         }
 
-        public ProteinDataUpdater(IWorkUnitDatabase database, IProteinService proteinService, SQLiteConnection connection)
+        public ProteinDataUpdater(IWorkUnitDatabase database, IProteinService proteinService, SqliteConnection connection)
         {
             _database = database ?? throw new ArgumentNullException(nameof(database));
             _proteinService = proteinService ?? NullProteinService.Instance;
@@ -58,7 +57,7 @@ namespace HFM.Core.Data
                             {
                                 cancellationToken.ThrowIfCancellationRequested();
 
-                                var projectId = row.Field<int>("ProjectID");
+                                var projectId = row.Field<long>("ProjectID");
                                 var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
                                 if (updateSql != null)
                                 {
@@ -112,10 +111,10 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Sql GetUpdateSql(int projectId, string column, long arg)
+        private PetaPoco.Sql GetUpdateSql(long projectId, string column, long arg)
         {
             // get the correct protein
-            var protein = _proteinService.Get(projectId);
+            var protein = _proteinService.Get((int)projectId);
             if (protein != null)
             {
                 var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")

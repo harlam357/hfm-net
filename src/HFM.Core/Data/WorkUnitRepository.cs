@@ -1,18 +1,19 @@
 ﻿using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
 
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
+using Microsoft.Data.Sqlite;
+
 namespace HFM.Core.Data
 {
     internal enum WorkUnitRepositoryTable
     {
         WuHistory,
-        Version
+        DbVersion
     }
 
     /// <summary>
@@ -22,14 +23,14 @@ namespace HFM.Core.Data
     {
         DataTable Select(string sql, params object[] args);
 
-        DataTable Select(SQLiteConnection connection, string sql, params object[] args);
+        DataTable Select(SqliteConnection connection, string sql, params object[] args);
 
-        int Execute(SQLiteConnection connection, string sql, params object[] args);
+        int Execute(SqliteConnection connection, string sql, params object[] args);
     }
 
-    public partial class WorkUnitRepository : IWorkUnitDatabase, IDisposable
+    public class WorkUnitRepository : IWorkUnitDatabase, IDisposable
     {
-        private string ConnectionString => String.Concat("Data Source=", FilePath, ";DateTimeKind=Utc");
+        private string ConnectionString => String.Concat("Data Source=", FilePath);
 
         private string FilePath { get; set; }
 
@@ -43,7 +44,7 @@ namespace HFM.Core.Data
             new()
             {
                 { WorkUnitRepositoryTable.WuHistory, new WuHistorySqlTableCommands() },
-                { WorkUnitRepositoryTable.Version, new VersionSqlTableCommands() }
+                { WorkUnitRepositoryTable.DbVersion, new VersionSqlTableCommands() }
             };
 
         public const string DefaultFileName = "WuHistory.db3";
@@ -52,9 +53,6 @@ namespace HFM.Core.Data
         {
             Logger = logger ?? NullLogger.Instance;
             ProteinService = proteinService ?? NullProteinService.Instance;
-
-            SQLiteFunction.RegisterFunction(typeof(ToSlotType));
-            SQLiteFunction.RegisterFunction(typeof(GetProduction));
         }
 
         public void Initialize(string filePath)
@@ -66,7 +64,7 @@ namespace HFM.Core.Data
                 if (!exists)
                 {
                     CreateTable(WorkUnitRepositoryTable.WuHistory);
-                    CreateTable(WorkUnitRepositoryTable.Version);
+                    CreateTable(WorkUnitRepositoryTable.DbVersion);
                     SetDatabaseVersion(Application.Version);
                 }
                 // verify the connection by performing a db operation
@@ -85,7 +83,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private SQLiteConnection CreateConnection() => new(ConnectionString);
+        private SqliteConnection CreateConnection() => new(ConnectionString);
 
         public bool RequiresUpgrade()
         {
@@ -153,18 +151,18 @@ namespace HFM.Core.Data
             return versionNumber < Version.Parse(upgradeVersionString);
         }
 
-        private static void AddProteinColumns(SQLiteConnection connection)
+        private static void AddProteinColumns(SqliteConnection connection)
         {
             using (var adder = new SQLiteAddColumnCommand(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].TableName, connection))
             {
-                adder.AddColumn("WorkUnitName", "VARCHAR(30)");
-                adder.AddColumn("KFactor", "FLOAT");
-                adder.AddColumn("Core", "VARCHAR(20)");
-                adder.AddColumn("Frames", "INT");
-                adder.AddColumn("Atoms", "INT");
-                adder.AddColumn("Credit", "FLOAT");
-                adder.AddColumn("PreferredDays", "FLOAT");
-                adder.AddColumn("MaximumDays", "FLOAT");
+                adder.AddColumn("WorkUnitName", "TEXT");
+                adder.AddColumn("KFactor", "REAL");
+                adder.AddColumn("Core", "TEXT");
+                adder.AddColumn("Frames", "INTEGER");
+                adder.AddColumn("Atoms", "INTEGER");
+                adder.AddColumn("Credit", "REAL");
+                adder.AddColumn("PreferredDays", "REAL");
+                adder.AddColumn("MaximumDays", "REAL");
                 adder.Execute();
             }
         }
@@ -178,19 +176,20 @@ namespace HFM.Core.Data
             }
         }
 
-        private void SetDatabaseVersion(SQLiteConnection connection, string version)
+        private void SetDatabaseVersion(SqliteConnection connection, string version)
         {
             Debug.Assert(!String.IsNullOrWhiteSpace(version));
 
-            if (!TableExists(connection, WorkUnitRepositoryTable.Version))
+            if (!TableExists(connection, WorkUnitRepositoryTable.DbVersion))
             {
-                CreateTable(connection, WorkUnitRepositoryTable.Version);
+                CreateTable(connection, WorkUnitRepositoryTable.DbVersion);
             }
 
             Logger.Info($"Setting database version to: v{version}");
-            using (var cmd = new SQLiteCommand("INSERT INTO [DbVersion] (Version) VALUES (?);", connection))
+            using (var cmd = connection.CreateCommand())
             {
-                var param = new SQLiteParameter("Version", DbType.String) { Value = version };
+                cmd.CommandText = "INSERT INTO [DbVersion] (Version) VALUES (@0);";
+                var param = new SqliteParameter("@0", version);
                 cmd.Parameters.Add(param);
                 cmd.ExecuteNonQuery();
             }
@@ -200,16 +199,48 @@ namespace HFM.Core.Data
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
+            var result = new List<PetaPocoWorkUnitRow>();
+
             var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
-            GetProduction.BonusCalculation = BonusCalculation.None;
             using (var connection = CreateConnection())
             {
                 connection.Open();
-                using (var database = new PetaPoco.Database(connection))
+                using (var command = connection.CreateCommand())
                 {
-                    return database.Fetch<PetaPocoWorkUnitRow>(select);
+                    command.CommandText = select.SQL;
+                    using var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var row = new PetaPocoWorkUnitRow();
+                        row.ID = reader.GetFieldValue<long>("ID");
+                        row.ProjectID = reader.GetFieldValue<int>("ProjectID");
+                        row.ProjectRun = reader.GetFieldValue<int>("ProjectRun");
+                        row.ProjectClone = reader.GetFieldValue<int>("ProjectClone");
+                        row.ProjectGen = reader.GetFieldValue<int>("ProjectGen");
+                        row.Username = reader.GetFieldValue<string>("Username");
+                        row.Team = reader.GetFieldValue<int>("Team");
+                        row.FramesCompleted = reader.GetFieldValue<int>("FramesCompleted");
+                        row.WorkUnitName = reader.GetFieldValue<string>("WorkUnitName");
+                        row.KFactor = reader.GetFieldValue<double>("KFactor");
+                        row.Core = reader.GetFieldValue<string>("Core");
+                        row.Frames = reader.GetFieldValue<int>("Frames");
+                        row.Atoms = reader.GetFieldValue<int>("Atoms");
+                        row.PreferredDays = reader.GetFieldValue<double>("PreferredDays");
+                        row.MaximumDays = reader.GetFieldValue<double>("MaximumDays");
+                        row.Name = reader.GetFieldValue<string>("InstanceName");
+                        row.Path = reader.GetFieldValue<string>("InstancePath");
+                        row.CoreVersion = reader.GetFieldValue<float>("CoreVersion");
+                        row.FrameTimeValue = reader.GetFieldValue<int>("FrameTime");
+                        row.ResultValue = reader.GetFieldValue<int>("Result");
+                        row.Assigned = reader.GetFieldValue<DateTime>("DownloadDateTime");
+                        row.Finished = reader.GetFieldValue<DateTime>("CompletionDateTime");
+                        row.BaseCredit = reader.GetFieldValue<double>("Credit");
+                        result.Add(row);
+                    }
                 }
             }
+
+            return result;
         }
 
         public DataTable Select(string sql, params object[] args)
@@ -221,7 +252,7 @@ namespace HFM.Core.Data
             }
         }
 
-        public DataTable Select(SQLiteConnection connection, string sql, params object[] args)
+        public DataTable Select(SqliteConnection connection, string sql, params object[] args)
         {
             var operatingConnection = connection;
             try
@@ -232,13 +263,13 @@ namespace HFM.Core.Data
                     operatingConnection.Open();
                 }
 
-                using (var database = new PetaPoco.Database(operatingConnection))
-                using (var cmd = database.CreateCommand(database.Connection, sql, args))
+                using (var cmd = operatingConnection.CreateCommand())
                 {
-                    using (var adapter = new SQLiteDataAdapter((SQLiteCommand)cmd))
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
                     {
                         var table = new DataTable();
-                        adapter.Fill(table);
+                        table.Load(reader);
                         return table;
                     }
                 }
@@ -252,7 +283,7 @@ namespace HFM.Core.Data
             }
         }
 
-        public int Execute(SQLiteConnection connection, string sql, params object[] args)
+        public int Execute(SqliteConnection connection, string sql, params object[] args)
         {
             var operatingConnection = connection;
             try
@@ -263,9 +294,15 @@ namespace HFM.Core.Data
                     operatingConnection.Open();
                 }
 
-                using (var database = new PetaPoco.Database(operatingConnection))
+                using (var cmd = operatingConnection.CreateCommand())
                 {
-                    return database.Execute(sql, args);
+                    cmd.CommandText = sql;
+                    int count = 0;
+                    foreach (var p in args)
+                    {
+                        cmd.Parameters.Add(new SqliteParameter($"@{count++}", p));
+                    }
+                    return cmd.ExecuteNonQuery();
                 }
             }
             finally
@@ -306,12 +343,11 @@ namespace HFM.Core.Data
             }
         }
 
-        private static bool TableExists(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        private static bool TableExists(SqliteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
-            using (DataTable table = connection.GetSchema("Tables", new[] { null, null, _SqlTableCommandDictionary[databaseTable].TableName, null }))
-            {
-                return table.Rows.Count != 0;
-            }
+            using var command = connection.CreateCommand();
+            using var table = command.GetSchema(databaseTable.ToString());
+            return table.Rows.Count != 0;
         }
 
         private void CreateTable(WorkUnitRepositoryTable databaseTable)
@@ -323,7 +359,7 @@ namespace HFM.Core.Data
             }
         }
 
-        private static void CreateTable(SQLiteConnection connection, WorkUnitRepositoryTable databaseTable)
+        private static void CreateTable(SqliteConnection connection, WorkUnitRepositoryTable databaseTable)
         {
             using (var command = _SqlTableCommandDictionary[databaseTable].GetCreateTableCommand(connection))
             {
@@ -335,7 +371,7 @@ namespace HFM.Core.Data
 
         internal string GetDatabaseVersion()
         {
-            if (!TableExists(WorkUnitRepositoryTable.Version))
+            if (!TableExists(WorkUnitRepositoryTable.DbVersion))
             {
                 return VersionStringDefault;
             }
@@ -359,7 +395,7 @@ namespace HFM.Core.Data
 
             public virtual string SelectSql => String.Empty;
 
-            public abstract DbCommand GetCreateTableCommand(SQLiteConnection connection);
+            public abstract DbCommand GetCreateTableCommand(SqliteConnection connection);
         }
 
         private class WuHistorySqlTableCommands : SqlTableCommands
@@ -369,29 +405,29 @@ namespace HFM.Core.Data
             private const string WuHistoryTableName = "WuHistory";
 
             private static readonly string _WuHistoryTableCreateSql = "CREATE TABLE [{0}] (" +
-                                                           "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                                                           "[ProjectID] INT  NOT NULL," +
-                                                           "[ProjectRun] INT  NOT NULL," +
-                                                           "[ProjectClone] INT  NOT NULL," +
-                                                           "[ProjectGen] INT  NOT NULL," +
-                                                           "[InstanceName] VARCHAR(60)  NOT NULL," +
-                                                           "[InstancePath] VARCHAR(260)  NOT NULL," +
-                                                           "[Username] VARCHAR(60)  NOT NULL," +
-                                                           "[Team] INT  NOT NULL," +
-                                                           "[CoreVersion] FLOAT  NOT NULL," +
-                                                           "[FramesCompleted] INT  NOT NULL," +
-                                                           "[FrameTime] INT  NOT NULL," +
-                                                           "[Result] INT  NOT NULL," +
-                                                           "[DownloadDateTime] DATETIME  NOT NULL," +
-                                                           "[CompletionDateTime] DATETIME  NOT NULL," +
-                                                           SetDefaultValue("[WorkUnitName] VARCHAR(30) DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[KFactor] FLOAT DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[Core] VARCHAR(20) DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[Frames] INT DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[Atoms] INT DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[Credit] FLOAT DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[PreferredDays] FLOAT DEFAULT {0} NOT NULL,") +
-                                                           SetDefaultValue("[MaximumDays] FLOAT DEFAULT {0} NOT NULL") +
+                                                           "[ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                           "[ProjectID] INTEGER NOT NULL," +
+                                                           "[ProjectRun] INTEGER NOT NULL," +
+                                                           "[ProjectClone] INTEGER NOT NULL," +
+                                                           "[ProjectGen] INTEGER NOT NULL," +
+                                                           "[InstanceName] TEXT NOT NULL," +
+                                                           "[InstancePath] TEXT NOT NULL," +
+                                                           "[Username] TEXT NOT NULL," +
+                                                           "[Team] INTEGER NOT NULL," +
+                                                           "[CoreVersion] REAL NOT NULL," +
+                                                           "[FramesCompleted] INTEGER NOT NULL," +
+                                                           "[FrameTime] INTEGER NOT NULL," +
+                                                           "[Result] INTEGER NOT NULL," +
+                                                           "[DownloadDateTime] DATETIME NOT NULL," +
+                                                           "[CompletionDateTime] DATETIME NOT NULL," +
+                                                           SetDefaultValue("[WorkUnitName] TEXT DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[KFactor] REAL DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[Core] TEXT DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[Frames] INTEGER DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[Atoms] INTEGER DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[Credit] REAL DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[PreferredDays] REAL DEFAULT {0} NOT NULL,") +
+                                                           SetDefaultValue("[MaximumDays] REAL DEFAULT {0} NOT NULL") +
                                                            ");";
 
             private static string SetDefaultValue(string columnDef)
@@ -399,33 +435,30 @@ namespace HFM.Core.Data
                 return String.Format(CultureInfo.InvariantCulture, columnDef, SQLiteAddColumnCommand.GetDefaultValue(columnDef));
             }
 
-            private const string WuHistoryTableSelect = "SELECT * FROM (SELECT [ID], " +
-                                                                              "[ProjectID], " +
-                                                                              "[ProjectRun], " +
-                                                                              "[ProjectClone], " +
-                                                                              "[ProjectGen], " +
-                                                                              "[InstanceName], " +
-                                                                              "[InstancePath], " +
-                                                                              "[Username], " +
-                                                                              "[Team], " +
-                                                                              "[CoreVersion], " +
-                                                                              "[FramesCompleted], " +
-                                                                              "[FrameTime], " +
-                                                                              "[Result], " +
-                                                                              "[DownloadDateTime], " +
-                                                                              "[CompletionDateTime], " +
-                                                                              "[WorkUnitName], " +
-                                                                              "[KFactor], " +
-                                                                              "[Core], " +
-                                                                              "[Frames], " +
-                                                                              "[Atoms], " +
-                                                                              "[Credit], " +
-                                                                              "[PreferredDays], " +
-                                                                              "[MaximumDays], " +
-                                                                              "ToSlotType(Core) As [SlotType], " +
-                                                                              "CAST(GetProduction(FrameTime, Frames, Credit, KFactor, PreferredDays, MaximumDays, datetime(DownloadDateTime), datetime(CompletionDateTime), 0) As FLOAT) As [PPD], " +
-                                                                              "CAST(GetProduction(FrameTime, Frames, Credit, KFactor, PreferredDays, MaximumDays, datetime(DownloadDateTime), datetime(CompletionDateTime), 1) As FLOAT) As [CalcCredit] " +
-                                                                              "FROM [WuHistory])";
+            private const string WuHistoryTableSelect = "SELECT [ID], " +
+                                                               "[ProjectID], " +
+                                                               "[ProjectRun], " +
+                                                               "[ProjectClone], " +
+                                                               "[ProjectGen], " +
+                                                               "[InstanceName], " +
+                                                               "[InstancePath], " +
+                                                               "[Username], " +
+                                                               "[Team], " +
+                                                               "[CoreVersion], " +
+                                                               "[FramesCompleted], " +
+                                                               "[FrameTime], " +
+                                                               "[Result], " +
+                                                               "[DownloadDateTime], " +
+                                                               "[CompletionDateTime], " +
+                                                               "[WorkUnitName], " +
+                                                               "[KFactor], " +
+                                                               "[Core], " +
+                                                               "[Frames], " +
+                                                               "[Atoms], " +
+                                                               "[Credit], " +
+                                                               "[PreferredDays], " +
+                                                               "[MaximumDays] " +
+                                                               "FROM [WuHistory]";
 
             #endregion
 
@@ -435,13 +468,12 @@ namespace HFM.Core.Data
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "No user input.")]
-            public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
+            public override DbCommand GetCreateTableCommand(SqliteConnection connection)
             {
-                return new SQLiteCommand(connection)
-                {
-                    CommandText = String.Format(CultureInfo.InvariantCulture,
-                                               _WuHistoryTableCreateSql, WuHistoryTableName)
-                };
+                var command = connection.CreateCommand();
+                command.CommandText = String.Format(CultureInfo.InvariantCulture,
+                    _WuHistoryTableCreateSql, WuHistoryTableName);
+                return command;
             }
         }
 
@@ -452,8 +484,8 @@ namespace HFM.Core.Data
             private const string VersionTableName = "DbVersion";
 
             private const string VersionTableCreateSql = "CREATE TABLE [{0}] (" +
-                                                         "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                                                         "[Version] VARCHAR(20)  NOT NULL);";
+                                                         "[ID] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                         "[Version] TEXT NOT NULL);";
 
             #endregion
 
@@ -461,13 +493,12 @@ namespace HFM.Core.Data
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "No user input.")]
-            public override DbCommand GetCreateTableCommand(SQLiteConnection connection)
+            public override DbCommand GetCreateTableCommand(SqliteConnection connection)
             {
-                return new SQLiteCommand(connection)
-                {
-                    CommandText = String.Format(CultureInfo.InvariantCulture,
-                                               VersionTableCreateSql, VersionTableName)
-                };
+                var command = connection.CreateCommand();
+                command.CommandText = String.Format(CultureInfo.InvariantCulture,
+                    VersionTableCreateSql, VersionTableName);
+                return command;
             }
         }
 

@@ -123,18 +123,6 @@ namespace HFM.Core.Data
 
         [PetaPoco.Column("Credit")]
         public double BaseCredit { get; set; }
-
-        [PetaPoco.ResultColumn]
-        public string SlotType { get; set; }
-
-        [PetaPoco.ResultColumn]
-        public int ProductionView { get; set; }
-
-        [PetaPoco.ResultColumn]
-        public double PPD { get; set; }
-
-        [PetaPoco.ResultColumn("CalcCredit")]
-        public double Credit { get; set; }
     }
 
     public class WorkUnitEntityRow : WorkUnitRow

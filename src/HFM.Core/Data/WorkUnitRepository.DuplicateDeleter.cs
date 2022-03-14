@@ -1,9 +1,9 @@
-﻿using System;
-using System.Data;
-using System.Data.SQLite;
+﻿using System.Data;
 using System.Globalization;
 
 using HFM.Core.Logging;
+
+using Microsoft.Data.Sqlite;
 
 namespace HFM.Core.Data
 {
@@ -11,9 +11,9 @@ namespace HFM.Core.Data
     {
         private readonly ILogger _logger;
         private readonly IWorkUnitDatabase _database;
-        private readonly SQLiteConnection _connection;
+        private readonly SqliteConnection _connection;
 
-        public DuplicateDeleter(ILogger logger, IWorkUnitDatabase database, SQLiteConnection connection)
+        public DuplicateDeleter(ILogger logger, IWorkUnitDatabase database, SqliteConnection connection)
         {
             _logger = logger ?? NullLogger.Instance;
             _database = database ?? throw new ArgumentNullException(nameof(database));

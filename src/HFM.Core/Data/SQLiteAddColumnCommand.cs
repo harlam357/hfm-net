@@ -1,21 +1,18 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
+
+using Microsoft.Data.Sqlite;
 
 namespace HFM.Core.Data
 {
     internal class SQLiteAddColumnCommand : IDisposable
     {
         private readonly string _tableName;
-        private readonly SQLiteConnection _connection;
+        private readonly SqliteConnection _connection;
 
-        public SQLiteAddColumnCommand(string tableName, SQLiteConnection connection)
+        public SQLiteAddColumnCommand(string tableName, SqliteConnection connection)
         {
             _tableName = tableName;
             _connection = connection;
@@ -34,12 +31,9 @@ namespace HFM.Core.Data
 
             if (_rows == null)
             {
-                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", _connection))
-                using (var table = new DataTable())
-                {
-                    adapter.Fill(table);
-                    _rows = table.AsEnumerable();
-                }
+                using var command = _connection.CreateCommand();
+                using var table = command.GetSchema(_tableName);
+                _rows = table.AsEnumerable();
             }
 
             bool columnExists = _rows.Any(row => row.Field<string>(1) == name);
@@ -47,21 +41,23 @@ namespace HFM.Core.Data
             {
                 string commandText = String.Format(CultureInfo.InvariantCulture,
                     "ALTER TABLE [{0}] ADD COLUMN [{1}] {2} DEFAULT {3} NOT NULL", _tableName, name, dataType, GetDefaultValue(dataType));
-                _commands.Add(new SQLiteCommand(_connection) { CommandText = commandText });
+                var command = _connection.CreateCommand();
+                command.CommandText = commandText;
+                _commands.Add(command);
             }
         }
 
         public static object GetDefaultValue(string dataType)
         {
-            if (dataType.Contains("VARCHAR"))
+            if (dataType.Contains("TEXT"))
             {
                 return "''";
             }
-            if (dataType.Contains("INT"))
+            if (dataType.Contains("INTEGER"))
             {
                 return 0;
             }
-            if (dataType.Contains("FLOAT"))
+            if (dataType.Contains("REAL"))
             {
                 return 0.0f;
             }

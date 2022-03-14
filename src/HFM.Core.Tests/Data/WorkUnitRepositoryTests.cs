@@ -1,11 +1,12 @@
 ﻿using System.Data;
-using System.Data.SQLite;
 using System.Diagnostics;
-
-using NUnit.Framework;
 
 using HFM.Core.WorkUnits;
 using HFM.Proteins;
+
+using Microsoft.Data.Sqlite;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Data
 {
@@ -135,66 +136,55 @@ namespace HFM.Core.Data
 
         private static int GetWuHistoryColumnCount(string dataSource)
         {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
+            using var con = new SqliteConnection(@"Data Source=" + dataSource);
+            con.Open();
+
+            using var command = con.CreateCommand();
+            using var table = command.GetSchema("WuHistory");
+
+            foreach (DataRow row in table.Rows)
             {
-                con.Open();
-                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
-                using (var table = new DataTable())
-                {
-                    adapter.Fill(table);
-                    foreach (DataRow row in table.Rows)
-                    {
-                        Debug.WriteLine(row[1].ToString());
-                    }
-                    return table.Rows.Count;
-                }
+                Debug.WriteLine(row[1].ToString());
             }
+            return table.Rows.Count;
         }
 
         private static void VerifyWuHistoryTableSchema(string dataSource)
         {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
+            using var con = new SqliteConnection(@"Data Source=" + dataSource);
+            con.Open();
+
+            using var command = con.CreateCommand();
+            using var table = command.GetSchema("WuHistory");
+
+            Assert.AreEqual(23, table.Rows.Count);
+            for (int i = 0; i < table.Rows.Count; i++)
             {
-                con.Open();
-                using (var adapter = new SQLiteDataAdapter("PRAGMA table_info(WuHistory);", con))
-                using (var table = new DataTable())
+                var row = table.Rows[i];
+                // notnull check
+                Assert.AreEqual(1, row[3]);
+                // dflt_value check
+                if (i < 15)
                 {
-                    adapter.Fill(table);
-                    Assert.AreEqual(23, table.Rows.Count);
-
-                    for (int i = 0; i < table.Rows.Count; i++)
-                    {
-                        var row = table.Rows[i];
-                        // notnull check
-                        Assert.AreEqual(1, row[3]);
-                        // dflt_value check
-                        if (i < 15)
-                        {
-                            Assert.IsTrue(row[4].Equals(DBNull.Value));
-                        }
-                        else
-                        {
-                            Assert.IsFalse(row[4].Equals(DBNull.Value));
-                        }
-                        // pk check
-                        Assert.AreEqual(i == 0 ? 1 : 0, row[5]);
-                    }
-
+                    Assert.IsTrue(row[4].Equals(DBNull.Value));
                 }
+                else
+                {
+                    Assert.IsFalse(row[4].Equals(DBNull.Value));
+                }
+                // pk check
+                Assert.AreEqual(i == 0 ? 1 : 0, row[5]);
             }
         }
 
         private static int GetWuHistoryRowCount(string dataSource)
         {
-            using (var con = new SQLiteConnection(@"Data Source=" + dataSource))
-            {
-                con.Open();
-                using (var cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT COUNT(*) FROM WuHistory";
-                    return Convert.ToInt32(cmd.ExecuteScalar());
-                }
-            }
+            using var con = new SqliteConnection(@"Data Source=" + dataSource);
+            con.Open();
+
+            using var cmd = con.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM WuHistory";
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
         public static IProteinService CreateProteinService()
