@@ -42,14 +42,14 @@ namespace HFM.Core.Data
                 case WorkUnitProteinUpdateScope.All:
                 case WorkUnitProteinUpdateScope.Unknown:
                     {
-                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory");
+                        string selectSql = "SELECT ProjectID FROM WuHistory ";
                         if (scope == WorkUnitProteinUpdateScope.Unknown)
                         {
-                            selectSql = selectSql.Where(workUnitNameUnknown);
+                            selectSql += $"WHERE {workUnitNameUnknown} ";
                         }
-                        selectSql = selectSql.GroupBy("ProjectID");
+                        selectSql += "GROUP BY ProjectID";
 
-                        using (var table = _database.Select(_connection, selectSql.SQL))
+                        using (var table = _database.Select(_connection, selectSql))
                         {
                             int count = 0;
                             int lastProgress = 0;

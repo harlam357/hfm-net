@@ -22,10 +22,10 @@ namespace HFM.Core.Data
 
         public void Execute(IProgress<ProgressInfo> progress)
         {
-            var selectSql = PetaPoco.Sql.Builder.Select("ID", "ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime", "COUNT(*)")
-               .From("WuHistory")
-               .GroupBy("ProjectID", "ProjectRun", "ProjectClone", "ProjectGen", "DownloadDateTime")
-               .Append("HAVING MAX(ID) AND COUNT(*) > 1");
+            const string selectSql = "SELECT ID, ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime, COUNT(*) " +
+               "FROM WuHistory " +
+               "GROUP BY ProjectID, ProjectRun, ProjectClone, ProjectGen, DownloadDateTime " +
+               "HAVING MAX(ID) AND COUNT(*) > 1";
 
             int count = 0;
             int totalCount = 0;
@@ -34,7 +34,7 @@ namespace HFM.Core.Data
             _logger.Info(message);
             progress?.Report(new ProgressInfo(0, message));
 
-            using (var table = _database.Select(_connection, selectSql.SQL))
+            using (var table = _database.Select(_connection, selectSql))
             {
                 int lastProgress = 0;
                 foreach (DataRow row in table.Rows)

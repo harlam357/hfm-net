@@ -130,7 +130,12 @@ namespace HFM.Core.Data
             // Assert
             VerifyWuHistoryTableSchema(_testData2FileCopy);
             // 32 duplicates deleted
-            Assert.AreEqual(253, GetWuHistoryRowCount(_testData2FileCopy));
+            var rows = _repository.Fetch();
+            Assert.AreEqual(253, rows.Count);
+            // protein data added
+            Assert.IsNotEmpty(rows.First(x => x.ProjectID == 6903).Core);
+            Assert.IsNotEmpty(rows.First(x => x.ProjectID == 8011).Core);
+            // database version updated
             Assert.AreEqual(Version.Parse("0.9.2"), Version.Parse(_repository.GetDatabaseVersion()));
         }
 

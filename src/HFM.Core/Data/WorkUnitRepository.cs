@@ -201,13 +201,13 @@ namespace HFM.Core.Data
 
             var result = new List<PetaPocoWorkUnitRow>();
 
-            var select = new PetaPoco.Sql(_SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql);
+            string select = _SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql;
             using (var connection = CreateConnection())
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = select.SQL;
+                    command.CommandText = select;
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
