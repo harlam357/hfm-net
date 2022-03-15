@@ -70,21 +70,16 @@ namespace HFM.Core.Data
     [PetaPoco.PrimaryKey("ID")]
     public class PetaPocoWorkUnitRow : WorkUnitRow
     {
-        [PetaPoco.Column("InstanceName")]
         public string Name { get; set; }
 
-        [PetaPoco.Column("InstancePath")]
         public string Path { get; set; }
 
         public float CoreVersion { get; set; }
 
-        [PetaPoco.Ignore]
         public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeValue);
 
-        [PetaPoco.Column("FrameTime")]
         public int FrameTimeValue { get; set; }
 
-        [PetaPoco.Ignore]
         public string Result => ToWorkUnitResultString(ResultValue);
 
         private static string ToWorkUnitResultString(int result)
@@ -112,16 +107,12 @@ namespace HFM.Core.Data
             }
         }
 
-        [PetaPoco.Column("Result")]
         public int ResultValue { get; set; }
 
-        [PetaPoco.Column("DownloadDateTime")]
         public DateTime Assigned { get; set; }
 
-        [PetaPoco.Column("CompletionDateTime")]
         public DateTime Finished { get; set; }
 
-        [PetaPoco.Column("Credit")]
         public double BaseCredit { get; set; }
     }
 
