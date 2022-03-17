@@ -38,10 +38,13 @@ namespace HFM.Core.Data
                     cancellationToken.ThrowIfCancellationRequested();
 
                     var projectId = row.Field<long>("ProjectID");
-                    var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                    if (updateSql != null)
+                    var protein = _proteinService.Get((int)projectId);
+                    if (protein is not null)
                     {
-                        _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
+                        _database.Execute(_connection, UpdateSql,
+                            protein.WorkUnitName, protein.KFactor, protein.Core, protein.Frames,
+                            protein.NumberOfAtoms, protein.Credit, protein.PreferredDays, protein.MaximumDays,
+                            projectId);
                     }
                     count++;
 
@@ -56,26 +59,16 @@ namespace HFM.Core.Data
             }
         }
 
-        private PetaPoco.Sql GetUpdateSql(long projectId, string column, long arg)
-        {
-            // get the correct protein
-            var protein = _proteinService.Get((int)projectId);
-            if (protein != null)
-            {
-                var updateSql = PetaPoco.Sql.Builder.Append("UPDATE [WuHistory]")
-                   .Append("SET [WorkUnitName] = @0,", protein.WorkUnitName)
-                   .Append("[KFactor] = @0,", protein.KFactor)
-                   .Append("[Core] = @0,", protein.Core)
-                   .Append("[Frames] = @0,", protein.Frames)
-                   .Append("[Atoms] = @0,", protein.NumberOfAtoms)
-                   .Append("[Credit] = @0,", protein.Credit)
-                   .Append("[PreferredDays] = @0,", protein.PreferredDays)
-                   .Append("[MaximumDays] = @0", protein.MaximumDays)
-                   .Where(column + " = @0", arg);
-                return updateSql;
-            }
-
-            return null;
-        }
+        private const string UpdateSql =
+            "UPDATE [WuHistory] " +
+               "SET [WorkUnitName] = @0, " +
+                   "[KFactor] = @1, " +
+                   "[Core] = @2, " +
+                   "[Frames] = @3, " +
+                   "[Atoms] = @4, " +
+                   "[Credit] = @5, " +
+                   "[PreferredDays] = @6, " +
+                   "[MaximumDays] = @7 " +
+               "WHERE ProjectID = @8";
     }
 }
