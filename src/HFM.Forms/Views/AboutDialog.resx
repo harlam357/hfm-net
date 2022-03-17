@@ -136,8 +136,6 @@ Third-Party Libraries
 LightInject - https://www.lightinject.net
 protobuf-net - https://github.com/mgravell/protobuf-net
 AutoMapper - https://github.com/AutoMapper/AutoMapper
-System.Data.SQLite - https://system.data.sqlite.org
-PetaPoco - https://github.com/CollaboratingPlatypus/PetaPoco
 ZedGraph - https://sourceforge.net/projects/zedgraph</value>
   </data>
 </root>
