@@ -66,8 +66,6 @@ namespace HFM.Core.Data
         public double MaximumDays { get; set; }
     }
 
-    [PetaPoco.TableName("WuHistory")]
-    [PetaPoco.PrimaryKey("ID")]
     public class PetaPocoWorkUnitRow : WorkUnitRow
     {
         public string Name { get; set; }
