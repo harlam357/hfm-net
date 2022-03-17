@@ -131,7 +131,7 @@ namespace HFM.Core.Data
                         AddProteinColumns(connection);
                         // update the WuHistory table with protein info
                         var proteinDataUpdater = new ProteinDataUpdater(this, ProteinService, connection);
-                        proteinDataUpdater.Execute(progress, default, default, CancellationToken.None);
+                        proteinDataUpdater.Execute(progress, CancellationToken.None);
                         // set database version
                         SetDatabaseVersion(connection, VersionString092);
 

@@ -181,26 +181,6 @@ namespace HFM.Forms.Views
             _presenter.LastPageClicked();
         }
 
-        private void RefreshAllMenuItem_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshAllProjectDataClick();
-        }
-
-        private void RefreshUnknownMenuItem_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshUnknownProjectDataClick();
-        }
-
-        private void RefreshProjectMenuItem_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshDataByProjectClick();
-        }
-
-        private void RefreshEntryMenuItem_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshDataByIdClick();
-        }
-
         private DataGridViewColumnSelector _columnSelector;
 
         private void SetupDataGridView(IPreferences preferences)

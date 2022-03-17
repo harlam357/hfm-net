@@ -30,11 +30,6 @@ namespace HFM.Forms.Views
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuViewAutoSizeGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RefreshProjectDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RefreshAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RefreshUnknownMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RefreshProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RefreshEntryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.dataGridMenuItemDeleteWorkUnit = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridMenuItemSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -134,49 +129,10 @@ namespace HFM.Forms.Views
             // ToolsMenuItem
             // 
             this.ToolsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RefreshProjectDataMenuItem});
+            });
             this.ToolsMenuItem.Name = "ToolsMenuItem";
             this.ToolsMenuItem.Size = new System.Drawing.Size(46, 20);
             this.ToolsMenuItem.Text = "&Tools";
-            // 
-            // RefreshProjectDataMenuItem
-            // 
-            this.RefreshProjectDataMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RefreshAllMenuItem,
-            this.RefreshUnknownMenuItem,
-            this.RefreshProjectMenuItem,
-            this.RefreshEntryMenuItem});
-            this.RefreshProjectDataMenuItem.Name = "RefreshProjectDataMenuItem";
-            this.RefreshProjectDataMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.RefreshProjectDataMenuItem.Text = "Refresh &Project Data";
-            // 
-            // RefreshAllMenuItem
-            // 
-            this.RefreshAllMenuItem.Name = "RefreshAllMenuItem";
-            this.RefreshAllMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.RefreshAllMenuItem.Text = "All";
-            this.RefreshAllMenuItem.Click += new System.EventHandler(this.RefreshAllMenuItem_Click);
-            // 
-            // RefreshUnknownMenuItem
-            // 
-            this.RefreshUnknownMenuItem.Name = "RefreshUnknownMenuItem";
-            this.RefreshUnknownMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.RefreshUnknownMenuItem.Text = "Unknown";
-            this.RefreshUnknownMenuItem.Click += new System.EventHandler(this.RefreshUnknownMenuItem_Click);
-            // 
-            // RefreshProjectMenuItem
-            // 
-            this.RefreshProjectMenuItem.Name = "RefreshProjectMenuItem";
-            this.RefreshProjectMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.RefreshProjectMenuItem.Text = "Project Number";
-            this.RefreshProjectMenuItem.Click += new System.EventHandler(this.RefreshProjectMenuItem_Click);
-            // 
-            // RefreshEntryMenuItem
-            // 
-            this.RefreshEntryMenuItem.Name = "RefreshEntryMenuItem";
-            this.RefreshEntryMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.RefreshEntryMenuItem.Text = "Single Entry";
-            this.RefreshEntryMenuItem.Click += new System.EventHandler(this.RefreshEntryMenuItem_Click);
             // 
             // dataGridMenuStrip
             // 
@@ -563,11 +519,6 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripSeparator mnuFileSep1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileExit;
         private System.Windows.Forms.ToolStripMenuItem ToolsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RefreshProjectDataMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RefreshAllMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RefreshUnknownMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RefreshProjectMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RefreshEntryMenuItem;
         private System.Windows.Forms.Label PageSizeLabel;
         private System.Windows.Forms.Label PageNumberLabel;
         private System.Windows.Forms.TextBox PageNumberTextBox;

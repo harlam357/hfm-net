@@ -7,14 +7,6 @@ using Microsoft.Data.Sqlite;
 
 namespace HFM.Core.Data
 {
-    public enum WorkUnitProteinUpdateScope
-    {
-        All,
-        Unknown,
-        Project,
-        Id
-    }
-
     public class ProteinDataUpdater
     {
         private readonly IWorkUnitDatabase _database;
@@ -33,81 +25,34 @@ namespace HFM.Core.Data
             _connection = connection;
         }
 
-        public void Execute(IProgress<ProgressInfo> progress, WorkUnitProteinUpdateScope scope, long id, CancellationToken cancellationToken)
+        public void Execute(IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
         {
-            const string workUnitNameUnknown = "WorkUnitName = '' OR WorkUnitName = 'Unknown'";
+            const string selectSql = "SELECT ProjectID FROM WuHistory GROUP BY ProjectID";
 
-            switch (scope)
+            using (var table = _database.Select(_connection, selectSql))
             {
-                case WorkUnitProteinUpdateScope.All:
-                case WorkUnitProteinUpdateScope.Unknown:
+                int count = 0;
+                int lastProgress = 0;
+                foreach (DataRow row in table.Rows)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var projectId = row.Field<long>("ProjectID");
+                    var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
+                    if (updateSql != null)
                     {
-                        string selectSql = "SELECT ProjectID FROM WuHistory ";
-                        if (scope == WorkUnitProteinUpdateScope.Unknown)
-                        {
-                            selectSql += $"WHERE {workUnitNameUnknown} ";
-                        }
-                        selectSql += "GROUP BY ProjectID";
-
-                        using (var table = _database.Select(_connection, selectSql))
-                        {
-                            int count = 0;
-                            int lastProgress = 0;
-                            foreach (DataRow row in table.Rows)
-                            {
-                                cancellationToken.ThrowIfCancellationRequested();
-
-                                var projectId = row.Field<long>("ProjectID");
-                                var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                                if (updateSql != null)
-                                {
-                                    if (scope == WorkUnitProteinUpdateScope.Unknown)
-                                    {
-                                        updateSql = updateSql.Where(workUnitNameUnknown);
-                                    }
-                                    _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
-                                }
-                                count++;
-
-                                int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
-                                if (progressPercentage != lastProgress)
-                                {
-                                    string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
-                                    progress?.Report(new ProgressInfo(progressPercentage, message));
-                                    lastProgress = progressPercentage;
-                                }
-                            }
-                        }
-                        break;
+                        _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
                     }
-                case WorkUnitProteinUpdateScope.Project:
+                    count++;
+
+                    int progressPercentage = Convert.ToInt32((count / (double)table.Rows.Count) * 100);
+                    if (progressPercentage != lastProgress)
                     {
-                        int projectId = (int)id;
-                        var updateSql = GetUpdateSql(projectId, "ProjectID", projectId);
-                        if (updateSql != null)
-                        {
-                            _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
-                        }
-                        break;
+                        string message = String.Format(CultureInfo.CurrentCulture, "Updating project {0} of {1}.", count, table.Rows.Count);
+                        progress?.Report(new ProgressInfo(progressPercentage, message));
+                        lastProgress = progressPercentage;
                     }
-                case WorkUnitProteinUpdateScope.Id:
-                    {
-                        var selectSql = PetaPoco.Sql.Builder.Select("ProjectID").From("WuHistory").Where("ID = @0", id);
-
-                        using (var table = _database.Select(_connection, selectSql.SQL, selectSql.Arguments))
-                        {
-                            if (table.Rows.Count != 0)
-                            {
-                                var projectId = table.Rows[0].Field<int>("ProjectID");
-                                var updateSql = GetUpdateSql(projectId, "ID", id);
-                                if (updateSql != null)
-                                {
-                                    _database.Execute(_connection, updateSql.SQL, updateSql.Arguments);
-                                }
-                            }
-                        }
-                        break;
-                    }
+                }
             }
         }
 
