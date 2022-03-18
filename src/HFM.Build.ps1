@@ -107,7 +107,6 @@ Function Clean-Artifacts
     New-Item "$DotNetWindowsArtifactsBin\Documentation\License" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$DotNetWindowsArtifactsBin\CSS" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$DotNetWindowsArtifactsBin\XSL" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
-    New-Item "$DotNetWindowsArtifactsBin\runtimes\win" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$DotNetWindowsArtifactsBin\runtimes\win-x86" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item "$DotNetWindowsArtifactsBin\runtimes\win-x64" -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
     New-Item $DotNetWindowsArtifactsPackages -ItemType Directory -ErrorAction Stop -Verbose:$localVerbose > $null
@@ -149,8 +148,6 @@ Function Deploy-Build
         "Newtonsoft.Json.dll",
         "protobuf-net.Core.dll",
         "protobuf-net.dll",
-        "System.Data.SQLite.dll"
-        "System.Data.SQLite.EF6.dll"
         "ZedGraph.dll"
         )
 
@@ -159,7 +156,6 @@ Function Deploy-Build
     $AssemblyFiles = Get-ChildItem -Path "$hfmBinRoot\*" -Include $Assemblies
     Copy-Item -Path $AssemblyFiles -Destination $DotNetWindowsArtifactsBin -ErrorAction Stop -Verbose:$localVerbose
     # SQLite Assemblies
-    Copy-Item -Path "$hfmBinRoot\runtimes\win\*" -Destination "$DotNetWindowsArtifactsBin\runtimes\win" -Recurse -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path "$hfmBinRoot\runtimes\win-x86\*" -Destination "$DotNetWindowsArtifactsBin\runtimes\win-x86" -Recurse -ErrorAction Stop -Verbose:$localVerbose
     Copy-Item -Path "$hfmBinRoot\runtimes\win-x64\*" -Destination "$DotNetWindowsArtifactsBin\runtimes\win-x64" -Recurse -ErrorAction Stop -Verbose:$localVerbose
     # Tools Assemblies
