@@ -129,8 +129,6 @@ Function Deploy-Build
     # Primary Assemblies
     [string[]]$Assemblies = @(
         "AutoMapper.dll",
-        "EntityFramework.dll",
-        "EntityFramework.SqlServer.dll",
         "HFM.Client.dll",
         "HFM.Core.dll",
         "HFM.deps.json", 
@@ -144,10 +142,27 @@ Function Deploy-Build
         "HFM.runtimeconfig.json",
         "LightInject.dll",
         "LightInject.Microsoft.DependencyInjection.dll",
+        "Microsoft.Data.Sqlite.dll",
+        "Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "Microsoft.EntityFrameworkCore.dll",
+        "Microsoft.EntityFrameworkCore.Relational.dll",
+        "Microsoft.EntityFrameworkCore.Sqlite.dll",
+        "Microsoft.Extensions.Caching.Abstractions.dll",
+        "Microsoft.Extensions.Caching.Memory.dll",
+        "Microsoft.Extensions.Configuration.Abstractions.dll",
         "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "Microsoft.Extensions.DependencyInjection.dll",
+        "Microsoft.Extensions.DependencyModel.dll",
+        "Microsoft.Extensions.Logging.Abstractions.dll",
+        "Microsoft.Extensions.Logging.dll",
+        "Microsoft.Extensions.Options.dll",
+        "Microsoft.Extensions.Primitives.dll",
         "Newtonsoft.Json.dll",
         "protobuf-net.Core.dll",
         "protobuf-net.dll",
+        "SQLitePCLRaw.batteries_v2.dll",
+        "SQLitePCLRaw.core.dll",
+        "SQLitePCLRaw.provider.e_sqlite3.dll",
         "ZedGraph.dll"
         )
 
