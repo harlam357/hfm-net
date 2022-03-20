@@ -279,16 +279,19 @@ namespace HFM.Core.Client
         public void Client_Slots_IsThreadSafe()
         {
             // Arrange
+            using var cts = new CancellationTokenSource();
+            var token = cts.Token;
+
             using (var client = new TestClientRefreshesSlots())
             {
-                Task.Run(() =>
+                _ = Task.Run(() =>
                 {
-                    while (true)
+                    while (!token.IsCancellationRequested)
                     {
                         // ReSharper disable once AccessToDisposedClosure
                         client.RefreshSlots();
                     }
-                });
+                }, token);
 
                 const int count = 10;
 
@@ -311,6 +314,10 @@ namespace HFM.Core.Client
                 catch (Exception)
                 {
                     Assert.Fail("Enumeration failed");
+                }
+                finally
+                {
+                    cts.Cancel();
                 }
             }
         }
