@@ -10,7 +10,6 @@ namespace HFM.Core.ScheduledTasks
         private static ILogger Logger { get; } = TestLogger.Instance;
 
         [Test]
-        [Ignore("Hanging on CI build")]
         public async Task DelegateScheduledTask_Test()
         {
             // create and start the task
