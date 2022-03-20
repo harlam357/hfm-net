@@ -8,6 +8,8 @@ using Microsoft.Data.Sqlite;
 
 using NUnit.Framework;
 
+using static HFM.Core.Data.Internal.SqliteCommandExtensions;
+
 namespace HFM.Core.Data
 {
     [TestFixture]
