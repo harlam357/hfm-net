@@ -210,6 +210,10 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.ClientSlot = workUnitModel.SlotModel.SlotID == SlotIdentifier.NoSlotID
             ? null
             : workUnitModel.SlotModel.SlotID;
+        workUnit.Processor = workUnitModel.BenchmarkIdentifier.Processor;
+        workUnit.Threads = workUnitModel.BenchmarkIdentifier.HasThreads
+            ? workUnitModel.BenchmarkIdentifier.Threads
+            : null;
 
         if (insert)
         {

@@ -85,7 +85,7 @@ public class WorkUnitContextRepositoryTests
                 KFactor = 0.3
             };
 
-            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, 1);
+            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, 1, "AMD Ryzen 7 5800X", 14);
             _updateResult = _repository.Update(workUnitModel);
         }
 
@@ -146,6 +146,8 @@ public class WorkUnitContextRepositoryTests
             Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
             Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
             Assert.AreEqual(1, workUnit.ClientSlot);
+            Assert.AreEqual("AMD Ryzen 7 5800X", workUnit.Processor);
+            Assert.AreEqual(14, workUnit.Threads);
         }
 
         [Test]
@@ -801,11 +803,27 @@ public class WorkUnitContextRepositoryTests
         }
     }
 
-    private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein, int slotID = SlotIdentifier.NoSlotID)
+    private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein,
+        int slotID = SlotIdentifier.NoSlotID, string processor = null, int? threads = null)
     {
-        var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
+        var slotModel = new ProteinBenchmarkDetailSlotModel(new NullClient { Settings = settings })
+        {
+            SlotID = slotID,
+            Processor = processor,
+            Threads = threads
+        };
         var workUnitModel = new WorkUnitModel(slotModel, workUnit);
         workUnitModel.CurrentProtein = protein;
         return workUnitModel;
+    }
+
+    private class ProteinBenchmarkDetailSlotModel : SlotModel, IProteinBenchmarkDetailSource
+    {
+        public ProteinBenchmarkDetailSlotModel(IClient client) : base(client)
+        {
+
+        }
+
+        public int? Threads { get; init; }
     }
 }

@@ -34,6 +34,10 @@ public record WorkUnitEntity
 
     public int? ClientSlot { get; set; }
 
+    public string Processor { get; set; }
+
+    public int? Threads { get; set; }
+
     public virtual ProteinEntity Protein { get; set; }
 
     public virtual ClientEntity Client { get; set; }
