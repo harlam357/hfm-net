@@ -5,6 +5,8 @@ using System.Globalization;
 
 using Microsoft.Data.Sqlite;
 
+using static HFM.Core.Data.Internal.SqliteCommandExtensions;
+
 namespace HFM.Core.Data
 {
     internal class SQLiteAddColumnCommand : IDisposable

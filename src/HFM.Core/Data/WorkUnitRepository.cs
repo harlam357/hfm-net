@@ -8,6 +8,9 @@ using HFM.Core.WorkUnits;
 
 using Microsoft.Data.Sqlite;
 
+using static HFM.Core.Data.Internal.DbDataReaderExtensions;
+using static HFM.Core.Data.Internal.SqliteCommandExtensions;
+
 namespace HFM.Core.Data
 {
     internal enum WorkUnitRepositoryTable
@@ -212,29 +215,29 @@ namespace HFM.Core.Data
                     while (reader.Read())
                     {
                         var row = new PetaPocoWorkUnitRow();
-                        row.ID = reader.GetFieldValue<long>("ID");
-                        row.ProjectID = reader.GetFieldValue<int>("ProjectID");
-                        row.ProjectRun = reader.GetFieldValue<int>("ProjectRun");
-                        row.ProjectClone = reader.GetFieldValue<int>("ProjectClone");
-                        row.ProjectGen = reader.GetFieldValue<int>("ProjectGen");
-                        row.Username = reader.GetFieldValue<string>("Username");
-                        row.Team = reader.GetFieldValue<int>("Team");
-                        row.FramesCompleted = reader.GetFieldValue<int>("FramesCompleted");
-                        row.WorkUnitName = reader.GetFieldValue<string>("WorkUnitName");
-                        row.KFactor = reader.GetFieldValue<double>("KFactor");
-                        row.Core = reader.GetFieldValue<string>("Core");
-                        row.Frames = reader.GetFieldValue<int>("Frames");
-                        row.Atoms = reader.GetFieldValue<int>("Atoms");
-                        row.PreferredDays = reader.GetFieldValue<double>("PreferredDays");
-                        row.MaximumDays = reader.GetFieldValue<double>("MaximumDays");
-                        row.Name = reader.GetFieldValue<string>("InstanceName");
-                        row.Path = reader.GetFieldValue<string>("InstancePath");
-                        row.CoreVersion = reader.GetFieldValue<float>("CoreVersion");
-                        row.FrameTimeValue = reader.GetFieldValue<int>("FrameTime");
-                        row.ResultValue = reader.GetFieldValue<int>("Result");
-                        row.Assigned = reader.GetFieldValue<DateTime>("DownloadDateTime");
-                        row.Finished = reader.GetFieldValue<DateTime>("CompletionDateTime");
-                        row.BaseCredit = reader.GetFieldValue<double>("Credit");
+                        row.ID = reader.GetFieldValueOrDefault<long>("ID");
+                        row.ProjectID = reader.GetFieldValueOrDefault<int>("ProjectID");
+                        row.ProjectRun = reader.GetFieldValueOrDefault<int>("ProjectRun");
+                        row.ProjectClone = reader.GetFieldValueOrDefault<int>("ProjectClone");
+                        row.ProjectGen = reader.GetFieldValueOrDefault<int>("ProjectGen");
+                        row.Username = reader.GetFieldValueOrDefault<string>("Username");
+                        row.Team = reader.GetFieldValueOrDefault<int>("Team");
+                        row.FramesCompleted = reader.GetFieldValueOrDefault<int>("FramesCompleted");
+                        row.WorkUnitName = reader.GetFieldValueOrDefault<string>("WorkUnitName");
+                        row.KFactor = reader.GetFieldValueOrDefault<double>("KFactor");
+                        row.Core = reader.GetFieldValueOrDefault<string>("Core");
+                        row.Frames = reader.GetFieldValueOrDefault<int>("Frames");
+                        row.Atoms = reader.GetFieldValueOrDefault<int>("Atoms");
+                        row.PreferredDays = reader.GetFieldValueOrDefault<double>("PreferredDays");
+                        row.MaximumDays = reader.GetFieldValueOrDefault<double>("MaximumDays");
+                        row.Name = reader.GetFieldValueOrDefault<string>("InstanceName");
+                        row.Path = reader.GetFieldValueOrDefault<string>("InstancePath");
+                        row.CoreVersion = reader.GetFieldValueOrDefault<float>("CoreVersion");
+                        row.FrameTimeValue = reader.GetFieldValueOrDefault<int>("FrameTime");
+                        row.ResultValue = reader.GetFieldValueOrDefault<int>("Result");
+                        row.Assigned = reader.GetFieldValueOrDefault<DateTime>("DownloadDateTime");
+                        row.Finished = reader.GetFieldValueOrDefault<DateTime>("CompletionDateTime");
+                        row.BaseCredit = reader.GetFieldValueOrDefault<double>("Credit");
                         result.Add(row);
                     }
                 }

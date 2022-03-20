@@ -1,16 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 
 using HFM.Core;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms.Views
 {
-    public delegate void ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
+    public delegate Task ProgressFunction(IProgress<ProgressInfo> progress, CancellationToken cancellationToken);
 
     public sealed partial class ProgressDialog : FormBase
     {

@@ -2,7 +2,7 @@
 
 using Microsoft.Data.Sqlite;
 
-namespace HFM.Core.Data;
+namespace HFM.Core.Data.Internal;
 
 internal static class SqliteCommandExtensions
 {

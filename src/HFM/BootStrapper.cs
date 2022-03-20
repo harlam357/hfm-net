@@ -3,10 +3,12 @@
 using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Services;
+using HFM.Core.WorkUnits;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 using HFM.Preferences;
+using HFM.Proteins;
 
 using LightInject;
 
@@ -199,6 +201,7 @@ namespace HFM
 
             var mainForm = (MainForm)mainPresenter.Form;
             var repository = Container.GetInstance<WorkUnitRepository>();
+            //var repository = new WorkUnitRepository(null, CreateProteinService());
             try
             {
                 string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
@@ -225,7 +228,12 @@ namespace HFM
 
         private static void UpgradeWorkUnitRepository(WorkUnitRepository repository)
         {
-            using var dialog = new ProgressDialog((progress, _) => repository.Upgrade(progress), false);
+            using var dialog = new ProgressDialog((progress, _) =>
+            {
+                repository.Upgrade(progress);
+                return Task.CompletedTask;
+            }, false);
+
             dialog.Text = Core.Application.NameAndVersion;
             dialog.StartPosition = FormStartPosition.CenterScreen;
             dialog.ShowDialog();
@@ -253,7 +261,7 @@ namespace HFM
         {
             var toWorkUnitContext = new MigrateToWorkUnitContext(Logger, Container.GetInstance<IServiceScopeFactory>(), repository);
 
-            using var dialog = new ProgressDialog((progress, _) => toWorkUnitContext.ExecuteAsync(progress).ConfigureAwait(true), false);
+            using var dialog = new ProgressDialog(async (progress, _) => await toWorkUnitContext.ExecuteAsync(progress).ConfigureAwait(true), false);
             dialog.Text = Core.Application.NameAndVersion;
             dialog.StartPosition = FormStartPosition.CenterScreen;
             dialog.ShowDialog();
@@ -262,6 +270,65 @@ namespace HFM
                 throw dialog.Exception;
             }
         }
+
+#if DEBUG
+        public static IProteinService CreateProteinService()
+        {
+            var collection = new List<Protein>();
+
+            var protein = new Protein();
+            protein.ProjectNumber = 6600;
+            protein.WorkUnitName = "WorkUnitName";
+            protein.Core = "GROGPU2";
+            protein.Credit = 450;
+            protein.KFactor = 0;
+            protein.Frames = 100;
+            protein.NumberOfAtoms = 5000;
+            protein.PreferredDays = 2;
+            protein.MaximumDays = 3;
+            collection.Add(protein);
+
+            protein = new Protein();
+            protein.ProjectNumber = 5797;
+            protein.WorkUnitName = "WorkUnitName2";
+            protein.Core = "GROGPU2";
+            protein.Credit = 675;
+            protein.KFactor = 2.3;
+            protein.Frames = 100;
+            protein.NumberOfAtoms = 7000;
+            protein.PreferredDays = 2;
+            protein.MaximumDays = 3;
+            collection.Add(protein);
+
+            protein = new Protein();
+            protein.ProjectNumber = 8011;
+            protein.WorkUnitName = "WorkUnitName3";
+            protein.Core = "GRO-A4";
+            protein.Credit = 106.6;
+            protein.KFactor = 0.75;
+            protein.Frames = 100;
+            protein.NumberOfAtoms = 9000;
+            protein.PreferredDays = 2.13;
+            protein.MaximumDays = 4.62;
+            collection.Add(protein);
+
+            protein = new Protein();
+            protein.ProjectNumber = 6903;
+            protein.WorkUnitName = "WorkUnitName4";
+            protein.Core = "GRO-A5";
+            protein.Credit = 22706;
+            protein.KFactor = 38.05;
+            protein.Frames = 100;
+            protein.NumberOfAtoms = 11000;
+            protein.PreferredDays = 5;
+            protein.MaximumDays = 12;
+            collection.Add(protein);
+
+            var dataContainer = new ProteinDataContainer();
+            dataContainer.Data = collection;
+            return new ProteinService(dataContainer, null, null);
+        }
+#endif
 
         public void RegisterForUnhandledExceptions()
         {

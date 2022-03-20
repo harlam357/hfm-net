@@ -655,7 +655,11 @@ namespace HFM.Forms.Presenters
             try
             {
                 IEnumerable<ProteinChange> result = null;
-                using (var dialog = new ProgressDialog((progress, token) => result = proteinService.Refresh(progress), false))
+                using (var dialog = new ProgressDialog((progress, _) =>
+                {
+                    result = proteinService.Refresh(progress);
+                    return Task.CompletedTask;
+                }, false))
                 {
                     dialog.Text = Core.Application.NameAndVersion;
                     dialog.ShowDialog(Form);
