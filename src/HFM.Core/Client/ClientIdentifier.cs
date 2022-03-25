@@ -126,5 +126,7 @@ namespace HFM.Core.Client
                 ? new ClientIdentifier(name, match.Groups["Server"].Value, Convert.ToInt32(match.Groups["Port"].Value), guid)
                 : new ClientIdentifier(name, connectionString, ClientSettings.NoPort, guid);
         }
+
+        internal static ClientIdentifier FromGuid(Guid guid) => new(null, null, ClientSettings.DefaultPort, guid);
     }
 }

@@ -31,6 +31,8 @@ namespace HFM.Core.Client
 
         public int SlotID { get; }
 
+        public bool HasSlotID => SlotID != NoSlotID;
+
         public string Name => AppendSlotID(ClientIdentifier.Name, SlotID);
 
         private static string AppendSlotID(string name, int slotId) =>
