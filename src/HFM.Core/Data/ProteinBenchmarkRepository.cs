@@ -101,10 +101,9 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                         x.Processor == benchmarkIdentifier.Processor &&
                         x.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
             .SelectMany(x => x.Frames)
+            .Where(x => x.Duration.ToString() != TimeSpan.Zero.ToString())
             .OrderByDescending(x => x.WorkUnitID).ThenByDescending(x => x.FrameID)
             .Take(300)
-            .AsEnumerable()
-            .Where(x => x.Duration > TimeSpan.Zero)
             .ToList();
 
         return new WorkUnitContextProteinBenchmark
