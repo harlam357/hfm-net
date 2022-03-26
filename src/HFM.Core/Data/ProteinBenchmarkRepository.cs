@@ -2,6 +2,7 @@
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Core.Data;
@@ -14,9 +15,9 @@ public interface IProteinBenchmarkRepository
 
     WorkUnitContextProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
 
-    ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
+    ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
-    ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
+    ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
 }
 
 public class ScopedProteinBenchmarkRepository : ProteinBenchmarkRepository
@@ -37,6 +38,8 @@ public class ScopedProteinBenchmarkRepository : ProteinBenchmarkRepository
 
 public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
 {
+    private const int DefaultMaxFrames = 300;
+
     public ILogger Logger { get; }
 
     protected ProteinBenchmarkRepository() : this(null)
@@ -82,8 +85,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     {
         using var context = CreateWorkUnitContext();
 
-        var query = QueryWorkUnitsByClientSlot(slotIdentifier, context);
-        return query
+        return QueryWorkUnitsByClientSlot(slotIdentifier, context)
             .Where(x => x.Frames.Count != 0)
             .Select(x => x.Protein.ProjectID)
             .Distinct()
@@ -95,25 +97,65 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     {
         using var context = CreateWorkUnitContext();
 
-        var query = QueryWorkUnitsByClientSlot(slotIdentifier, context);
-        var frames = query
-            .Where(x => x.Protein.ProjectID == benchmarkIdentifier.ProjectID &&
-                        x.Processor == benchmarkIdentifier.Processor &&
-                        x.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
+        var frames = QueryWorkUnitsByClientSlot(slotIdentifier, context)
+            .Where(x =>
+                x.Protein.ProjectID == benchmarkIdentifier.ProjectID &&
+                x.Processor == benchmarkIdentifier.Processor &&
+                x.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
             .SelectMany(x => x.Frames)
             .Where(x => x.Duration.ToString() != TimeSpan.Zero.ToString())
             .OrderByDescending(x => x.WorkUnitID).ThenByDescending(x => x.FrameID)
-            .Take(300)
+            .Take(DefaultMaxFrames)
             .ToList();
 
         return new WorkUnitContextProteinBenchmark
         {
-            ProjectID = benchmarkIdentifier.ProjectID,
-            Processor = benchmarkIdentifier.Processor,
-            Threads = benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : ProteinBenchmarkIdentifier.NoThreads,
+            SlotIdentifier = slotIdentifier,
+            BenchmarkIdentifier = benchmarkIdentifier,
             FrameTimes = frames.Select(x => new ProteinBenchmarkFrameTime(x.Duration)).ToList(),
             MinimumFrameTime = frames.Min(x => x.Duration)
         };
+    }
+
+    public ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) =>
+        GetBenchmarks(slotIdentifier, new[] { projectID });
+
+    public ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+    {
+        using var context = CreateWorkUnitContext();
+
+        return QueryWorkUnitsByClientSlot(slotIdentifier, context)
+            .Include(x => x.Protein)
+            .Include(x => x.Client)
+            .Include(x => x.Frames
+                .Where(y => y.Duration.ToString() != TimeSpan.Zero.ToString())
+                .OrderByDescending(y => y.FrameID))
+            .Where(x => projects.Contains(x.Protein.ProjectID) && x.Frames.Any())
+            .OrderByDescending(x => x.ID)
+            .AsEnumerable()
+            .GroupBy(x =>
+                (SlotIdentifier: new SlotIdentifier(
+                    ClientIdentifier.FromConnectionString(
+                        x.Client.Name, x.Client.ConnectionString, Guid.Parse(x.Client.Guid)),
+                            x.ClientSlot ?? SlotIdentifier.NoSlotID),
+                BenchmarkIdentifier: new ProteinBenchmarkIdentifier(
+                    x.Protein.ProjectID, x.Processor, x.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
+            .Select(x =>
+            {
+                var frames = x
+                    .SelectMany(y => y.Frames)
+                    .Take(DefaultMaxFrames)
+                    .ToList();
+
+                return new WorkUnitContextProteinBenchmark
+                {
+                    SlotIdentifier = x.Key.SlotIdentifier,
+                    BenchmarkIdentifier = x.Key.BenchmarkIdentifier,
+                    FrameTimes = frames.Select(y => new ProteinBenchmarkFrameTime(y.Duration)).ToList(),
+                    MinimumFrameTime = frames.Min(y => y.Duration)
+                };
+            })
+            .ToList();
     }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientSlot(SlotIdentifier slotIdentifier, WorkUnitContext context)
@@ -132,10 +174,6 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
 
         return query;
     }
-
-    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) => throw new NotImplementedException();
-
-    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects) => throw new NotImplementedException();
 
     protected abstract WorkUnitContext CreateWorkUnitContext();
 }

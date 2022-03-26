@@ -1,15 +1,13 @@
-﻿using HFM.Core.WorkUnits;
+﻿using HFM.Core.Client;
+using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data;
+
 public record WorkUnitContextProteinBenchmark
 {
-    public ProteinBenchmarkIdentifier BenchmarkIdentifier => new(ProjectID, Processor, Threads);
+    public SlotIdentifier SlotIdentifier { get; init; }
 
-    public int ProjectID { get; init; }
-
-    public string Processor { get; init; }
-
-    public int Threads { get; init; }
+    public ProteinBenchmarkIdentifier BenchmarkIdentifier { get; init; }
 
     public TimeSpan MinimumFrameTime { get; init; }
 
