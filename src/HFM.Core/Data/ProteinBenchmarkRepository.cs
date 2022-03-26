@@ -12,7 +12,7 @@ public interface IProteinBenchmarkRepository
 
     ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
 
-    ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
+    WorkUnitContextProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
 
     ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
@@ -49,68 +49,90 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         Logger = logger ?? NullLogger.Instance;
     }
 
-    public ICollection<SlotIdentifier> GetSlotIdentifiers() => GetSlotIdentifiersInternal(false);
-
-    public ICollection<SlotIdentifier> GetAllSlotIdentifiers() => GetSlotIdentifiersInternal(true);
-
-    private ICollection<SlotIdentifier> GetSlotIdentifiersInternal(bool all)
+    public ICollection<SlotIdentifier> GetSlotIdentifiers()
     {
         using var context = CreateWorkUnitContext();
 
         var clients = context.Clients
-            .Where(x => all || x.Guid != null)
+            .Where(x => x.Guid != null)
             .AsEnumerable()
-            .Select(x => new
-            {
-                x.ID,
-                ClientIdentifier = ClientIdentifier.FromConnectionString(x.Name, x.ConnectionString,
-                    x.Guid is null ? Guid.Empty : Guid.Parse(x.Guid))
-            })
-            .ToList();
+            .Select(x => (
+                ClientID: x.ID,
+                ClientIdentifier: ClientIdentifier.FromConnectionString(x.Name, x.ConnectionString,
+                    x.Guid is null ? Guid.Empty : Guid.Parse(x.Guid))));
 
         var clientSlots = context.WorkUnits
-            .Where(x => all || x.Frames.Count != 0)
+            .Where(x => x.Frames.Count != 0)
             .Select(x => new { x.ClientID, x.ClientSlot })
             .Distinct()
             .AsEnumerable()
-            .GroupBy(x => x.ClientID)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.ClientSlot));
+            .ToLookup(x => x.ClientID, x => x.ClientSlot);
 
         var slotIdentifiers = new List<SlotIdentifier>();
         foreach (var c in clients)
         {
-            if (clientSlots.TryGetValue(c.ID, out var slots))
-            {
-                foreach (var s in slots)
-                {
-                    slotIdentifiers.Add(new SlotIdentifier(c.ClientIdentifier, s ?? SlotIdentifier.NoSlotID));
-                }
-            }
+            slotIdentifiers.AddRange(
+                clientSlots[c.ClientID].Select(s =>
+                    new SlotIdentifier(c.ClientIdentifier, s ?? SlotIdentifier.NoSlotID)));
         }
         return slotIdentifiers;
     }
 
-    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) => GetBenchmarkProjectsInternal(slotIdentifier, false);
-
-    public ICollection<int> GetAllBenchmarkProjects(SlotIdentifier slotIdentifier) => GetBenchmarkProjectsInternal(slotIdentifier, true);
-
-    public ICollection<int> GetBenchmarkProjectsInternal(SlotIdentifier slotIdentifier, bool all)
+    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
     {
         using var context = CreateWorkUnitContext();
 
-        var clients = context.Clients
-            .Where(x => slotIdentifier.IsAllSlots() || x.Guid == slotIdentifier.ClientIdentifier.Guid.ToString());
-
-        return context.WorkUnits
-            .Where(x => all || x.Frames.Count != 0)
-            .Where(x => clients.Contains(x.Client) || x.ClientSlot == (slotIdentifier.SlotID == SlotIdentifier.NoSlotID ? null : slotIdentifier.SlotID))
+        var query = QueryWorkUnitsByClientSlot(slotIdentifier, context);
+        return query
+            .Where(x => x.Frames.Count != 0)
             .Select(x => x.Protein.ProjectID)
             .Distinct()
             .OrderBy(x => x)
             .ToList();
     }
 
-    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier) => throw new NotImplementedException();
+    public WorkUnitContextProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
+    {
+        using var context = CreateWorkUnitContext();
+
+        var query = QueryWorkUnitsByClientSlot(slotIdentifier, context);
+        var frames = query
+            .Where(x => x.Protein.ProjectID == benchmarkIdentifier.ProjectID &&
+                        x.Processor == benchmarkIdentifier.Processor &&
+                        x.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
+            .SelectMany(x => x.Frames)
+            .OrderByDescending(x => x.WorkUnitID).ThenByDescending(x => x.FrameID)
+            .Take(300)
+            .AsEnumerable()
+            .Where(x => x.Duration > TimeSpan.Zero)
+            .ToList();
+
+        return new WorkUnitContextProteinBenchmark
+        {
+            ProjectID = benchmarkIdentifier.ProjectID,
+            Processor = benchmarkIdentifier.Processor,
+            Threads = benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : ProteinBenchmarkIdentifier.NoThreads,
+            FrameTimes = frames.Select(x => new ProteinBenchmarkFrameTime(x.Duration)).ToList(),
+            MinimumFrameTime = frames.Min(x => x.Duration)
+        };
+    }
+
+    private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientSlot(SlotIdentifier slotIdentifier, WorkUnitContext context)
+    {
+        var query = context.WorkUnits.AsQueryable();
+
+        if (!slotIdentifier.IsAllSlots())
+        {
+            int? clientSlot = slotIdentifier.HasSlotID
+                ? slotIdentifier.SlotID
+                : null;
+
+            var clients = context.Clients.Where(x => x.Guid == slotIdentifier.ClientIdentifier.Guid.ToString());
+            query = query.Where(x => clients.Contains(x.Client) && x.ClientSlot == clientSlot);
+        }
+
+        return query;
+    }
 
     public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) => throw new NotImplementedException();
 
