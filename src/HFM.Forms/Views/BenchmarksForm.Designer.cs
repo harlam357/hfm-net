@@ -71,11 +71,8 @@ namespace HFM.Forms.Views
             this.productionGraphTab = new System.Windows.Forms.TabPage();
             this.projectComparisonGraphTab = new System.Windows.Forms.TabPage();
             this.grpClients = new System.Windows.Forms.GroupBox();
-            this.picDeleteClient = new System.Windows.Forms.PictureBox();
             this.cboClients = new System.Windows.Forms.ComboBox();
             this.projectsListBoxContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuContextRefreshMinimum = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuContextDeleteProject = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.grpProjectInfo.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -89,7 +86,6 @@ namespace HFM.Forms.Views
             this.grpColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).BeginInit();
             this.grpClients.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).BeginInit();
             this.projectsListBoxContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -543,7 +539,6 @@ namespace HFM.Forms.Views
             // grpClients
             // 
             this.grpClients.BackColor = System.Drawing.SystemColors.Control;
-            this.grpClients.Controls.Add(this.picDeleteClient);
             this.grpClients.Controls.Add(this.cboClients);
             this.grpClients.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpClients.Location = new System.Drawing.Point(3, 3);
@@ -552,18 +547,6 @@ namespace HFM.Forms.Views
             this.grpClients.TabIndex = 0;
             this.grpClients.TabStop = false;
             this.grpClients.Text = "Client Slots";
-            // 
-            // picDeleteClient
-            // 
-            this.picDeleteClient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picDeleteClient.Image = global::HFM.Forms.Properties.Resources.Quit;
-            this.picDeleteClient.Location = new System.Drawing.Point(528, 21);
-            this.picDeleteClient.Name = "picDeleteClient";
-            this.picDeleteClient.Size = new System.Drawing.Size(16, 16);
-            this.picDeleteClient.TabIndex = 2;
-            this.picDeleteClient.TabStop = false;
-            this.toolTip1.SetToolTip(this.picDeleteClient, "Delete Client Benchmarks");
-            this.picDeleteClient.Click += new System.EventHandler(this.picDeleteClient_Click);
             // 
             // cboClients
             // 
@@ -579,24 +562,9 @@ namespace HFM.Forms.Views
             // projectsListBoxContextMenuStrip
             // 
             this.projectsListBoxContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuContextRefreshMinimum,
-            this.mnuContextDeleteProject});
+            });
             this.projectsListBoxContextMenuStrip.Name = "projectsListBoxContextMenuStrip";
             this.projectsListBoxContextMenuStrip.Size = new System.Drawing.Size(235, 48);
-            // 
-            // mnuContextRefreshMinimum
-            // 
-            this.mnuContextRefreshMinimum.Name = "mnuContextRefreshMinimum";
-            this.mnuContextRefreshMinimum.Size = new System.Drawing.Size(234, 22);
-            this.mnuContextRefreshMinimum.Text = "Refresh Minimum Frame Time";
-            this.mnuContextRefreshMinimum.Click += new System.EventHandler(this.mnuContextRefreshMinimum_Click);
-            // 
-            // mnuContextDeleteProject
-            // 
-            this.mnuContextDeleteProject.Name = "mnuContextDeleteProject";
-            this.mnuContextDeleteProject.Size = new System.Drawing.Size(234, 22);
-            this.mnuContextDeleteProject.Text = "Delete This Project";
-            this.mnuContextDeleteProject.Click += new System.EventHandler(this.mnuContextDeleteProject_Click);
             // 
             // BenchmarksForm
             // 
@@ -623,7 +591,6 @@ namespace HFM.Forms.Views
             this.grpColors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.colorPreviewPictureBox)).EndInit();
             this.grpClients.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picDeleteClient)).EndInit();
             this.projectsListBoxContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -658,10 +625,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.TextBox txtBenchmarks;
         private System.Windows.Forms.GroupBox grpClients;
         private System.Windows.Forms.ComboBox cboClients;
-        private System.Windows.Forms.PictureBox picDeleteClient;
         private System.Windows.Forms.ContextMenuStrip projectsListBoxContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem mnuContextRefreshMinimum;
-        private System.Windows.Forms.ToolStripMenuItem mnuContextDeleteProject;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage benchmarkTextTab;

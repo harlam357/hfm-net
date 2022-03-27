@@ -60,25 +60,6 @@ namespace HFM.Core.Client
             }
         }
 
-        private sealed class ProteinBenchmarkSlotIdentifierEqualityComparer : IEqualityComparer<SlotIdentifier>
-        {
-            public bool Equals(SlotIdentifier x, SlotIdentifier y) =>
-                x.Ordinal == y.Ordinal && ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.ClientIdentifier, y.ClientIdentifier) && x.SlotID == y.SlotID;
-
-            public int GetHashCode(SlotIdentifier obj)
-            {
-                unchecked
-                {
-                    var hashCode = obj.Ordinal;
-                    hashCode = (hashCode * 397) ^ ClientIdentifier.ProteinBenchmarkEqualityComparer.GetHashCode(obj.ClientIdentifier);
-                    hashCode = (hashCode * 397) ^ obj.SlotID;
-                    return hashCode;
-                }
-            }
-        }
-
-        public static IEqualityComparer<SlotIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkSlotIdentifierEqualityComparer();
-
         public static bool operator ==(SlotIdentifier left, SlotIdentifier right) => left.Equals(right);
 
         public static bool operator !=(SlotIdentifier left, SlotIdentifier right) => !left.Equals(right);

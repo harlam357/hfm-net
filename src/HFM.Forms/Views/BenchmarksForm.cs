@@ -44,8 +44,6 @@ namespace HFM.Forms.Views
             cboClients.DisplayMember = nameof(ListItem.DisplayMember);
             cboClients.ValueMember = nameof(ListItem.ValueMember);
 
-            picDeleteClient.BindVisible(model, nameof(BenchmarksModel.SelectedSlotDeleteEnabled));
-
             ProjectIDTextBox.BindText(model, nameof(BenchmarksModel.WorkUnitName));
             CreditTextBox.BindText(model, nameof(BenchmarksModel.Credit));
             KFactorTextBox.BindText(model, nameof(BenchmarksModel.KFactor));
@@ -150,24 +148,9 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void mnuContextRefreshMinimum_Click(object sender, EventArgs e)
-        {
-            _presenter.RefreshMinimumFrameTimeClicked();
-        }
-
-        private void mnuContextDeleteProject_Click(object sender, EventArgs e)
-        {
-            _presenter.DeleteProjectClicked();
-        }
-
         private void linkDescription_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             _presenter.DescriptionLinkClicked(LocalProcessService.Default);
-        }
-
-        private void picDeleteClient_Click(object sender, EventArgs e)
-        {
-            _presenter.DeleteSlotClicked();
         }
 
         private void btnMoveColorUp_Click(object sender, EventArgs e)

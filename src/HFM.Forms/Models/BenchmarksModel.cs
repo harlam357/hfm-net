@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 using HFM.Proteins;
@@ -17,15 +13,15 @@ namespace HFM.Forms.Models
     {
         public IPreferences Preferences { get; }
         public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
+        public IProteinBenchmarkRepository Benchmarks { get; }
         public IEnumerable<BenchmarksReport> Reports { get; }
 
         public BenchmarksModel(IPreferences preferences, IProteinService proteinService,
-            IProteinBenchmarkService benchmarkService, IEnumerable<BenchmarksReport> reports)
+            IProteinBenchmarkRepository benchmarks, IEnumerable<BenchmarksReport> reports)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             ProteinService = proteinService ?? NullProteinService.Instance;
-            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
+            Benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
             Reports = reports ?? Array.Empty<BenchmarksReport>();
 
             SlotIdentifiers = new BindingSource();
@@ -176,7 +172,6 @@ namespace HFM.Forms.Models
                 {
                     _selectedSlotIdentifier = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(SelectedSlotDeleteEnabled));
 
                     RefreshSlotProjects();
                     if (_selectedSlotIdentifier is null || SelectedSlotProject is null)
@@ -187,12 +182,10 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool SelectedSlotDeleteEnabled => SelectedSlotIdentifier != null && SelectedSlotIdentifier.Value != SlotIdentifier.AllSlots;
-
         private void RefreshSlotIdentifiers()
         {
             var slots = Enumerable.Repeat(SlotIdentifier.AllSlots, 1)
-                .Concat(BenchmarkService.GetSlotIdentifiers().OrderBy(x => x.Name))
+                .Concat(Benchmarks.GetSlotIdentifiers().OrderBy(x => x.Name))
                 .Select(x => new ListItem(x.ToString(), new ValueItem<SlotIdentifier>(x)));
 
             SlotIdentifiers.Clear();
@@ -257,7 +250,7 @@ namespace HFM.Forms.Models
 
             if (SelectedSlotIdentifier != null)
             {
-                var projects = BenchmarkService.GetBenchmarkProjects(SelectedSlotIdentifier.Value)
+                var projects = Benchmarks.GetBenchmarkProjects(SelectedSlotIdentifier.Value)
                     .Select(x => new ListItem(x.ToString(), new ValueItem<int>(x)));
 
                 foreach (var project in projects)
@@ -394,20 +387,6 @@ namespace HFM.Forms.Models
                     OnPropertyChanged();
                 }
             }
-        }
-
-        // Benchmark Actions
-        public void RemoveSlot(SlotIdentifier slotIdentifier)
-        {
-            BenchmarkService.RemoveAll(slotIdentifier);
-            RefreshSlotIdentifiers();
-        }
-
-        public void RemoveProject(SlotIdentifier slotIdentifier, int projectID)
-        {
-            BenchmarkService.RemoveAll(slotIdentifier, projectID);
-            RefreshSlotIdentifiers();
-            RefreshSlotProjects();
         }
 
         // Color Actions

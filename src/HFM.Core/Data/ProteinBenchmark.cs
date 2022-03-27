@@ -3,7 +3,7 @@ using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Data;
 
-public record WorkUnitContextProteinBenchmark
+public record ProteinBenchmark
 {
     public SlotIdentifier SlotIdentifier { get; init; }
 

@@ -76,6 +76,17 @@ public class ProteinBenchmarkRepositoryTests
                 Assert.AreEqual(TimeSpan.FromSeconds(70), actual.AverageFrameTime);
                 Assert.AreEqual(TimeSpan.FromSeconds(69), actual.MinimumFrameTime);
             }
+
+            [Test]
+            public void ThenBenchmarkIsNullWhenNoBenchmarkExists()
+            {
+                var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));
+                var s = new SlotIdentifier(c, 2);
+                var b = new ProteinBenchmarkIdentifier(99999, "GeForce RTX 3070 Ti", ProteinBenchmarkIdentifier.NoThreads);
+
+                var actual = _repository.GetBenchmark(s, b);
+                Assert.IsNull(actual);
+            }
         }
 
         [TestFixture]

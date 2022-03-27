@@ -2,7 +2,6 @@
 
 using HFM.Client;
 using HFM.Core.Data;
-using HFM.Core.WorkUnits;
 using HFM.Log;
 
 using Moq;
@@ -11,10 +10,7 @@ namespace HFM.Core.Client.Mocks;
 
 public class MockFahClient : FahClient
 {
-    public MockFahClient()
-        : base(null, null,
-            new ProteinBenchmarkService(new ProteinBenchmarkDataContainer()), null,
-            Mock.Of<IWorkUnitRepository>())
+    public MockFahClient() : base(null, null, null, null, Mock.Of<IWorkUnitRepository>())
     {
         Messages = new FahClientMessages(this, null);
     }

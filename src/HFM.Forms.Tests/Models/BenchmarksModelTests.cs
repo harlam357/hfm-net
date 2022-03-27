@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
@@ -9,6 +6,8 @@ using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 using HFM.Proteins;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -54,8 +53,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_Load_SlotsAndProjectsFromBenchmarks()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(benchmarks);
             // Act
             model.Load();
             // Assert (slots)
@@ -70,8 +69,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_Load_SlotIdentifiersRaisesOneListChangedEvent()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(benchmarks);
             int listChanged = 0;
             model.SlotIdentifiers.ListChanged += (s, e) => listChanged++;
             // Act
@@ -84,8 +83,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_Load_SlotProjectsRaisesOneListChangedEvent()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(benchmarks);
             int listChanged = 0;
             model.SlotProjects.ListChanged += (s, e) => listChanged++;
             // Act
@@ -123,8 +122,8 @@ namespace HFM.Forms.Models
             // Act
             model.SelectedSlotIdentifier = new ValueItem<SlotIdentifier>(slotIdentifier);
             // Assert
-            Assert.AreEqual(2, propertyNames.Count);
-            var expected = new[] { nameof(BenchmarksModel.SelectedSlotIdentifier), nameof(BenchmarksModel.SelectedSlotDeleteEnabled) };
+            Assert.AreEqual(1, propertyNames.Count);
+            var expected = new[] { nameof(BenchmarksModel.SelectedSlotIdentifier) };
             CollectionAssert.AreEqual(expected, propertyNames);
         }
 
@@ -132,8 +131,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_SelectedSlotIdentifier_RefreshesSlotProjects()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarks);
             model.Load();
             // Act
             model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
@@ -146,8 +145,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_SelectedSlotProject_IsSetFromDefaultProjectID()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarks);
             model.DefaultProjectID = 65432;
             model.Load();
             // Act
@@ -162,8 +161,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_SelectedSlotProject_IsSetWhenProjectListItemIsSelected()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(benchmarks);
             model.Load();
             model.SelectedSlotProjectListItems.Clear();
             Assert.IsNull(model.SelectedSlotProject);
@@ -181,8 +180,8 @@ namespace HFM.Forms.Models
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(proteinService, benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(proteinService, benchmarks);
             // Act
             model.Load();
             // Assert
@@ -195,8 +194,8 @@ namespace HFM.Forms.Models
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(proteinService, benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(proteinService, benchmarks);
             model.Load();
             Assert.IsNotNull(model.Protein);
             // Act
@@ -211,8 +210,8 @@ namespace HFM.Forms.Models
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(proteinService, benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
+            var model = CreateModel(proteinService, benchmarks);
             model.Load();
             // Act
             model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
@@ -224,8 +223,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_AsIBenchmarkReportSource()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarks);
             var preferences = model.Preferences;
             preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
             // Act
@@ -241,8 +240,8 @@ namespace HFM.Forms.Models
         public void BenchmarksModel_AsIBenchmarkReportSource_WhenSelectedSlotIdentifierIsNull()
         {
             // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
+            var model = CreateModel(benchmarks);
             var preferences = model.Preferences;
             preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
             model.Load();
@@ -261,45 +260,13 @@ namespace HFM.Forms.Models
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(proteinService, benchmarkService, new[] { new MockTextBenchmarksReport() });
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(proteinService, benchmarks, new[] { new MockTextBenchmarksReport() });
             // Act
             model.Load();
             // Assert
             Assert.AreEqual(1, model.BenchmarkText.Count);
             Assert.AreEqual(MockTextBenchmarksReport.Text, model.BenchmarkText.First());
-        }
-
-        [Test]
-        public void BenchmarksModel_RemoveSlot_RemovesSlotFromSlotIdentifiers()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
-            model.Load();
-            Assert.AreEqual(3, model.SlotIdentifiers.Count);
-            // Act
-            model.RemoveSlot(model.SlotIdentifierValueItems.ElementAt(1).Value);
-            // Assert
-            Assert.AreEqual(2, model.SlotIdentifiers.Count);
-        }
-
-        [Test]
-        public void BenchmarksModel_RemoveProject_RemovesProjectFromSlotProjects()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
-            model.Load();
-            Assert.AreEqual(3, model.SlotIdentifiers.Count);
-            Assert.AreEqual(3, model.SlotProjects.Count);
-            var slotIdentifier = model.SlotIdentifierValueItems.ElementAt(1).Value;
-            int projectID = model.SlotProjectListItems.First().GetValue<ValueItem<int>>().Value;
-            // Act
-            model.RemoveProject(slotIdentifier, projectID);
-            // Assert
-            Assert.AreEqual(2, model.SlotIdentifiers.Count);
-            Assert.AreEqual(2, model.SlotProjects.Count);
         }
 
         [Test]
@@ -458,30 +425,23 @@ namespace HFM.Forms.Models
             return new ProteinService(dataContainer, null, NullLogger.Instance);
         }
 
-        private static IProteinBenchmarkService CreateBenchmarkServiceWithOneSlotAndProject()
+        private static IProteinBenchmarkRepository CreateBenchmarkRepositoryWithOneSlotAndProject()
         {
-            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
-            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(12345);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-            return benchmarkService;
+            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slotIdentifier });
+            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
+            return benchmarks.Object;
         }
 
-        private static IProteinBenchmarkService CreateBenchmarkServiceWithTwoSlotsAndProjects()
+        private static IProteinBenchmarkRepository CreateBenchmarkRepositoryWithTwoSlotsAndProjects()
         {
-            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
-
-            var slotIdentifier = CreateSlotIdentifier("Test", 0);
-            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(12345);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-
-            slotIdentifier = CreateSlotIdentifier("Test", 1);
-            benchmarkIdentifier = new ProteinBenchmarkIdentifier(23456);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-            benchmarkIdentifier = new ProteinBenchmarkIdentifier(65432);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-
-            return benchmarkService;
+            var benchmarks = new Mock<IProteinBenchmarkRepository>();
+            var slot0 = CreateSlotIdentifier("Test", 0);
+            var slot1 = CreateSlotIdentifier("Test", 1);
+            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slot0, slot1 });
+            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 23456, 65432 });
+            return benchmarks.Object;
         }
 
         private class MockTextBenchmarksReport : TextBenchmarksReport
@@ -499,14 +459,14 @@ namespace HFM.Forms.Models
             }
         }
 
-        private static BenchmarksModel CreateModel(IProteinBenchmarkService benchmarkService = null)
+        private static BenchmarksModel CreateModel(IProteinBenchmarkRepository benchmarks = null)
         {
-            return CreateModel(null, benchmarkService);
+            return CreateModel(null, benchmarks);
         }
 
-        private static BenchmarksModel CreateModel(IProteinService proteinService, IProteinBenchmarkService benchmarkService, IEnumerable<BenchmarksReport> reports = null)
+        private static BenchmarksModel CreateModel(IProteinService proteinService, IProteinBenchmarkRepository benchmarks, IEnumerable<BenchmarksReport> reports = null)
         {
-            return new BenchmarksModel(null, proteinService, benchmarkService, reports);
+            return new BenchmarksModel(null, proteinService, benchmarks, reports);
         }
     }
 }

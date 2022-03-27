@@ -57,25 +57,6 @@ namespace HFM.Core.Client
             }
         }
 
-        private sealed class ProteinBenchmarkClientIdentifierEqualityComparer : IEqualityComparer<ClientIdentifier>
-        {
-            public bool Equals(ClientIdentifier x, ClientIdentifier y) =>
-                x.Name == y.Name && x.Server == y.Server && x.Port == y.Port;
-
-            public int GetHashCode(ClientIdentifier obj)
-            {
-                unchecked
-                {
-                    var hashCode = (obj.Name != null ? obj.Name.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.Server != null ? obj.Server.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ obj.Port;
-                    return hashCode;
-                }
-            }
-        }
-
-        public static IEqualityComparer<ClientIdentifier> ProteinBenchmarkEqualityComparer { get; } = new ProteinBenchmarkClientIdentifierEqualityComparer();
-
         public static bool operator ==(ClientIdentifier left, ClientIdentifier right) => left.Equals(right);
 
         public static bool operator !=(ClientIdentifier left, ClientIdentifier right) => !left.Equals(right);

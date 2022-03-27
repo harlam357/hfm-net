@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 
 using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
 using HFM.Preferences;
@@ -17,15 +15,15 @@ namespace HFM.Forms.Models
 
         public IPreferences Preferences { get; }
         public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
+        public IProteinBenchmarkRepository Benchmarks { get; }
         public ClientConfiguration ClientConfiguration { get; }
 
         public TextBenchmarksReport(IPreferences preferences, IProteinService proteinService,
-            IProteinBenchmarkService benchmarkService, ClientConfiguration clientConfiguration) : base(KeyName)
+            IProteinBenchmarkRepository benchmarks, ClientConfiguration clientConfiguration) : base(KeyName)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             ProteinService = proteinService ?? NullProteinService.Instance;
-            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
+            Benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
             ClientConfiguration = clientConfiguration;
         }
 
@@ -55,9 +53,9 @@ namespace HFM.Forms.Models
                     continue;
                 }
 
-                var benchmarks = BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
+                var benchmarks = Benchmarks.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
                     .OrderBy(x => x.SlotIdentifier.Name)
-                    .ThenBy(x => x.Threads);
+                    .ThenBy(x => x.BenchmarkIdentifier.Threads);
 
                 benchmarkText
                     .AddRange(EnumerateProjectInformation(protein)

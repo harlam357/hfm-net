@@ -28,40 +28,6 @@ namespace HFM.Forms.Presenters
             return new BenchmarksForm(this);
         }
 
-        public void DeleteSlotClicked()
-        {
-            string text = String.Format(CultureInfo.CurrentCulture,
-                "Are you sure you want to delete {0}?", Model.SelectedSlotIdentifier.Value);
-
-            if (MessageBox.AskYesNoQuestion(Form, text, Core.Application.NameAndVersion) == DialogResult.Yes)
-            {
-                Model.RemoveSlot(Model.SelectedSlotIdentifier.Value);
-            }
-        }
-
-        public void DeleteProjectClicked()
-        {
-            string text = String.Format(CultureInfo.CurrentCulture,
-                "Are you sure you want to delete {0} - Project {1}?", Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
-
-            if (MessageBox.AskYesNoQuestion(Form, text, Core.Application.NameAndVersion) == DialogResult.Yes)
-            {
-                Model.RemoveProject(Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
-            }
-        }
-
-        public void RefreshMinimumFrameTimeClicked()
-        {
-            string text = String.Format(CultureInfo.CurrentCulture,
-                "Are you sure you want to refresh {0} - Project {1} minimum frame time?", Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
-
-            if (MessageBox.AskYesNoQuestion(Form, text, Core.Application.NameAndVersion) == DialogResult.Yes)
-            {
-                Model.BenchmarkService.UpdateMinimumFrameTime(Model.SelectedSlotIdentifier.Value, Model.SelectedSlotProject.Value);
-                Model.RunReports();
-            }
-        }
-
         public void DescriptionLinkClicked(LocalProcessService localProcess)
         {
             try

@@ -46,10 +46,10 @@ namespace HFM.Core.Client
 
         public FahClient(ILogger logger,
                          IPreferences preferences,
-                         IProteinBenchmarkService benchmarkService,
+                         IProteinBenchmarkRepository benchmarks,
                          IProteinService proteinService,
                          IWorkUnitRepository workUnitRepository)
-            : base(logger, preferences, benchmarkService)
+            : base(logger, preferences, benchmarks)
         {
             ProteinService = proteinService;
             WorkUnitRepository = workUnitRepository;
@@ -209,7 +209,7 @@ namespace HFM.Core.Client
                 var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
                 PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
-                UpdateWorkUnitBenchmarkAndRepository(workUnitModels, previousWorkUnitModel);
+                UpdateWorkUnitBenchmarkAndRepository(workUnitModels);
 
                 slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                    Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
@@ -293,31 +293,11 @@ namespace HFM.Core.Client
             }
         }
 
-        private void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels, WorkUnitModel previousWorkUnitModel)
+        private void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels)
         {
             foreach (var m in workUnitModels)
             {
-                // find the WorkUnit in workUnitModels that matches the previousWorkUnitModel
-                if (previousWorkUnitModel.WorkUnit.EqualsProjectAndDownloadTime(m.WorkUnit))
-                {
-                    UpdateBenchmarkFrameTimes(previousWorkUnitModel, m);
-                }
                 UpdateWorkUnitRepository(m);
-            }
-        }
-
-        internal void UpdateBenchmarkFrameTimes(WorkUnitModel previousWorkUnitModel, WorkUnitModel workUnitModel)
-        {
-            // current frame has already been recorded, increment to the next frame
-            int nextFrame = previousWorkUnitModel.FramesComplete + 1;
-            int count = workUnitModel.FramesComplete - previousWorkUnitModel.FramesComplete;
-            var frameTimes = GetFrameTimes(workUnitModel.WorkUnit, nextFrame, count);
-
-            if (frameTimes.Count > 0)
-            {
-                var slotIdentifier = workUnitModel.SlotModel.SlotIdentifier;
-                var benchmarkIdentifier = workUnitModel.BenchmarkIdentifier;
-                BenchmarkService.Update(slotIdentifier, benchmarkIdentifier, frameTimes);
             }
         }
 

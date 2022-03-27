@@ -192,7 +192,7 @@ namespace HFM.Core.WorkUnits
                 return TimeSpan.FromSeconds(rawTime);
             }
 
-            var benchmark = SlotModel.Client.BenchmarkService.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
+            var benchmark = SlotModel.Client.Benchmarks.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
             return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
         }
 

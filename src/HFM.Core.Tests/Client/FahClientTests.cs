@@ -36,41 +36,6 @@ namespace HFM.Core.Client
         }
 
         [TestFixture]
-        public class GivenClientUpdatesBenchmarkFrameTimes : FahClientTests
-        {
-            private MockFahClient _fahClient;
-
-            [SetUp]
-            public async Task BeforeEach()
-            {
-                _fahClient = MockFahClient.Create("test");
-                await _fahClient.Connect();
-            }
-
-            [Test]
-            public void Then_ItDoesNotUpdateBenchmarksWhenNoFramesAreComplete()
-            {
-                var workUnit = new WorkUnit
-                {
-                    ProjectID = 12345,
-                    ProjectRun = 6,
-                    ProjectClone = 7,
-                    ProjectGen = 8,
-                    Assigned = DateTime.UtcNow
-                };
-
-                var slotModel = new SlotModel(_fahClient);
-                var previousWorkUnitModel = new WorkUnitModel(slotModel, workUnit);
-                var workUnitModel = new WorkUnitModel(slotModel, workUnit.Copy());
-
-                _fahClient.UpdateBenchmarkFrameTimes(previousWorkUnitModel, workUnitModel);
-
-                var benchmarkService = _fahClient.BenchmarkService;
-                Assert.IsNull(benchmarkService.GetBenchmark(workUnitModel.SlotModel.SlotIdentifier, workUnitModel.BenchmarkIdentifier));
-            }
-        }
-
-        [TestFixture]
         public class GivenConnectedClientReceivesSlotsMessage : FahClientTests
         {
             private MockFahClient _fahClient;

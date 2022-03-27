@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 
 using HFM.Core;
+using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
@@ -17,8 +15,8 @@ namespace HFM.Forms.Models
 
         public IPreferences Preferences { get; }
 
-        public ProjectComparisonZedGraphBenchmarksReport(IPreferences preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
-            : base(KeyName, proteinService, benchmarkService)
+        public ProjectComparisonZedGraphBenchmarksReport(IPreferences preferences, IProteinService proteinService, IProteinBenchmarkRepository benchmarks)
+            : base(KeyName, proteinService, benchmarks)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
@@ -35,9 +33,9 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = BenchmarkService.GetBenchmarks(slotIdentifier.Value, projects)
+            var benchmarks = Benchmarks.GetBenchmarks(slotIdentifier.Value, projects)
                 .OrderBy(x => x.SlotIdentifier.Name)
-                .ThenBy(x => x.Threads)
+                .ThenBy(x => x.BenchmarkIdentifier.Threads)
                 .ToList();
 
             if (benchmarks.Count == 0)
@@ -55,11 +53,11 @@ namespace HFM.Forms.Models
 
                 int i = 0;
                 var ppd = new List<double>();
-                foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.Processor, x.Threads)))
+                foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.BenchmarkIdentifier.Processor, x.BenchmarkIdentifier.Threads)))
                 {
                     PointPairList points;
                     string label;
-                    (points, label) = BuildSlotPoints(group.OrderBy(x => x.ProjectID), projectToXAxisOrdinal);
+                    (points, label) = BuildSlotPoints(group.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal);
 
                     if (points.Count > 0)
                     {
@@ -95,7 +93,7 @@ namespace HFM.Forms.Models
         {
             double ordinal = 1.0;
             var projectToXAxisOrdinal = new Dictionary<int, double>();
-            foreach (int projectID in benchmarks.Select(x => x.ProjectID).OrderBy(x => x).Distinct())
+            foreach (int projectID in benchmarks.Select(x => x.BenchmarkIdentifier.ProjectID).OrderBy(x => x).Distinct())
             {
                 projectToXAxisOrdinal.Add(projectID, ordinal++);
             }
@@ -111,7 +109,7 @@ namespace HFM.Forms.Models
 
             foreach (var b in benchmarks)
             {
-                var protein = ProteinService.Get(b.ProjectID);
+                var protein = ProteinService.Get(b.BenchmarkIdentifier.ProjectID);
                 if (protein is null)
                 {
                     continue;
@@ -123,7 +121,7 @@ namespace HFM.Forms.Models
                 }
 
                 double y = GetPPD(protein, b.AverageFrameTime, calculateBonus);
-                points.Add(projectToXAxisOrdinal[b.ProjectID], y);
+                points.Add(projectToXAxisOrdinal[b.BenchmarkIdentifier.ProjectID], y);
             }
 
             return (points, label);

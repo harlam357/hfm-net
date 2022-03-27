@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 
+using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
@@ -22,7 +23,7 @@ namespace HFM.Core.Client
 
         IPreferences Preferences { get; }
 
-        IProteinBenchmarkService BenchmarkService { get; }
+        IProteinBenchmarkRepository Benchmarks { get; }
 
         /// <summary>
         /// Settings that define this client's behavior.
@@ -69,13 +70,13 @@ namespace HFM.Core.Client
 
         public ILogger Logger { get; }
         public IPreferences Preferences { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
+        public IProteinBenchmarkRepository Benchmarks { get; }
 
-        protected Client(ILogger logger, IPreferences preferences, IProteinBenchmarkService benchmarkService)
+        protected Client(ILogger logger, IPreferences preferences, IProteinBenchmarkRepository benchmarks)
         {
             Logger = logger ?? NullLogger.Instance;
             Preferences = preferences ?? new InMemoryPreferencesProvider();
-            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
+            Benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
 
             RefreshSlots();
         }

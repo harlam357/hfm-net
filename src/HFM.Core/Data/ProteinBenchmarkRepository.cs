@@ -13,11 +13,11 @@ public interface IProteinBenchmarkRepository
 
     ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
 
-    WorkUnitContextProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
+    ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
 
-    ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
+    ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID);
 
-    ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
+    ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
 }
 
 public class ScopedProteinBenchmarkRepository : ProteinBenchmarkRepository
@@ -93,7 +93,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
             .ToList();
     }
 
-    public WorkUnitContextProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
+    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
     {
         using var context = CreateWorkUnitContext();
 
@@ -108,19 +108,21 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
             .Take(DefaultMaxFrames)
             .ToList();
 
-        return new WorkUnitContextProteinBenchmark
-        {
-            SlotIdentifier = slotIdentifier,
-            BenchmarkIdentifier = benchmarkIdentifier,
-            FrameTimes = frames.Select(x => new ProteinBenchmarkFrameTime(x.Duration)).ToList(),
-            MinimumFrameTime = frames.Min(x => x.Duration)
-        };
+        return frames.Count == 0
+            ? null
+            : new ProteinBenchmark
+            {
+                SlotIdentifier = slotIdentifier,
+                BenchmarkIdentifier = benchmarkIdentifier,
+                FrameTimes = frames.Select(x => new ProteinBenchmarkFrameTime(x.Duration)).ToList(),
+                MinimumFrameTime = frames.Any() ? frames.Min(x => x.Duration) : TimeSpan.Zero
+            };
     }
 
-    public ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) =>
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) =>
         GetBenchmarks(slotIdentifier, new[] { projectID });
 
-    public ICollection<WorkUnitContextProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
     {
         using var context = CreateWorkUnitContext();
 
@@ -147,7 +149,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                     .Take(DefaultMaxFrames)
                     .ToList();
 
-                return new WorkUnitContextProteinBenchmark
+                return new ProteinBenchmark
                 {
                     SlotIdentifier = x.Key.SlotIdentifier,
                     BenchmarkIdentifier = x.Key.BenchmarkIdentifier,
@@ -176,4 +178,19 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     }
 
     protected abstract WorkUnitContext CreateWorkUnitContext();
+}
+
+public class NullProteinBenchmarkRepository : IProteinBenchmarkRepository
+{
+    public static NullProteinBenchmarkRepository Instance { get; } = new();
+
+    public ICollection<SlotIdentifier> GetSlotIdentifiers() => Array.Empty<SlotIdentifier>();
+
+    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) => Array.Empty<int>();
+
+    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier) => null;
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) => Array.Empty<ProteinBenchmark>();
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects) => Array.Empty<ProteinBenchmark>();
 }

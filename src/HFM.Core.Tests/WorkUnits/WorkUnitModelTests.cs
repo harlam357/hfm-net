@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Log;
 using HFM.Proteins;
 
@@ -489,8 +490,8 @@ namespace HFM.Core.WorkUnits
         [Test]
         public void WorkUnitModel_TimePerSectionTest5()
         {
-            var mockBenchmarkService = new Mock<IProteinBenchmarkService>();
-            var benchmark = new ProteinBenchmark { FrameTimes = { new ProteinBenchmarkFrameTime { Duration = TimeSpan.FromMinutes(10) } } };
+            var mockBenchmarkService = new Mock<IProteinBenchmarkRepository>();
+            var benchmark = new ProteinBenchmark { FrameTimes = new List<ProteinBenchmarkFrameTime> { new() { Duration = TimeSpan.FromMinutes(10) } } };
             mockBenchmarkService.Setup(x => x.GetBenchmark(It.IsAny<SlotIdentifier>(), It.IsAny<ProteinBenchmarkIdentifier>())).Returns(benchmark);
             var workUnitModel = CreateWorkUnitModel(null, new WorkUnit(), mockBenchmarkService.Object);
 
@@ -642,9 +643,9 @@ namespace HFM.Core.WorkUnits
 
         #region Helpers
 
-        private static WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit, IProteinBenchmarkService benchmarkService = null)
+        private static WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit, IProteinBenchmarkRepository benchmarks = null)
         {
-            var slotModel = new SlotModel(new NullClient(null, null, benchmarkService) { Settings = new ClientSettings() });
+            var slotModel = new SlotModel(new NullClient(null, null, benchmarks) { Settings = new ClientSettings() });
             return new WorkUnitModel(slotModel, workUnit)
             {
                 CurrentProtein = protein ?? new Protein()

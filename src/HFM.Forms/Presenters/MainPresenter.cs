@@ -326,35 +326,12 @@ namespace HFM.Forms.Presenters
                 var clients = ClientConfiguration.GetClients();
                 _settingsManager.Write(clients.Select(x => x.Settings), fileName, filterIndex);
                 ClientConfiguration.IsDirty = false;
-
-                ApplyClientIdentifierToBenchmarks(clients);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.Message, ex);
                 MessageBox.ShowError(Form, String.Format(CultureInfo.CurrentCulture,
                     "The client configuration has not been saved.{0}{0}{1}", Environment.NewLine, ex.Message), Core.Application.NameAndVersion);
-            }
-        }
-
-        private static void ApplyClientIdentifierToBenchmarks(ICollection<IClient> clients)
-        {
-            var benchmarkService = clients.FirstOrDefault()?.BenchmarkService;
-            if (benchmarkService is null)
-            {
-                return;
-            }
-
-            foreach (var benchmarkClientIdentifier in benchmarkService.GetClientIdentifiers())
-            {
-                var clientIdentifier = clients.Select(x => (ClientIdentifier?)x.Settings.ClientIdentifier)
-                    .FirstOrDefault(x => x.Value.Equals(benchmarkClientIdentifier) ||
-                                         ClientIdentifier.ProteinBenchmarkEqualityComparer.Equals(x.Value, benchmarkClientIdentifier));
-
-                if (clientIdentifier.HasValue)
-                {
-                    benchmarkService.UpdateClientIdentifier(clientIdentifier.Value);
-                }
             }
         }
 

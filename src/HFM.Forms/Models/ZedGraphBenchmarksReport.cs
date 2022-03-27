@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-
-using HFM.Core.Client;
+﻿using HFM.Core.Client;
+using HFM.Core.Data;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
 using HFM.Preferences;
@@ -16,12 +12,12 @@ namespace HFM.Forms.Models
     public abstract class ZedGraphBenchmarksReport : BenchmarksReport
     {
         public IProteinService ProteinService { get; }
-        public IProteinBenchmarkService BenchmarkService { get; }
+        public IProteinBenchmarkRepository Benchmarks { get; }
 
-        protected ZedGraphBenchmarksReport(string key, IProteinService proteinService, IProteinBenchmarkService benchmarkService) : base(key)
+        protected ZedGraphBenchmarksReport(string key, IProteinService proteinService, IProteinBenchmarkRepository benchmarks) : base(key)
         {
             ProteinService = proteinService ?? NullProteinService.Instance;
-            BenchmarkService = benchmarkService ?? NullProteinBenchmarkService.Instance;
+            Benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
         }
 
         protected static ZedGraphControl CreateZedGraphControl()
@@ -91,8 +87,8 @@ namespace HFM.Forms.Models
 
     public abstract class ZedGraphBarGraphBenchmarksReport : ZedGraphBenchmarksReport
     {
-        protected ZedGraphBarGraphBenchmarksReport(string key, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
-            : base(key, proteinService, benchmarkService)
+        protected ZedGraphBarGraphBenchmarksReport(string key, IProteinService proteinService, IProteinBenchmarkRepository benchmarks)
+            : base(key, proteinService, benchmarks)
         {
 
         }
@@ -110,7 +106,7 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = SortBenchmarks(BenchmarkService.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber));
+            var benchmarks = SortBenchmarks(Benchmarks.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber));
 
             var zg = CreateZedGraphControl();
             try
@@ -120,7 +116,7 @@ namespace HFM.Forms.Models
                 // Create the bars for each benchmark
                 int i = 0;
                 double yMaximum = 0.0;
-                foreach (ProteinBenchmark benchmark in benchmarks)
+                foreach (var benchmark in benchmarks)
                 {
                     var yPoints = GetYPoints(protein, benchmark);
                     foreach (var y in yPoints)
@@ -149,7 +145,7 @@ namespace HFM.Forms.Models
 
         private static int? GetProjectID(IBenchmarksReportSource source)
         {
-            return source.Projects.Count > 0 ? (int?)source.Projects.First() : null;
+            return source.Projects.Count > 0 ? source.Projects.First() : null;
         }
 
         private Protein GetProtein(int? projectID)
@@ -195,8 +191,8 @@ namespace HFM.Forms.Models
     {
         public const string KeyName = "Frame Time (Seconds)";
 
-        public FrameTimeZedGraphBenchmarksReport(IProteinService proteinService, IProteinBenchmarkService benchmarkService)
-            : base(KeyName, proteinService, benchmarkService)
+        public FrameTimeZedGraphBenchmarksReport(IProteinService proteinService, IProteinBenchmarkRepository benchmarks)
+            : base(KeyName, proteinService, benchmarks)
         {
 
         }
@@ -217,8 +213,8 @@ namespace HFM.Forms.Models
 
         public IPreferences Preferences { get; }
 
-        public ProductionZedGraphBenchmarksReport(IPreferences preferences, IProteinService proteinService, IProteinBenchmarkService benchmarkService)
-            : base(KeyName, proteinService, benchmarkService)
+        public ProductionZedGraphBenchmarksReport(IPreferences preferences, IProteinService proteinService, IProteinBenchmarkRepository benchmarks)
+            : base(KeyName, proteinService, benchmarks)
         {
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }

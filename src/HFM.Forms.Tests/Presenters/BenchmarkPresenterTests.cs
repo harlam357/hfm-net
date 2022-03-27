@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 using HFM.Core.Client;
@@ -15,6 +12,8 @@ using HFM.Forms.Presenters.Mocks;
 using HFM.Forms.Views;
 using HFM.Preferences;
 using HFM.Proteins;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -36,98 +35,14 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_DeleteSlotClicked_AsksYesNoQuestionAndExitsAfterNoAnswer()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
-            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.No);
-            using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
-            {
-                presenter.Show();
-                Assert.AreEqual(2, presenter.Model.SlotIdentifiers.Count);
-                presenter.Model.SelectedSlotIdentifier = presenter.Model.SlotIdentifierValueItems.Last();
-                // Act
-                presenter.DeleteSlotClicked();
-                // Assert
-                Assert.AreEqual(2, presenter.Model.SlotIdentifiers.Count);
-                Assert.AreEqual(1, messageBox.Invocations.Count);
-            }
-        }
-
-        [Test]
-        public void BenchmarkPresenter_DeleteSlotClicked_AsksYesNoQuestionAndDeletesSlot()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(benchmarkService);
-            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
-            using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
-            {
-                presenter.Show();
-                Assert.AreEqual(2, presenter.Model.SlotIdentifiers.Count);
-                presenter.Model.SelectedSlotIdentifier = presenter.Model.SlotIdentifierValueItems.Last();
-                // Act
-                presenter.DeleteSlotClicked();
-                // Assert
-                Assert.AreEqual(1, presenter.Model.SlotIdentifiers.Count);
-                Assert.AreEqual(1, messageBox.Invocations.Count);
-            }
-        }
-
-        [Test]
-        public void BenchmarkPresenter_DeleteProjectClicked_AsksYesNoQuestionAndExitsAfterNoAnswer()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
-            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.No);
-            using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
-            {
-                presenter.Show();
-                presenter.Model.SelectedSlotIdentifier = presenter.Model.SlotIdentifierValueItems.Last();
-                Assert.AreEqual(2, presenter.Model.SlotProjects.Count);
-                presenter.Model.SelectedSlotProjectListItems.Clear();
-                presenter.Model.SelectedSlotProjectListItems.Add(presenter.Model.SlotProjectListItems.Last());
-                // Act
-                presenter.DeleteProjectClicked();
-                // Assert
-                Assert.AreEqual(2, presenter.Model.SlotProjects.Count);
-                Assert.AreEqual(1, messageBox.Invocations.Count);
-            }
-        }
-
-        [Test]
-        public void BenchmarkPresenter_DeleteProjectClicked_AsksYesNoQuestionAndDeletesSlot()
-        {
-            // Arrange
-            var benchmarkService = CreateBenchmarkServiceWithTwoSlotsAndProjects();
-            var model = CreateModel(benchmarkService);
-            var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
-            using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
-            {
-                presenter.Show();
-                presenter.Model.SelectedSlotIdentifier = presenter.Model.SlotIdentifierValueItems.Last();
-                Assert.AreEqual(2, presenter.Model.SlotProjects.Count);
-                presenter.Model.SelectedSlotProjectListItems.Clear();
-                presenter.Model.SelectedSlotProjectListItems.Add(presenter.Model.SlotProjectListItems.Last());
-                // Act
-                presenter.DeleteProjectClicked();
-                // Assert
-                Assert.AreEqual(1, presenter.Model.SlotProjects.Count);
-                Assert.AreEqual(1, messageBox.Invocations.Count);
-            }
-        }
-
-        [Test]
         public void BenchmarkPresenter_DescriptionLinkClicked_StartsLocalProcess()
         {
             // Arrange
             var dataContainer = new ProteinDataContainer();
             dataContainer.Data.Add(new Protein { ProjectNumber = 12345, Description = "http://someurl"});
             var proteinService = new ProteinService(dataContainer, null, null);
-            var benchmarkService = CreateBenchmarkServiceWithOneSlotAndProject();
-            var model = CreateModel(proteinService, benchmarkService);
+            var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
+            var model = CreateModel(proteinService, benchmarks);
             using (var presenter = new MockFormBenchmarksPresenter(model))
             {
                 presenter.Show();
@@ -266,40 +181,33 @@ namespace HFM.Forms.Presenters
             return new SlotIdentifier(new ClientIdentifier(name, "Server", ClientSettings.DefaultPort, Guid.NewGuid()), slotID);
         }
 
-        private static IProteinBenchmarkService CreateBenchmarkServiceWithOneSlotAndProject()
+        private static IProteinBenchmarkRepository CreateBenchmarkRepositoryWithOneSlotAndProject()
         {
-            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
+            var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
-            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(12345);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-            return benchmarkService;
+            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slotIdentifier });
+            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
+            return benchmarks.Object;
         }
 
-        private static IProteinBenchmarkService CreateBenchmarkServiceWithTwoSlotsAndProjects()
+        private static IProteinBenchmarkRepository CreateBenchmarkRepositoryWithTwoSlotsAndProjects()
         {
-            var benchmarkService = new ProteinBenchmarkService(new ProteinBenchmarkDataContainer());
-
-            var slotIdentifier = CreateSlotIdentifier("Test", 0);
-            var benchmarkIdentifier = new ProteinBenchmarkIdentifier(12345);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-
-            slotIdentifier = CreateSlotIdentifier("Test", 1);
-            benchmarkIdentifier = new ProteinBenchmarkIdentifier(23456);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-            benchmarkIdentifier = new ProteinBenchmarkIdentifier(65432);
-            benchmarkService.Update(slotIdentifier, benchmarkIdentifier, Array.Empty<TimeSpan>());
-
-            return benchmarkService;
+            var benchmarks = new Mock<IProteinBenchmarkRepository>();
+            var slot0 = CreateSlotIdentifier("Test", 0);
+            var slot1 = CreateSlotIdentifier("Test", 1);
+            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slot0, slot1 });
+            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 23456, 65432 });
+            return benchmarks.Object;
         }
 
-        private static BenchmarksModel CreateModel(IProteinBenchmarkService benchmarkService = null)
+        private static BenchmarksModel CreateModel(IProteinBenchmarkRepository benchmarks = null)
         {
-            return new BenchmarksModel(null, null, benchmarkService, null);
+            return new BenchmarksModel(null, null, benchmarks, null);
         }
 
-        private static BenchmarksModel CreateModel(IProteinService proteinService, IProteinBenchmarkService benchmarkService = null)
+        private static BenchmarksModel CreateModel(IProteinService proteinService, IProteinBenchmarkRepository benchmarks = null)
         {
-            return new BenchmarksModel(null, proteinService, benchmarkService, null);
+            return new BenchmarksModel(null, proteinService, benchmarks, null);
         }
 
         private class MockFormBenchmarksPresenter : BenchmarksPresenter
