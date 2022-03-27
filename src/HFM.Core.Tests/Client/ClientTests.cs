@@ -10,20 +10,16 @@ namespace HFM.Core.Client
     [TestFixture]
     public class ClientTests
     {
-        private static ILogger Logger { get; } = TestLogger.Instance;
-
         [Test]
         public void Client_Settings_CallsOnSettingsChanged_OldIsNullAndCurrentIsSame()
         {
             // Arrange
-            using (var client = new TestClientSettingsChanged())
-            {
-                // Act
-                client.Settings = new ClientSettings { Name = "Foo" };
-                // Assert
-                Assert.IsNull(client.OldSettings);
-                Assert.AreSame(client.Settings, client.NewSettings);
-            }
+            var client = new TestClientSettingsChanged();
+            // Act
+            client.Settings = new ClientSettings { Name = "Foo" };
+            // Assert
+            Assert.IsNull(client.OldSettings);
+            Assert.AreSame(client.Settings, client.NewSettings);
         }
 
         [Test]
@@ -31,15 +27,13 @@ namespace HFM.Core.Client
         {
             // Arrange
             var oldSettings = new ClientSettings { Name = "Bar" };
-            using (var client = new TestClientSettingsChanged())
-            {
-                client.Settings = oldSettings;
-                // Act
-                client.Settings = new ClientSettings { Name = "Foo" };
-                // Assert
-                Assert.AreSame(oldSettings, client.OldSettings);
-                Assert.AreSame(client.Settings, client.NewSettings);
-            }
+            var client = new TestClientSettingsChanged();
+            client.Settings = oldSettings;
+            // Act
+            client.Settings = new ClientSettings { Name = "Foo" };
+            // Assert
+            Assert.AreSame(oldSettings, client.OldSettings);
+            Assert.AreSame(client.Settings, client.NewSettings);
         }
 
         [Test]
@@ -47,232 +41,200 @@ namespace HFM.Core.Client
         {
             // Arrange
             var oldSettings = new ClientSettings { Name = "Bar" };
-            using (var client = new TestClientSettingsChanged())
-            {
-                client.Settings = oldSettings;
-                // Act
-                client.Settings = null;
-                // Assert
-                Assert.AreSame(oldSettings, client.OldSettings);
-                Assert.IsNull(client.NewSettings);
-            }
+            var client = new TestClientSettingsChanged();
+            client.Settings = oldSettings;
+            // Act
+            client.Settings = null;
+            // Assert
+            Assert.AreSame(oldSettings, client.OldSettings);
+            Assert.IsNull(client.NewSettings);
         }
 
         [Test]
         public void Client_Slots_ContainsOneOfflineSlot()
         {
-            using (var client = new MockClient())
-            {
-                Assert.AreEqual(1, client.Slots.Count);
-                Assert.AreEqual(SlotStatus.Offline, client.Slots.First().Status);
-            }
+            var client = new MockClient();
+            Assert.AreEqual(1, client.Slots.Count);
+            Assert.AreEqual(SlotStatus.Offline, client.Slots.First().Status);
         }
 
         [Test]
         public void Client_RefreshSlots_RaisesSlotsChangedEvent()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                bool raised = false;
-                client.SlotsChanged += (s, e) => raised = true;
-                // Act
-                client.RefreshSlots();
-                // Assert
-                Assert.IsTrue(raised);
-            }
+            var client = new MockClient();
+            bool raised = false;
+            client.SlotsChanged += (s, e) => raised = true;
+            // Act
+            client.RefreshSlots();
+            // Assert
+            Assert.IsTrue(raised);
         }
 
         [Test]
         public async Task Client_Connect_ConnectsTheClient()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                // Act
-                await client.Connect();
-                // Assert
-                Assert.IsTrue(client.Connected);
-            }
+            var client = new MockClient();
+            // Act
+            await client.Connect();
+            // Assert
+            Assert.IsTrue(client.Connected);
         }
 
         [Test]
         public async Task Client_Connect_DoesNotConnectTheClientIfTheClientIsDisabled()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                client.Settings = new ClientSettings { Disabled = true };
-                // Act
-                await client.Connect();
-                // Assert
-                Assert.IsFalse(client.Connected);
-            }
+            var client = new MockClient();
+            client.Settings = new ClientSettings { Disabled = true };
+            // Act
+            await client.Connect();
+            // Assert
+            Assert.IsFalse(client.Connected);
         }
 
         [Test]
         public void Client_Connect_Throws()
         {
             // Arrange
-            using (var client = new TestClientConnectThrows())
-            {
-                // Act & Assert
-                Assert.ThrowsAsync<Exception>(() => client.Connect());
-            }
+            var client = new TestClientConnectThrows();
+            // Act & Assert
+            Assert.ThrowsAsync<Exception>(() => client.Connect());
         }
 
         [Test]
         public async Task Client_Retrieve_ClearsIsCancellationRequested()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                client.Close();
-                Assert.IsTrue(client.IsCancellationRequested);
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.IsFalse(client.IsCancellationRequested);
-            }
+            var client = new MockClient();
+            client.Close();
+            Assert.IsTrue(client.IsCancellationRequested);
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.IsFalse(client.IsCancellationRequested);
         }
 
         [Test]
         public async Task Client_Retrieve_CloseIsCalledDuringRetrieve()
         {
             // Arrange
-            using (var client = new TestClientClosesOnRetrieve())
-            {
-                Assert.IsFalse(client.IsCancellationRequested);
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.IsTrue(client.IsCancellationRequested);
-            }
+            var client = new TestClientClosesOnRetrieve();
+            Assert.IsFalse(client.IsCancellationRequested);
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.IsTrue(client.IsCancellationRequested);
         }
 
         [Test]
         public async Task Client_Retrieve_SetsLastRetrieveTime()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                var expected = client.LastRetrieveTime;
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.AreNotEqual(expected, client.LastRetrieveTime);
-            }
+            var client = new MockClient();
+            var expected = client.LastRetrieveTime;
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.AreNotEqual(expected, client.LastRetrieveTime);
         }
 
         [Test]
         public async Task Client_Retrieve_ConnectsIfNotConnected()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.IsTrue(client.Connected);
-            }
+            var client = new MockClient();
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.IsTrue(client.Connected);
         }
 
         [Test]
         public async Task Client_Retrieve_DoesNotConnectTheClientIfTheClientIsDisabled()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                client.Settings = new ClientSettings { Disabled = true };
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.IsFalse(client.Connected);
-            }
+            var client = new MockClient();
+            client.Settings = new ClientSettings { Disabled = true };
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.IsFalse(client.Connected);
         }
 
         [Test]
         public async Task Client_Retrieve_ConnectThrowsAndLogsException()
         {
             // Arrange
-            using (var client = new TestClientConnectThrows())
-            {
-                // Act
-                await client.Retrieve();
-                // Assert
-                var mockLogger = Mock.Get(client.Logger);
-                mockLogger.Verify(x => x.Error(It.IsAny<string>(), It.IsAny<Exception>()));
-            }
+            var client = new TestClientConnectThrows();
+            // Act
+            await client.Retrieve();
+            // Assert
+            var mockLogger = Mock.Get(client.Logger);
+            mockLogger.Verify(x => x.Error(It.IsAny<string>(), It.IsAny<Exception>()));
         }
 
         [Test]
         public async Task Client_Retrieve_ThrowsAndLogsException()
         {
             // Arrange
-            using (var client = new TestClientRetrieveThrows())
-            {
-                // Act
-                await client.Retrieve();
-                // Assert
-                var mockLogger = Mock.Get(client.Logger);
-                mockLogger.Verify(x => x.Error(It.IsAny<string>(), It.IsAny<Exception>()));
-            }
+            var client = new TestClientRetrieveThrows();
+            // Act
+            await client.Retrieve();
+            // Assert
+            var mockLogger = Mock.Get(client.Logger);
+            mockLogger.Verify(x => x.Error(It.IsAny<string>(), It.IsAny<Exception>()));
         }
 
         [Test]
         public async Task Client_Retrieve_OnMultipleRetrieveCallsConnectIsCalledOnce()
         {
             // Arrange
-            using (var client = new MockClient())
+            var client = new MockClient();
+            const int count = 10;
+            // Act
+            for (int i = 0; i < count; i++)
             {
-                const int count = 10;
-                // Act
-                for (int i = 0; i < count; i++)
-                {
-                    await client.Retrieve();
-                }
-                // Assert
-                Logger.Debug($"Retrieve Count: {client.RetrieveCount}");
-                Assert.IsTrue(client.Connected);
-                Assert.AreEqual(count - 1, client.RetrieveCount);
+                await client.Retrieve();
             }
+            // Assert
+            TestLogger.Instance.Debug($"Retrieve Count: {client.RetrieveCount}");
+            Assert.IsTrue(client.Connected);
+            Assert.AreEqual(count - 1, client.RetrieveCount);
         }
 
         [Test]
         public async Task Client_Retrieve_RaisesRetrieveFinishedEvent()
         {
             // Arrange
-            using (var client = new MockClient())
-            {
-                bool raised = false;
-                client.RetrieveFinished += (s, e) => raised = true;
-                // Act
-                await client.Retrieve();
-                // Assert
-                Assert.IsTrue(raised);
-            }
+            var client = new MockClient();
+            bool raised = false;
+            client.RetrieveFinished += (s, e) => raised = true;
+            // Act
+            await client.Retrieve();
+            // Assert
+            Assert.IsTrue(raised);
         }
 
         [Test]
         public void Client_Retrieve_OnMultipleThreadsThrowsAwayConcurrentCallsToRetrieve()
         {
             // Arrange
-            using (var client = new TestClientRetrieveOnMultipleThreads())
-            {
-                const int count = 100;
-                // Act
-                var tasks = Enumerable.Range(0, count)
-                    // ReSharper disable once AccessToDisposedClosure
-                    .Select(_ => Task.Run(() => client.Retrieve()))
-                    .ToArray();
-                Task.WaitAll(tasks);
-                // Assert
-                Logger.Debug($"Retrieve In Progress Count: {client.RetrieveInProgressCount}");
-                Logger.Debug($"Retrieve Count: {client.RetrieveCount}");
-                Assert.IsTrue(client.RetrieveInProgressCount > 0);
-                Assert.IsTrue(client.RetrieveCount > 0);
-                Assert.AreEqual(count, client.RetrieveInProgressCount + client.RetrieveCount);
-            }
+            var client = new TestClientRetrieveOnMultipleThreads();
+            const int count = 100;
+            // Act
+            var tasks = Enumerable.Range(0, count)
+                // ReSharper disable once AccessToDisposedClosure
+                .Select(_ => Task.Run(() => client.Retrieve()))
+                .ToArray();
+            Task.WaitAll(tasks);
+            // Assert
+            TestLogger.Instance.Debug($"Retrieve In Progress Count: {client.RetrieveInProgressCount}");
+            TestLogger.Instance.Debug($"Retrieve Count: {client.RetrieveCount}");
+            Assert.IsTrue(client.RetrieveInProgressCount > 0);
+            Assert.IsTrue(client.RetrieveCount > 0);
+            Assert.AreEqual(count, client.RetrieveInProgressCount + client.RetrieveCount);
         }
 
         [Test]
@@ -282,43 +244,42 @@ namespace HFM.Core.Client
             using var cts = new CancellationTokenSource();
             var token = cts.Token;
 
-            using (var client = new TestClientRefreshesSlots())
+            var client = new TestClientRefreshesSlots();
+
+            _ = Task.Run(() =>
             {
-                _ = Task.Run(() =>
+                while (!token.IsCancellationRequested)
                 {
-                    while (!token.IsCancellationRequested)
+                    // ReSharper disable once AccessToDisposedClosure
+                    client.RefreshSlots();
+                }
+            }, token);
+
+            const int count = 10;
+
+            var tasks = Enumerable.Range(0, count)
+                .Select(_ => Task.Run(() =>
+                {
+                    Thread.Sleep(10);
+                    // ReSharper disable once AccessToDisposedClosure
+                    foreach (var x in client.Slots)
                     {
-                        // ReSharper disable once AccessToDisposedClosure
-                        client.RefreshSlots();
+                        // enumeration of client slots
                     }
-                }, token);
+                }))
+                .ToArray();
 
-                const int count = 10;
-
-                var tasks = Enumerable.Range(0, count)
-                    .Select(_ => Task.Run(() =>
-                    {
-                        Thread.Sleep(10);
-                        // ReSharper disable once AccessToDisposedClosure
-                        foreach (var x in client.Slots)
-                        {
-                            // enumeration of client slots
-                        }
-                    }))
-                    .ToArray();
-
-                try
-                {
-                    Task.WaitAll(tasks);
-                }
-                catch (Exception)
-                {
-                    Assert.Fail("Enumeration failed");
-                }
-                finally
-                {
-                    cts.Cancel();
-                }
+            try
+            {
+                Task.WaitAll(tasks);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Enumeration failed");
+            }
+            finally
+            {
+                cts.Cancel();
             }
         }
 
