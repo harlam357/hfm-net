@@ -145,5 +145,27 @@ namespace HFM.Core.Client
                 mockWorkUnitRepository.Verify(x => x.Update(It.IsAny<WorkUnitModel>()), Times.Once);
             }
         }
+
+        [TestFixture]
+        public class GivenConnectedClientSendsCommandsToSendMessageUpdates : FahClientTests
+        {
+            private MockFahClient _fahClient;
+
+            [SetUp]
+            public async Task BeforeEach()
+            {
+                _fahClient = MockFahClient.Create("test");
+                await _fahClient.Connect();
+                await _fahClient.SetupClientToSendMessageUpdatesAsync();
+            }
+
+            [Test]
+            public void Then_CommandsAreExecuted()
+            {
+                var connection = (MockFahClientConnection)_fahClient.Connection;
+                Assert.AreEqual(7, connection.Commands.Count);
+                Assert.IsTrue(connection.Commands.All(x => x.Executed));
+            }
+        }
     }
 }

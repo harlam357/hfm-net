@@ -152,8 +152,22 @@ namespace HFM.Core.Client
             }
             if (Connected)
             {
-                await Messages.SetupClientToSendMessageUpdatesAsync().ConfigureAwait(false);
+                await SetupClientToSendMessageUpdatesAsync().ConfigureAwait(false);
             }
+        }
+
+        internal async Task SetupClientToSendMessageUpdatesAsync()
+        {
+            var heartbeatCommandText = String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", FahClientMessages.HeartbeatInterval);
+
+            await Connection.CreateCommand("updates clear").ExecuteAsync().ConfigureAwait(false);
+            await Connection.CreateCommand("log-updates restart").ExecuteAsync().ConfigureAwait(false);
+            await Connection.CreateCommand(heartbeatCommandText).ExecuteAsync().ConfigureAwait(false);
+            await Connection.CreateCommand("updates add 1 1 $info").ExecuteAsync().ConfigureAwait(false);
+            await Connection.CreateCommand("updates add 2 1 $(options -a)").ExecuteAsync().ConfigureAwait(false);
+            await Connection.CreateCommand("updates add 3 1 $slot-info").ExecuteAsync().ConfigureAwait(false);
+            // get an initial queue reading
+            await Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
         }
 
         private async Task ReadMessagesFromConnection()

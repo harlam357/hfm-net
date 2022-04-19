@@ -50,20 +50,6 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task FahClientMessages_SetupClientToSendMessageUpdatesAsync_ExecutesUpdateCommands()
-        {
-            // Arrange
-            var fahClient = SetupFahClientForSendingMockCommands();
-            var connection = (MockFahClientConnection)fahClient.Connection;
-            var messages = new FahClientMessages(fahClient);
-            // Act
-            await messages.SetupClientToSendMessageUpdatesAsync();
-            // Assert
-            Assert.AreEqual(7, connection.Commands.Count);
-            Assert.IsTrue(connection.Commands.All(x => x.Executed));
-        }
-
-        [Test]
         public async Task FahClientMessages_UpdateMessageAsync_StoresLatestHeartbeat()
         {
             // Arrange

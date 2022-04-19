@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
@@ -76,7 +71,7 @@ namespace HFM.Core.Client
             }
         }
 
-        private const int HeartbeatInterval = 60;
+        public const int HeartbeatInterval = 60;
 
         public bool IsHeartbeatOverdue()
         {
@@ -84,20 +79,6 @@ namespace HFM.Core.Client
 
             return DateTime.UtcNow.Subtract(Heartbeat.Identifier.Received).TotalMinutes >
                    TimeSpan.FromSeconds(HeartbeatInterval * 3).TotalMinutes;
-        }
-
-        public async Task SetupClientToSendMessageUpdatesAsync()
-        {
-            var heartbeatCommandText = String.Format(CultureInfo.InvariantCulture, "updates add 0 {0} $heartbeat", HeartbeatInterval);
-
-            await Client.Connection.CreateCommand("updates clear").ExecuteAsync().ConfigureAwait(false);
-            await Client.Connection.CreateCommand("log-updates restart").ExecuteAsync().ConfigureAwait(false);
-            await Client.Connection.CreateCommand(heartbeatCommandText).ExecuteAsync().ConfigureAwait(false);
-            await Client.Connection.CreateCommand("updates add 1 1 $info").ExecuteAsync().ConfigureAwait(false);
-            await Client.Connection.CreateCommand("updates add 2 1 $(options -a)").ExecuteAsync().ConfigureAwait(false);
-            await Client.Connection.CreateCommand("updates add 3 1 $slot-info").ExecuteAsync().ConfigureAwait(false);
-            // get an initial queue reading
-            await Client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
         }
 
         /// <summary>
