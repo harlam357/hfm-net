@@ -44,9 +44,9 @@ public record WorkUnitEntity
 
     public virtual ICollection<WorkUnitFrameEntity> Frames { get; set; }
 
-    public string SlotType { get; set; }
-
     public string SlotName { get; set; }
+
+    public string SlotType { get; set; }
 
     public double PPD { get; set; }
 
