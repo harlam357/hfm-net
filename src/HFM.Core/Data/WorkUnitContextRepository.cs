@@ -84,7 +84,8 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var workUnit = GetExistingWorkUnit(context, workUnitModel.WorkUnit);
         var client = GetOrInsertClientEntity(context, workUnitModel);
         var protein = GetOrInsertProteinEntity(context, workUnitModel);
-        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID);
+        var platform = GetOrInsertPlatformEntity(context, workUnitModel);
+        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform.ID);
         InsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
 
         return workUnit.ID;
@@ -185,7 +186,35 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return protein;
     }
 
-    private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit, long clientID, long proteinID)
+    private static PlatformEntity GetOrInsertPlatformEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+    {
+        var clientVersion = workUnitModel.SlotModel.Client.ClientVersion;
+        var processor = workUnitModel.BenchmarkIdentifier.Processor;
+        int? threads = workUnitModel.BenchmarkIdentifier.HasThreads
+            ? workUnitModel.BenchmarkIdentifier.Threads
+            : null;
+
+        var platform = context.Platforms
+            .FirstOrDefault(x => x.ClientVersion == clientVersion &&
+                                 x.Processor == processor &&
+                                 x.Threads == threads);
+
+        if (platform is null)
+        {
+            platform = new PlatformEntity();
+            platform.ClientVersion = clientVersion;
+            platform.Processor = processor;
+            platform.Threads = threads;
+
+            context.Platforms.Add(platform);
+            context.SaveChanges();
+        }
+
+        return platform;
+    }
+
+    private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
+        WorkUnitEntity workUnit, long clientID, long proteinID, long platformID)
     {
         bool insert = workUnit is null;
 
@@ -207,13 +236,10 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.FrameTimeInSeconds = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
         workUnit.ProteinID = proteinID;
         workUnit.ClientID = clientID;
+        workUnit.PlatformID = platformID;
         workUnit.ClientSlot = workUnitModel.SlotModel.SlotID == SlotIdentifier.NoSlotID
             ? null
             : workUnitModel.SlotModel.SlotID;
-        workUnit.Processor = workUnitModel.BenchmarkIdentifier.Processor;
-        workUnit.Threads = workUnitModel.BenchmarkIdentifier.HasThreads
-            ? workUnitModel.BenchmarkIdentifier.Threads
-            : null;
 
         if (insert)
         {

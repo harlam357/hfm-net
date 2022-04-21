@@ -124,6 +124,23 @@ public class WorkUnitContextRepositoryTests
         }
 
         [Test]
+        public void ThenNewPlatformIsInserted()
+        {
+            Assert.AreEqual(1, _updateResult);
+
+            using var context = new WorkUnitContext(_connection);
+            var platform = context.Platforms.First();
+            Assert.AreEqual("7", platform.ClientVersion);
+            Assert.AreEqual(null, platform.OperatingSystem);
+            Assert.AreEqual(null, platform.Implementation);
+            Assert.AreEqual("AMD Ryzen 7 5800X", platform.Processor);
+            Assert.AreEqual(14, platform.Threads);
+            Assert.AreEqual(null, platform.DriverVersion);
+            Assert.AreEqual(null, platform.ComputeVersion);
+            Assert.AreEqual(null, platform.CUDAVersion);
+        }
+
+        [Test]
         public void ThenNewWorkUnitIsInserted()
         {
             Assert.AreEqual(1, _updateResult);
@@ -146,8 +163,6 @@ public class WorkUnitContextRepositoryTests
             Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);
             Assert.AreEqual(context.Clients.First().ID, workUnit.ClientID);
             Assert.AreEqual(1, workUnit.ClientSlot);
-            Assert.AreEqual("AMD Ryzen 7 5800X", workUnit.Processor);
-            Assert.AreEqual(14, workUnit.Threads);
         }
 
         [Test]
@@ -806,7 +821,7 @@ public class WorkUnitContextRepositoryTests
     private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein,
         int slotID = SlotIdentifier.NoSlotID, string processor = null, int? threads = null)
     {
-        var slotModel = new ProteinBenchmarkDetailSlotModel(new NullClient { Settings = settings })
+        var slotModel = new ProteinBenchmarkDetailSlotModel(new NullClient { Settings = settings, ClientVersion = "7" })
         {
             SlotID = slotID,
             Processor = processor,

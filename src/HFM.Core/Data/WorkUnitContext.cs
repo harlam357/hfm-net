@@ -46,6 +46,7 @@ public partial class WorkUnitContext : DbContext
     public DbSet<WorkUnitEntity> WorkUnits { get; set; }
     public DbSet<ProteinEntity> Proteins { get; set; }
     public DbSet<ClientEntity> Clients { get; set; }
+    public DbSet<PlatformEntity> Platforms { get; set; }
     public DbSet<WorkUnitFrameEntity> WorkUnitFrames { get; set; }
     public DbSet<VersionEntity> Versions { get; set; }
 
@@ -129,6 +130,11 @@ public partial class WorkUnitContext : DbContext
             .HasOne(x => x.Client)
             .WithMany()
             .HasForeignKey(x => x.ClientID);
+
+        modelBuilder.Entity<WorkUnitEntity>()
+            .HasOne(x => x.Platform)
+            .WithMany()
+            .HasForeignKey(x => x.PlatformID);
 
         modelBuilder.Entity<WorkUnitEntity>()
             .HasMany(x => x.Frames)

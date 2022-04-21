@@ -32,15 +32,15 @@ public record WorkUnitEntity
 
     public long ClientID { get; set; }
 
+    public long? PlatformID { get; set; }
+
     public int? ClientSlot { get; set; }
-
-    public string Processor { get; set; }
-
-    public int? Threads { get; set; }
 
     public virtual ProteinEntity Protein { get; set; }
 
     public virtual ClientEntity Client { get; set; }
+
+    public virtual PlatformEntity Platform { get; set; }
 
     public virtual ICollection<WorkUnitFrameEntity> Frames { get; set; }
 
@@ -83,6 +83,30 @@ public record ClientEntity
     public string ConnectionString { get; set; }
 
     public string Guid { get; set; }
+}
+
+public record PlatformEntity
+{
+    public long ID { get; set; }
+
+    public string ClientVersion { get; set; }
+
+    public string OperatingSystem { get; set; }
+
+    // Reference, CPU, OpenCL, CUDA
+    public string Implementation { get; set; }
+
+    public string Processor { get; set; }
+
+    // CPU specific
+    public int? Threads { get; set; }
+
+    // GPU specific
+    public string DriverVersion { get; set; }
+
+    public string ComputeVersion { get; set; }
+
+    public string CUDAVersion { get; set; }
 }
 
 public record WorkUnitFrameEntity

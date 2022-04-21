@@ -7,48 +7,91 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitContextTests
     {
-        [Test]
-        public void WorkUnitContext_CanAddWorkUnitEntity()
+        [TestFixture]
+        public class CanAddWorkUnitEntity : WorkUnitContextTests
         {
-            using var artifacts = new ArtifactFolder();
-            string connectionString = $"Data Source={artifacts.GetRandomFilePath()}";
-            using var context = new WorkUnitContext(connectionString);
-            context.Database.EnsureCreated();
+            private ArtifactFolder _artifacts;
+            private WorkUnitContext _context;
 
-            context.Proteins.Add(new ProteinEntity());
-            context.SaveChanges();
-
-            context.Clients.Add(new ClientEntity());
-            context.SaveChanges();
-
-            context.WorkUnits.Add(new WorkUnitEntity
+            [SetUp]
+            public void BeforeEach()
             {
-                ProteinID = context.Proteins.First().ID,
-                ClientID = context.Clients.First().ID
-            });
-            context.SaveChanges();
+                _artifacts = new ArtifactFolder();
+                string connectionString = $"Data Source={_artifacts.GetRandomFilePath()}";
+                _context = new WorkUnitContext(connectionString);
+                _context.Database.EnsureCreated();
 
-            context.WorkUnitFrames.Add(new WorkUnitFrameEntity
-            {
-                WorkUnitID = context.WorkUnits.First().ID,
-                FrameID = 0
-            });
-            context.WorkUnitFrames.Add(new WorkUnitFrameEntity
-            {
-                WorkUnitID = context.WorkUnits.First().ID,
-                FrameID = 1
-            });
-            context.SaveChanges();
+                _context.Proteins.Add(new ProteinEntity());
+                _context.SaveChanges();
 
-            var workUnit = context.WorkUnits
-                .Include(x => x.Client)
-                .Include(x => x.Protein)
-                .Include(x => x.Frames)
-                .First();
-            Assert.IsNotNull(workUnit);
-            Assert.IsNotNull(workUnit.Client);
-            Assert.IsNotNull(workUnit.Protein);
-            Assert.AreEqual(2, workUnit.Frames.Count);
+                _context.Clients.Add(new ClientEntity());
+                _context.SaveChanges();
+            }
+
+            [TearDown]
+            public void AfterEach()
+            {
+                _artifacts?.Dispose();
+                _context?.Dispose();
+            }
+
+            [Test]
+            public void WithFrames()
+            {
+                _context.WorkUnits.Add(new WorkUnitEntity
+                {
+                    ProteinID = _context.Proteins.First().ID,
+                    ClientID = _context.Clients.First().ID
+                });
+                _context.SaveChanges();
+
+                _context.WorkUnitFrames.Add(new WorkUnitFrameEntity
+                {
+                    WorkUnitID = _context.WorkUnits.First().ID,
+                    FrameID = 0
+                });
+                _context.WorkUnitFrames.Add(new WorkUnitFrameEntity
+                {
+                    WorkUnitID = _context.WorkUnits.First().ID,
+                    FrameID = 1
+                });
+                _context.SaveChanges();
+
+                var workUnit = _context.WorkUnits
+                    .Include(x => x.Client)
+                    .Include(x => x.Protein)
+                    .Include(x => x.Frames)
+                    .First();
+                Assert.IsNotNull(workUnit);
+                Assert.IsNotNull(workUnit.Client);
+                Assert.IsNotNull(workUnit.Protein);
+                Assert.AreEqual(2, workUnit.Frames.Count);
+            }
+
+            [Test]
+            public void WithPlatform()
+            {
+                _context.Platforms.Add(new PlatformEntity());
+                _context.SaveChanges();
+
+                _context.WorkUnits.Add(new WorkUnitEntity
+                {
+                    ProteinID = _context.Proteins.First().ID,
+                    ClientID = _context.Clients.First().ID,
+                    PlatformID = _context.Platforms.First().ID
+                });
+                _context.SaveChanges();
+
+                var workUnit = _context.WorkUnits
+                    .Include(x => x.Client)
+                    .Include(x => x.Protein)
+                    .Include(x => x.Platform)
+                    .First();
+                Assert.IsNotNull(workUnit);
+                Assert.IsNotNull(workUnit.Client);
+                Assert.IsNotNull(workUnit.Protein);
+                Assert.IsNotNull(workUnit.Platform);
+            }
         }
     }
 }

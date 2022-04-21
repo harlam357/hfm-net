@@ -98,10 +98,11 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         using var context = CreateWorkUnitContext();
 
         var frames = QueryWorkUnitsByClientSlot(slotIdentifier, context)
+            .Include(x => x.Platform)
             .Where(x =>
                 x.Protein.ProjectID == benchmarkIdentifier.ProjectID &&
-                x.Processor == benchmarkIdentifier.Processor &&
-                x.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
+                x.Platform.Processor == benchmarkIdentifier.Processor &&
+                x.Platform.Threads == (benchmarkIdentifier.HasThreads ? benchmarkIdentifier.Threads : null))
             .SelectMany(x => x.Frames)
             .Where(x => x.Duration.ToString() != TimeSpan.Zero.ToString())
             .OrderByDescending(x => x.WorkUnitID).ThenByDescending(x => x.FrameID)
@@ -129,6 +130,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         return QueryWorkUnitsByClientSlot(slotIdentifier, context)
             .Include(x => x.Protein)
             .Include(x => x.Client)
+            .Include(x => x.Platform)
             .Include(x => x.Frames
                 .Where(y => y.Duration.ToString() != TimeSpan.Zero.ToString())
                 .OrderByDescending(y => y.FrameID))
@@ -141,7 +143,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                         x.Client.Name, x.Client.ConnectionString, Guid.Parse(x.Client.Guid)),
                             x.ClientSlot ?? SlotIdentifier.NoSlotID),
                 BenchmarkIdentifier: new ProteinBenchmarkIdentifier(
-                    x.Protein.ProjectID, x.Processor, x.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
+                    x.Protein.ProjectID, x.Platform.Processor, x.Platform.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
             .Select(x =>
             {
                 var frames = x

@@ -46,7 +46,7 @@ public class ProteinBenchmarkRepositoryTests
             public void ThenBenchmarkProjectsAreReturnedForAllSlots()
             {
                 var actual = _repository.GetBenchmarkProjects(SlotIdentifier.AllSlots);
-                Assert.AreEqual(14, actual.Count);
+                Assert.AreEqual(6, actual.Count);
             }
 
             [Test]
@@ -55,7 +55,7 @@ public class ProteinBenchmarkRepositoryTests
                 var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));
                 var s = new SlotIdentifier(c, 2);
                 var actual = _repository.GetBenchmarkProjects(s);
-                Assert.AreEqual(6, actual.Count);
+                Assert.AreEqual(2, actual.Count);
             }
         }
 
@@ -72,9 +72,9 @@ public class ProteinBenchmarkRepositoryTests
                 var actual = _repository.GetBenchmark(s, b);
                 Assert.AreEqual(s, actual.SlotIdentifier);
                 Assert.AreEqual(b, actual.BenchmarkIdentifier);
-                Assert.AreEqual(118, actual.FrameTimes.Count);
-                Assert.AreEqual(TimeSpan.FromSeconds(70), actual.AverageFrameTime);
-                Assert.AreEqual(TimeSpan.FromSeconds(69), actual.MinimumFrameTime);
+                Assert.AreEqual(100, actual.FrameTimes.Count);
+                Assert.AreEqual(TimeSpan.FromSeconds(72), actual.AverageFrameTime);
+                Assert.AreEqual(TimeSpan.FromSeconds(70), actual.MinimumFrameTime);
             }
 
             [Test]
@@ -103,26 +103,26 @@ public class ProteinBenchmarkRepositoryTests
                 Assert.AreEqual("192.168.1.194", x.SlotIdentifier.ClientIdentifier.Server);
                 Assert.AreEqual(36330, x.SlotIdentifier.ClientIdentifier.Port);
                 Assert.AreEqual(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"), x.SlotIdentifier.ClientIdentifier.Guid);
+                Assert.AreEqual(3, x.SlotIdentifier.SlotID);
+                Assert.AreEqual(18213, x.BenchmarkIdentifier.ProjectID);
+                Assert.AreEqual("GeForce RTX 3060 Ti Lite Hash Rate", x.BenchmarkIdentifier.Processor);
+                Assert.AreEqual(ProteinBenchmarkIdentifier.NoThreads, x.BenchmarkIdentifier.Threads);
+                Assert.AreEqual(100, x.FrameTimes.Count);
+                Assert.AreEqual(TimeSpan.FromSeconds(87), x.AverageFrameTime);
+                Assert.AreEqual(TimeSpan.FromSeconds(87), x.MinimumFrameTime);
+
+                x = actual.ElementAt(1);
+                Assert.AreEqual("Ryzen 5800X", x.SlotIdentifier.ClientIdentifier.Name);
+                Assert.AreEqual("192.168.1.194", x.SlotIdentifier.ClientIdentifier.Server);
+                Assert.AreEqual(36330, x.SlotIdentifier.ClientIdentifier.Port);
+                Assert.AreEqual(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"), x.SlotIdentifier.ClientIdentifier.Guid);
                 Assert.AreEqual(2, x.SlotIdentifier.SlotID);
                 Assert.AreEqual(18213, x.BenchmarkIdentifier.ProjectID);
                 Assert.AreEqual("GeForce RTX 3070 Ti", x.BenchmarkIdentifier.Processor);
                 Assert.AreEqual(ProteinBenchmarkIdentifier.NoThreads, x.BenchmarkIdentifier.Threads);
-                Assert.AreEqual(118, x.FrameTimes.Count);
-                Assert.AreEqual(TimeSpan.FromSeconds(70), x.AverageFrameTime);
-                Assert.AreEqual(TimeSpan.FromSeconds(69), x.MinimumFrameTime);
-
-                x = actual.ElementAt(1);
-                Assert.AreEqual("Ryzen 3700X", x.SlotIdentifier.ClientIdentifier.Name);
-                Assert.AreEqual("192.168.1.149", x.SlotIdentifier.ClientIdentifier.Server);
-                Assert.AreEqual(36330, x.SlotIdentifier.ClientIdentifier.Port);
-                Assert.AreEqual(Guid.Parse("53bdccb2-807d-4ef3-a942-7900881a55d5"), x.SlotIdentifier.ClientIdentifier.Guid);
-                Assert.AreEqual(2, x.SlotIdentifier.SlotID);
-                Assert.AreEqual(18213, x.BenchmarkIdentifier.ProjectID);
-                Assert.AreEqual("GeForce RTX 3060 Lite Hash Rate", x.BenchmarkIdentifier.Processor);
-                Assert.AreEqual(ProteinBenchmarkIdentifier.NoThreads, x.BenchmarkIdentifier.Threads);
-                Assert.AreEqual(17, x.FrameTimes.Count);
-                Assert.AreEqual(TimeSpan.FromSeconds(115), x.AverageFrameTime);
-                Assert.AreEqual(TimeSpan.FromSeconds(115), x.MinimumFrameTime);
+                Assert.AreEqual(100, x.FrameTimes.Count);
+                Assert.AreEqual(TimeSpan.FromSeconds(72), x.AverageFrameTime);
+                Assert.AreEqual(TimeSpan.FromSeconds(70), x.MinimumFrameTime);
             }
 
             [Test]
@@ -143,23 +143,23 @@ public class ProteinBenchmarkRepositoryTests
                 Assert.AreEqual(18213, b.BenchmarkIdentifier.ProjectID);
                 Assert.AreEqual("GeForce RTX 3070 Ti", b.BenchmarkIdentifier.Processor);
                 Assert.AreEqual(ProteinBenchmarkIdentifier.NoThreads, b.BenchmarkIdentifier.Threads);
-                Assert.AreEqual(118, b.FrameTimes.Count);
-                Assert.AreEqual(TimeSpan.FromSeconds(70), b.AverageFrameTime);
-                Assert.AreEqual(TimeSpan.FromSeconds(69), b.MinimumFrameTime);
+                Assert.AreEqual(100, b.FrameTimes.Count);
+                Assert.AreEqual(TimeSpan.FromSeconds(72), b.AverageFrameTime);
+                Assert.AreEqual(TimeSpan.FromSeconds(70), b.MinimumFrameTime);
             }
 
             [Test]
             public void ThenBenchmarksAreReturnedForAllSlotsAndMultipleProjects()
             {
-                var actual = _repository.GetBenchmarks(SlotIdentifier.AllSlots, new[] { 17257, 18021 });
+                var actual = _repository.GetBenchmarks(SlotIdentifier.AllSlots, new[] { 17910, 18213, 17908 });
                 Assert.AreEqual(4, actual.Count);
-                Assert.AreEqual(18021, actual.ElementAt(0).BenchmarkIdentifier.ProjectID);
-                Assert.AreEqual(18021, actual.ElementAt(1).BenchmarkIdentifier.ProjectID);
-                Assert.AreEqual(17257, actual.ElementAt(2).BenchmarkIdentifier.ProjectID);
-                Assert.AreEqual(17257, actual.ElementAt(3).BenchmarkIdentifier.ProjectID);
-                Assert.AreEqual(300, actual.ElementAt(0).FrameTimes.Count);
-                Assert.AreEqual(200, actual.ElementAt(1).FrameTimes.Count);
-                Assert.AreEqual(200, actual.ElementAt(2).FrameTimes.Count);
+                Assert.AreEqual(17908, actual.ElementAt(0).BenchmarkIdentifier.ProjectID);
+                Assert.AreEqual(17910, actual.ElementAt(1).BenchmarkIdentifier.ProjectID);
+                Assert.AreEqual(18213, actual.ElementAt(2).BenchmarkIdentifier.ProjectID);
+                Assert.AreEqual(18213, actual.ElementAt(3).BenchmarkIdentifier.ProjectID);
+                Assert.AreEqual(61, actual.ElementAt(0).FrameTimes.Count);
+                Assert.AreEqual(100, actual.ElementAt(1).FrameTimes.Count);
+                Assert.AreEqual(100, actual.ElementAt(2).FrameTimes.Count);
                 Assert.AreEqual(100, actual.ElementAt(3).FrameTimes.Count);
             }
         }
