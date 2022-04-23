@@ -1,6 +1,7 @@
 ﻿using HFM.Client.ObjectModel;
 using HFM.Core.Client.Mocks;
 using HFM.Core.WorkUnits;
+using HFM.Log;
 
 using NUnit.Framework;
 
@@ -15,7 +16,7 @@ namespace HFM.Core.Client
         public void WorkUnitCollectionBuilder_BuildForSlot_ReturnsEmptyCollectionWhenUnitCollectionIsNull()
         {
             // Arrange
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings(), null, null, null, _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings(), new MessageSource(), _UnitRetrievalTime);
             // Act
             var workUnits = builder.BuildForSlot(0, null);
             // Assert
@@ -28,7 +29,12 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_10");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, null, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var source = new MessageSource
+            {
+                UnitCollection = fahClient.Messages.UnitCollection,
+                ClientRun = fahClient.Messages.ClientRun
+            };
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, source, _UnitRetrievalTime);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
             // Assert
@@ -43,7 +49,7 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_10");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -91,7 +97,7 @@ namespace HFM.Core.Client
             // clear the log data so this test operates only on data provided by FahClient
             fahClient.Messages.Log.Clear();
 
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -132,7 +138,7 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_10");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit());
@@ -177,7 +183,7 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_10");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_10");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
@@ -222,7 +228,7 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_11");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_11");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
@@ -267,7 +273,7 @@ namespace HFM.Core.Client
             // Arrange
             var fahClient = MockFahClient.Create("Client_v7_19");
             await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_19");
-            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
             var workUnits = builder.BuildForSlot(1, new WorkUnit());
@@ -315,7 +321,12 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 0, State = "READY" },
                 new Unit { Slot = 0, ID = 1, State = "RUNNING" }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            var source = new MessageSource
+            {
+                UnitCollection = units,
+                Options = new Options()
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
             // Assert
@@ -331,7 +342,12 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 2, State = "READY" },
                 new Unit { Slot = 0, ID = 1, State = "READY" }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            var source = new MessageSource
+            {
+                UnitCollection = units,
+                Options = new Options()
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit());
             // Assert
@@ -347,7 +363,12 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 0, State = "READY", Project = 1 },
                 new Unit { Slot = 0, ID = 1, State = "RUNNING", Project = 2 }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            var source = new MessageSource
+            {
+                UnitCollection = units,
+                Options = new Options()
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 2 });
             // Assert
@@ -363,11 +384,24 @@ namespace HFM.Core.Client
                 new Unit { Slot = 0, ID = 0, State = "READY", Project = 1 },
                 new Unit { Slot = 0, ID = 1, State = "RUNNING", Project = 2 }
             };
-            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, units, new Options(), null, DateTime.MinValue);
+            var source = new MessageSource
+            {
+                UnitCollection = units,
+                Options = new Options()
+            };
+            var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
             var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 3 });
             // Assert
             Assert.AreEqual(2, workUnits.Count);
+        }
+
+        private class MessageSource : IWorkUnitMessageSource
+        {
+            public Info Info { get; init; }
+            public Options Options { get; init; }
+            public UnitCollection UnitCollection { get; init; }
+            public ClientRun ClientRun { get; init; }
         }
     }
 }

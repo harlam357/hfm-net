@@ -12,24 +12,20 @@ namespace HFM.Core.Client
         public ILogger Logger { get; }
         public ClientSettings Settings { get; }
 
-        private readonly UnitCollection _units;
-        private readonly Options _options;
-        private readonly ClientRun _clientRun;
+        private readonly IWorkUnitMessageSource _source;
         private readonly DateTime _unitRetrievalTime;
 
-        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, UnitCollection units, Options options, ClientRun clientRun, DateTime unitRetrievalTime)
+        public WorkUnitCollectionBuilder(ILogger logger, ClientSettings settings, IWorkUnitMessageSource source, DateTime unitRetrievalTime)
         {
             Logger = logger ?? NullLogger.Instance;
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _units = units;
-            _options = options;
-            _clientRun = clientRun;
+            _source = source ?? throw new ArgumentNullException(nameof(source));
             _unitRetrievalTime = unitRetrievalTime;
         }
 
         public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
         {
-            if (_units is null) return new WorkUnitCollection();
+            if (_source.UnitCollection is null) return new WorkUnitCollection();
             if (previousWorkUnit is null) throw new ArgumentNullException(nameof(previousWorkUnit));
 
             var slotRun = GetSlotRun(slotID);
@@ -48,7 +44,7 @@ namespace HFM.Core.Client
         {
             Debug.Assert(previousWorkUnit != null);
 
-            var workUnits = new WorkUnitCollection(_units.Where(x => x.Slot == slotID).Select(x => BuildWorkUnit(slotID, x)));
+            var workUnits = new WorkUnitCollection(_source.UnitCollection.Where(x => x.Slot == slotID).Select(x => BuildWorkUnit(slotID, x)));
             var currentID = GetCurrentWorkUnitID(slotID);
             if (currentID.HasValue)
             {
@@ -83,7 +79,7 @@ namespace HFM.Core.Client
         }
 
         private SlotRun GetSlotRun(int slotID) =>
-            _clientRun != null && _clientRun.SlotRuns.TryGetValue(slotID, out var slotRun)
+            _source.ClientRun != null && _source.ClientRun.SlotRuns.TryGetValue(slotID, out var slotRun)
                 ? slotRun
                 : null;
 
@@ -95,7 +91,7 @@ namespace HFM.Core.Client
             Debug.Assert(unit != null);
 
             var workUnit = new WorkUnit { UnitRetrievalTime = _unitRetrievalTime };
-            PopulateWorkUnitFromClientData(workUnit, unit, _options);
+            PopulateWorkUnitFromClientData(workUnit, unit, _source.Options);
 
             var projectInfo = ToProjectInfo(unit);
             var unitRun = GetUnitRun(slotID, unit.ID.GetValueOrDefault(), projectInfo);
@@ -114,13 +110,13 @@ namespace HFM.Core.Client
 
         private int? GetCurrentWorkUnitID(int slotID)
         {
-            int? currentID = _units
+            int? currentID = _source.UnitCollection
                 .FirstOrDefault(x => x.Slot == slotID && x.State.Equals("RUNNING", StringComparison.OrdinalIgnoreCase))
                 ?.ID;
 
             if (!currentID.HasValue)
             {
-                currentID = _units
+                currentID = _source.UnitCollection
                     .FirstOrDefault(x => x.Slot == slotID && x.State.Equals("READY", StringComparison.OrdinalIgnoreCase))
                     ?.ID;
             }

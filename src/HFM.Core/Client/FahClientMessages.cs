@@ -8,7 +8,18 @@ using HFM.Log;
 
 namespace HFM.Core.Client
 {
-    public class FahClientMessages
+    public interface IWorkUnitMessageSource
+    {
+        Info Info { get; }
+
+        Options Options { get; }
+
+        UnitCollection UnitCollection { get; }
+
+        ClientRun ClientRun { get; }
+    }
+
+    public class FahClientMessages : IWorkUnitMessageSource
     {
         public IFahClient Client { get; }
 
@@ -44,11 +55,11 @@ namespace HFM.Core.Client
         /// </summary>
         public bool LogIsRetrieved => Log.ClientRuns.Count > 0;
 
-        public ClientRun GetClientRun() => Log.ClientRuns.LastOrDefault();
+        public ClientRun ClientRun => Log.ClientRuns.LastOrDefault();
 
         public SlotRun GetSlotRun(int slotID)
         {
-            var clientRun = GetClientRun();
+            var clientRun = ClientRun;
             return clientRun != null && clientRun.SlotRuns.TryGetValue(slotID, out var slotRun) ? slotRun : null;
         }
 

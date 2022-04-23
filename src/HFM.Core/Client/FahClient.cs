@@ -209,8 +209,7 @@ namespace HFM.Core.Client
         {
             var sw = Stopwatch.StartNew();
 
-            var workUnitsBuilder = new WorkUnitCollectionBuilder(
-                Logger, Settings, Messages.UnitCollection, Messages.Options, Messages.GetClientRun(), LastRetrieveTime);
+            var workUnitsBuilder = new WorkUnitCollectionBuilder(Logger, Settings, Messages, LastRetrieveTime);
             var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
                 Messages.UnitCollection, Messages.Info?.System);
 
@@ -250,7 +249,7 @@ namespace HFM.Core.Client
 
             if (logLines is null)
             {
-                var clientRun = Messages.GetClientRun();
+                var clientRun = Messages.ClientRun;
                 if (clientRun != null)
                 {
                     logLines = LogLineEnumerable.Create(clientRun);
@@ -289,7 +288,7 @@ namespace HFM.Core.Client
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
             slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
 
-            var clientRun = Messages.GetClientRun();
+            var clientRun = Messages.ClientRun;
             if (WorkUnitRepository is not null && clientRun is not null)
             {
                 slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
