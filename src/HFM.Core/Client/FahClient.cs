@@ -57,7 +57,7 @@ namespace HFM.Core.Client
             _messageActions = new List<FahClientMessageAction>
             {
                 new DelegateFahClientMessageAction(FahClientMessageType.SlotInfo, RefreshSlots),
-                new DelegateFahClientMessageAction(FahClientMessageType.Info, RefreshClientInfo),
+                new DelegateFahClientMessageAction(FahClientMessageType.Info, RefreshClientPlatform),
                 new ExecuteRetrieveMessageAction(Messages, async () => await Retrieve().ConfigureAwait(false))
             };
         }
@@ -107,7 +107,14 @@ namespace HFM.Core.Client
             }
         }
 
-        private void RefreshClientInfo() => ClientVersion = Messages.Info?.Client.Version;
+        private void RefreshClientPlatform()
+        {
+            var info = Messages.Info;
+            if (info is not null)
+            {
+                Platform = new ClientPlatform(info.Client.Version, info.System.OS);
+            }
+        }
 
         protected override void OnClose()
         {

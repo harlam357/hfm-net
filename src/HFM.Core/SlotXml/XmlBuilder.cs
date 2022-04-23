@@ -136,7 +136,7 @@ namespace HFM.Core.SlotXml
             slotData.Name = slot.Name;
             slotData.SlotType = slot.SlotTypeString;
             slotData.Processor = slot.Processor;
-            slotData.ClientVersion = slot.Client.ClientVersion;
+            slotData.ClientVersion = slot.Client.Platform?.ClientVersion;
             slotData.TPF = slot.TPF.ToString();
             slotData.PPD = slot.PPD;
             slotData.UPD = slot.UPD;

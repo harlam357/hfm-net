@@ -157,9 +157,9 @@ namespace HFM.Core.Client
                 {
                     sb.AppendFormat(CultureInfo.InvariantCulture, ":{0}", Threads);
                 }
-                if (ShowVersions && !String.IsNullOrEmpty(Client.ClientVersion))
+                if (ShowVersions && !String.IsNullOrEmpty(Client.Platform?.ClientVersion))
                 {
-                    sb.Append($" ({Client.ClientVersion})");
+                    sb.Append($" ({Client.Platform.ClientVersion})");
                 }
                 return sb.ToString();
             }

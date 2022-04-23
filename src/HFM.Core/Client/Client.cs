@@ -29,10 +29,7 @@ public interface IClient
     /// </summary>
     ClientSettings Settings { get; set; }
 
-    /// <summary>
-    /// Gets the client version.
-    /// </summary>
-    string ClientVersion { get; }
+    ClientPlatform Platform { get; }
 
     /// <summary>
     /// Gets the collection of client slots.
@@ -56,6 +53,8 @@ public interface IClient
     /// </summary>
     Task Retrieve();
 }
+
+public record ClientPlatform(string ClientVersion, string OperatingSystem);
 
 public abstract class Client : IClient
 {
@@ -101,7 +100,7 @@ public abstract class Client : IClient
     {
     }
 
-    public string ClientVersion { get; set; }
+    public ClientPlatform Platform { get; set; }
 
     // Slots
     private List<SlotModel> _slots = new();

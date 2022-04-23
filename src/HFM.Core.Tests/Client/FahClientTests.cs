@@ -123,8 +123,6 @@ namespace HFM.Core.Client
             [Test]
             public void ThenSlotsAreUpdated()
             {
-                Assert.IsNull(_fahClient.ClientVersion);
-
                 var slot00 = _fahClient.Slots.ElementAt(0);
                 Assert.AreEqual("AMD Ryzen 7 3700X 8-Core Processor", slot00.Processor);
                 Assert.IsNull(slot00.WorkUnitQueue);

@@ -169,15 +169,17 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
         if (protein is null)
         {
-            protein = new ProteinEntity();
-            protein.ProjectID = workUnitModel.CurrentProtein.ProjectNumber;
-            protein.Credit = workUnitModel.CurrentProtein.Credit;
-            protein.KFactor = workUnitModel.CurrentProtein.KFactor;
-            protein.Frames = workUnitModel.CurrentProtein.Frames;
-            protein.Core = workUnitModel.CurrentProtein.Core;
-            protein.Atoms = workUnitModel.CurrentProtein.NumberOfAtoms;
-            protein.TimeoutDays = workUnitModel.CurrentProtein.PreferredDays;
-            protein.ExpirationDays = workUnitModel.CurrentProtein.MaximumDays;
+            protein = new ProteinEntity
+            {
+                ProjectID = workUnitModel.CurrentProtein.ProjectNumber,
+                Credit = workUnitModel.CurrentProtein.Credit,
+                KFactor = workUnitModel.CurrentProtein.KFactor,
+                Frames = workUnitModel.CurrentProtein.Frames,
+                Core = workUnitModel.CurrentProtein.Core,
+                Atoms = workUnitModel.CurrentProtein.NumberOfAtoms,
+                TimeoutDays = workUnitModel.CurrentProtein.PreferredDays,
+                ExpirationDays = workUnitModel.CurrentProtein.MaximumDays
+            };
 
             context.Proteins.Add(protein);
             context.SaveChanges();
@@ -188,7 +190,9 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private static PlatformEntity GetOrInsertPlatformEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
-        var clientVersion = workUnitModel.SlotModel.Client.ClientVersion;
+        var clientPlatform = workUnitModel.SlotModel.Client.Platform;
+        var clientVersion = clientPlatform?.ClientVersion;
+        var operatingSystem = clientPlatform?.OperatingSystem;
         var processor = workUnitModel.BenchmarkIdentifier.Processor;
         int? threads = workUnitModel.BenchmarkIdentifier.HasThreads
             ? workUnitModel.BenchmarkIdentifier.Threads
@@ -196,15 +200,19 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
         var platform = context.Platforms
             .FirstOrDefault(x => x.ClientVersion == clientVersion &&
+                                 x.OperatingSystem == operatingSystem &&
                                  x.Processor == processor &&
                                  x.Threads == threads);
 
         if (platform is null)
         {
-            platform = new PlatformEntity();
-            platform.ClientVersion = clientVersion;
-            platform.Processor = processor;
-            platform.Threads = threads;
+            platform = new PlatformEntity
+            {
+                ClientVersion = clientVersion,
+                OperatingSystem = operatingSystem,
+                Processor = processor,
+                Threads = threads
+            };
 
             context.Platforms.Add(platform);
             context.SaveChanges();

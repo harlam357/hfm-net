@@ -821,7 +821,12 @@ public class WorkUnitContextRepositoryTests
     private static WorkUnitModel CreateWorkUnitModel(ClientSettings settings, WorkUnit workUnit, Protein protein,
         int slotID = SlotIdentifier.NoSlotID, string processor = null, int? threads = null)
     {
-        var slotModel = new ProteinBenchmarkDetailSlotModel(new NullClient { Settings = settings, ClientVersion = "7" })
+        var client = new NullClient
+        {
+            Settings = settings,
+            Platform = new ClientPlatform("7", null)
+        };
+        var slotModel = new ProteinBenchmarkDetailSlotModel(client)
         {
             SlotID = slotID,
             Processor = processor,
