@@ -6,6 +6,8 @@ public abstract class SlotDescription
 {
     public abstract SlotType SlotType { get; }
 
+    public string Processor { get; set; }
+
     public string Value { get; set; }
 
     public static SlotDescription Parse(string value) =>
@@ -32,7 +34,6 @@ public class GPUSlotDescription : SlotDescription
     public int? GPUBus { get; set; }
     public int? GPUSlot { get; set; }
     public string GPUPrefix { get; set; }
-    public string GPU { get; set; }
 
     public static new GPUSlotDescription Parse(string value)
     {
@@ -42,7 +43,7 @@ public class GPUSlotDescription : SlotDescription
         };
         d.SetGPUBusAndSlot(value);
         d.SetGPUPrefix(value);
-        d.SetGPU(value);
+        d.SetProcessor(value);
         return d;
     }
 
@@ -67,12 +68,12 @@ public class GPUSlotDescription : SlotDescription
         }
     }
 
-    private void SetGPU(string description)
+    private void SetProcessor(string description)
     {
         var match = Regex.Match(description, "\\[(?<GPU>.+)\\]", RegexOptions.Singleline);
         if (match.Success)
         {
-            GPU = match.Groups["GPU"].Value;
+            Processor = match.Groups["GPU"].Value;
         }
     }
 }

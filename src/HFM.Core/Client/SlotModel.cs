@@ -20,7 +20,7 @@ namespace HFM.Core.Client
         ClientStart
     }
 
-    public class SlotModel
+    public class SlotModel : IProteinBenchmarkDetailSource
     {
         public SlotIdentifier SlotIdentifier => new(Client.Settings.ClientIdentifier, SlotID);
 
@@ -46,11 +46,15 @@ namespace HFM.Core.Client
             set => _ = value;
         }
 
-        public SlotType SlotType { get; set; }
+        public SlotType SlotType => Description?.SlotType ?? default;
 
         public virtual string SlotTypeString { get; set; }
 
-        public virtual string Processor { get; set; }
+        public string Processor => Description?.Processor;
+
+        public int? Threads => Description is CPUSlotDescription cpu ? cpu.CPUThreads : null;
+
+        public SlotDescription Description { get; set; }
 
         public virtual TimeSpan TPF { get; set; }
 
@@ -109,7 +113,7 @@ namespace HFM.Core.Client
         }
     }
 
-    public class FahClientSlotModel : SlotModel, IProteinBenchmarkDetailSource, ICompletedFailedUnitsSource
+    public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
     {
         private PPDCalculation PPDCalculation => Client.Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
 
@@ -121,11 +125,10 @@ namespace HFM.Core.Client
 
         private readonly SlotStatus _status;
 
-        public FahClientSlotModel(IClient client, SlotStatus status, int slotID, SlotType slotType) : base(client)
+        public FahClientSlotModel(IClient client, SlotStatus status, int slotID) : base(client)
         {
             _status = status;
             SlotID = slotID;
-            SlotType = slotType;
         }
 
         public override SlotStatus Status =>
@@ -164,8 +167,6 @@ namespace HFM.Core.Client
                 return sb.ToString();
             }
         }
-
-        public int? Threads { get; set; }
 
         private bool IsUsingBenchmarkFrameTime => WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
 

@@ -64,7 +64,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(8, description.GPUBus);
             Assert.AreEqual(0, description.GPUSlot);
             Assert.AreEqual("TU116", description.GPUPrefix);
-            Assert.AreEqual("GeForce GTX 1660 Ti", description.GPU);
+            Assert.AreEqual("GeForce GTX 1660 Ti", description.Processor);
         }
     }
 }

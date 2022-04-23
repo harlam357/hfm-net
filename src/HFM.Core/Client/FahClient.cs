@@ -87,17 +87,8 @@ namespace HFM.Core.Client
                     var slotDescription = SlotDescription.Parse(slot.Description);
                     var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
                     var slotID = slot.ID.GetValueOrDefault();
-                    var slotType = slotDescription?.SlotType ?? default;
-                    var slotModel = new FahClientSlotModel(this, status, slotID, slotType);
-                    switch (slotDescription)
-                    {
-                        case GPUSlotDescription g:
-                            slotModel.Processor = g.GPU;
-                            break;
-                        case CPUSlotDescription c:
-                            slotModel.Threads = c.CPUThreads;
-                            break;
-                    }
+                    var slotModel = new FahClientSlotModel(this, status, slotID);
+                    slotModel.Description = slotDescription;
                     slots.Add(slotModel);
                 }
             }
@@ -293,7 +284,7 @@ namespace HFM.Core.Client
 
             if (slotModel.SlotType == SlotType.CPU)
             {
-                slotModel.Processor = Messages.Info?.System?.CPU;
+                slotModel.Description.Processor = Messages.Info?.System?.CPU;
             }
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
             slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);

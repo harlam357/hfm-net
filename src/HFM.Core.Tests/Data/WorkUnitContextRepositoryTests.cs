@@ -881,26 +881,19 @@ public class WorkUnitContextRepositoryTests
             Settings = settings,
             Platform = new ClientPlatform("7", "Windows")
         };
-        var slotModel = new ProteinBenchmarkDetailSlotModel(client)
+        var slotModel = new SlotModel(client)
         {
             SlotID = slotID,
-            Processor = processor,
-            Threads = threads
+            Description = new CPUSlotDescription
+            {
+                Processor = processor,
+                CPUThreads = threads
+            }
         };
         var workUnitModel = new WorkUnitModel(slotModel, workUnit)
         {
             CurrentProtein = protein
         };
         return workUnitModel;
-    }
-
-    private class ProteinBenchmarkDetailSlotModel : SlotModel, IProteinBenchmarkDetailSource
-    {
-        public ProteinBenchmarkDetailSlotModel(IClient client) : base(client)
-        {
-
-        }
-
-        public int? Threads { get; init; }
     }
 }
