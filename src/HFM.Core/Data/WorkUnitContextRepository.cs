@@ -193,6 +193,8 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var clientPlatform = workUnitModel.SlotModel.Client.Platform;
         var clientVersion = clientPlatform?.ClientVersion;
         var operatingSystem = clientPlatform?.OperatingSystem;
+
+        var implementation = workUnitModel.WorkUnit.Platform;
         var processor = workUnitModel.BenchmarkIdentifier.Processor;
         int? threads = workUnitModel.BenchmarkIdentifier.HasThreads
             ? workUnitModel.BenchmarkIdentifier.Threads
@@ -201,6 +203,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var platform = context.Platforms
             .FirstOrDefault(x => x.ClientVersion == clientVersion &&
                                  x.OperatingSystem == operatingSystem &&
+                                 x.Implementation == implementation &&
                                  x.Processor == processor &&
                                  x.Threads == threads);
 
@@ -210,6 +213,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             {
                 ClientVersion = clientVersion,
                 OperatingSystem = operatingSystem,
+                Implementation = implementation,
                 Processor = processor,
                 Threads = threads
             };

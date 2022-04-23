@@ -45,6 +45,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
+                Platform = "CUDA",
                 UnitResult = WorkUnitResult.FinishedUnit,
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6),
@@ -131,8 +132,8 @@ public class WorkUnitContextRepositoryTests
             using var context = new WorkUnitContext(_connection);
             var platform = context.Platforms.First();
             Assert.AreEqual("7", platform.ClientVersion);
-            Assert.AreEqual(null, platform.OperatingSystem);
-            Assert.AreEqual(null, platform.Implementation);
+            Assert.AreEqual("Windows", platform.OperatingSystem);
+            Assert.AreEqual("CUDA", platform.Implementation);
             Assert.AreEqual("AMD Ryzen 7 5800X", platform.Processor);
             Assert.AreEqual(14, platform.Threads);
             Assert.AreEqual(null, platform.DriverVersion);
@@ -567,6 +568,59 @@ public class WorkUnitContextRepositoryTests
     }
 
     [TestFixture]
+    public class WhenUpdatingExistingPlatform : WorkUnitContextRepositoryTests
+    {
+        private SqliteConnection _connection;
+        private IWorkUnitRepository _repository;
+        private long _updateResult;
+
+        [SetUp]
+        public void BeforeEach()
+        {
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableWorkUnitContextRepository(_connection);
+
+            var settings = new ClientSettings();
+            var workUnit = new WorkUnit
+            {
+                ProjectID = 1,
+                ProjectRun = 2,
+                ProjectClone = 3,
+                ProjectGen = 4,
+                Platform = "CUDA",
+                Assigned = _assigned,
+                Finished = _assigned.AddHours(6)
+            };
+
+            var workUnitModel = CreateWorkUnitModel(settings, workUnit, new Protein(), processor: "AMD Ryzen 7 5800X", threads: 14);
+            _repository.Update(workUnitModel);
+
+            workUnit.Assigned = _assigned.AddHours(24);
+            workUnit.Finished = _assigned.AddHours(30);
+
+            workUnitModel = CreateWorkUnitModel(settings, workUnit, new Protein(), processor: "AMD Ryzen 7 5800X", threads: 14);
+            _updateResult = _repository.Update(workUnitModel);
+        }
+
+        [TearDown]
+        public void AfterEach() => _connection?.Dispose();
+
+        [Test]
+        public void ThenExistingPlatformIsReferenced()
+        {
+            Assert.AreEqual(2, _updateResult);
+
+            using var context = new WorkUnitContext(_connection);
+            Assert.AreEqual(1, context.Platforms.Count());
+            Assert.AreEqual(2, context.WorkUnits.Count());
+
+            var workUnit = context.WorkUnits.OrderByDescending(x => x.ID).First();
+            Assert.AreEqual(context.Platforms.First().ID, workUnit.PlatformID);
+        }
+    }
+
+    [TestFixture]
     public class GivenFinishedAndFailedWorkUnits : WorkUnitContextRepositoryTests
     {
         private SqliteConnection _connection;
@@ -711,6 +765,7 @@ public class WorkUnitContextRepositoryTests
             using var context = new WorkUnitContext(_connection);
             Assert.AreEqual(1, context.Clients.Count());
             Assert.AreEqual(1, context.Proteins.Count());
+            Assert.AreEqual(1, context.Platforms.Count());
             Assert.AreEqual(0, context.WorkUnits.Count());
             Assert.AreEqual(0, context.WorkUnitFrames.Count());
         }
@@ -824,7 +879,7 @@ public class WorkUnitContextRepositoryTests
         var client = new NullClient
         {
             Settings = settings,
-            Platform = new ClientPlatform("7", null)
+            Platform = new ClientPlatform("7", "Windows")
         };
         var slotModel = new ProteinBenchmarkDetailSlotModel(client)
         {
@@ -832,8 +887,10 @@ public class WorkUnitContextRepositoryTests
             Processor = processor,
             Threads = threads
         };
-        var workUnitModel = new WorkUnitModel(slotModel, workUnit);
-        workUnitModel.CurrentProtein = protein;
+        var workUnitModel = new WorkUnitModel(slotModel, workUnit)
+        {
+            CurrentProtein = protein
+        };
         return workUnitModel;
     }
 
