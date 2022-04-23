@@ -32,18 +32,14 @@ public class WorkUnit : IQueueItem, IProjectInfo
         };
 
     /// <summary>
-    /// Local time the logs used to generate this WorkUnit were retrieved
+    /// Gets or sets the local time this work unit record was generated.
     /// </summary>
     public DateTime UnitRetrievalTime { get; set; }
 
-    /// <summary>
-    /// The Folding ID (Username) attached to this work unit
-    /// </summary>
+    // TODO: Rename to DonorName
     public string FoldingID { get; set; }
 
-    /// <summary>
-    /// The Team number attached to this work unit
-    /// </summary>
+    // TODO: Rename to DonorTeam
     public int Team { get; set; }
 
     /// <summary>
@@ -57,7 +53,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
     public DateTime Timeout { get; set; }
 
     /// <summary>
-    /// Unit Start Time Stamp
+    /// Gets or sets the time stamp of the start of the work unit.
     /// </summary>
     public TimeSpan UnitStartTimeStamp { get; set; }
 
@@ -66,38 +62,20 @@ public class WorkUnit : IQueueItem, IProjectInfo
     /// </summary>
     public DateTime Finished { get; set; }
 
-    /// <summary>
-    /// Core Version Number
-    /// </summary>
     public Version CoreVersion { get; set; }
 
-    /// <summary>
-    /// Project ID Number
-    /// </summary>
     public int ProjectID { get; set; }
 
-    /// <summary>
-    /// Project ID (Run)
-    /// </summary>
     public int ProjectRun { get; set; }
 
-    /// <summary>
-    /// Project ID (Clone)
-    /// </summary>
     public int ProjectClone { get; set; }
 
-    /// <summary>
-    /// Project ID (Gen)
-    /// </summary>
     public int ProjectGen { get; set; }
 
-    /// <summary>
-    /// The Result of this Work Unit
-    /// </summary>
     public WorkUnitResult UnitResult { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of frames observed since the unit was last started.
+    /// Gets or sets the number of frames observed (completed) since last unit start or resume from pause.
     /// </summary>
     public int FramesObserved { get; set; }
 
