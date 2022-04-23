@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 using HFM.Client.ObjectModel;
 using HFM.Core.Logging;
@@ -160,6 +158,7 @@ namespace HFM.Core.Client
             workUnit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
             workUnit.FramesObserved = unitRun.Data.FramesObserved;
             workUnit.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
+            workUnit.Platform = unitRun.Data.Platform;
             workUnit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
             // there is no finished time available from the client API

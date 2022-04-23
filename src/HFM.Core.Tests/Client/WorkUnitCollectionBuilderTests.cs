@@ -9,7 +9,7 @@ namespace HFM.Core.Client
     [TestFixture]
     public class WorkUnitCollectionBuilderTests
     {
-        private static readonly DateTime _UnitRetrievalTime = new DateTime(2020, 1, 1);
+        private static readonly DateTime _UnitRetrievalTime = new(2020, 1, 1);
 
         [Test]
         public void WorkUnitCollectionBuilder_BuildForSlot_ReturnsEmptyCollectionWhenUnitCollectionIsNull()
@@ -70,6 +70,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
             Assert.AreEqual(59, workUnit.ProjectGen);
+            Assert.AreEqual(null, workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(10, workUnit.FramesObserved);
             Assert.AreEqual(33, workUnit.CurrentFrame.ID);
@@ -117,6 +118,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(630, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
             Assert.AreEqual(59, workUnit.ProjectGen);
+            Assert.AreEqual(null, workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(0, workUnit.FramesObserved);
             Assert.IsNull(workUnit.CurrentFrame);
@@ -157,6 +159,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(7, workUnit.ProjectRun);
             Assert.AreEqual(364, workUnit.ProjectClone);
             Assert.AreEqual(252, workUnit.ProjectGen);
+            Assert.AreEqual(null, workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(53, workUnit.FramesObserved);
             Assert.AreEqual(53, workUnit.CurrentFrame.ID);
@@ -201,6 +204,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(3, workUnit.ProjectRun);
             Assert.AreEqual(138, workUnit.ProjectClone);
             Assert.AreEqual(144, workUnit.ProjectGen);
+            Assert.AreEqual(null, workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.FinishedUnit, workUnit.UnitResult);
             Assert.AreEqual(100, workUnit.FramesObserved);
             Assert.AreEqual(100, workUnit.CurrentFrame.ID);
@@ -245,6 +249,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(192, workUnit.ProjectRun);
             Assert.AreEqual(0, workUnit.ProjectClone);
             Assert.AreEqual(58, workUnit.ProjectGen);
+            Assert.AreEqual(null, workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(3, workUnit.FramesObserved);
             Assert.AreEqual(95, workUnit.CurrentFrame.ID);
@@ -254,6 +259,51 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 4, 50), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(32, workUnit.LogLines.Count);
             Assert.AreEqual("A4", workUnit.CoreID);
+        }
+
+        [Test]
+        public async Task WorkUnitCollectionBuilder_Client_v7_19_SlotID_1()
+        {
+            // Arrange
+            var fahClient = MockFahClient.Create("Client_v7_19");
+            await fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_19");
+            var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages.UnitCollection, fahClient.Messages.Options, fahClient.Messages.GetClientRun(), _UnitRetrievalTime);
+
+            // Act
+            var workUnits = builder.BuildForSlot(1, new WorkUnit());
+
+            // Assert
+            Assert.IsNotNull(workUnits);
+            Assert.AreEqual(0, workUnits.CurrentID);
+            Assert.AreEqual(1, workUnits.Count);
+            Assert.IsFalse(workUnits.Any(x => x == null));
+            Assert.IsFalse(workUnits.Any(x => x.LogLines == null));
+
+            // Assert - Work Unit
+            var workUnit = workUnits.Current;
+
+            Assert.AreEqual(_UnitRetrievalTime, workUnit.UnitRetrievalTime);
+            Assert.AreEqual("harlam357", workUnit.FoldingID);
+            Assert.AreEqual(32, workUnit.Team);
+            Assert.AreEqual(new DateTime(2021, 9, 5, 17, 57, 5), workUnit.Assigned);
+            Assert.AreEqual(new DateTime(2021, 9, 7, 17, 57, 5), workUnit.Timeout);
+            Assert.AreEqual(new TimeSpan(9, 23, 36), workUnit.UnitStartTimeStamp);
+            Assert.AreEqual(DateTime.MinValue, workUnit.Finished);
+            Assert.AreEqual(new Version(0, 0, 13), workUnit.CoreVersion);
+            Assert.AreEqual(18201, workUnit.ProjectID);
+            Assert.AreEqual(44695, workUnit.ProjectRun);
+            Assert.AreEqual(3, workUnit.ProjectClone);
+            Assert.AreEqual(2, workUnit.ProjectGen);
+            Assert.AreEqual("CUDA", workUnit.Platform);
+            Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
+            Assert.AreEqual(75, workUnit.FramesObserved);
+            Assert.AreEqual(74, workUnit.CurrentFrame.ID);
+            Assert.AreEqual(925000, workUnit.CurrentFrame.RawFramesComplete);
+            Assert.AreEqual(1250000, workUnit.CurrentFrame.RawFramesTotal);
+            Assert.AreEqual(new TimeSpan(20, 53, 54), workUnit.CurrentFrame.TimeStamp);
+            Assert.AreEqual(new TimeSpan(0, 2, 24), workUnit.CurrentFrame.Duration);
+            Assert.AreEqual(181, workUnit.LogLines.Count);
+            Assert.AreEqual("22", workUnit.CoreID);
         }
 
         [Test]
