@@ -24,6 +24,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
             ProjectRun = ProjectRun,
             ProjectClone = ProjectClone,
             ProjectGen = ProjectGen,
+            Platform = Platform,
             UnitResult = UnitResult,
             FramesObserved = FramesObserved,
             LogLines = LogLines,
@@ -71,6 +72,11 @@ public class WorkUnit : IQueueItem, IProjectInfo
     public int ProjectClone { get; set; }
 
     public int ProjectGen { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work unit platform (CPU, CUDA, OpenCL).
+    /// </summary>
+    public string Platform { get; set; }
 
     public WorkUnitResult UnitResult { get; set; }
 
