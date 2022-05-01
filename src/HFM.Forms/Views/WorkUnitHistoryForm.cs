@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Globalization;
 
 using HFM.Core.Client;
 using HFM.Core.Data;
@@ -112,9 +107,12 @@ namespace HFM.Forms.Views
             {
                 string[] tokens = col.Split(',');
                 int index = Int32.Parse(tokens[3]);
-                dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
-                dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
-                dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
+                if (dataGridView1.Columns.Count > index)
+                {
+                    dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+                    dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
+                    dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
+                }
             }
         }
 
@@ -195,8 +193,6 @@ namespace HFM.Forms.Views
             // ReSharper disable PossibleNullReferenceException
             dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectID.ToString(), names[(int)WorkUnitRowColumn.ProjectID]);
             dataGridView1.Columns[WorkUnitRowColumn.ProjectID.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectID.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.WorkUnitName.ToString(), names[(int)WorkUnitRowColumn.WorkUnitName]);
-            dataGridView1.Columns[WorkUnitRowColumn.WorkUnitName.ToString()].DataPropertyName = WorkUnitRowColumn.WorkUnitName.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.Name.ToString(), names[(int)WorkUnitRowColumn.Name]);
             dataGridView1.Columns[WorkUnitRowColumn.Name.ToString()].DataPropertyName = WorkUnitRowColumn.Name.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.Path.ToString(), names[(int)WorkUnitRowColumn.Path]);

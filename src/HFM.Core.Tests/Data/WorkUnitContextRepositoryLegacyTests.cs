@@ -208,7 +208,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(WorkUnitResultString.FinishedUnit, row.Result);
                 Assert.AreEqual(new DateTime(2010, 1, 1), row.Assigned);
                 Assert.AreEqual(new DateTime(2010, 1, 2), row.Finished);
-                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(1.0, row.KFactor);
                 Assert.AreEqual("GRO-A3", row.Core);
                 Assert.AreEqual(100, row.Frames);
@@ -283,7 +282,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(WorkUnitResultString.EarlyUnitEnd, row.Result);
                 Assert.AreEqual(new DateTime(2009, 5, 5), row.Assigned);
                 Assert.AreEqual(new DateTime(2009, 5, 6), row.Finished);
-                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(2.0, row.KFactor);
                 Assert.AreEqual("GRO-A4", row.Core);
                 Assert.AreEqual(200, row.Frames);
@@ -358,7 +356,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(WorkUnitResultString.EarlyUnitEnd, row.Result);
                 Assert.AreEqual(new DateTime(2010, 2, 2), row.Assigned);
                 Assert.AreEqual(new DateTime(2010, 2, 3), row.Finished);
-                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(3.0, row.KFactor);
                 Assert.AreEqual("GRO-A5", row.Core);
                 Assert.AreEqual(300, row.Frames);
@@ -433,7 +430,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(WorkUnitResultString.FinishedUnit, row.Result);
                 Assert.AreEqual(new DateTime(2012, 1, 2), row.Assigned);
                 Assert.AreEqual(new DateTime(2012, 1, 5), row.Finished);
-                Assert.AreEqual("", row.WorkUnitName);
                 Assert.AreEqual(4.0, row.KFactor);
                 Assert.AreEqual("OPENMMGPU", row.Core);
                 Assert.AreEqual(400, row.Frames);

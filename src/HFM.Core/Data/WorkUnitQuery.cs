@@ -241,7 +241,7 @@ namespace HFM.Core.Data
                 "Unit Result",
                 "Assigned (UTC)",
                 "Finished (UTC)",
-                "Work Unit Name",
+                "Removed (Work Unit Name)",
                 "KFactor",
                 "Core Name",
                 "Total Frames",

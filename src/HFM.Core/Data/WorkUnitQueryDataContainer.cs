@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using HFM.Core.Logging;
+﻿using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Core.Data
@@ -22,8 +19,22 @@ namespace HFM.Core.Data
             var path = preferences?.Get<string>(Preference.ApplicationDataFolderPath);
             if (!String.IsNullOrEmpty(path))
             {
-                FilePath = System.IO.Path.Combine(path, DefaultFileName);
+                FilePath = Path.Combine(path, DefaultFileName);
             }
+        }
+
+        public override void Read()
+        {
+            base.Read();
+            // remove queries containing removed fields
+            Data = Data.Where(x => !HasRemovedField(x)).ToList();
+        }
+
+        private static bool HasRemovedField(WorkUnitQuery query)
+        {
+            var parameters = query?.Parameters;
+            // 14 is WorkUnitName
+            return parameters != null && parameters.Any(x => 14 == (int)x.Column);
         }
     }
 }

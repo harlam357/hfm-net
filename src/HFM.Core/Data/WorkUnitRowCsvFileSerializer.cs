@@ -15,10 +15,8 @@ namespace HFM.Core.Data
 
         public void Serialize(string path, List<WorkUnitRow> value)
         {
-            using (var writer = new StreamWriter(path, false))
-            {
-                Serialize(writer, value);
-            }
+            using var writer = new StreamWriter(path, false);
+            Serialize(writer, value);
         }
 
         internal static void Serialize(TextWriter writer, List<WorkUnitRow> value)
@@ -37,12 +35,9 @@ namespace HFM.Core.Data
                 "CoreVersion",
                 "FramesCompleted",
                 "FrameTime",
-                //"FrameTimeValue",
                 "Result",
-                //"ResultValue",
                 "Assigned",
                 "Finished",
-                "WorkUnitName",
                 "KFactor",
                 "Core",
                 "Frames",
@@ -73,12 +68,9 @@ namespace HFM.Core.Data
                     h.CoreVersion,
                     h.FramesCompleted,
                     h.FrameTime,
-                    //h.FrameTimeValue,
                     h.Result,
-                    //h.ResultValue,
                     h.Assigned.ToString(provider),
                     h.Finished.ToString(provider),
-                    h.WorkUnitName,
                     h.KFactor.ToString(provider),
                     h.Core,
                     h.Frames,

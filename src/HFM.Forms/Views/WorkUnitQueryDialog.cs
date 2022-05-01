@@ -87,7 +87,6 @@ namespace HFM.Forms.Views
             var columnChoices = new List<ListItem>();
             string[] names = WorkUnitQueryParameter.GetColumnNames();
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.WorkUnitName], WorkUnitRowColumn.WorkUnitName));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Name], WorkUnitRowColumn.Name));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Path], WorkUnitRowColumn.Path));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Username], WorkUnitRowColumn.Username));

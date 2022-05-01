@@ -13,7 +13,6 @@ public class WorkUnitRowProfile : Profile
             .ForMember(x => x.Path, opt => opt.MapFrom<WorkUnitRowPathValueResolver>())
             .ForMember(x => x.Username, opt => opt.MapFrom(src => src.DonorName))
             .ForMember(x => x.Team, opt => opt.MapFrom(src => src.DonorTeam))
-            .ForMember(x => x.WorkUnitName, opt => opt.MapFrom(src => ""))
             .ForMember(x => x.ProjectID, opt => opt.MapFrom(src => src.Protein.ProjectID))
             .ForMember(x => x.KFactor, opt => opt.MapFrom(src => src.Protein.KFactor))
             .ForMember(x => x.Core, opt => opt.MapFrom(src => src.Protein.Core))
