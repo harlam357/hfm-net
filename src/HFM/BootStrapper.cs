@@ -12,6 +12,7 @@ using HFM.Proteins;
 
 using LightInject;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM
@@ -256,8 +257,7 @@ namespace HFM
             using (Container.BeginScope())
             {
                 using var context = Container.GetInstance<WorkUnitContext>();
-                // TODO: Replace EnsureCreated() with EF Migration
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
                 return context.GetDatabaseVersion();
             }
         }
