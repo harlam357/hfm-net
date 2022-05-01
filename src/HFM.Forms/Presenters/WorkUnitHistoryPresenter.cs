@@ -63,10 +63,10 @@ namespace HFM.Forms.Presenters
 
         public void ExportClick(FileDialogPresenter saveFile)
         {
-            ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { new WorkUnitRowCsvFileSerializer() });
+            ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
         }
 
-        internal void ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitEntityRow>>> serializers)
+        internal void ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitRow>>> serializers)
         {
             saveFile.Filter = serializers.GetFileTypeFilters();
             if (saveFile.ShowDialog() == DialogResult.OK)
@@ -74,7 +74,7 @@ namespace HFM.Forms.Presenters
                 try
                 {
                     var serializer = serializers[saveFile.FilterIndex - 1];
-                    var value = Model.Repository.Fetch(Model.SelectedWorkUnitQuery, Model.BonusCalculation).Cast<WorkUnitEntityRow>().ToList();
+                    var value = Model.Repository.Fetch(Model.SelectedWorkUnitQuery, Model.BonusCalculation).Cast<WorkUnitRow>().ToList();
                     serializer.Serialize(saveFile.FileName, value);
                 }
                 catch (Exception ex)

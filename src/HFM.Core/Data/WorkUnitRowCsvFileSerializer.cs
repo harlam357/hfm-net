@@ -4,16 +4,16 @@ using HFM.Core.Serializers;
 
 namespace HFM.Core.Data
 {
-    public class WorkUnitRowCsvFileSerializer : IFileSerializer<List<WorkUnitEntityRow>>
+    public class WorkUnitRowCsvFileSerializer : IFileSerializer<List<WorkUnitRow>>
     {
         public string FileExtension => "csv";
 
         public string FileTypeFilter => "Comma Separated Value Files|*.csv";
 
-        public List<WorkUnitEntityRow> Deserialize(string path) =>
+        public List<WorkUnitRow> Deserialize(string path) =>
             throw new NotSupportedException("History entry csv deserialization is not supported.");
 
-        public void Serialize(string path, List<WorkUnitEntityRow> value)
+        public void Serialize(string path, List<WorkUnitRow> value)
         {
             using (var writer = new StreamWriter(path, false))
             {
@@ -21,7 +21,7 @@ namespace HFM.Core.Data
             }
         }
 
-        internal static void Serialize(TextWriter writer, List<WorkUnitEntityRow> value)
+        internal static void Serialize(TextWriter writer, List<WorkUnitRow> value)
         {
             string line = String.Join(",", new[]
             {

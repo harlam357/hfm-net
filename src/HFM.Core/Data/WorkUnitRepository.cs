@@ -13,6 +13,84 @@ using static HFM.Core.Data.Internal.SqliteCommandExtensions;
 
 namespace HFM.Core.Data
 {
+    public class LegacyWorkUnitRow
+    {
+        public long ID { get; set; }
+
+        public int ProjectID { get; set; }
+
+        public int ProjectRun { get; set; }
+
+        public int ProjectClone { get; set; }
+
+        public int ProjectGen { get; set; }
+
+        public string Username { get; set; }
+
+        public int Team { get; set; }
+
+        public int FramesCompleted { get; set; }
+
+        public string WorkUnitName { get; set; }
+
+        public double KFactor { get; set; }
+
+        public string Core { get; set; }
+
+        public int Frames { get; set; }
+
+        public int Atoms { get; set; }
+
+        public double PreferredDays { get; set; }
+
+        public double MaximumDays { get; set; }
+
+        public string Name { get; set; }
+
+        public string Path { get; set; }
+
+        public float CoreVersion { get; set; }
+
+        public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeValue);
+
+        public int FrameTimeValue { get; set; }
+
+        public string Result => ToWorkUnitResultString(ResultValue);
+
+        private static string ToWorkUnitResultString(int result)
+        {
+            switch ((WorkUnitResult)result)
+            {
+                case WorkUnitResult.FinishedUnit:
+                    return WorkUnitResultString.FinishedUnit;
+                case WorkUnitResult.EarlyUnitEnd:
+                    return WorkUnitResultString.EarlyUnitEnd;
+                case WorkUnitResult.UnstableMachine:
+                    return WorkUnitResultString.UnstableMachine;
+                case WorkUnitResult.Interrupted:
+                    return WorkUnitResultString.Interrupted;
+                case WorkUnitResult.BadWorkUnit:
+                    return WorkUnitResultString.BadWorkUnit;
+                case WorkUnitResult.CoreOutdated:
+                    return WorkUnitResultString.CoreOutdated;
+                case WorkUnitResult.GpuMemtestError:
+                    return WorkUnitResultString.GpuMemtestError;
+                case WorkUnitResult.UnknownEnum:
+                    return WorkUnitResultString.UnknownEnum;
+                default:
+                    return String.Empty;
+            }
+        }
+
+        public int ResultValue { get; set; }
+
+        public DateTime Assigned { get; set; }
+
+        public DateTime Finished { get; set; }
+
+        public double BaseCredit { get; set; }
+    }
+
     internal enum WorkUnitRepositoryTable
     {
         WuHistory,
@@ -198,11 +276,11 @@ namespace HFM.Core.Data
             }
         }
 
-        public IList<PetaPocoWorkUnitRow> Fetch()
+        public IList<LegacyWorkUnitRow> Fetch()
         {
             Debug.Assert(TableExists(WorkUnitRepositoryTable.WuHistory));
 
-            var result = new List<PetaPocoWorkUnitRow>();
+            var result = new List<LegacyWorkUnitRow>();
 
             string select = _SqlTableCommandDictionary[WorkUnitRepositoryTable.WuHistory].SelectSql;
             using (var connection = CreateConnection())
@@ -214,7 +292,7 @@ namespace HFM.Core.Data
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        var row = new PetaPocoWorkUnitRow();
+                        var row = new LegacyWorkUnitRow();
                         row.ID = reader.GetFieldValueOrDefault<long>("ID");
                         row.ProjectID = reader.GetFieldValueOrDefault<int>("ProjectID");
                         row.ProjectRun = reader.GetFieldValueOrDefault<int>("ProjectRun");

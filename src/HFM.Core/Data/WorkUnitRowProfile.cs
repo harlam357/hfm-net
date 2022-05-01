@@ -8,7 +8,7 @@ public class WorkUnitRowProfile : Profile
 {
     public WorkUnitRowProfile()
     {
-        CreateMap<WorkUnitEntity, WorkUnitEntityRow>()
+        CreateMap<WorkUnitEntity, WorkUnitRow>()
             .ForMember(x => x.Name, opt => opt.MapFrom<WorkUnitRowNameValueResolver>())
             .ForMember(x => x.Path, opt => opt.MapFrom<WorkUnitRowPathValueResolver>())
             .ForMember(x => x.Username, opt => opt.MapFrom(src => src.DonorName))

@@ -7,14 +7,14 @@ namespace HFM.Core.Data
     [TestFixture]
     public class WorkUnitRowCsvFileSerializerTests
     {
-        private List<WorkUnitEntityRow> _value;
+        private List<WorkUnitRow> _value;
         private string _expected;
 
         [SetUp]
         public void BeforeEach()
         {
             // Arrange
-            _value = new List<WorkUnitEntityRow> { new() };
+            _value = new List<WorkUnitRow> { new() };
             _expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,Name,Path,Username,Team,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,WorkUnitName,KFactor,Core,Frames,Atoms,PreferredDays,MaximumDays,SlotType,PPD,Credit,BaseCredit";
             _expected += Environment.NewLine;
             _expected += "0,0,0,0,0,,,,0,,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,,0,,0,0,0,0,,0,0,0";

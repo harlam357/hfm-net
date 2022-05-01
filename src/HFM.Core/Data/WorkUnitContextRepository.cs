@@ -28,11 +28,11 @@ public interface IWorkUnitRepository
 {
     long Update(WorkUnitModel workUnitModel);
 
-    int Delete(WorkUnitEntityRow row);
+    int Delete(WorkUnitRow row);
 
-    IList<WorkUnitEntityRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
+    IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-    Page<WorkUnitEntityRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
+    Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
     long CountCompleted(string clientName, DateTime? clientStartTime);
 
@@ -316,7 +316,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         context.SaveChanges();
     }
 
-    public int Delete(WorkUnitEntityRow row)
+    public int Delete(WorkUnitRow row)
     {
         using var context = CreateWorkUnitContext();
         var workUnit = context.WorkUnits.Find(row.ID);
@@ -328,7 +328,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return context.SaveChanges();
     }
 
-    public IList<WorkUnitEntityRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var sw = Stopwatch.StartNew();
         try
@@ -341,7 +341,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    private IList<WorkUnitEntityRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
         IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
@@ -351,10 +351,10 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             q = q.Where(p);
         }
 
-        return _mapper.Map<IList<WorkUnitEntityRow>>(q.ToList());
+        return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
     }
 
-    public Page<WorkUnitEntityRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var sw = Stopwatch.StartNew();
         try
@@ -367,7 +367,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    private Page<WorkUnitEntityRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var context = CreateWorkUnitContext();
         IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
@@ -389,8 +389,8 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             totalPages++;
         }
 
-        var items = _mapper.Map<IList<WorkUnitEntityRow>>(q.ToList());
-        return new Page<WorkUnitEntityRow>
+        var items = _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        return new Page<WorkUnitRow>
         {
             CurrentPage = page,
             TotalPages = totalPages,

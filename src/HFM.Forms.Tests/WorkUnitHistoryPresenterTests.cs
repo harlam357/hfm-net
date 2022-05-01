@@ -212,11 +212,11 @@ namespace HFM.Forms
             // Arrange
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             var presenter = CreatePresenter(messageBox);
-            presenter.Model.HistoryBindingSource.Add(new WorkUnitEntityRow { ID = 1 });
+            presenter.Model.HistoryBindingSource.Add(new WorkUnitRow { ID = 1 });
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitEntityRow>())).Returns(1);
+            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitRow>())).Returns(1);
             // Act
             presenter.DeleteWorkUnitClick();
             // Assert
@@ -241,33 +241,33 @@ namespace HFM.Forms
         {
             // Arrange
             var presenter = CreatePresenter();
-            var workUnitRows = new[] { new WorkUnitEntityRow() };
+            var workUnitRows = new[] { new WorkUnitRow() };
             var mockRepository = Mock.Get(presenter.Model.Repository);
             mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(workUnitRows);
             var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { serializer });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
             // Assert
             Assert.AreEqual("test.csv", serializer.FileName);
             Assert.IsTrue(workUnitRows.SequenceEqual(serializer.Rows));
         }
 
-        private class WorkUnitRowFileSerializerSavesFileNameAndRows : IFileSerializer<List<WorkUnitEntityRow>>
+        private class WorkUnitRowFileSerializerSavesFileNameAndRows : IFileSerializer<List<WorkUnitRow>>
         {
             public string FileExtension { get; }
             public string FileTypeFilter { get; }
 
-            public List<WorkUnitEntityRow> Deserialize(string path)
+            public List<WorkUnitRow> Deserialize(string path)
             {
                 throw new NotImplementedException();
             }
 
             public string FileName { get; set; }
 
-            public List<WorkUnitEntityRow> Rows { get; set; }
+            public List<WorkUnitRow> Rows { get; set; }
 
-            public void Serialize(string path, List<WorkUnitEntityRow> value)
+            public void Serialize(string path, List<WorkUnitRow> value)
             {
                 FileName = path;
                 Rows = value;
@@ -280,26 +280,26 @@ namespace HFM.Forms
             // Arrange
             var presenter = CreatePresenter();
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitEntityRow>());
+            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitRow>());
             var saveFile = CreateSaveFileDialogView();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitEntityRow>>> { new WorkUnitRowFileSerializerThrows() });
+            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
         }
 
-        private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitEntityRow>>
+        private class WorkUnitRowFileSerializerThrows : IFileSerializer<List<WorkUnitRow>>
         {
             public string FileExtension { get; }
             public string FileTypeFilter { get; }
 
-            public List<WorkUnitEntityRow> Deserialize(string path)
+            public List<WorkUnitRow> Deserialize(string path)
             {
                 throw new NotImplementedException();
             }
 
-            public void Serialize(string path, List<WorkUnitEntityRow> value)
+            public void Serialize(string path, List<WorkUnitRow> value)
             {
                 throw new IOException();
             }

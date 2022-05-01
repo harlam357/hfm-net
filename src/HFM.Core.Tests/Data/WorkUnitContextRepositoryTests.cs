@@ -773,7 +773,7 @@ public class WorkUnitContextRepositoryTests
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, processor: "Ryzen", threads: 16);
             long workUnitID = _repository.Update(workUnitModel);
 
-            _deleteResult = _repository.Delete(new WorkUnitEntityRow { ID = workUnitID });
+            _deleteResult = _repository.Delete(new WorkUnitRow { ID = workUnitID });
         }
 
         [TearDown]
@@ -810,7 +810,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingAllWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private IList<WorkUnitEntityRow> _result;
+            private IList<WorkUnitRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -829,7 +829,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingSomeWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private IList<WorkUnitEntityRow> _result;
+            private IList<WorkUnitRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -851,7 +851,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingFirstPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private Page<WorkUnitEntityRow> _result;
+            private Page<WorkUnitRow> _result;
 
             [SetUp]
             public override void BeforeEach()
@@ -874,7 +874,7 @@ public class WorkUnitContextRepositoryTests
         [TestFixture]
         public class WhenFetchingLastPageOfWorkUnits : GivenWorkUnitsInTheDatabase
         {
-            private Page<WorkUnitEntityRow> _result;
+            private Page<WorkUnitRow> _result;
 
             [SetUp]
             public override void BeforeEach()

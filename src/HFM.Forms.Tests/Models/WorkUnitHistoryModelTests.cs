@@ -147,7 +147,7 @@ namespace HFM.Forms.Models
                     It.IsAny<int>(),
                     It.IsAny<WorkUnitQuery>(),
                     It.IsAny<BonusCalculation>()))
-                .Returns(new Page<WorkUnitEntityRow>());
+                .Returns(new Page<WorkUnitRow>());
             // Act
             _model.ResetBindings(true);
             // Assert

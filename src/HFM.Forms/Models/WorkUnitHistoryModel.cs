@@ -19,7 +19,7 @@ namespace HFM.Forms.Models
 
         private readonly List<WorkUnitQuery> _queryList;
         private readonly WorkUnitRowSortableBindingList _workUnitList;
-        private Page<WorkUnitEntityRow> _page;
+        private Page<WorkUnitRow> _page;
 
         public WorkUnitHistoryModel(IPreferences preferences, WorkUnitQueryDataContainer queryContainer, IWorkUnitRepository repository)
         {
@@ -47,7 +47,7 @@ namespace HFM.Forms.Models
             HistoryBindingSource = new BindingSource();
             HistoryBindingSource.DataSource = _workUnitList;
 
-            _page = new Page<WorkUnitEntityRow> { Items = new List<WorkUnitEntityRow>() };
+            _page = new Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
 
         public override void Load()
@@ -154,7 +154,7 @@ namespace HFM.Forms.Models
             QueryBindingSource.ResetBindings(false);
         }
 
-        public void DeleteHistoryEntry(WorkUnitEntityRow row)
+        public void DeleteHistoryEntry(WorkUnitRow row)
         {
             if (Repository.Delete(row) != 0)
             {
@@ -170,15 +170,7 @@ namespace HFM.Forms.Models
 
             if (executeQuery)
             {
-                var page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
-                _page = page is null ? null : new Page<WorkUnitEntityRow>
-                {
-                    CurrentPage = page.CurrentPage,
-                    Items = page.Items.Cast<WorkUnitEntityRow>().ToList(),
-                    ItemsPerPage = page.ItemsPerPage,
-                    TotalItems = page.TotalItems,
-                    TotalPages = page.TotalPages
-                };
+                _page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
             }
             if (_page == null)
             {
@@ -202,7 +194,7 @@ namespace HFM.Forms.Models
             OnPropertyChanged(nameof(CurrentPage));
         }
 
-        private void RefreshHistoryList(IEnumerable<WorkUnitEntityRow> historyEntries)
+        private void RefreshHistoryList(IEnumerable<WorkUnitRow> historyEntries)
         {
             HistoryBindingSource.Clear();
             if (historyEntries != null)
@@ -228,13 +220,13 @@ namespace HFM.Forms.Models
             }
         }
 
-        public WorkUnitEntityRow SelectedWorkUnitRow
+        public WorkUnitRow SelectedWorkUnitRow
         {
             get
             {
                 if (HistoryBindingSource.Current != null)
                 {
-                    return (WorkUnitEntityRow)HistoryBindingSource.Current;
+                    return (WorkUnitRow)HistoryBindingSource.Current;
                 }
                 return null;
             }

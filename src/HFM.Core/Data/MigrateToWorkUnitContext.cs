@@ -12,14 +12,14 @@ namespace HFM.Core.Data;
 
 public interface ILegacyWorkUnitSource
 {
-    IList<PetaPocoWorkUnitRow> Fetch();
+    IList<LegacyWorkUnitRow> Fetch();
 
     DataTable Select(string sql, params object[] args);
 }
 
 public class NullLegacyWorkUnitSource : ILegacyWorkUnitSource
 {
-    public IList<PetaPocoWorkUnitRow> Fetch() => new List<PetaPocoWorkUnitRow>(0);
+    public IList<LegacyWorkUnitRow> Fetch() => new List<LegacyWorkUnitRow>(0);
 
     public DataTable Select(string sql, params object[] args) => new();
 }
@@ -56,13 +56,13 @@ public class MigrateToWorkUnitContext
         await AddVersions().ConfigureAwait(false);
     }
 
-    private async Task AddClientsAndProjects(IProgress<ProgressInfo> progress, IEnumerable<WorkUnitRow> rows)
+    private async Task AddClientsAndProjects(IProgress<ProgressInfo> progress, IEnumerable<LegacyWorkUnitRow> rows)
     {
         ReportProgressMessage(progress, "Finding clients and projects...");
         var proteins = new HashSet<ProteinEntity>();
         var clients = new HashSet<ClientEntity>();
 
-        foreach (var r in rows.Cast<PetaPocoWorkUnitRow>())
+        foreach (var r in rows)
         {
             ReportClientAndProjectProgress(progress);
 
@@ -91,14 +91,14 @@ public class MigrateToWorkUnitContext
         await AddRange(clients).ConfigureAwait(false);
     }
 
-    private async Task AddWorkUnits(IProgress<ProgressInfo> progress, IEnumerable<WorkUnitRow> rows)
+    private async Task AddWorkUnits(IProgress<ProgressInfo> progress, IEnumerable<LegacyWorkUnitRow> rows)
     {
         var workUnits = new HashSet<WorkUnitEntity>();
 
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-            foreach (var r in rows.Cast<PetaPocoWorkUnitRow>())
+            foreach (var r in rows)
             {
                 ReportWorkUnitProgress(progress);
 
