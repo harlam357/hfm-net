@@ -45,7 +45,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
-                Platform = "CUDA",
+                Platform = new WorkUnitPlatform("CUDA"),
                 UnitResult = WorkUnitResult.FinishedUnit,
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6),
@@ -588,7 +588,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
-                Platform = "CUDA",
+                Platform = new WorkUnitPlatform("CUDA"),
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6)
             };
@@ -722,6 +722,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectGen = 4,
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6),
+                Platform = new WorkUnitPlatform("CPU"),
                 Frames = new Dictionary<int, LogLineFrameData>
                 {
                     {
@@ -748,7 +749,7 @@ public class WorkUnitContextRepositoryTests
             };
             var protein = new Protein();
 
-            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
+            var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, processor: "Ryzen", threads: 16);
             long workUnitID = _repository.Update(workUnitModel);
 
             _deleteResult = _repository.Delete(new WorkUnitEntityRow { ID = workUnitID });

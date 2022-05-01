@@ -85,7 +85,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var client = GetOrInsertClientEntity(context, workUnitModel);
         var protein = GetOrInsertProteinEntity(context, workUnitModel);
         var platform = GetOrInsertPlatformEntity(context, workUnitModel);
-        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform.ID);
+        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
         InsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
 
         return workUnit.ID;
@@ -190,34 +190,25 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private static PlatformEntity GetOrInsertPlatformEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
-        var clientPlatform = workUnitModel.SlotModel.Client.Platform;
-        var clientVersion = clientPlatform?.ClientVersion;
-        var operatingSystem = clientPlatform?.OperatingSystem;
-
-        var implementation = workUnitModel.WorkUnit.Platform;
-        var processor = workUnitModel.BenchmarkIdentifier.Processor;
-        int? threads = workUnitModel.BenchmarkIdentifier.HasThreads
-            ? workUnitModel.BenchmarkIdentifier.Threads
-            : null;
+        var p = CreatePlatformEntity(workUnitModel);
+        if (!ValidatePlatformEntity(p))
+        {
+            return null;
+        }
 
         var platform = context.Platforms
-            .FirstOrDefault(x => x.ClientVersion == clientVersion &&
-                                 x.OperatingSystem == operatingSystem &&
-                                 x.Implementation == implementation &&
-                                 x.Processor == processor &&
-                                 x.Threads == threads);
+            .FirstOrDefault(x => x.ClientVersion == p.ClientVersion &&
+                                 x.OperatingSystem == p.OperatingSystem &&
+                                 x.Implementation == p.Implementation &&
+                                 x.Processor == p.Processor &&
+                                 x.Threads == p.Threads &&
+                                 x.DriverVersion == p.DriverVersion &&
+                                 x.ComputeVersion == p.ComputeVersion &&
+                                 x.CUDAVersion == p.CUDAVersion);
 
         if (platform is null)
         {
-            platform = new PlatformEntity
-            {
-                ClientVersion = clientVersion,
-                OperatingSystem = operatingSystem,
-                Implementation = implementation,
-                Processor = processor,
-                Threads = threads
-            };
-
+            platform = p;
             context.Platforms.Add(platform);
             context.SaveChanges();
         }
@@ -225,8 +216,43 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return platform;
     }
 
+    private static PlatformEntity CreatePlatformEntity(WorkUnitModel workUnitModel)
+    {
+        var clientPlatform = workUnitModel.SlotModel.Client.Platform;
+        var clientVersion = clientPlatform?.ClientVersion;
+        var operatingSystem = clientPlatform?.OperatingSystem;
+
+        var workUnitPlatform = workUnitModel.WorkUnit.Platform;
+        var implementation = workUnitPlatform?.Implementation;
+        var processor = workUnitModel.BenchmarkIdentifier.Processor;
+        int? threads = workUnitModel.BenchmarkIdentifier.HasThreads
+            ? workUnitModel.BenchmarkIdentifier.Threads
+            : null;
+        var driverVersion = workUnitPlatform?.DriverVersion;
+        var computeVersion = workUnitPlatform?.ComputeVersion;
+        var cudaVersion = workUnitPlatform?.CUDAVersion;
+
+        return new PlatformEntity
+        {
+            ClientVersion = clientVersion,
+            OperatingSystem = operatingSystem,
+            Implementation = implementation,
+            Processor = processor,
+            Threads = threads,
+            DriverVersion = driverVersion,
+            ComputeVersion = computeVersion,
+            CUDAVersion = cudaVersion
+        };
+    }
+
+    private static bool ValidatePlatformEntity(PlatformEntity platform) =>
+        !String.IsNullOrEmpty(platform.ClientVersion) &&
+        !String.IsNullOrEmpty(platform.OperatingSystem) &&
+        !String.IsNullOrEmpty(platform.Implementation) &&
+        !String.IsNullOrEmpty(platform.Processor);
+
     private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
-        WorkUnitEntity workUnit, long clientID, long proteinID, long platformID)
+        WorkUnitEntity workUnit, long clientID, long proteinID, long? platformID)
     {
         bool insert = workUnit is null;
 

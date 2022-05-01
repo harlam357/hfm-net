@@ -18,7 +18,7 @@ namespace HFM.Core.Client
             // Arrange
             var builder = new WorkUnitCollectionBuilder(null, new ClientSettings(), new MessageSource(), _UnitRetrievalTime);
             // Act
-            var workUnits = builder.BuildForSlot(0, null);
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), null);
             // Assert
             Assert.AreEqual(0, workUnits.Count);
         }
@@ -36,7 +36,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, source, _UnitRetrievalTime);
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
             // Assert
             var workUnit = workUnits.Current;
             Assert.AreEqual(Unknown.Value, workUnit.FoldingID);
@@ -52,7 +52,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -100,7 +100,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -141,7 +141,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(1, new WorkUnit());
+            var workUnits = builder.BuildForSlot(1, new CPUSlotDescription(), new WorkUnit());
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -186,7 +186,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(1, new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
+            var workUnits = builder.BuildForSlot(1, new CPUSlotDescription(), new WorkUnit { ID = 0, ProjectID = 5767, ProjectRun = 3, ProjectClone = 138, ProjectGen = 144 });
 
             // Assert - AggregatorResult
             Assert.IsNotNull(workUnits);
@@ -231,7 +231,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
 
             // Assert
             Assert.IsNotNull(workUnits);
@@ -276,7 +276,7 @@ namespace HFM.Core.Client
             var builder = new WorkUnitCollectionBuilder(null, fahClient.Settings, fahClient.Messages, _UnitRetrievalTime);
 
             // Act
-            var workUnits = builder.BuildForSlot(1, new WorkUnit());
+            var workUnits = builder.BuildForSlot(1, new GPUSlotDescription { GPUBus = 13, GPUSlot = 0 }, new WorkUnit());
 
             // Assert
             Assert.IsNotNull(workUnits);
@@ -300,7 +300,13 @@ namespace HFM.Core.Client
             Assert.AreEqual(44695, workUnit.ProjectRun);
             Assert.AreEqual(3, workUnit.ProjectClone);
             Assert.AreEqual(2, workUnit.ProjectGen);
-            Assert.AreEqual("CUDA", workUnit.Platform);
+            Assert.AreEqual(new WorkUnitPlatform("CUDA")
+            {
+                DriverVersion = "456.71",
+                ComputeVersion = "7.5",
+                CUDAVersion = "11.1"
+            },
+            workUnit.Platform);
             Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
             Assert.AreEqual(75, workUnit.FramesObserved);
             Assert.AreEqual(74, workUnit.CurrentFrame.ID);
@@ -328,7 +334,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
             // Assert
             Assert.AreEqual(1, workUnits.CurrentID);
         }
@@ -349,7 +355,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit());
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit());
             // Assert
             Assert.AreEqual(2, workUnits.CurrentID);
         }
@@ -370,7 +376,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 2 });
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit { ID = 0, ProjectID = 2 });
             // Assert
             Assert.AreEqual(2, workUnits.Count);
         }
@@ -391,7 +397,7 @@ namespace HFM.Core.Client
             };
             var builder = new WorkUnitCollectionBuilder(null, new ClientSettings { Name = "Foo" }, source, DateTime.MinValue);
             // Act
-            var workUnits = builder.BuildForSlot(0, new WorkUnit { ID = 0, ProjectID = 3 });
+            var workUnits = builder.BuildForSlot(0, new CPUSlotDescription(), new WorkUnit { ID = 0, ProjectID = 3 });
             // Assert
             Assert.AreEqual(2, workUnits.Count);
         }

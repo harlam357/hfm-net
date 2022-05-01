@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 
 using HFM.Client.ObjectModel;
 using HFM.Core.Logging;
@@ -23,10 +24,11 @@ namespace HFM.Core.Client
             _unitRetrievalTime = unitRetrievalTime;
         }
 
-        public WorkUnitCollection BuildForSlot(int slotID, WorkUnit previousWorkUnit)
+        public WorkUnitCollection BuildForSlot(int slotID, SlotDescription slotDescription, WorkUnit previousWorkUnit)
         {
             if (_source.UnitCollection is null) return new WorkUnitCollection();
-            if (previousWorkUnit is null) throw new ArgumentNullException(nameof(previousWorkUnit));
+            ArgumentNullException.ThrowIfNull(slotDescription);
+            ArgumentNullException.ThrowIfNull(previousWorkUnit);
 
             var slotRun = GetSlotRun(slotID);
             if (Logger.IsDebugEnabled && slotRun != null)
@@ -37,14 +39,16 @@ namespace HFM.Core.Client
                 }
             }
 
-            return BuildWorkUnitCollection(slotID, previousWorkUnit);
+            return BuildWorkUnitCollection(slotID, slotDescription, previousWorkUnit);
         }
 
-        private WorkUnitCollection BuildWorkUnitCollection(int slotID, WorkUnit previousWorkUnit)
+        private WorkUnitCollection BuildWorkUnitCollection(int slotID, SlotDescription slotDescription, WorkUnit previousWorkUnit)
         {
             Debug.Assert(previousWorkUnit != null);
 
-            var workUnits = new WorkUnitCollection(_source.UnitCollection.Where(x => x.Slot == slotID).Select(x => BuildWorkUnit(slotID, x)));
+            var workUnits = new WorkUnitCollection(_source.UnitCollection
+                .Where(x => x.Slot == slotID)
+                .Select(x => BuildWorkUnit(slotID, slotDescription, x)));
             var currentID = GetCurrentWorkUnitID(slotID);
             if (currentID.HasValue)
             {
@@ -86,10 +90,8 @@ namespace HFM.Core.Client
         private UnitRun GetUnitRun(int slotID, int queueIndex, IProjectInfo projectInfo) =>
             GetSlotRun(slotID)?.UnitRuns.LastOrDefault(x => x.QueueIndex == queueIndex && projectInfo.EqualsProject(ToProjectInfo(x.Data)));
 
-        private WorkUnit BuildWorkUnit(int slotID, Unit unit)
+        private WorkUnit BuildWorkUnit(int slotID, SlotDescription slotDescription, Unit unit)
         {
-            Debug.Assert(unit != null);
-
             var workUnit = new WorkUnit { UnitRetrievalTime = _unitRetrievalTime };
             PopulateWorkUnitFromClientData(workUnit, unit, _source.Options);
 
@@ -103,6 +105,7 @@ namespace HFM.Core.Client
             else
             {
                 PopulateWorkUnitFromLogData(workUnit, unitRun);
+                PopulateWorkUnitPlatform(slotDescription, workUnit, unitRun, _source.Info?.System);
             }
 
             return workUnit;
@@ -126,9 +129,6 @@ namespace HFM.Core.Client
 
         private static void PopulateWorkUnitFromClientData(WorkUnit workUnit, Unit unit, Options options)
         {
-            Debug.Assert(workUnit != null);
-            Debug.Assert(unit != null);
-
             workUnit.ID = unit.ID.GetValueOrDefault();
             workUnit.Assigned = unit.AssignedDateTime.GetValueOrDefault();
             workUnit.Timeout = unit.TimeoutDateTime.GetValueOrDefault();
@@ -146,15 +146,11 @@ namespace HFM.Core.Client
 
         private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)
         {
-            Debug.Assert(workUnit != null);
-            Debug.Assert(unitRun != null);
-
             workUnit.LogLines = LogLineEnumerable.Create(unitRun).ToList();
             workUnit.Frames = unitRun.Data.Frames;
             workUnit.UnitStartTimeStamp = unitRun.Data.UnitStartTimeStamp ?? TimeSpan.MinValue;
             workUnit.FramesObserved = unitRun.Data.FramesObserved;
             workUnit.CoreVersion = ParseCoreVersion(unitRun.Data.CoreVersion);
-            workUnit.Platform = unitRun.Data.Platform;
             workUnit.UnitResult = WorkUnitResultString.ToWorkUnitResult(unitRun.Data.WorkUnitResult);
 
             // there is no finished time available from the client API
@@ -166,6 +162,32 @@ namespace HFM.Core.Client
             {
                 workUnit.Finished = DateTime.UtcNow;
             }
+        }
+
+        private static void PopulateWorkUnitPlatform(SlotDescription slotDescription, WorkUnit workUnit, UnitRun unitRun, SystemInfo systemInfo)
+        {
+            if (String.IsNullOrEmpty(unitRun.Data.Platform)) return;
+
+            if (systemInfo is not null && slotDescription is GPUSlotDescription gpu)
+            {
+                string targetGPU = String.Format(CultureInfo.InvariantCulture, "Bus:{0} Slot:{1}", gpu.GPUBus, gpu.GPUSlot);
+                var gpuInfo = systemInfo.GPUInfos.Values.FirstOrDefault(x => x.GPU != null && x.GPU.StartsWith(targetGPU, StringComparison.Ordinal));
+                if (gpuInfo is not null)
+                {
+                    var cuda = GPUDeviceDescription.Parse(gpuInfo.CUDADevice);
+                    var openCL = GPUDeviceDescription.Parse(gpuInfo.OpenCLDevice);
+                    var platformIsCUDA = unitRun.Data.Platform.Equals("CUDA", StringComparison.Ordinal);
+
+                    workUnit.Platform = new WorkUnitPlatform(unitRun.Data.Platform)
+                    {
+                        DriverVersion = openCL?.Driver,
+                        ComputeVersion = platformIsCUDA ? cuda?.Compute : openCL?.Compute,
+                        CUDAVersion = platformIsCUDA ? cuda?.Driver : null
+                    };
+                }
+            }
+
+            workUnit.Platform ??= new WorkUnitPlatform(unitRun.Data.Platform);
         }
 
         private static bool IsTerminating(WorkUnit workUnit) =>

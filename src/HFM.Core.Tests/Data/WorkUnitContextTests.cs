@@ -71,7 +71,13 @@ namespace HFM.Core.Data
             [Test]
             public void WithPlatform()
             {
-                _context.Platforms.Add(new PlatformEntity());
+                _context.Platforms.Add(new PlatformEntity
+                {
+                    ClientVersion = "7",
+                    OperatingSystem = "Windows",
+                    Implementation = "CPU",
+                    Processor = "Ryzen"
+                });
                 _context.SaveChanges();
 
                 _context.WorkUnits.Add(new WorkUnitEntity

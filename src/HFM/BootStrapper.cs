@@ -200,21 +200,29 @@ namespace HFM
             }
 
             var mainForm = (MainForm)mainPresenter.Form;
-            var repository = Container.GetInstance<WorkUnitRepository>();
-            //var repository = new WorkUnitRepository(null, CreateProteinService());
             try
             {
                 string appDataPath = Preferences.Get<string>(Preference.ApplicationDataFolderPath);
-                repository.Initialize(Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName));
-                if (repository.RequiresUpgrade())
+                string filePath = Path.Combine(appDataPath, WorkUnitRepository.DefaultFileName);
+
+                ILegacyWorkUnitSource legacyWorkUnitSource = new NullLegacyWorkUnitSource();
+                if (File.Exists(filePath))
                 {
-                    UpgradeWorkUnitRepository(repository);
+                    var repository = Container.GetInstance<WorkUnitRepository>();
+                    //var repository = new WorkUnitRepository(null, CreateProteinService());
+
+                    repository.Initialize(filePath);
+                    if (repository.RequiresUpgrade())
+                    {
+                        UpgradeWorkUnitRepository(repository);
+                    }
+                    legacyWorkUnitSource = repository;
                 }
 
                 string databaseVersion = GetDatabaseVersionFromWorkUnitContext();
                 if (ShouldMigrateToWorkUnitContext(databaseVersion))
                 {
-                    MigrateToWorkUnitContext(repository);
+                    MigrateToWorkUnitContext(legacyWorkUnitSource);
                 }
             }
             catch (Exception ex)
@@ -257,7 +265,7 @@ namespace HFM
         private static bool ShouldMigrateToWorkUnitContext(string databaseVersion) =>
             databaseVersion is not null && Version.Parse(databaseVersion) < Version.Parse(Core.Application.Version);
 
-        private void MigrateToWorkUnitContext(WorkUnitRepository repository)
+        private void MigrateToWorkUnitContext(ILegacyWorkUnitSource repository)
         {
             var toWorkUnitContext = new MigrateToWorkUnitContext(Logger, Container.GetInstance<IServiceScopeFactory>(), repository);
 

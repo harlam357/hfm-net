@@ -4,6 +4,15 @@ using HFM.Log;
 
 namespace HFM.Core.WorkUnits;
 
+public record WorkUnitPlatform(string Implementation)
+{
+    public string DriverVersion { get; init; }
+
+    public string ComputeVersion { get; init; }
+
+    public string CUDAVersion { get; init; }
+}
+
 public class WorkUnit : IQueueItem, IProjectInfo
 {
     /// <summary>
@@ -73,10 +82,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
 
     public int ProjectGen { get; set; }
 
-    /// <summary>
-    /// Gets or sets the work unit platform (CPU, CUDA, OpenCL).
-    /// </summary>
-    public string Platform { get; set; }
+    public WorkUnitPlatform Platform { get; set; }
 
     public WorkUnitResult UnitResult { get; set; }
 

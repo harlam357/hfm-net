@@ -31,7 +31,7 @@ namespace HFM.Core.Data
         int Execute(SqliteConnection connection, string sql, params object[] args);
     }
 
-    public class WorkUnitRepository : IWorkUnitDatabase, IDisposable
+    public class WorkUnitRepository : IWorkUnitDatabase, ILegacyWorkUnitSource, IDisposable
     {
         private string ConnectionString => String.Concat("Data Source=", FilePath);
 

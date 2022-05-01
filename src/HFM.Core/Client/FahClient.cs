@@ -216,7 +216,7 @@ namespace HFM.Core.Client
             foreach (var slotModel in Slots.OfType<FahClientSlotModel>())
             {
                 var previousWorkUnitModel = slotModel.WorkUnitModel;
-                var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, previousWorkUnitModel.WorkUnit);
+                var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.Description, previousWorkUnitModel.WorkUnit);
                 var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
                 PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);

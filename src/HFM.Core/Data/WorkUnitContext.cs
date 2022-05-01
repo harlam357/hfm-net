@@ -115,16 +115,18 @@ public partial class WorkUnitContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<WorkUnitEntity>()
-            .HasOne(x => x.Protein)
-            .WithMany()
-            .HasForeignKey(x => x.ProteinID);
-
+        // Ignore properties populated by UDF
         modelBuilder.Entity<WorkUnitEntity>()
             .Ignore(x => x.SlotName)
             .Ignore(x => x.SlotType)
             .Ignore(x => x.PPD)
             .Ignore(x => x.Credit);
+
+        // Setup relationships
+        modelBuilder.Entity<WorkUnitEntity>()
+            .HasOne(x => x.Protein)
+            .WithMany()
+            .HasForeignKey(x => x.ProteinID);
 
         modelBuilder.Entity<WorkUnitEntity>()
             .HasOne(x => x.Client)
@@ -141,6 +143,14 @@ public partial class WorkUnitContext : DbContext
             .WithOne()
             .HasForeignKey(x => x.WorkUnitID);
 
+        // Platform NOT NULL properties
+        var platformBuilder = modelBuilder.Entity<PlatformEntity>();
+        platformBuilder.Property(x => x.ClientVersion).IsRequired();
+        platformBuilder.Property(x => x.OperatingSystem).IsRequired();
+        platformBuilder.Property(x => x.Implementation).IsRequired();
+        platformBuilder.Property(x => x.Processor).IsRequired();
+
+        // WorkUnitFrame PK
         modelBuilder.Entity<WorkUnitFrameEntity>()
             .HasKey(x => new { x.WorkUnitID, x.FrameID });
     }

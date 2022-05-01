@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Data;
+using System.Globalization;
 
 using HFM.Core.Client;
 using HFM.Core.Logging;
@@ -9,13 +10,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Core.Data;
 
+public interface ILegacyWorkUnitSource
+{
+    IList<PetaPocoWorkUnitRow> Fetch();
+
+    DataTable Select(string sql, params object[] args);
+}
+
+public class NullLegacyWorkUnitSource : ILegacyWorkUnitSource
+{
+    public IList<PetaPocoWorkUnitRow> Fetch() => new List<PetaPocoWorkUnitRow>(0);
+
+    public DataTable Select(string sql, params object[] args) => new();
+}
+
 public class MigrateToWorkUnitContext
 {
     private readonly ILogger _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly WorkUnitRepository _repository;
+    private readonly ILegacyWorkUnitSource _repository;
 
-    public MigrateToWorkUnitContext(ILogger logger, IServiceScopeFactory serviceScopeFactory, WorkUnitRepository repository)
+    public MigrateToWorkUnitContext(ILogger logger, IServiceScopeFactory serviceScopeFactory, ILegacyWorkUnitSource repository)
     {
         _logger = logger ?? NullLogger.Instance;
         _serviceScopeFactory = serviceScopeFactory;
@@ -135,9 +150,8 @@ public class MigrateToWorkUnitContext
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
 
-        var database = (IWorkUnitDatabase)_repository;
-        var table = database.Select("SELECT * FROM [DbVersion]");
-        foreach (System.Data.DataRow row in table.Rows)
+        var table = _repository.Select("SELECT * FROM [DbVersion]");
+        foreach (DataRow row in table.Rows)
         {
             context.Versions.Add(new VersionEntity { Version = row["Version"].ToString() });
         }
