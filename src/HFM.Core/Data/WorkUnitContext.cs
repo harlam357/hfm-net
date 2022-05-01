@@ -54,6 +54,11 @@ public partial class WorkUnitContext : DbContext
     private SqliteConnection _connection;
     private bool _contextOwnsConnection;
 
+    public WorkUnitContext()
+    {
+        _options = new WorkUnitContextOptions();
+    }
+
     public WorkUnitContext(SqliteConnection connection)
     {
         _options = new WorkUnitContextOptions { Connection = connection };
