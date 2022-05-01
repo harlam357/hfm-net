@@ -148,12 +148,21 @@ public partial class WorkUnitContext : DbContext
             .WithOne()
             .HasForeignKey(x => x.WorkUnitID);
 
+        // Client NOT NULL properties
+        var clientBuilder = modelBuilder.Entity<ClientEntity>();
+        clientBuilder.Property(x => x.Name).IsRequired();
+        clientBuilder.Property(x => x.ConnectionString).IsRequired();
+
         // Platform NOT NULL properties
         var platformBuilder = modelBuilder.Entity<PlatformEntity>();
         platformBuilder.Property(x => x.ClientVersion).IsRequired();
         platformBuilder.Property(x => x.OperatingSystem).IsRequired();
         platformBuilder.Property(x => x.Implementation).IsRequired();
         platformBuilder.Property(x => x.Processor).IsRequired();
+
+        // Versions NOT NULL properties
+        var versionBuilder = modelBuilder.Entity<VersionEntity>();
+        versionBuilder.Property(x => x.Version).IsRequired();
 
         // WorkUnitFrame PK
         modelBuilder.Entity<WorkUnitFrameEntity>()

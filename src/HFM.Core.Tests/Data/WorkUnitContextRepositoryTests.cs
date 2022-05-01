@@ -206,7 +206,12 @@ public class WorkUnitContextRepositoryTests
             _connection.Open();
             _repository = new TestableWorkUnitContextRepository(_connection);
 
-            var settings = new ClientSettings();
+            var settings = new ClientSettings
+            {
+                Name = "GTX3090",
+                Server = "gtx3090.awesome.com",
+                Port = ClientSettings.DefaultPort
+            };
             var workUnit = new WorkUnit
             {
                 ProjectID = 1,
@@ -518,7 +523,12 @@ public class WorkUnitContextRepositoryTests
             _connection.Open();
             _repository = new TestableWorkUnitContextRepository(_connection);
 
-            var settings = new ClientSettings();
+            var settings = new ClientSettings
+            {
+                Name = "GTX3090",
+                Server = "gtx3090.awesome.com",
+                Port = ClientSettings.DefaultPort
+            };
             var workUnit = new WorkUnit
             {
                 ProjectID = 1,
@@ -581,7 +591,12 @@ public class WorkUnitContextRepositoryTests
             _connection.Open();
             _repository = new TestableWorkUnitContextRepository(_connection);
 
-            var settings = new ClientSettings();
+            var settings = new ClientSettings
+            {
+                Name = "GTX3090",
+                Server = "gtx3090.awesome.com",
+                Port = ClientSettings.DefaultPort
+            };
             var workUnit = new WorkUnit
             {
                 ProjectID = 1,
@@ -713,7 +728,12 @@ public class WorkUnitContextRepositoryTests
             _connection.Open();
             _repository = new TestableWorkUnitContextRepository(_connection);
 
-            var settings = new ClientSettings();
+            var settings = new ClientSettings
+            {
+                Name = "GTX3090",
+                Server = "gtx3090.awesome.com",
+                Port = ClientSettings.DefaultPort
+            };
             var workUnit = new WorkUnit
             {
                 ProjectID = 1,

@@ -24,7 +24,11 @@ namespace HFM.Core.Data
                 _context.Proteins.Add(new ProteinEntity());
                 _context.SaveChanges();
 
-                _context.Clients.Add(new ClientEntity());
+                _context.Clients.Add(new ClientEntity
+                {
+                    Name = "Name",
+                    ConnectionString = "ConnectionString"
+                });
                 _context.SaveChanges();
             }
 
