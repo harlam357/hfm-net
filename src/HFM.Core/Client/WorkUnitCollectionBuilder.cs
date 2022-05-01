@@ -142,6 +142,7 @@ namespace HFM.Core.Client
             workUnit.Team = ToNullableInt32(options?[Options.Team]).GetValueOrDefault();
 
             workUnit.CoreID = unit.Core?.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.UnitID = unit.UnitHex;
         }
 
         private static void PopulateWorkUnitFromLogData(WorkUnit workUnit, UnitRun unitRun)

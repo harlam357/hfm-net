@@ -38,6 +38,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
             FramesObserved = FramesObserved,
             LogLines = LogLines,
             CoreID = CoreID,
+            UnitID = UnitID,
             ID = ID
         };
 
@@ -135,9 +136,14 @@ public class WorkUnit : IQueueItem, IProjectInfo
     public IDictionary<int, LogLineFrameData> Frames { get; set; }
 
     /// <summary>
-    /// Core ID (Hex) Value
+    /// Gets or sets the core hex identifier.
     /// </summary>
     public string CoreID { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work unit hex identifier.
+    /// </summary>
+    public string UnitID { get; set; }
 
     public int ID { get; set; } = WorkUnitCollection.NoID;
 

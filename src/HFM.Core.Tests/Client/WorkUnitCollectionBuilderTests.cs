@@ -86,6 +86,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 8, 31), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(39, workUnit.LogLines.Count);
             Assert.AreEqual("A4", workUnit.CoreID);
+            Assert.AreEqual("0x00000050664f2dd04de6d4f93deb418d", workUnit.UnitID);
         }
 
         [Test]
@@ -130,6 +131,7 @@ namespace HFM.Core.Client
             Assert.IsNull(workUnit.CurrentFrame);
             Assert.IsNull(workUnit.LogLines);
             Assert.AreEqual("A4", workUnit.CoreID);
+            Assert.AreEqual("0x00000050664f2dd04de6d4f93deb418d", workUnit.UnitID);
         }
 
         [Test]
@@ -175,6 +177,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 0, 42), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(98, workUnit.LogLines.Count);
             Assert.AreEqual("11", workUnit.CoreID);
+            Assert.AreEqual("0x241a68704f0d0e3a00fc016c0007168c", workUnit.UnitID);
         }
 
         [Test]
@@ -220,6 +223,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 0, 33), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(186, workUnit.LogLines.Count);
             Assert.AreEqual(null, workUnit.CoreID);
+            Assert.AreEqual(null, workUnit.UnitID);
         }
 
         [Test]
@@ -265,6 +269,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 4, 50), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(32, workUnit.LogLines.Count);
             Assert.AreEqual("A4", workUnit.CoreID);
+            Assert.AreEqual("0x0000004e664f2dd04de6d35869ac2ae3", workUnit.UnitID);
         }
 
         [Test]
@@ -316,6 +321,7 @@ namespace HFM.Core.Client
             Assert.AreEqual(new TimeSpan(0, 2, 24), workUnit.CurrentFrame.Duration);
             Assert.AreEqual(181, workUnit.LogLines.Count);
             Assert.AreEqual("22", workUnit.CoreID);
+            Assert.AreEqual("0x0000000300000002000047190000ae97", workUnit.UnitID);
         }
 
         [Test]
