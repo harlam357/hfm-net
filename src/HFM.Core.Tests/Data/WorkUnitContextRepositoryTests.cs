@@ -72,7 +72,8 @@ public class WorkUnitContextRepositoryTests
                             Duration = TimeSpan.FromSeconds(28)
                         }
                     }
-                }
+                },
+                UnitID = "0x0000005a000000150000467700000003"
             };
             var protein = new Protein
             {
@@ -158,7 +159,7 @@ public class WorkUnitContextRepositoryTests
             Assert.AreEqual(2, workUnit.ProjectRun);
             Assert.AreEqual(3, workUnit.ProjectClone);
             Assert.AreEqual(4, workUnit.ProjectGen);
-            Assert.AreEqual(null, workUnit.HexID);
+            Assert.AreEqual("0x0000005a000000150000467700000003", workUnit.HexID);
             Assert.AreEqual(100, workUnit.FramesCompleted);
             Assert.AreEqual(28, workUnit.FrameTimeInSeconds);
             Assert.AreEqual(context.Proteins.First().ID, workUnit.ProteinID);

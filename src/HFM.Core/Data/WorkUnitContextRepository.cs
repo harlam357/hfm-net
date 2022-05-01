@@ -270,6 +270,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.ProjectRun = workUnitModel.WorkUnit.ProjectRun;
         workUnit.ProjectClone = workUnitModel.WorkUnit.ProjectClone;
         workUnit.ProjectGen = workUnitModel.WorkUnit.ProjectGen;
+        workUnit.HexID = workUnitModel.WorkUnit.UnitID;
         workUnit.FramesCompleted = workUnitModel.FramesComplete;
         workUnit.FrameTimeInSeconds = workUnitModel.GetRawTime(PPDCalculation.AllFrames);
         workUnit.ProteinID = proteinID;
