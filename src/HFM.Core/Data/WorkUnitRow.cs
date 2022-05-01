@@ -36,57 +36,31 @@ namespace HFM.Core.Data
     public class WorkUnitRow : IProjectInfo
     {
         public long ID { get; set; }
-
         public int ProjectID { get; set; }
-
         public int ProjectRun { get; set; }
-
         public int ProjectClone { get; set; }
-
         public int ProjectGen { get; set; }
-
-        public string Username { get; set; }
-
-        public int Team { get; set; }
-
-        public int FramesCompleted { get; set; }
-
-        public string WorkUnitName { get; set; }
-
-        public double KFactor { get; set; }
-
-        public string Core { get; set; }
-
-        public int Frames { get; set; }
-
-        public int Atoms { get; set; }
-
-        public double PreferredDays { get; set; }
-
-        public double MaximumDays { get; set; }
-
         public string Name { get; set; }
-
         public string Path { get; set; }
-
+        public string Username { get; set; }
+        public int Team { get; set; }
         public string CoreVersion { get; set; }
-
+        public int FramesCompleted { get; set; }
         public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeInSeconds);
-
         public int FrameTimeInSeconds { get; set; }
-
         public string Result { get; set; }
-
         public DateTime Assigned { get; set; }
-
         public DateTime Finished { get; set; }
-
-        public double BaseCredit { get; set; }
-
+        public string WorkUnitName { get; set; }
+        public double KFactor { get; set; }
+        public string Core { get; set; }
+        public int Frames { get; set; }
+        public int Atoms { get; set; }
         public string SlotType { get; set; }
-
         public double PPD { get; set; }
-
         public double Credit { get; set; }
+        public double BaseCredit { get; set; }
+        public double PreferredDays { get; set; }
+        public double MaximumDays { get; set; }
     }
 }
