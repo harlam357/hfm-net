@@ -85,8 +85,8 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         var client = GetOrInsertClientEntity(context, workUnitModel);
         var protein = GetOrInsertProteinEntity(context, workUnitModel);
         var platform = GetOrInsertPlatformEntity(context, workUnitModel);
-        workUnit = InsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
-        InsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
+        workUnit = UpsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
+        UpsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
 
         return workUnit.ID;
     }
@@ -251,7 +251,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         !String.IsNullOrEmpty(platform.Implementation) &&
         !String.IsNullOrEmpty(platform.Processor);
 
-    private static WorkUnitEntity InsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
+    private static WorkUnitEntity UpsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
         WorkUnitEntity workUnit, long clientID, long proteinID, long? platformID)
     {
         bool insert = workUnit is null;
@@ -288,7 +288,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         return workUnit;
     }
 
-    private static void InsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit)
+    private static void UpsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit)
     {
         if (workUnitModel.WorkUnit.Frames is null)
         {
