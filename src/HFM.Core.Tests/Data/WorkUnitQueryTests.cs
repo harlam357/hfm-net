@@ -1,7 +1,4 @@
-﻿
-using System;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace HFM.Core.Data
 {
@@ -89,7 +86,7 @@ namespace HFM.Core.Data
             Assert.IsTrue(query1.CompareTo(query2) < 0);
             Assert.IsTrue(query1 < query2);
         }
-        
+
         [Test]
         public void WorkUnitQuery_Compare_AreNotEqual()
         {
@@ -105,15 +102,6 @@ namespace HFM.Core.Data
             var query = new WorkUnitQuery();
             Assert.IsTrue(query.CompareTo(null) > 0);
             Assert.IsTrue(query > null);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_DefaultConstructor_HasPropertyValues()
-        {
-            var parameter = new WorkUnitQueryParameter();
-            Assert.AreEqual(WorkUnitRowColumn.ProjectID, parameter.Column);
-            Assert.AreEqual(WorkUnitQueryOperator.Equal, parameter.Operator);
-            Assert.AreEqual("=", parameter.GetOperatorString());
         }
 
         [Test]
@@ -144,23 +132,6 @@ namespace HFM.Core.Data
             Assert.AreEqual("6900", parameter.Value);
             parameter.Value = null;
             Assert.IsNull(parameter.Value);
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_OperatorsHaveStringValue()
-        {
-            var parameter = new WorkUnitQueryParameter();
-            foreach (WorkUnitQueryOperator op in Enum.GetValues(typeof(WorkUnitQueryOperator)))
-            {
-                parameter.Operator = op;
-            }
-        }
-
-        [Test]
-        public void WorkUnitQueryParameter_Operator_UnknownOperatorsThrowExceptionOnStringValue()
-        {
-            var parameter = new WorkUnitQueryParameter { Operator = (WorkUnitQueryOperator)Int32.MaxValue };
-            Assert.Throws<InvalidOperationException>(() => parameter.GetOperatorString());
         }
     }
 }

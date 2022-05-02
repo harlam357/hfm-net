@@ -192,34 +192,9 @@ namespace HFM.Core.Data
         [DataMember(Order = 4)]
         private string _stringValue;
 
-        internal string GetOperatorString()
-        {
-            switch (Operator)
-            {
-                case WorkUnitQueryOperator.Equal:
-                    return "=";
-                case WorkUnitQueryOperator.GreaterThan:
-                    return ">";
-                case WorkUnitQueryOperator.GreaterThanOrEqual:
-                    return ">=";
-                case WorkUnitQueryOperator.LessThan:
-                    return "<";
-                case WorkUnitQueryOperator.LessThanOrEqual:
-                    return "<=";
-                case WorkUnitQueryOperator.Like:
-                    return "LIKE";
-                case WorkUnitQueryOperator.NotLike:
-                    return "NOT LIKE";
-                case WorkUnitQueryOperator.NotEqual:
-                    return "!=";
-                default:
-                    throw new InvalidOperationException($"Operator {Operator} is not supported.");
-            }
-        }
-
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, GetOperatorString(), Value);
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, Operator, Value);
         }
 
         public static string[] GetColumnNames()
