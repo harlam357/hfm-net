@@ -120,52 +120,63 @@ public partial class WorkUnitContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Ignore properties populated by UDF
-        modelBuilder.Entity<WorkUnitEntity>()
-            .Ignore(x => x.SlotName)
-            .Ignore(x => x.SlotType)
-            .Ignore(x => x.PPD)
-            .Ignore(x => x.Credit);
+        modelBuilder.Entity<WorkUnitEntity>(entity =>
+        {
+            // Ignore properties populated by UDF
+            entity
+                .Ignore(x => x.SlotName)
+                .Ignore(x => x.SlotType)
+                .Ignore(x => x.PPD)
+                .Ignore(x => x.Credit);
 
-        // Setup relationships
-        modelBuilder.Entity<WorkUnitEntity>()
-            .HasOne(x => x.Protein)
-            .WithMany()
-            .HasForeignKey(x => x.ProteinID);
+            // Setup relationships
+            entity
+                .HasOne(x => x.Protein)
+                .WithMany()
+                .HasForeignKey(x => x.ProteinID);
 
-        modelBuilder.Entity<WorkUnitEntity>()
-            .HasOne(x => x.Client)
-            .WithMany()
-            .HasForeignKey(x => x.ClientID);
+            entity
+                .HasOne(x => x.Client)
+                .WithMany()
+                .HasForeignKey(x => x.ClientID);
 
-        modelBuilder.Entity<WorkUnitEntity>()
-            .HasOne(x => x.Platform)
-            .WithMany()
-            .HasForeignKey(x => x.PlatformID);
+            entity
+                .HasOne(x => x.Platform)
+                .WithMany()
+                .HasForeignKey(x => x.PlatformID);
 
-        modelBuilder.Entity<WorkUnitEntity>()
-            .HasMany(x => x.Frames)
-            .WithOne()
-            .HasForeignKey(x => x.WorkUnitID);
+            entity
+                .HasMany(x => x.Frames)
+                .WithOne()
+                .HasForeignKey(x => x.WorkUnitID);
+        });
 
-        // Client NOT NULL properties
-        var clientBuilder = modelBuilder.Entity<ClientEntity>();
-        clientBuilder.Property(x => x.Name).IsRequired();
-        clientBuilder.Property(x => x.ConnectionString).IsRequired();
+        modelBuilder.Entity<ClientEntity>(entity =>
+        {
+            // Client NOT NULL properties
+            entity.Property(x => x.Name).IsRequired();
+            entity.Property(x => x.ConnectionString).IsRequired();
+        });
 
-        // Platform NOT NULL properties
-        var platformBuilder = modelBuilder.Entity<PlatformEntity>();
-        platformBuilder.Property(x => x.ClientVersion).IsRequired();
-        platformBuilder.Property(x => x.OperatingSystem).IsRequired();
-        platformBuilder.Property(x => x.Implementation).IsRequired();
-        platformBuilder.Property(x => x.Processor).IsRequired();
+        modelBuilder.Entity<PlatformEntity>(entity =>
+        {
+            // Platform NOT NULL properties
+            entity.Property(x => x.ClientVersion).IsRequired();
+            entity.Property(x => x.OperatingSystem).IsRequired();
+            entity.Property(x => x.Implementation).IsRequired();
+            entity.Property(x => x.Processor).IsRequired();
+        });
 
-        // Versions NOT NULL properties
-        var versionBuilder = modelBuilder.Entity<VersionEntity>();
-        versionBuilder.Property(x => x.Version).IsRequired();
+        modelBuilder.Entity<VersionEntity>(entity =>
+        {
+            // Versions NOT NULL properties
+            entity.Property(x => x.Version).IsRequired();
+        });
 
-        // WorkUnitFrame PK
-        modelBuilder.Entity<WorkUnitFrameEntity>()
-            .HasKey(x => new { x.WorkUnitID, x.FrameID });
+        modelBuilder.Entity<WorkUnitFrameEntity>(entity =>
+        {
+            // WorkUnitFrame PK
+            entity.HasKey(x => new { x.WorkUnitID, x.FrameID });
+        });
     }
 }
