@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 using HFM.Core.Data;
 using HFM.Forms.Controls;
@@ -85,7 +82,7 @@ namespace HFM.Forms.Views
         private static List<ListItem> GetQueryFieldChoices()
         {
             var columnChoices = new List<ListItem>();
-            string[] names = WorkUnitQueryParameter.GetColumnNames();
+            string[] names = Models.WorkUnitHistoryModel.GetColumnNames();
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Name], WorkUnitRowColumn.Name));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Path], WorkUnitRowColumn.Path));

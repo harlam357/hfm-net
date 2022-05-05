@@ -196,36 +196,5 @@ namespace HFM.Core.Data
         {
             return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, Operator, Value);
         }
-
-        public static string[] GetColumnNames()
-        {
-            // Indexes Must Match WorkUnitRowColumn enum defined in Enumerations.cs
-            return new[]
-            {
-                "ProjectID",
-                "Run",
-                "Clone",
-                "Gen",
-                "Name",
-                "Path",
-                "Username",
-                "Team",
-                "Core Version",
-                "Frames Completed",
-                "Frame Time (Seconds)",
-                "Unit Result",
-                "Assigned (UTC)",
-                "Finished (UTC)",
-                "Removed (Work Unit Name)",
-                "KFactor",
-                "Core Name",
-                "Total Frames",
-                "Atoms",
-                "Slot Type",
-                "PPD",
-                "Credit",
-                "Base Credit"
-            };
-        }
     }
 }

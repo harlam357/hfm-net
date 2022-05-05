@@ -347,5 +347,36 @@ namespace HFM.Forms.Models
         public ICollection<string> FormColumns { get; set; }
 
         #endregion
+
+        public static string[] GetColumnNames()
+        {
+            // Indexes Must Match WorkUnitRowColumn enum
+            return new[]
+            {
+                "ProjectID",
+                "Run",
+                "Clone",
+                "Gen",
+                "Name",
+                "Path",
+                "Username",
+                "Team",
+                "Core Version",
+                "Frames Completed",
+                "Frame Time (Seconds)",
+                "Unit Result",
+                "Assigned (UTC)",
+                "Finished (UTC)",
+                "Removed (Work Unit Name)",
+                "KFactor",
+                "Core Name",
+                "Total Frames",
+                "Atoms",
+                "Slot Type",
+                "PPD",
+                "Credit",
+                "Base Credit"
+            };
+        }
     }
 }

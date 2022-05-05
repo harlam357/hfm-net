@@ -186,7 +186,7 @@ namespace HFM.Forms.Views
             // Add Column Selector
             _columnSelector = new DataGridViewColumnSelector(dataGridView1);
 
-            string[] names = WorkUnitQueryParameter.GetColumnNames();
+            string[] names = WorkUnitHistoryModel.GetColumnNames();
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
             dataGridView1.AutoGenerateColumns = false;
