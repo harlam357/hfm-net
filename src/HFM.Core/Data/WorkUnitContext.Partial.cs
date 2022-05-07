@@ -102,7 +102,9 @@ public partial class WorkUnitContext
 
         return bonusCalculation switch
         {
-            BonusCalculation.DownloadTime => finishedDateTime.Subtract(assignedDateTime),
+            BonusCalculation.DownloadTime => finishedDateTime == default
+                ? TimeSpan.FromDays(frameTime * frames / oneDayInSeconds)
+                : finishedDateTime.Subtract(assignedDateTime),
             BonusCalculation.FrameTime => TimeSpan.FromDays(frameTime * frames / oneDayInSeconds),
             BonusCalculation.None => TimeSpan.FromDays(expirationDays)
         };
