@@ -45,7 +45,12 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
-                Platform = new WorkUnitPlatform("CUDA"),
+                Platform = new WorkUnitPlatform("CUDA")
+                {
+                    DriverVersion = "123",
+                    ComputeVersion = "456",
+                    CUDAVersion = "789"
+                },
                 UnitResult = WorkUnitResult.FinishedUnit,
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6),
@@ -137,9 +142,23 @@ public class WorkUnitContextRepositoryTests
             Assert.AreEqual("CUDA", platform.Implementation);
             Assert.AreEqual("AMD Ryzen 7 5800X", platform.Processor);
             Assert.AreEqual(14, platform.Threads);
-            Assert.AreEqual(null, platform.DriverVersion);
-            Assert.AreEqual(null, platform.ComputeVersion);
-            Assert.AreEqual(null, platform.CUDAVersion);
+            Assert.AreEqual("123", platform.DriverVersion);
+            Assert.AreEqual("456", platform.ComputeVersion);
+            Assert.AreEqual("789", platform.CUDAVersion);
+        }
+
+        [Test]
+        public void ThenPlatformIsMappedToWorkUnitRow()
+        {
+            var row = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).First();
+            Assert.AreEqual("7", row.ClientVersion);
+            Assert.AreEqual("Windows", row.OperatingSystem);
+            Assert.AreEqual("CUDA", row.PlatformImplementation);
+            Assert.AreEqual("AMD Ryzen 7 5800X", row.PlatformProcessor);
+            Assert.AreEqual(14, row.PlatformThreads);
+            Assert.AreEqual("123", row.DriverVersion);
+            Assert.AreEqual("456", row.ComputeVersion);
+            Assert.AreEqual("789", row.CUDAVersion);
         }
 
         [Test]
@@ -822,7 +841,7 @@ public class WorkUnitContextRepositoryTests
             [Test]
             public void ThenAllWorkUnitsAreReturned()
             {
-                Assert.AreEqual(89674, _result.Count);
+                Assert.AreEqual(99070, _result.Count);
             }
         }
 
@@ -864,8 +883,8 @@ public class WorkUnitContextRepositoryTests
             public void ThenThePageOfWorkUnitsIsReturned()
             {
                 Assert.AreEqual(1, _result.CurrentPage);
-                Assert.AreEqual(90, _result.TotalPages);
-                Assert.AreEqual(89674, _result.TotalItems);
+                Assert.AreEqual(100, _result.TotalPages);
+                Assert.AreEqual(99070, _result.TotalItems);
                 Assert.AreEqual(1000, _result.ItemsPerPage);
                 Assert.AreEqual(1000, _result.Items.Count);
             }
@@ -880,17 +899,17 @@ public class WorkUnitContextRepositoryTests
             public override void BeforeEach()
             {
                 base.BeforeEach();
-                _result = _repository.Page(90, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
+                _result = _repository.Page(100, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
             }
 
             [Test]
             public void ThenThePageOfWorkUnitsIsReturned()
             {
-                Assert.AreEqual(90, _result.CurrentPage);
-                Assert.AreEqual(90, _result.TotalPages);
-                Assert.AreEqual(89674, _result.TotalItems);
+                Assert.AreEqual(100, _result.CurrentPage);
+                Assert.AreEqual(100, _result.TotalPages);
+                Assert.AreEqual(99070, _result.TotalItems);
                 Assert.AreEqual(1000, _result.ItemsPerPage);
-                Assert.AreEqual(674, _result.Items.Count);
+                Assert.AreEqual(70, _result.Items.Count);
             }
         }
     }

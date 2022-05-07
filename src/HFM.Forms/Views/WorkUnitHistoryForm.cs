@@ -190,54 +190,48 @@ namespace HFM.Forms.Views
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
             dgv.AutoGenerateColumns = false;
+            AddColumn(WorkUnitRowColumn.ProjectID, names);
+            AddColumn(WorkUnitRowColumn.SlotName, names);
+            AddColumn(WorkUnitRowColumn.ConnectionString, names);
+            AddColumn(WorkUnitRowColumn.DonorName, names);
+            AddColumn(WorkUnitRowColumn.DonorTeam, names);
+            AddColumn(WorkUnitRowColumn.SlotType, names);
+            AddColumn(WorkUnitRowColumn.Core, names);
+            AddColumn(WorkUnitRowColumn.CoreVersion, names);
+            AddColumn(WorkUnitRowColumn.FrameTime, names);
+            AddColumn(WorkUnitRowColumn.KFactor, names);
+            AddColumn(WorkUnitRowColumn.PPD, names, numberFormat);
+            AddColumn(WorkUnitRowColumn.Assigned, names);
+            AddColumn(WorkUnitRowColumn.Finished, names);
+            AddColumn(WorkUnitRowColumn.Credit, names, numberFormat);
+            AddColumn(WorkUnitRowColumn.BaseCredit, names, numberFormat);
+            AddColumn(WorkUnitRowColumn.Frames, names);
+            AddColumn(WorkUnitRowColumn.FramesCompleted, names);
+            AddColumn(WorkUnitRowColumn.Result, names);
+            AddColumn(WorkUnitRowColumn.Atoms, names);
+            AddColumn(WorkUnitRowColumn.ProjectRun, names);
+            AddColumn(WorkUnitRowColumn.ProjectClone, names);
+            AddColumn(WorkUnitRowColumn.ProjectGen, names);
+            AddColumn(WorkUnitRowColumn.ClientVersion, names);
+            AddColumn(WorkUnitRowColumn.OperatingSystem, names);
+            AddColumn(WorkUnitRowColumn.PlatformImplementation, names);
+            AddColumn(WorkUnitRowColumn.PlatformProcessor, names);
+            AddColumn(WorkUnitRowColumn.PlatformThreads, names);
+            AddColumn(WorkUnitRowColumn.DriverVersion, names);
+            AddColumn(WorkUnitRowColumn.ComputeVersion, names);
+            AddColumn(WorkUnitRowColumn.CUDAVersion, names);
+        }
+
+        private void AddColumn(WorkUnitRowColumn column, IReadOnlyList<string> names, string numberFormat = null)
+        {
+            string columnName = column.ToString();
+            dgv.Columns.Add(columnName, names[(int)column]);
             // ReSharper disable PossibleNullReferenceException
-            dgv.Columns.Add(WorkUnitRowColumn.ProjectID.ToString(), names[(int)WorkUnitRowColumn.ProjectID]);
-            dgv.Columns[WorkUnitRowColumn.ProjectID.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectID.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.SlotName.ToString(), names[(int)WorkUnitRowColumn.SlotName]);
-            dgv.Columns[WorkUnitRowColumn.SlotName.ToString()].DataPropertyName = WorkUnitRowColumn.SlotName.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.ConnectionString.ToString(), names[(int)WorkUnitRowColumn.ConnectionString]);
-            dgv.Columns[WorkUnitRowColumn.ConnectionString.ToString()].DataPropertyName = WorkUnitRowColumn.ConnectionString.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.DonorName.ToString(), names[(int)WorkUnitRowColumn.DonorName]);
-            dgv.Columns[WorkUnitRowColumn.DonorName.ToString()].DataPropertyName = WorkUnitRowColumn.DonorName.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.DonorTeam.ToString(), names[(int)WorkUnitRowColumn.DonorTeam]);
-            dgv.Columns[WorkUnitRowColumn.DonorTeam.ToString()].DataPropertyName = WorkUnitRowColumn.DonorTeam.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.SlotType.ToString(), names[(int)WorkUnitRowColumn.SlotType]);
-            dgv.Columns[WorkUnitRowColumn.SlotType.ToString()].DataPropertyName = WorkUnitRowColumn.SlotType.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.Core.ToString(), names[(int)WorkUnitRowColumn.Core]);
-            dgv.Columns[WorkUnitRowColumn.Core.ToString()].DataPropertyName = WorkUnitRowColumn.Core.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.CoreVersion.ToString(), names[(int)WorkUnitRowColumn.CoreVersion]);
-            dgv.Columns[WorkUnitRowColumn.CoreVersion.ToString()].DataPropertyName = WorkUnitRowColumn.CoreVersion.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.FrameTime.ToString(), names[(int)WorkUnitRowColumn.FrameTime]);
-            dgv.Columns[WorkUnitRowColumn.FrameTime.ToString()].DataPropertyName = WorkUnitRowColumn.FrameTime.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.KFactor.ToString(), names[(int)WorkUnitRowColumn.KFactor]);
-            dgv.Columns[WorkUnitRowColumn.KFactor.ToString()].DataPropertyName = WorkUnitRowColumn.KFactor.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.PPD.ToString(), names[(int)WorkUnitRowColumn.PPD]);
-            dgv.Columns[WorkUnitRowColumn.PPD.ToString()].DataPropertyName = WorkUnitRowColumn.PPD.ToString();
-            dgv.Columns[WorkUnitRowColumn.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dgv.Columns.Add(WorkUnitRowColumn.Assigned.ToString(), names[(int)WorkUnitRowColumn.Assigned]);
-            dgv.Columns[WorkUnitRowColumn.Assigned.ToString()].DataPropertyName = WorkUnitRowColumn.Assigned.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.Finished.ToString(), names[(int)WorkUnitRowColumn.Finished]);
-            dgv.Columns[WorkUnitRowColumn.Finished.ToString()].DataPropertyName = WorkUnitRowColumn.Finished.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.Credit.ToString(), names[(int)WorkUnitRowColumn.Credit]);
-            dgv.Columns[WorkUnitRowColumn.Credit.ToString()].DataPropertyName = WorkUnitRowColumn.Credit.ToString();
-            dgv.Columns[WorkUnitRowColumn.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dgv.Columns.Add(WorkUnitRowColumn.BaseCredit.ToString(), names[(int)WorkUnitRowColumn.BaseCredit]);
-            dgv.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DataPropertyName = WorkUnitRowColumn.BaseCredit.ToString();
-            dgv.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dgv.Columns.Add(WorkUnitRowColumn.Frames.ToString(), names[(int)WorkUnitRowColumn.Frames]);
-            dgv.Columns[WorkUnitRowColumn.Frames.ToString()].DataPropertyName = WorkUnitRowColumn.Frames.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.FramesCompleted.ToString(), names[(int)WorkUnitRowColumn.FramesCompleted]);
-            dgv.Columns[WorkUnitRowColumn.FramesCompleted.ToString()].DataPropertyName = WorkUnitRowColumn.FramesCompleted.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.Result.ToString(), names[(int)WorkUnitRowColumn.Result]);
-            dgv.Columns[WorkUnitRowColumn.Result.ToString()].DataPropertyName = WorkUnitRowColumn.Result.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.Atoms.ToString(), names[(int)WorkUnitRowColumn.Atoms]);
-            dgv.Columns[WorkUnitRowColumn.Atoms.ToString()].DataPropertyName = WorkUnitRowColumn.Atoms.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.ProjectRun.ToString(), names[(int)WorkUnitRowColumn.ProjectRun]);
-            dgv.Columns[WorkUnitRowColumn.ProjectRun.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectRun.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.ProjectClone.ToString(), names[(int)WorkUnitRowColumn.ProjectClone]);
-            dgv.Columns[WorkUnitRowColumn.ProjectClone.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectClone.ToString();
-            dgv.Columns.Add(WorkUnitRowColumn.ProjectGen.ToString(), names[(int)WorkUnitRowColumn.ProjectGen]);
-            dgv.Columns[WorkUnitRowColumn.ProjectGen.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectGen.ToString();
+            dgv.Columns[columnName].DataPropertyName = columnName;
+            if (!String.IsNullOrEmpty(numberFormat))
+            {
+                dgv.Columns[columnName].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
+            }
             // ReSharper restore PossibleNullReferenceException
         }
 

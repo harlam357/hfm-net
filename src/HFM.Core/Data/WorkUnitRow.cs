@@ -30,7 +30,15 @@ public enum WorkUnitRowColumn
     SlotType = 19,
     PPD = 20,
     Credit = 21,
-    BaseCredit = 22
+    BaseCredit = 22,
+    ClientVersion = 23,
+    OperatingSystem = 24,
+    PlatformImplementation = 25,
+    PlatformProcessor = 26,
+    PlatformThreads = 27,
+    DriverVersion = 28,
+    ComputeVersion = 29,
+    CUDAVersion = 30
 }
 
 public class WorkUnitRow : IProjectInfo
@@ -60,4 +68,12 @@ public class WorkUnitRow : IProjectInfo
     public double PPD { get; set; }
     public double Credit { get; set; }
     public double BaseCredit { get; set; }
+    public string ClientVersion { get; set; }
+    public string OperatingSystem { get; set; }
+    public string PlatformImplementation { get; set; }
+    public string PlatformProcessor { get; set; }
+    public int? PlatformThreads { get; set; }
+    public string DriverVersion { get; set; }
+    public string ComputeVersion { get; set; }
+    public string CUDAVersion { get; set; }
 }

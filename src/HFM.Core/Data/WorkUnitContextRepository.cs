@@ -405,6 +405,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             .AsNoTracking()
             .Include(x => x.Client)
             .Include(x => x.Protein)
+            .Include(x => x.Platform)
             .Include(x => x.Frames)
             .Select(x => new WorkUnitEntity
             {
@@ -423,9 +424,11 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 FrameTimeInSeconds = x.FrameTimeInSeconds,
                 ProteinID = x.ProteinID,
                 ClientID = x.ClientID,
+                PlatformID = x.PlatformID,
                 ClientSlot = x.ClientSlot,
                 Protein = x.Protein,
                 Client = x.Client,
+                Platform = x.Platform,
                 Frames = x.Frames,
                 SlotName = WorkUnitContext.ToSlotName(x.Client.Name, x.ClientSlot),
                 SlotType = WorkUnitContext.ToSlotType(x.Protein.Core),

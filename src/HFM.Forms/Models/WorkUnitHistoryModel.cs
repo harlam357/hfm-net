@@ -375,7 +375,15 @@ namespace HFM.Forms.Models
                 "Slot Type",
                 "PPD",
                 "Credit",
-                "Base Credit"
+                "Base Credit",
+                "Client Version",
+                "Operating System",
+                "Platform",
+                "Processor",
+                "Threads",
+                "Driver Version",
+                "Compute Version",
+                "CUDA Version"
             };
         }
     }
