@@ -438,7 +438,7 @@ namespace HFM.Core.Data
         #region Delete
 
         [Test]
-        public void WorkUnitContextRepository_Delete_Test()
+        public async Task WorkUnitContextRepository_DeleteAsync_Test()
         {
             // Arrange
             Initialize(_testDataFileCopy);
@@ -446,17 +446,17 @@ namespace HFM.Core.Data
             // Assert (pre-condition)
             Assert.AreEqual(44, entries.Count);
             // Act
-            Assert.AreEqual(1, _repository.Delete(entries[14]));
+            Assert.AreEqual(1, await _repository.DeleteAsync(entries[14]));
             // Assert
             entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(43, entries.Count);
         }
 
         [Test]
-        public void WorkUnitContextRepository_Delete_NotExist_Test()
+        public async Task WorkUnitContextRepository_DeleteAsync_NotExist_Test()
         {
             Initialize(_testDataFileCopy);
-            Assert.AreEqual(0, _repository.Delete(new WorkUnitRow { ID = 100 }));
+            Assert.AreEqual(0, await _repository.DeleteAsync(new WorkUnitRow { ID = 100 }));
         }
 
         #endregion

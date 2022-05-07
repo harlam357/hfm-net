@@ -763,7 +763,7 @@ public class WorkUnitContextRepositoryTests
         private int _deleteResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -813,7 +813,7 @@ public class WorkUnitContextRepositoryTests
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, processor: "Ryzen", threads: 16);
             long workUnitID = _repository.Update(workUnitModel);
 
-            _deleteResult = _repository.Delete(new WorkUnitRow { ID = workUnitID });
+            _deleteResult = await _repository.DeleteAsync(new WorkUnitRow { ID = workUnitID });
         }
 
         [TearDown]

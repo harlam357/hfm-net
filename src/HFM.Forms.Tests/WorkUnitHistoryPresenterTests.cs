@@ -207,7 +207,7 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_DeleteWorkUnitClick_AsksYesNoQuestionAndDeletesSelectedRow()
+        public async Task WorkUnitHistoryPresenter_DeleteWorkUnitClick_AsksYesNoQuestionAndDeletesSelectedRow()
         {
             // Arrange
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
@@ -216,21 +216,21 @@ namespace HFM.Forms
             presenter.Model.HistoryBindingSource.ResetBindings(false);
 
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Delete(It.IsAny<WorkUnitRow>())).Returns(1);
+            mockRepository.Setup(x => x.DeleteAsync(It.IsAny<WorkUnitRow>())).Returns(Task.FromResult(1));
             // Act
-            presenter.DeleteWorkUnitClick();
+            await presenter.DeleteWorkUnitClick();
             // Assert
             Assert.AreEqual(1, messageBox.Invocations.Count);
             mockRepository.Verify();
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_DeleteWorkUnitClick_ShowsMessageBoxWhenNoRowIsSelected()
+        public async Task WorkUnitHistoryPresenter_DeleteWorkUnitClick_ShowsMessageBoxWhenNoRowIsSelected()
         {
             // Arrange
             var presenter = CreatePresenter();
             // Act
-            presenter.DeleteWorkUnitClick();
+            await presenter.DeleteWorkUnitClick();
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);

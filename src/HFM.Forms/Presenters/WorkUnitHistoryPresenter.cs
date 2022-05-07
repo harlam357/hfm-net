@@ -175,7 +175,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public void DeleteWorkUnitClick()
+        public async Task DeleteWorkUnitClick()
         {
             var entry = Model.SelectedWorkUnitRow;
             if (entry == null)
@@ -187,7 +187,7 @@ namespace HFM.Forms.Presenters
                 var result = MessageBox.AskYesNoQuestion(Form, "Are you sure?  This operation cannot be undone.", Core.Application.NameAndVersion);
                 if (result == DialogResult.Yes)
                 {
-                    Model.DeleteHistoryEntry(entry);
+                    await Model.DeleteHistoryEntry(entry).ConfigureAwait(true);
                 }
             }
         }

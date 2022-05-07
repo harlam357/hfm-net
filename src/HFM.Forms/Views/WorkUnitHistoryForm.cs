@@ -266,10 +266,8 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void DeleteWorkUnit_Click(object sender, EventArgs e)
-        {
-            _presenter.DeleteWorkUnitClick();
-        }
+        private async void DeleteWorkUnit_Click(object sender, EventArgs e) =>
+            await _presenter.DeleteWorkUnitClick().ConfigureAwait(true);
 
         private void CopyPRCGToClipboard_Click(object sender, EventArgs e)
         {

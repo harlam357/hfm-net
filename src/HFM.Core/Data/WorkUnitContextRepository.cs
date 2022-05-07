@@ -28,7 +28,7 @@ public interface IWorkUnitRepository
 {
     long Update(WorkUnitModel workUnitModel);
 
-    int Delete(WorkUnitRow row);
+    Task<int> DeleteAsync(WorkUnitRow row);
 
     IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
@@ -316,16 +316,16 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         context.SaveChanges();
     }
 
-    public int Delete(WorkUnitRow row)
+    public async Task<int> DeleteAsync(WorkUnitRow row)
     {
         using var context = CreateWorkUnitContext();
-        var workUnit = context.WorkUnits.Find(row.ID);
+        var workUnit = await context.WorkUnits.FindAsync(row.ID).ConfigureAwait(false);
         if (workUnit is null)
         {
             return 0;
         }
         context.WorkUnits.Remove(workUnit);
-        return context.SaveChanges();
+        return await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)

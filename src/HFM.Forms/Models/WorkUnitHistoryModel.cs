@@ -154,9 +154,10 @@ namespace HFM.Forms.Models
             QueryBindingSource.ResetBindings(false);
         }
 
-        public void DeleteHistoryEntry(WorkUnitRow row)
+        public async Task DeleteHistoryEntry(WorkUnitRow row)
         {
-            if (Repository.Delete(row) != 0)
+            int result = await Repository.DeleteAsync(row).ConfigureAwait(true);
+            if (result != 0)
             {
                 _page.Items.Remove(row);
                 _page.TotalItems--;
