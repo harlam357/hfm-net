@@ -241,18 +241,17 @@ namespace HFM.Core.Client
         public void Client_Slots_IsThreadSafe()
         {
             // Arrange
-            using var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var token = cts.Token;
 
             var client = new TestClientRefreshesSlots();
 
             _ = Task.Run(() =>
             {
-                while (!token.IsCancellationRequested)
-                {
-                    // ReSharper disable once AccessToDisposedClosure
-                    client.RefreshSlots();
-                }
+                token.ThrowIfCancellationRequested();
+
+                // ReSharper disable once AccessToDisposedClosure
+                client.RefreshSlots();
             }, token);
 
             const int count = 10;
@@ -260,18 +259,27 @@ namespace HFM.Core.Client
             var tasks = Enumerable.Range(0, count)
                 .Select(_ => Task.Run(() =>
                 {
+                    token.ThrowIfCancellationRequested();
+
                     Thread.Sleep(10);
                     // ReSharper disable once AccessToDisposedClosure
                     foreach (var x in client.Slots)
                     {
                         // enumeration of client slots
                     }
-                }))
+                }, token))
                 .ToArray();
 
             try
             {
                 Task.WaitAll(tasks);
+            }
+            catch (AggregateException aggEx)
+            {
+                if (!aggEx.InnerExceptions.Any(x => x is OperationCanceledException))
+                {
+                    Assert.Fail("Enumeration failed");
+                }
             }
             catch (Exception)
             {
