@@ -58,7 +58,7 @@ namespace HFM.Forms.Views
             PageNumberTextBox.BindText(model, nameof(WorkUnitHistoryModel.CurrentPage));
             ResultNumberUpDownControl.DataBindings.Add("Value", model, nameof(WorkUnitHistoryModel.ShowEntriesValue), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            dataGridView1.DataSource = model.HistoryBindingSource;
+            dgv.DataSource = model.HistoryBindingSource;
 
             Location = model.FormLocation;
             LocationChanged += (s, e) => model.FormLocation = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
@@ -82,7 +82,7 @@ namespace HFM.Forms.Views
             var formColumns = new List<string>();
             int i = 0;
 
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            foreach (DataGridViewColumn column in dgv.Columns)
             {
                 formColumns.Add(String.Format(CultureInfo.InvariantCulture,
                                         "{0},{1},{2},{3}",
@@ -107,11 +107,11 @@ namespace HFM.Forms.Views
             {
                 string[] tokens = col.Split(',');
                 int index = Int32.Parse(tokens[3]);
-                if (dataGridView1.Columns.Count > index)
+                if (dgv.Columns.Count > index)
                 {
-                    dataGridView1.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
-                    dataGridView1.Columns[index].Width = Int32.Parse(tokens[1]);
-                    dataGridView1.Columns[index].Visible = Boolean.Parse(tokens[2]);
+                    dgv.Columns[index].DisplayIndex = Int32.Parse(tokens[0]);
+                    dgv.Columns[index].Width = Int32.Parse(tokens[1]);
+                    dgv.Columns[index].Visible = Boolean.Parse(tokens[2]);
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace HFM.Forms.Views
             // this can take quite a while... should limit it to
             // the visible entries if possible... if not then some
             // set number like 100 entries.
-            dataGridView1.AutoResizeColumns();
+            dgv.AutoResizeColumns();
         }
 
         private void FirstPageButton_Click(object sender, EventArgs e)
@@ -184,60 +184,60 @@ namespace HFM.Forms.Views
         private void SetupDataGridView(IPreferences preferences)
         {
             // Add Column Selector
-            _columnSelector = new DataGridViewColumnSelector(dataGridView1);
+            _columnSelector = new DataGridViewColumnSelector(dgv);
 
             string[] names = WorkUnitHistoryModel.GetColumnNames();
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
-            dataGridView1.AutoGenerateColumns = false;
+            dgv.AutoGenerateColumns = false;
             // ReSharper disable PossibleNullReferenceException
-            dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectID.ToString(), names[(int)WorkUnitRowColumn.ProjectID]);
-            dataGridView1.Columns[WorkUnitRowColumn.ProjectID.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectID.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.SlotName.ToString(), names[(int)WorkUnitRowColumn.SlotName]);
-            dataGridView1.Columns[WorkUnitRowColumn.SlotName.ToString()].DataPropertyName = WorkUnitRowColumn.SlotName.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.ConnectionString.ToString(), names[(int)WorkUnitRowColumn.ConnectionString]);
-            dataGridView1.Columns[WorkUnitRowColumn.ConnectionString.ToString()].DataPropertyName = WorkUnitRowColumn.ConnectionString.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.DonorName.ToString(), names[(int)WorkUnitRowColumn.DonorName]);
-            dataGridView1.Columns[WorkUnitRowColumn.DonorName.ToString()].DataPropertyName = WorkUnitRowColumn.DonorName.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.DonorTeam.ToString(), names[(int)WorkUnitRowColumn.DonorTeam]);
-            dataGridView1.Columns[WorkUnitRowColumn.DonorTeam.ToString()].DataPropertyName = WorkUnitRowColumn.DonorTeam.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.SlotType.ToString(), names[(int)WorkUnitRowColumn.SlotType]);
-            dataGridView1.Columns[WorkUnitRowColumn.SlotType.ToString()].DataPropertyName = WorkUnitRowColumn.SlotType.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Core.ToString(), names[(int)WorkUnitRowColumn.Core]);
-            dataGridView1.Columns[WorkUnitRowColumn.Core.ToString()].DataPropertyName = WorkUnitRowColumn.Core.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.CoreVersion.ToString(), names[(int)WorkUnitRowColumn.CoreVersion]);
-            dataGridView1.Columns[WorkUnitRowColumn.CoreVersion.ToString()].DataPropertyName = WorkUnitRowColumn.CoreVersion.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.FrameTime.ToString(), names[(int)WorkUnitRowColumn.FrameTime]);
-            dataGridView1.Columns[WorkUnitRowColumn.FrameTime.ToString()].DataPropertyName = WorkUnitRowColumn.FrameTime.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.KFactor.ToString(), names[(int)WorkUnitRowColumn.KFactor]);
-            dataGridView1.Columns[WorkUnitRowColumn.KFactor.ToString()].DataPropertyName = WorkUnitRowColumn.KFactor.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.PPD.ToString(), names[(int)WorkUnitRowColumn.PPD]);
-            dataGridView1.Columns[WorkUnitRowColumn.PPD.ToString()].DataPropertyName = WorkUnitRowColumn.PPD.ToString();
-            dataGridView1.Columns[WorkUnitRowColumn.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Assigned.ToString(), names[(int)WorkUnitRowColumn.Assigned]);
-            dataGridView1.Columns[WorkUnitRowColumn.Assigned.ToString()].DataPropertyName = WorkUnitRowColumn.Assigned.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Finished.ToString(), names[(int)WorkUnitRowColumn.Finished]);
-            dataGridView1.Columns[WorkUnitRowColumn.Finished.ToString()].DataPropertyName = WorkUnitRowColumn.Finished.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Credit.ToString(), names[(int)WorkUnitRowColumn.Credit]);
-            dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DataPropertyName = WorkUnitRowColumn.Credit.ToString();
-            dataGridView1.Columns[WorkUnitRowColumn.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dataGridView1.Columns.Add(WorkUnitRowColumn.BaseCredit.ToString(), names[(int)WorkUnitRowColumn.BaseCredit]);
-            dataGridView1.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DataPropertyName = WorkUnitRowColumn.BaseCredit.ToString();
-            dataGridView1.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Frames.ToString(), names[(int)WorkUnitRowColumn.Frames]);
-            dataGridView1.Columns[WorkUnitRowColumn.Frames.ToString()].DataPropertyName = WorkUnitRowColumn.Frames.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.FramesCompleted.ToString(), names[(int)WorkUnitRowColumn.FramesCompleted]);
-            dataGridView1.Columns[WorkUnitRowColumn.FramesCompleted.ToString()].DataPropertyName = WorkUnitRowColumn.FramesCompleted.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Result.ToString(), names[(int)WorkUnitRowColumn.Result]);
-            dataGridView1.Columns[WorkUnitRowColumn.Result.ToString()].DataPropertyName = WorkUnitRowColumn.Result.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Atoms.ToString(), names[(int)WorkUnitRowColumn.Atoms]);
-            dataGridView1.Columns[WorkUnitRowColumn.Atoms.ToString()].DataPropertyName = WorkUnitRowColumn.Atoms.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectRun.ToString(), names[(int)WorkUnitRowColumn.ProjectRun]);
-            dataGridView1.Columns[WorkUnitRowColumn.ProjectRun.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectRun.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectClone.ToString(), names[(int)WorkUnitRowColumn.ProjectClone]);
-            dataGridView1.Columns[WorkUnitRowColumn.ProjectClone.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectClone.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectGen.ToString(), names[(int)WorkUnitRowColumn.ProjectGen]);
-            dataGridView1.Columns[WorkUnitRowColumn.ProjectGen.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectGen.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.ProjectID.ToString(), names[(int)WorkUnitRowColumn.ProjectID]);
+            dgv.Columns[WorkUnitRowColumn.ProjectID.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectID.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.SlotName.ToString(), names[(int)WorkUnitRowColumn.SlotName]);
+            dgv.Columns[WorkUnitRowColumn.SlotName.ToString()].DataPropertyName = WorkUnitRowColumn.SlotName.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.ConnectionString.ToString(), names[(int)WorkUnitRowColumn.ConnectionString]);
+            dgv.Columns[WorkUnitRowColumn.ConnectionString.ToString()].DataPropertyName = WorkUnitRowColumn.ConnectionString.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.DonorName.ToString(), names[(int)WorkUnitRowColumn.DonorName]);
+            dgv.Columns[WorkUnitRowColumn.DonorName.ToString()].DataPropertyName = WorkUnitRowColumn.DonorName.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.DonorTeam.ToString(), names[(int)WorkUnitRowColumn.DonorTeam]);
+            dgv.Columns[WorkUnitRowColumn.DonorTeam.ToString()].DataPropertyName = WorkUnitRowColumn.DonorTeam.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.SlotType.ToString(), names[(int)WorkUnitRowColumn.SlotType]);
+            dgv.Columns[WorkUnitRowColumn.SlotType.ToString()].DataPropertyName = WorkUnitRowColumn.SlotType.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.Core.ToString(), names[(int)WorkUnitRowColumn.Core]);
+            dgv.Columns[WorkUnitRowColumn.Core.ToString()].DataPropertyName = WorkUnitRowColumn.Core.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.CoreVersion.ToString(), names[(int)WorkUnitRowColumn.CoreVersion]);
+            dgv.Columns[WorkUnitRowColumn.CoreVersion.ToString()].DataPropertyName = WorkUnitRowColumn.CoreVersion.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.FrameTime.ToString(), names[(int)WorkUnitRowColumn.FrameTime]);
+            dgv.Columns[WorkUnitRowColumn.FrameTime.ToString()].DataPropertyName = WorkUnitRowColumn.FrameTime.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.KFactor.ToString(), names[(int)WorkUnitRowColumn.KFactor]);
+            dgv.Columns[WorkUnitRowColumn.KFactor.ToString()].DataPropertyName = WorkUnitRowColumn.KFactor.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.PPD.ToString(), names[(int)WorkUnitRowColumn.PPD]);
+            dgv.Columns[WorkUnitRowColumn.PPD.ToString()].DataPropertyName = WorkUnitRowColumn.PPD.ToString();
+            dgv.Columns[WorkUnitRowColumn.PPD.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
+            dgv.Columns.Add(WorkUnitRowColumn.Assigned.ToString(), names[(int)WorkUnitRowColumn.Assigned]);
+            dgv.Columns[WorkUnitRowColumn.Assigned.ToString()].DataPropertyName = WorkUnitRowColumn.Assigned.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.Finished.ToString(), names[(int)WorkUnitRowColumn.Finished]);
+            dgv.Columns[WorkUnitRowColumn.Finished.ToString()].DataPropertyName = WorkUnitRowColumn.Finished.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.Credit.ToString(), names[(int)WorkUnitRowColumn.Credit]);
+            dgv.Columns[WorkUnitRowColumn.Credit.ToString()].DataPropertyName = WorkUnitRowColumn.Credit.ToString();
+            dgv.Columns[WorkUnitRowColumn.Credit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
+            dgv.Columns.Add(WorkUnitRowColumn.BaseCredit.ToString(), names[(int)WorkUnitRowColumn.BaseCredit]);
+            dgv.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DataPropertyName = WorkUnitRowColumn.BaseCredit.ToString();
+            dgv.Columns[WorkUnitRowColumn.BaseCredit.ToString()].DefaultCellStyle = new DataGridViewCellStyle { Format = numberFormat };
+            dgv.Columns.Add(WorkUnitRowColumn.Frames.ToString(), names[(int)WorkUnitRowColumn.Frames]);
+            dgv.Columns[WorkUnitRowColumn.Frames.ToString()].DataPropertyName = WorkUnitRowColumn.Frames.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.FramesCompleted.ToString(), names[(int)WorkUnitRowColumn.FramesCompleted]);
+            dgv.Columns[WorkUnitRowColumn.FramesCompleted.ToString()].DataPropertyName = WorkUnitRowColumn.FramesCompleted.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.Result.ToString(), names[(int)WorkUnitRowColumn.Result]);
+            dgv.Columns[WorkUnitRowColumn.Result.ToString()].DataPropertyName = WorkUnitRowColumn.Result.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.Atoms.ToString(), names[(int)WorkUnitRowColumn.Atoms]);
+            dgv.Columns[WorkUnitRowColumn.Atoms.ToString()].DataPropertyName = WorkUnitRowColumn.Atoms.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.ProjectRun.ToString(), names[(int)WorkUnitRowColumn.ProjectRun]);
+            dgv.Columns[WorkUnitRowColumn.ProjectRun.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectRun.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.ProjectClone.ToString(), names[(int)WorkUnitRowColumn.ProjectClone]);
+            dgv.Columns[WorkUnitRowColumn.ProjectClone.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectClone.ToString();
+            dgv.Columns.Add(WorkUnitRowColumn.ProjectGen.ToString(), names[(int)WorkUnitRowColumn.ProjectGen]);
+            dgv.Columns[WorkUnitRowColumn.ProjectGen.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectGen.ToString();
             // ReSharper restore PossibleNullReferenceException
         }
 
@@ -245,7 +245,7 @@ namespace HFM.Forms.Views
         {
             using (var sf = new StringFormat { Alignment = StringAlignment.Center })
             {
-                if (e.ColumnIndex < 0 && e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
+                if (e.ColumnIndex < 0 && e.RowIndex >= 0 && e.RowIndex < dgv.Rows.Count)
                 {
                     e.PaintBackground(e.ClipBounds, true);
                     e.Graphics.DrawString((e.RowIndex + 1).ToString(), Font, Brushes.Black, e.CellBounds, sf);
@@ -256,18 +256,18 @@ namespace HFM.Forms.Views
 
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
-            DataGridView.HitTestInfo hti = dataGridView1.HitTest(e.X, e.Y);
+            DataGridView.HitTestInfo hti = dgv.HitTest(e.X, e.Y);
             if (e.Button == MouseButtons.Right)
             {
                 if (hti.Type == DataGridViewHitTestType.RowHeader ||
                     hti.Type == DataGridViewHitTestType.Cell)
                 {
                     int columnIndex = hti.ColumnIndex < 0 ? 0 : hti.ColumnIndex;
-                    if (dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected == false)
+                    if (dgv.Rows[hti.RowIndex].Cells[columnIndex].Selected == false)
                     {
-                        dataGridView1.Rows[hti.RowIndex].Cells[columnIndex].Selected = true;
+                        dgv.Rows[hti.RowIndex].Cells[columnIndex].Selected = true;
                     }
-                    dataGridMenuStrip.Show(dataGridView1.PointToScreen(new Point(e.X, e.Y)));
+                    dataGridMenuStrip.Show(dgv.PointToScreen(new Point(e.X, e.Y)));
                 }
             }
         }

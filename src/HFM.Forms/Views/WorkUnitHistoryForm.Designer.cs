@@ -34,7 +34,7 @@ namespace HFM.Forms.Views
             this.dataGridMenuItemDeleteWorkUnit = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridMenuItemSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.dataGridMenuItemCopyPRCG = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView1 = new HFM.Forms.Controls.DataGridViewExt();
+            this.dgv = new HFM.Forms.Controls.DataGridViewExt();
             this.ResultsLabel = new System.Windows.Forms.Label();
             this.ResultNumberUpDownControl = new System.Windows.Forms.NumericUpDown();
             this.ResultsTextBox = new System.Windows.Forms.TextBox();
@@ -59,7 +59,7 @@ namespace HFM.Forms.Views
             this.splitContainerWrapper1 = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.dataGridMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResultNumberUpDownControl)).BeginInit();
             this.rdoPanelProduction.SuspendLayout();
             this.DataViewGroupBox.SuspendLayout();
@@ -162,15 +162,15 @@ namespace HFM.Forms.Views
             this.dataGridMenuItemCopyPRCG.Text = "Copy PCRG to Clipboard";
             this.dataGridMenuItemCopyPRCG.Click += new System.EventHandler(this.CopyPRCGToClipboard_Click);
             // 
-            // dataGridView1
+            // dgv
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dgv.AllowUserToAddRows = false;
+            this.dgv.AllowUserToDeleteRows = false;
+            this.dgv.AllowUserToOrderColumns = true;
+            this.dgv.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dgv.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgv.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -178,8 +178,8 @@ namespace HFM.Forms.Views
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -187,12 +187,12 @@ namespace HFM.Forms.Views
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
+            this.dgv.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv.Location = new System.Drawing.Point(0, 0);
+            this.dgv.MultiSelect = false;
+            this.dgv.Name = "dgv";
+            this.dgv.ReadOnly = true;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -200,14 +200,14 @@ namespace HFM.Forms.Views
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.RowTemplate.Height = 18;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.ShowCellToolTips = false;
-            this.dataGridView1.Size = new System.Drawing.Size(903, 198);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
-            this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
+            this.dgv.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgv.RowTemplate.Height = 18;
+            this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv.ShowCellToolTips = false;
+            this.dgv.Size = new System.Drawing.Size(903, 198);
+            this.dgv.TabIndex = 0;
+            this.dgv.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+            this.dgv.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
             // 
             // ResultsLabel
             // 
@@ -455,7 +455,7 @@ namespace HFM.Forms.Views
             // 
             // splitContainerWrapper1.Panel2
             // 
-            this.splitContainerWrapper1.Panel2.Controls.Add(this.dataGridView1);
+            this.splitContainerWrapper1.Panel2.Controls.Add(this.dgv);
             this.splitContainerWrapper1.Size = new System.Drawing.Size(903, 292);
             this.splitContainerWrapper1.SplitterDistance = 90;
             this.splitContainerWrapper1.TabIndex = 8;
@@ -476,7 +476,7 @@ namespace HFM.Forms.Views
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.dataGridMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ResultNumberUpDownControl)).EndInit();
             this.rdoPanelProduction.ResumeLayout(false);
             this.rdoPanelProduction.PerformLayout();
@@ -500,7 +500,7 @@ namespace HFM.Forms.Views
         private System.Windows.Forms.ToolStripMenuItem mnuViewAutoSizeGrid;
         private System.Windows.Forms.ContextMenuStrip dataGridMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem dataGridMenuItemDeleteWorkUnit;
-        private DataGridViewExt dataGridView1;
+        private DataGridViewExt dgv;
         private System.Windows.Forms.Label ResultsLabel;
         private System.Windows.Forms.NumericUpDown ResultNumberUpDownControl;
         private System.Windows.Forms.TextBox ResultsTextBox;
