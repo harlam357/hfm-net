@@ -193,14 +193,14 @@ namespace HFM.Forms.Views
             // ReSharper disable PossibleNullReferenceException
             dataGridView1.Columns.Add(WorkUnitRowColumn.ProjectID.ToString(), names[(int)WorkUnitRowColumn.ProjectID]);
             dataGridView1.Columns[WorkUnitRowColumn.ProjectID.ToString()].DataPropertyName = WorkUnitRowColumn.ProjectID.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Name.ToString(), names[(int)WorkUnitRowColumn.Name]);
-            dataGridView1.Columns[WorkUnitRowColumn.Name.ToString()].DataPropertyName = WorkUnitRowColumn.Name.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Path.ToString(), names[(int)WorkUnitRowColumn.Path]);
-            dataGridView1.Columns[WorkUnitRowColumn.Path.ToString()].DataPropertyName = WorkUnitRowColumn.Path.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Username.ToString(), names[(int)WorkUnitRowColumn.Username]);
-            dataGridView1.Columns[WorkUnitRowColumn.Username.ToString()].DataPropertyName = WorkUnitRowColumn.Username.ToString();
-            dataGridView1.Columns.Add(WorkUnitRowColumn.Team.ToString(), names[(int)WorkUnitRowColumn.Team]);
-            dataGridView1.Columns[WorkUnitRowColumn.Team.ToString()].DataPropertyName = WorkUnitRowColumn.Team.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.SlotName.ToString(), names[(int)WorkUnitRowColumn.SlotName]);
+            dataGridView1.Columns[WorkUnitRowColumn.SlotName.ToString()].DataPropertyName = WorkUnitRowColumn.SlotName.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.ConnectionString.ToString(), names[(int)WorkUnitRowColumn.ConnectionString]);
+            dataGridView1.Columns[WorkUnitRowColumn.ConnectionString.ToString()].DataPropertyName = WorkUnitRowColumn.ConnectionString.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.DonorName.ToString(), names[(int)WorkUnitRowColumn.DonorName]);
+            dataGridView1.Columns[WorkUnitRowColumn.DonorName.ToString()].DataPropertyName = WorkUnitRowColumn.DonorName.ToString();
+            dataGridView1.Columns.Add(WorkUnitRowColumn.DonorTeam.ToString(), names[(int)WorkUnitRowColumn.DonorTeam]);
+            dataGridView1.Columns[WorkUnitRowColumn.DonorTeam.ToString()].DataPropertyName = WorkUnitRowColumn.DonorTeam.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.SlotType.ToString(), names[(int)WorkUnitRowColumn.SlotType]);
             dataGridView1.Columns[WorkUnitRowColumn.SlotType.ToString()].DataPropertyName = WorkUnitRowColumn.SlotType.ToString();
             dataGridView1.Columns.Add(WorkUnitRowColumn.Core.ToString(), names[(int)WorkUnitRowColumn.Core]);

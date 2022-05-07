@@ -47,7 +47,7 @@ namespace HFM.Core.Data
             for (int i = 0; i < 5; i++)
             {
                 list.Add(new WorkUnitQuery("Test" + i)
-                    .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "Test" + i));
+                    .AddParameter(WorkUnitRowColumn.SlotName, WorkUnitQueryOperator.Equal, "Test" + i));
             }
 
             return list;
@@ -59,7 +59,7 @@ namespace HFM.Core.Data
             {
                 WorkUnitQuery workUnitQuery = list[i];
                 Assert.AreEqual("Test" + i, workUnitQuery.Name);
-                Assert.AreEqual(WorkUnitRowColumn.Name, workUnitQuery.Parameters[0].Column);
+                Assert.AreEqual(WorkUnitRowColumn.SlotName, workUnitQuery.Parameters[0].Column);
                 Assert.AreEqual(WorkUnitQueryOperator.Equal, workUnitQuery.Parameters[0].Operator);
                 Assert.AreEqual("Test" + i, workUnitQuery.Parameters[0].Value);
             }

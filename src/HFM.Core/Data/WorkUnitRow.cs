@@ -12,10 +12,10 @@ public enum WorkUnitRowColumn
     ProjectRun = 1,
     ProjectClone = 2,
     ProjectGen = 3,
-    Name = 4,
-    Path = 5,
-    Username = 6,
-    Team = 7,
+    SlotName = 4,
+    ConnectionString = 5,
+    DonorName = 6,
+    DonorTeam = 7,
     CoreVersion = 8,
     FramesCompleted = 9,
     FrameTime = 10,
@@ -40,10 +40,10 @@ public class WorkUnitRow : IProjectInfo
     public int ProjectRun { get; set; }
     public int ProjectClone { get; set; }
     public int ProjectGen { get; set; }
-    public string Name { get; set; }
-    public string Path { get; set; }
-    public string Username { get; set; }
-    public int Team { get; set; }
+    public string SlotName { get; set; }
+    public string ConnectionString { get; set; }
+    public string DonorName { get; set; }
+    public int DonorTeam { get; set; }
     public string CoreVersion { get; set; }
     public int FramesCompleted { get; set; }
     public TimeSpan FrameTime => TimeSpan.FromSeconds(FrameTimeInSeconds);

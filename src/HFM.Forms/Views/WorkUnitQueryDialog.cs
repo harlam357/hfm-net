@@ -84,10 +84,10 @@ namespace HFM.Forms.Views
             var columnChoices = new List<ListItem>();
             string[] names = Models.WorkUnitHistoryModel.GetColumnNames();
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Name], WorkUnitRowColumn.Name));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Path], WorkUnitRowColumn.Path));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Username], WorkUnitRowColumn.Username));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Team], WorkUnitRowColumn.Team));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.SlotName], WorkUnitRowColumn.SlotName));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ConnectionString], WorkUnitRowColumn.ConnectionString));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DonorName], WorkUnitRowColumn.DonorName));
+            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DonorTeam], WorkUnitRowColumn.DonorTeam));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.SlotType], WorkUnitRowColumn.SlotType));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Core], WorkUnitRowColumn.Core));
             columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.CoreVersion], WorkUnitRowColumn.CoreVersion));

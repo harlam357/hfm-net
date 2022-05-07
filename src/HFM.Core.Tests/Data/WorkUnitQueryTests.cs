@@ -18,7 +18,7 @@ namespace HFM.Core.Data
         {
             // Arrange
             var query = new WorkUnitQuery("Test")
-                .AddParameter(WorkUnitRowColumn.Name, WorkUnitQueryOperator.Equal, "Test Instance")
+                .AddParameter(WorkUnitRowColumn.SlotName, WorkUnitQueryOperator.Equal, "Test Instance")
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan, new DateTime(2000, 1, 1));
             // Act
             var copy = query.DeepClone();

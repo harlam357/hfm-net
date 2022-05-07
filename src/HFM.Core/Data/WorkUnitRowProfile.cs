@@ -9,10 +9,8 @@ public class WorkUnitRowProfile : Profile
     public WorkUnitRowProfile()
     {
         CreateMap<WorkUnitEntity, WorkUnitRow>()
-            .ForMember(x => x.Name, opt => opt.MapFrom<WorkUnitRowNameValueResolver>())
-            .ForMember(x => x.Path, opt => opt.MapFrom<WorkUnitRowPathValueResolver>())
-            .ForMember(x => x.Username, opt => opt.MapFrom(src => src.DonorName))
-            .ForMember(x => x.Team, opt => opt.MapFrom(src => src.DonorTeam))
+            .ForMember(x => x.SlotName, opt => opt.MapFrom<WorkUnitRowSlotNameValueResolver>())
+            .ForMember(x => x.ConnectionString, opt => opt.MapFrom<WorkUnitRowConnectionStringValueResolver>())
             .ForMember(x => x.ProjectID, opt => opt.MapFrom(src => src.Protein.ProjectID))
             .ForMember(x => x.KFactor, opt => opt.MapFrom(src => src.Protein.KFactor))
             .ForMember(x => x.Core, opt => opt.MapFrom(src => src.Protein.Core))
@@ -24,7 +22,7 @@ public class WorkUnitRowProfile : Profile
             .ForMember(x => x.SlotType, opt => opt.MapFrom(src => ConvertToSlotType.FromCoreName(src.Protein.Core)));
     }
 
-    private class WorkUnitRowNameValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
+    private class WorkUnitRowSlotNameValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
     {
         public string Resolve(WorkUnitEntity source, WorkUnitRow destination, string destMember, ResolutionContext context)
         {
@@ -36,7 +34,7 @@ public class WorkUnitRowProfile : Profile
         }
     }
 
-    private class WorkUnitRowPathValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
+    private class WorkUnitRowConnectionStringValueResolver : IValueResolver<WorkUnitEntity, WorkUnitRow, string>
     {
         public string Resolve(WorkUnitEntity source, WorkUnitRow destination, string destMember, ResolutionContext context)
         {
