@@ -162,6 +162,27 @@ public class WorkUnitContextRepositoryTests
         }
 
         [Test]
+        public void ThenPlatformFieldsCanBeQueried()
+        {
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.ClientVersion, WorkUnitQueryOperator.Equal, "7"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.OperatingSystem, WorkUnitQueryOperator.GreaterThan, "Linux"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformImplementation, WorkUnitQueryOperator.GreaterThanOrEqual, "CUDA"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformProcessor, WorkUnitQueryOperator.LessThan, "Intel"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformThreads, WorkUnitQueryOperator.LessThanOrEqual, 14), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.DriverVersion, WorkUnitQueryOperator.Like, "1%"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.ComputeVersion, WorkUnitQueryOperator.NotLike, "1%"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.CUDAVersion, WorkUnitQueryOperator.NotEqual, "123"), BonusCalculation.None).Count);
+        }
+
+        [Test]
         public void ThenNewWorkUnitIsInserted()
         {
             Assert.AreEqual(1, _updateResult);

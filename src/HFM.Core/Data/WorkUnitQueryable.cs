@@ -54,6 +54,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) < 0.001),
             WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) < 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) < 0.001),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion == stringValue),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem == stringValue),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation == stringValue),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor == stringValue),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads == Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion == stringValue),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion == stringValue),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion == stringValue),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -87,6 +95,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD > Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit > Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit > Double.Parse(stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads > Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion.CompareTo(stringValue) > 0),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion.CompareTo(stringValue) > 0),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -120,6 +136,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD >= Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit >= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit >= Double.Parse(stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads >= Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion.CompareTo(stringValue) >= 0),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion.CompareTo(stringValue) >= 0),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -153,6 +177,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD < Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit < Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit < Double.Parse(stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads < Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion.CompareTo(stringValue) < 0),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion.CompareTo(stringValue) < 0),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -186,6 +218,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => x.PPD <= Double.Parse(stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => x.Credit <= Double.Parse(stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => x.Protein.Credit <= Double.Parse(stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads <= Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion.CompareTo(stringValue) <= 0),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion.CompareTo(stringValue) <= 0),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -219,6 +259,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => EF.Functions.Like(x.PPD.ToString(), stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => EF.Functions.Like(x.Platform.ClientVersion, stringValue)),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => EF.Functions.Like(x.Platform.ClientVersion, stringValue)),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => EF.Functions.Like(x.Platform.Implementation, stringValue)),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => EF.Functions.Like(x.Platform.Processor, stringValue)),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => EF.Functions.Like(x.Platform.Threads.ToString(), stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => EF.Functions.Like(x.Platform.DriverVersion, stringValue)),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => EF.Functions.Like(x.Platform.ComputeVersion, stringValue)),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => EF.Functions.Like(x.Platform.CUDAVersion, stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -252,6 +300,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => !EF.Functions.Like(x.PPD.ToString(), stringValue)),
             WorkUnitRowColumn.Credit => q.Where(x => !EF.Functions.Like(x.Credit.ToString(), stringValue)),
             WorkUnitRowColumn.BaseCredit => q.Where(x => !EF.Functions.Like(x.Protein.Credit.ToString(), stringValue)),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => !EF.Functions.Like(x.Platform.ClientVersion, stringValue)),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => !EF.Functions.Like(x.Platform.ClientVersion, stringValue)),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => !EF.Functions.Like(x.Platform.Implementation, stringValue)),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => !EF.Functions.Like(x.Platform.Processor, stringValue)),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => !EF.Functions.Like(x.Platform.Threads.ToString(), stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => !EF.Functions.Like(x.Platform.DriverVersion, stringValue)),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => !EF.Functions.Like(x.Platform.ComputeVersion, stringValue)),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => !EF.Functions.Like(x.Platform.CUDAVersion, stringValue)),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }
@@ -285,6 +341,14 @@ public static class WorkUnitQueryable
             WorkUnitRowColumn.PPD => q.Where(x => Math.Abs(x.PPD - Double.Parse(stringValue)) > 0.001),
             WorkUnitRowColumn.Credit => q.Where(x => Math.Abs(x.Credit - Double.Parse(stringValue)) > 0.001),
             WorkUnitRowColumn.BaseCredit => q.Where(x => Math.Abs(x.Protein.Credit - Double.Parse(stringValue)) > 0.001),
+            WorkUnitRowColumn.ClientVersion => q.Where(x => x.Platform.ClientVersion != stringValue),
+            WorkUnitRowColumn.OperatingSystem => q.Where(x => x.Platform.OperatingSystem != stringValue),
+            WorkUnitRowColumn.PlatformImplementation => q.Where(x => x.Platform.Implementation != stringValue),
+            WorkUnitRowColumn.PlatformProcessor => q.Where(x => x.Platform.Processor != stringValue),
+            WorkUnitRowColumn.PlatformThreads => q.Where(x => x.Platform.Threads != Int32.Parse(stringValue)),
+            WorkUnitRowColumn.DriverVersion => q.Where(x => x.Platform.DriverVersion != stringValue),
+            WorkUnitRowColumn.ComputeVersion => q.Where(x => x.Platform.ComputeVersion != stringValue),
+            WorkUnitRowColumn.CUDAVersion => q.Where(x => x.Platform.CUDAVersion != stringValue),
             _ => throw new InvalidOperationException($"Column {parameter.Column} is not supported."),
         };
     }

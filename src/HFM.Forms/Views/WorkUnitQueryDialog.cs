@@ -81,43 +81,56 @@ namespace HFM.Forms.Views
 
         private static List<ListItem> GetQueryFieldChoices()
         {
-            var columnChoices = new List<ListItem>();
             string[] names = Models.WorkUnitHistoryModel.GetColumnNames();
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.SlotName], WorkUnitRowColumn.SlotName));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ConnectionString], WorkUnitRowColumn.ConnectionString));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DonorName], WorkUnitRowColumn.DonorName));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.DonorTeam], WorkUnitRowColumn.DonorTeam));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.SlotType], WorkUnitRowColumn.SlotType));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Core], WorkUnitRowColumn.Core));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.CoreVersion], WorkUnitRowColumn.CoreVersion));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FrameTime], WorkUnitRowColumn.FrameTime));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.KFactor], WorkUnitRowColumn.KFactor));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.PPD], WorkUnitRowColumn.PPD));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Assigned], WorkUnitRowColumn.Assigned));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Finished], WorkUnitRowColumn.Finished));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Credit], WorkUnitRowColumn.Credit));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Frames], WorkUnitRowColumn.Frames));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.FramesCompleted], WorkUnitRowColumn.FramesCompleted));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Result], WorkUnitRowColumn.Result));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.Atoms], WorkUnitRowColumn.Atoms));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectRun], WorkUnitRowColumn.ProjectRun));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectClone], WorkUnitRowColumn.ProjectClone));
-            columnChoices.Add(new ListItem(names[(int)WorkUnitRowColumn.ProjectGen], WorkUnitRowColumn.ProjectGen));
+
+            var columnChoices = new List<ListItem>
+            {
+                new(names[(int)WorkUnitRowColumn.ProjectID], WorkUnitRowColumn.ProjectID),
+                new(names[(int)WorkUnitRowColumn.SlotName], WorkUnitRowColumn.SlotName),
+                new(names[(int)WorkUnitRowColumn.ConnectionString], WorkUnitRowColumn.ConnectionString),
+                new(names[(int)WorkUnitRowColumn.DonorName], WorkUnitRowColumn.DonorName),
+                new(names[(int)WorkUnitRowColumn.DonorTeam], WorkUnitRowColumn.DonorTeam),
+                new(names[(int)WorkUnitRowColumn.SlotType], WorkUnitRowColumn.SlotType),
+                new(names[(int)WorkUnitRowColumn.Core], WorkUnitRowColumn.Core),
+                new(names[(int)WorkUnitRowColumn.CoreVersion], WorkUnitRowColumn.CoreVersion),
+                new(names[(int)WorkUnitRowColumn.FrameTime], WorkUnitRowColumn.FrameTime),
+                new(names[(int)WorkUnitRowColumn.KFactor], WorkUnitRowColumn.KFactor),
+                new(names[(int)WorkUnitRowColumn.PPD], WorkUnitRowColumn.PPD),
+                new(names[(int)WorkUnitRowColumn.Assigned], WorkUnitRowColumn.Assigned),
+                new(names[(int)WorkUnitRowColumn.Finished], WorkUnitRowColumn.Finished),
+                new(names[(int)WorkUnitRowColumn.Credit], WorkUnitRowColumn.Credit),
+                new(names[(int)WorkUnitRowColumn.Frames], WorkUnitRowColumn.Frames),
+                new(names[(int)WorkUnitRowColumn.FramesCompleted], WorkUnitRowColumn.FramesCompleted),
+                new(names[(int)WorkUnitRowColumn.Result], WorkUnitRowColumn.Result),
+                new(names[(int)WorkUnitRowColumn.Atoms], WorkUnitRowColumn.Atoms),
+                new(names[(int)WorkUnitRowColumn.ProjectRun], WorkUnitRowColumn.ProjectRun),
+                new(names[(int)WorkUnitRowColumn.ProjectClone], WorkUnitRowColumn.ProjectClone),
+                new(names[(int)WorkUnitRowColumn.ProjectGen], WorkUnitRowColumn.ProjectGen),
+                new(names[(int)WorkUnitRowColumn.ClientVersion], WorkUnitRowColumn.ClientVersion),
+                new(names[(int)WorkUnitRowColumn.OperatingSystem], WorkUnitRowColumn.OperatingSystem),
+                new(names[(int)WorkUnitRowColumn.PlatformImplementation], WorkUnitRowColumn.PlatformImplementation),
+                new(names[(int)WorkUnitRowColumn.PlatformProcessor], WorkUnitRowColumn.PlatformProcessor),
+                new(names[(int)WorkUnitRowColumn.PlatformThreads], WorkUnitRowColumn.PlatformThreads),
+                new(names[(int)WorkUnitRowColumn.DriverVersion], WorkUnitRowColumn.DriverVersion),
+                new(names[(int)WorkUnitRowColumn.ComputeVersion], WorkUnitRowColumn.ComputeVersion),
+                new(names[(int)WorkUnitRowColumn.CUDAVersion], WorkUnitRowColumn.CUDAVersion),
+            };
             return columnChoices;
         }
 
         private static List<ListItem> GetOperatorFieldChoices()
         {
-            var columnChoices = new List<ListItem>();
-            columnChoices.Add(new ListItem("Equal", WorkUnitQueryOperator.Equal));
-            columnChoices.Add(new ListItem("Not Equal", WorkUnitQueryOperator.NotEqual));
-            columnChoices.Add(new ListItem("Greater Than", WorkUnitQueryOperator.GreaterThan));
-            columnChoices.Add(new ListItem("Greater Than Or Equal", WorkUnitQueryOperator.GreaterThanOrEqual));
-            columnChoices.Add(new ListItem("Less Than", WorkUnitQueryOperator.LessThan));
-            columnChoices.Add(new ListItem("Less Than Or Equal", WorkUnitQueryOperator.LessThanOrEqual));
-            columnChoices.Add(new ListItem("Like", WorkUnitQueryOperator.Like));
-            columnChoices.Add(new ListItem("Not Like", WorkUnitQueryOperator.NotLike));
+            var columnChoices = new List<ListItem>
+            {
+                new("Equal", WorkUnitQueryOperator.Equal),
+                new("Not Equal", WorkUnitQueryOperator.NotEqual),
+                new("Greater Than", WorkUnitQueryOperator.GreaterThan),
+                new("Greater Than Or Equal", WorkUnitQueryOperator.GreaterThanOrEqual),
+                new("Less Than", WorkUnitQueryOperator.LessThan),
+                new("Less Than Or Equal", WorkUnitQueryOperator.LessThanOrEqual),
+                new("Like", WorkUnitQueryOperator.Like),
+                new("Not Like", WorkUnitQueryOperator.NotLike)
+            };
             return columnChoices;
         }
 
