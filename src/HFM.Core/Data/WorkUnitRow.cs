@@ -60,6 +60,4 @@ public class WorkUnitRow : IProjectInfo
     public double PPD { get; set; }
     public double Credit { get; set; }
     public double BaseCredit { get; set; }
-    public double PreferredDays { get; set; }
-    public double MaximumDays { get; set; }
 }

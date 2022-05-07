@@ -17,8 +17,6 @@ public class WorkUnitRowProfile : Profile
             .ForMember(x => x.Frames, opt => opt.MapFrom(src => src.Protein.Frames))
             .ForMember(x => x.Atoms, opt => opt.MapFrom(src => src.Protein.Atoms))
             .ForMember(x => x.BaseCredit, opt => opt.MapFrom(src => src.Protein.Credit))
-            .ForMember(x => x.PreferredDays, opt => opt.MapFrom(src => src.Protein.TimeoutDays))
-            .ForMember(x => x.MaximumDays, opt => opt.MapFrom(src => src.Protein.ExpirationDays))
             .ForMember(x => x.SlotType, opt => opt.MapFrom(src => ConvertToSlotType.FromCoreName(src.Protein.Core)));
     }
 

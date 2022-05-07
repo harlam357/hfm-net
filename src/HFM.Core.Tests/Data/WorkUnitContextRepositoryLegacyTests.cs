@@ -213,8 +213,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(100, row.Frames);
                 Assert.AreEqual(1000, row.Atoms);
                 Assert.AreEqual(100.0, row.BaseCredit);
-                Assert.AreEqual(3.0, row.PreferredDays);
-                Assert.AreEqual(5.0, row.MaximumDays);
                 Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
             };
         }
@@ -287,8 +285,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(200, row.Frames);
                 Assert.AreEqual(2000, row.Atoms);
                 Assert.AreEqual(200.0, row.BaseCredit);
-                Assert.AreEqual(6.0, row.PreferredDays);
-                Assert.AreEqual(10.0, row.MaximumDays);
                 Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
             };
         }
@@ -361,8 +357,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(300, row.Frames);
                 Assert.AreEqual(3000, row.Atoms);
                 Assert.AreEqual(300.0, row.BaseCredit);
-                Assert.AreEqual(7.0, row.PreferredDays);
-                Assert.AreEqual(12.0, row.MaximumDays);
                 Assert.AreEqual(SlotType.CPU.ToString(), row.SlotType);
             };
         }
@@ -435,8 +429,6 @@ namespace HFM.Core.Data
                 Assert.AreEqual(400, row.Frames);
                 Assert.AreEqual(4000, row.Atoms);
                 Assert.AreEqual(400.0, row.BaseCredit);
-                Assert.AreEqual(2.0, row.PreferredDays);
-                Assert.AreEqual(5.0, row.MaximumDays);
                 Assert.AreEqual(SlotType.GPU.ToString(), row.SlotType);
             };
         }
