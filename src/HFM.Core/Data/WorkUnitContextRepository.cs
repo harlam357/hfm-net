@@ -39,34 +39,94 @@ public interface IWorkUnitRepository
     Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime);
 }
 
-public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
+public class ScopedWorkUnitContextRepositoryProxy : IWorkUnitRepository
 {
+    private readonly ILogger _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ScopedWorkUnitContextRepository(ILogger logger, IServiceScopeFactory serviceScopeFactory) : base(logger)
+    public ScopedWorkUnitContextRepositoryProxy(ILogger logger, IServiceScopeFactory serviceScopeFactory)
     {
+        _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    protected override WorkUnitContext CreateWorkUnitContext()
+    public long Update(WorkUnitModel workUnitModel)
     {
-        var scope = _serviceScopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return repository.Update(workUnitModel);
+        }
+    }
+
+    public async Task<int> DeleteAsync(WorkUnitRow row)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        await using (context.ConfigureAwait(false))
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return await repository.DeleteAsync(row).ConfigureAwait(false);
+        }
+    }
+
+    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return repository.Fetch(query, bonusCalculation);
+        }
+    }
+
+    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return repository.Page(page, itemsPerPage, query, bonusCalculation);
+        }
+    }
+
+    public async Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        await using (context.ConfigureAwait(false))
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return await repository.CountCompletedAsync(clientName, clientStartTime).ConfigureAwait(false);
+        }
+    }
+
+    public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        await using (context.ConfigureAwait(false))
+        {
+            var repository = new WorkUnitContextRepository(_logger, context);
+            return await repository.CountFailedAsync(clientName, clientStartTime).ConfigureAwait(false);
+        }
     }
 }
 
-public abstract class WorkUnitContextRepository : IWorkUnitRepository
+public class WorkUnitContextRepository : IWorkUnitRepository
 {
     public ILogger Logger { get; }
 
-    protected WorkUnitContextRepository() : this(null)
-    {
+    private readonly WorkUnitContext _context;
 
-    }
-
-    protected WorkUnitContextRepository(ILogger logger)
+    public WorkUnitContextRepository(ILogger logger, WorkUnitContext context)
     {
         Logger = logger ?? NullLogger.Instance;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<WorkUnitRowProfile>()).CreateMapper();
     }
 
@@ -79,14 +139,12 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
             return -1;
         }
 
-        using var context = CreateWorkUnitContext();
-
-        var workUnit = GetExistingWorkUnit(context, workUnitModel.WorkUnit);
-        var client = GetOrInsertClientEntity(context, workUnitModel);
-        var protein = GetOrInsertProteinEntity(context, workUnitModel);
-        var platform = GetOrInsertPlatformEntity(context, workUnitModel);
-        workUnit = UpsertWorkUnitEntity(context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
-        UpsertWorkUnitFrameEntities(context, workUnitModel, workUnit);
+        var workUnit = GetExistingWorkUnit(_context, workUnitModel.WorkUnit);
+        var client = GetOrInsertClientEntity(_context, workUnitModel);
+        var protein = GetOrInsertProteinEntity(_context, workUnitModel);
+        var platform = GetOrInsertPlatformEntity(_context, workUnitModel);
+        workUnit = UpsertWorkUnitEntity(_context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
+        UpsertWorkUnitFrameEntities(_context, workUnitModel, workUnit);
 
         return workUnit.ID;
     }
@@ -318,17 +376,13 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     public async Task<int> DeleteAsync(WorkUnitRow row)
     {
-        var context = CreateWorkUnitContext();
-        await using (context.ConfigureAwait(false))
+        var workUnit = await _context.WorkUnits.FindAsync(row.ID).ConfigureAwait(false);
+        if (workUnit is null)
         {
-            var workUnit = await context.WorkUnits.FindAsync(row.ID).ConfigureAwait(false);
-            if (workUnit is null)
-            {
-                return 0;
-            }
-            context.WorkUnits.Remove(workUnit);
-            return await context.SaveChangesAsync().ConfigureAwait(false);
+            return 0;
         }
+        _context.WorkUnits.Remove(workUnit);
+        return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
@@ -346,8 +400,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
-        using var context = CreateWorkUnitContext();
-        IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
+        IQueryable<WorkUnitEntity> q = WorkUnitQuery(_context, bonusCalculation);
 
         foreach (var p in query.Parameters)
         {
@@ -372,8 +425,7 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
-        using var context = CreateWorkUnitContext();
-        IQueryable<WorkUnitEntity> q = WorkUnitQuery(context, bonusCalculation);
+        IQueryable<WorkUnitEntity> q = WorkUnitQuery(_context, bonusCalculation);
 
         foreach (var p in query.Parameters)
         {
@@ -463,30 +515,22 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
     {
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        var context = CreateWorkUnitContext();
-        await using (context.ConfigureAwait(false))
-        {
-            var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
-            query = WhereResultIsFinishedUnit(query);
-            query = WhereClientSlot(query, slotIdentifier.SlotID);
-            query = WhereFinishedAfterClientStart(query, clientStartTime);
-            return await query.LongCountAsync().ConfigureAwait(false);
-        }
+        var query = QueryWorkUnitsByClientName(_context, slotIdentifier.ClientIdentifier.Name);
+        query = WhereResultIsFinishedUnit(query);
+        query = WhereClientSlot(query, slotIdentifier.SlotID);
+        query = WhereFinishedAfterClientStart(query, clientStartTime);
+        return await query.LongCountAsync().ConfigureAwait(false);
     }
 
     public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
     {
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        var context = CreateWorkUnitContext();
-        await using (context.ConfigureAwait(false))
-        {
-            var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
-            query = WhereResultIsNotFinishedUnit(query);
-            query = WhereClientSlot(query, slotIdentifier.SlotID);
-            query = WhereFinishedAfterClientStart(query, clientStartTime);
-            return await query.LongCountAsync().ConfigureAwait(false);
-        }
+        var query = QueryWorkUnitsByClientName(_context, slotIdentifier.ClientIdentifier.Name);
+        query = WhereResultIsNotFinishedUnit(query);
+        query = WhereClientSlot(query, slotIdentifier.SlotID);
+        query = WhereFinishedAfterClientStart(query, clientStartTime);
+        return await query.LongCountAsync().ConfigureAwait(false);
     }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientName(WorkUnitContext context, string clientName) =>
@@ -515,6 +559,4 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
         }
         return query;
     }
-
-    protected abstract WorkUnitContext CreateWorkUnitContext();
 }

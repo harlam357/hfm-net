@@ -17,7 +17,7 @@ namespace HFM.Core
                 _ => new Preferences.XmlPreferencesProvider(Application.Path, Application.DataFolderPath, Application.Version), new PerContainerLifetime());
 
             // IWorkUnitRepository - Singleton
-            serviceRegistry.Register<Data.IWorkUnitRepository, Data.ScopedWorkUnitContextRepository>(new PerContainerLifetime());
+            serviceRegistry.Register<Data.IWorkUnitRepository, Data.ScopedWorkUnitContextRepositoryProxy>(new PerContainerLifetime());
             serviceRegistry.Register<Data.WorkUnitRepository>(new PerContainerLifetime());
 
             // WorkUnitContext - Scoped
