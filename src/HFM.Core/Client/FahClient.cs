@@ -188,16 +188,14 @@ namespace HFM.Core.Client
             }
         }
 
-        protected override Task OnRetrieve()
+        protected override async Task OnRetrieve()
         {
             if (Messages.IsHeartbeatOverdue())
             {
                 Close();
-                return Task.CompletedTask;
             }
 
-            Process();
-            return Task.CompletedTask;
+            await Process().ConfigureAwait(false);
         }
 
         protected override void OnRetrieveFinished()
@@ -205,7 +203,7 @@ namespace HFM.Core.Client
             if (!IsCancellationRequested) base.OnRetrieveFinished();
         }
 
-        private void Process()
+        private async Task Process()
         {
             var sw = Stopwatch.StartNew();
 
@@ -219,7 +217,7 @@ namespace HFM.Core.Client
                 var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.Description, previousWorkUnitModel.WorkUnit);
                 var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
-                PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder);
+                await PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
                 UpdateWorkUnitBenchmarkAndRepository(workUnitModels);
 
                 slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
@@ -271,10 +269,10 @@ namespace HFM.Core.Client
             };
         }
 
-        private void PopulateSlotModel(FahClientSlotModel slotModel,
-                                       WorkUnitCollection workUnits,
-                                       WorkUnitModelCollection workUnitModels,
-                                       WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
+        private async Task PopulateSlotModel(FahClientSlotModel slotModel,
+                                             WorkUnitCollection workUnits,
+                                             WorkUnitModelCollection workUnitModels,
+                                             WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
         {
             Debug.Assert(slotModel != null);
             Debug.Assert(workUnits != null);
@@ -291,10 +289,10 @@ namespace HFM.Core.Client
             var clientRun = Messages.ClientRun;
             if (WorkUnitRepository is not null && clientRun is not null)
             {
-                slotModel.TotalRunCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, clientRun.Data.StartTime);
-                slotModel.TotalCompletedUnits = (int)WorkUnitRepository.CountCompleted(slotModel.Name, null);
-                slotModel.TotalRunFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, clientRun.Data.StartTime);
-                slotModel.TotalFailedUnits = (int)WorkUnitRepository.CountFailed(slotModel.Name, null);
+                slotModel.TotalRunCompletedUnits = (int)await WorkUnitRepository.CountCompletedAsync(slotModel.Name, clientRun.Data.StartTime).ConfigureAwait(false);
+                slotModel.TotalCompletedUnits = (int)await WorkUnitRepository.CountCompletedAsync(slotModel.Name, null).ConfigureAwait(false);
+                slotModel.TotalRunFailedUnits = (int)await WorkUnitRepository.CountFailedAsync(slotModel.Name, clientRun.Data.StartTime).ConfigureAwait(false);
+                slotModel.TotalFailedUnits = (int)await WorkUnitRepository.CountFailedAsync(slotModel.Name, null).ConfigureAwait(false);
             }
 
             // Update the WorkUnitModel if we have a current unit index

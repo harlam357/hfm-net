@@ -846,34 +846,34 @@ namespace HFM.Core.Data
         #region Count
 
         [Test]
-        public void WorkUnitContextRepository_CountCompleted_Test1()
+        public async Task WorkUnitContextRepository_CountCompleted_Test1()
         {
             Initialize(_testDataFileCopy);
-            long count = _repository.CountCompleted("nVidia GPU - GTX285 - 1", null);
+            long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", null);
             Assert.AreEqual(11, count);
         }
 
         [Test]
-        public void WorkUnitContextRepository_CountCompleted_Test2()
+        public async Task WorkUnitContextRepository_CountCompleted_Test2()
         {
             Initialize(_testDataFileCopy);
-            long count = _repository.CountCompleted("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
+            long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
             Assert.AreEqual(6, count);
         }
 
         [Test]
-        public void WorkUnitContextRepository_CountFailed_Test1()
+        public async Task WorkUnitContextRepository_CountFailed_Test1()
         {
             Initialize(_testData2FileCopy);
-            long count = _repository.CountFailed("nVidia GPU - GTX470", null);
+            long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", null);
             Assert.AreEqual(1, count);
         }
 
         [Test]
-        public void WorkUnitContextRepository_CountFailed_Test2()
+        public async Task WorkUnitContextRepository_CountFailed_Test2()
         {
             Initialize(_testData2FileCopy);
-            long count = _repository.CountFailed("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
+            long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
             Assert.AreEqual(0, count);
         }
 

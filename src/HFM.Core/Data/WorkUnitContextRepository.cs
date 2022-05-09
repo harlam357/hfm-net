@@ -34,9 +34,9 @@ public interface IWorkUnitRepository
 
     Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-    long CountCompleted(string clientName, DateTime? clientStartTime);
+    Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime);
 
-    long CountFailed(string clientName, DateTime? clientStartTime);
+    Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime);
 }
 
 public class ScopedWorkUnitContextRepository : WorkUnitContextRepository
@@ -318,14 +318,17 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
 
     public async Task<int> DeleteAsync(WorkUnitRow row)
     {
-        using var context = CreateWorkUnitContext();
-        var workUnit = await context.WorkUnits.FindAsync(row.ID).ConfigureAwait(false);
-        if (workUnit is null)
+        var context = CreateWorkUnitContext();
+        await using (context.ConfigureAwait(false))
         {
-            return 0;
+            var workUnit = await context.WorkUnits.FindAsync(row.ID).ConfigureAwait(false);
+            if (workUnit is null)
+            {
+                return 0;
+            }
+            context.WorkUnits.Remove(workUnit);
+            return await context.SaveChangesAsync().ConfigureAwait(false);
         }
-        context.WorkUnits.Remove(workUnit);
-        return await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
@@ -456,28 +459,34 @@ public abstract class WorkUnitContextRepository : IWorkUnitRepository
                 // ReSharper restore SpecifyACultureInStringConversionExplicitly
             });
 
-    public long CountCompleted(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime)
     {
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        using var context = CreateWorkUnitContext();
-        var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
-        query = WhereResultIsFinishedUnit(query);
-        query = WhereClientSlot(query, slotIdentifier.SlotID);
-        query = WhereFinishedAfterClientStart(query, clientStartTime);
-        return query.Count();
+        var context = CreateWorkUnitContext();
+        await using (context.ConfigureAwait(false))
+        {
+            var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
+            query = WhereResultIsFinishedUnit(query);
+            query = WhereClientSlot(query, slotIdentifier.SlotID);
+            query = WhereFinishedAfterClientStart(query, clientStartTime);
+            return await query.LongCountAsync().ConfigureAwait(false);
+        }
     }
 
-    public long CountFailed(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
     {
         var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
 
-        using var context = CreateWorkUnitContext();
-        var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
-        query = WhereResultIsNotFinishedUnit(query);
-        query = WhereClientSlot(query, slotIdentifier.SlotID);
-        query = WhereFinishedAfterClientStart(query, clientStartTime);
-        return query.Count();
+        var context = CreateWorkUnitContext();
+        await using (context.ConfigureAwait(false))
+        {
+            var query = QueryWorkUnitsByClientName(context, slotIdentifier.ClientIdentifier.Name);
+            query = WhereResultIsNotFinishedUnit(query);
+            query = WhereClientSlot(query, slotIdentifier.SlotID);
+            query = WhereFinishedAfterClientStart(query, clientStartTime);
+            return await query.LongCountAsync().ConfigureAwait(false);
+        }
     }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientName(WorkUnitContext context, string clientName) =>
