@@ -140,11 +140,11 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         }
 
         var workUnit = await GetExistingWorkUnit(_context, workUnitModel.WorkUnit).ConfigureAwait(false);
-        var client = GetOrInsertClientEntity(_context, workUnitModel);
-        var protein = GetOrInsertProteinEntity(_context, workUnitModel);
-        var platform = GetOrInsertPlatformEntity(_context, workUnitModel);
-        workUnit = UpsertWorkUnitEntity(_context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID);
-        UpsertWorkUnitFrameEntities(_context, workUnitModel, workUnit);
+        var client = await GetOrInsertClientEntity(_context, workUnitModel).ConfigureAwait(false);
+        var protein = await GetOrInsertProteinEntity(_context, workUnitModel).ConfigureAwait(false);
+        var platform = await GetOrInsertPlatformEntity(_context, workUnitModel).ConfigureAwait(false);
+        workUnit = await UpsertWorkUnitEntity(_context, workUnitModel, workUnit, client.ID, protein.ID, platform?.ID).ConfigureAwait(false);
+        await UpsertWorkUnitFrameEntities(_context, workUnitModel, workUnit).ConfigureAwait(false);
 
         return workUnit.ID;
     }
@@ -157,13 +157,14 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         await context.WorkUnits
             .Include(x => x.Protein)
             .Include(x => x.Frames)
-            .FirstOrDefaultAsync(x => x.Protein.ProjectID == workUnit.ProjectID &&
-                                      x.ProjectRun == workUnit.ProjectRun &&
-                                      x.ProjectClone == workUnit.ProjectClone &&
-                                      x.ProjectGen == workUnit.ProjectGen &&
-                                      x.Assigned == workUnit.Assigned.Normalize()).ConfigureAwait(false);
+            .FirstOrDefaultAsync(x =>
+                x.Protein.ProjectID == workUnit.ProjectID &&
+                x.ProjectRun == workUnit.ProjectRun &&
+                x.ProjectClone == workUnit.ProjectClone &&
+                x.ProjectGen == workUnit.ProjectGen &&
+                x.Assigned == workUnit.Assigned.Normalize()).ConfigureAwait(false);
 
-    private static ClientEntity GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+    private static async Task<ClientEntity> GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
         ClientEntity client = null;
 
@@ -173,7 +174,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
 
         if (guid is not null)
         {
-            client = context.Clients.OrderByDescending(x => x.ID).FirstOrDefault(x => x.Guid == guid);
+            client = await context.Clients.OrderByDescending(x => x.ID).FirstOrDefaultAsync(x => x.Guid == guid).ConfigureAwait(false);
             if (client is not null && (client.Name != identifier.Name || client.ConnectionString != connectionString))
             {
                 client = new ClientEntity
@@ -183,17 +184,17 @@ public class WorkUnitContextRepository : IWorkUnitRepository
                     Guid = guid
                 };
                 context.Clients.Add(client);
-                context.SaveChanges();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
         if (client is null)
         {
-            client = context.Clients.FirstOrDefault(x => x.Name == identifier.Name && x.ConnectionString == connectionString);
+            client = await context.Clients.FirstOrDefaultAsync(x => x.Name == identifier.Name && x.ConnectionString == connectionString).ConfigureAwait(false);
             if (client is not null && client.Guid is null && guid is not null)
             {
                 client.Guid = guid;
-                context.SaveChanges();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -206,24 +207,25 @@ public class WorkUnitContextRepository : IWorkUnitRepository
                 Guid = guid
             };
             context.Clients.Add(client);
-            context.SaveChanges();
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         return client;
     }
 
-    private static ProteinEntity GetOrInsertProteinEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+    private static async Task<ProteinEntity> GetOrInsertProteinEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
         var p = workUnitModel.CurrentProtein;
-        var protein = context.Proteins
-            .FirstOrDefault(x => x.ProjectID == p.ProjectNumber &&
-                                 Math.Abs(x.Credit - p.Credit) < 0.001 &&
-                                 Math.Abs(x.KFactor - p.KFactor) < 0.001 &&
-                                 x.Frames == p.Frames &&
-                                 x.Core == p.Core &&
-                                 x.Atoms == p.NumberOfAtoms &&
-                                 Math.Abs(x.TimeoutDays - p.PreferredDays) < 0.001 &&
-                                 Math.Abs(x.ExpirationDays - p.MaximumDays) < 0.001);
+        var protein = await context.Proteins
+            .FirstOrDefaultAsync(x =>
+                x.ProjectID == p.ProjectNumber &&
+                Math.Abs(x.Credit - p.Credit) < 0.001 &&
+                Math.Abs(x.KFactor - p.KFactor) < 0.001 &&
+                x.Frames == p.Frames &&
+                x.Core == p.Core &&
+                x.Atoms == p.NumberOfAtoms &&
+                Math.Abs(x.TimeoutDays - p.PreferredDays) < 0.001 &&
+                Math.Abs(x.ExpirationDays - p.MaximumDays) < 0.001).ConfigureAwait(false);
 
         if (protein is null)
         {
@@ -240,13 +242,13 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             };
 
             context.Proteins.Add(protein);
-            context.SaveChanges();
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         return protein;
     }
 
-    private static PlatformEntity GetOrInsertPlatformEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
+    private static async Task<PlatformEntity> GetOrInsertPlatformEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {
         var p = CreatePlatformEntity(workUnitModel);
         if (!ValidatePlatformEntity(p))
@@ -254,21 +256,22 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             return null;
         }
 
-        var platform = context.Platforms
-            .FirstOrDefault(x => x.ClientVersion == p.ClientVersion &&
-                                 x.OperatingSystem == p.OperatingSystem &&
-                                 x.Implementation == p.Implementation &&
-                                 x.Processor == p.Processor &&
-                                 x.Threads == p.Threads &&
-                                 x.DriverVersion == p.DriverVersion &&
-                                 x.ComputeVersion == p.ComputeVersion &&
-                                 x.CUDAVersion == p.CUDAVersion);
+        var platform = await context.Platforms
+            .FirstOrDefaultAsync(x =>
+                x.ClientVersion == p.ClientVersion &&
+                x.OperatingSystem == p.OperatingSystem &&
+                x.Implementation == p.Implementation &&
+                x.Processor == p.Processor &&
+                x.Threads == p.Threads &&
+                x.DriverVersion == p.DriverVersion &&
+                x.ComputeVersion == p.ComputeVersion &&
+                x.CUDAVersion == p.CUDAVersion).ConfigureAwait(false);
 
         if (platform is null)
         {
             platform = p;
             context.Platforms.Add(platform);
-            context.SaveChanges();
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         return platform;
@@ -309,7 +312,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         !String.IsNullOrEmpty(platform.Implementation) &&
         !String.IsNullOrEmpty(platform.Processor);
 
-    private static WorkUnitEntity UpsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
+    private static async Task<WorkUnitEntity> UpsertWorkUnitEntity(WorkUnitContext context, WorkUnitModel workUnitModel,
         WorkUnitEntity workUnit, long clientID, long proteinID, long? platformID)
     {
         bool insert = workUnit is null;
@@ -342,12 +345,12 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         {
             context.WorkUnits.Add(workUnit);
         }
-        context.SaveChanges();
+        await context.SaveChangesAsync().ConfigureAwait(false);
 
         return workUnit;
     }
 
-    private static void UpsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit)
+    private static async Task UpsertWorkUnitFrameEntities(WorkUnitContext context, WorkUnitModel workUnitModel, WorkUnitEntity workUnit)
     {
         if (workUnitModel.WorkUnit.Frames is null)
         {
@@ -371,7 +374,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             }
         }
 
-        context.SaveChanges();
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task<int> DeleteAsync(WorkUnitRow row)
