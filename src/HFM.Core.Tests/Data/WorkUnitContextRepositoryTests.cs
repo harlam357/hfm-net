@@ -23,7 +23,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -93,7 +93,7 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, 1, "AMD Ryzen 7 5800X", 14);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -241,7 +241,7 @@ public class WorkUnitContextRepositoryTests
         private long _secondUpdateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -271,14 +271,14 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _firstUpdateResult = _repository.Update(workUnitModel);
+            _firstUpdateResult = await _repository.UpdateAsync(workUnitModel);
 
             workUnit.Frames[2] = CreateLogLineFrameData(2);
             workUnit.Frames[3] = CreateLogLineFrameData(3);
             workUnit.Frames[4] = CreateLogLineFrameData(4);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _secondUpdateResult = _repository.Update(workUnitModel);
+            _secondUpdateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         private static LogLineFrameData CreateLogLineFrameData(int id) =>
@@ -331,7 +331,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -342,7 +342,7 @@ public class WorkUnitContextRepositoryTests
             var protein = new Protein();
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -361,7 +361,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -389,13 +389,13 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             workUnit.Assigned = _assigned.AddHours(24);
             workUnit.Finished = _assigned.AddHours(30);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -424,7 +424,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -452,7 +452,7 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             settings.Name = "GTX4080";
             settings.Server = "gtx4080.awesome.com";
@@ -461,7 +461,7 @@ public class WorkUnitContextRepositoryTests
             workUnit.Finished = _assigned.AddHours(30);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -493,7 +493,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -520,7 +520,7 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             settings.Guid = _clientGuid;
 
@@ -528,7 +528,7 @@ public class WorkUnitContextRepositoryTests
             workUnit.Finished = _assigned.AddHours(30);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -558,7 +558,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -592,13 +592,13 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             workUnit.Assigned = _assigned.AddHours(24);
             workUnit.Finished = _assigned.AddHours(30);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, protein);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -626,7 +626,7 @@ public class WorkUnitContextRepositoryTests
         private long _updateResult;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -650,13 +650,13 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, new Protein(), processor: "AMD Ryzen 7 5800X", threads: 14);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             workUnit.Assigned = _assigned.AddHours(24);
             workUnit.Finished = _assigned.AddHours(30);
 
             workUnitModel = CreateWorkUnitModel(settings, workUnit, new Protein(), processor: "AMD Ryzen 7 5800X", threads: 14);
-            _updateResult = _repository.Update(workUnitModel);
+            _updateResult = await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -685,7 +685,7 @@ public class WorkUnitContextRepositoryTests
         private readonly DateTime _utcNow = DateTime.UtcNow;
 
         [SetUp]
-        public void BeforeEach()
+        public async Task BeforeEach()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -698,11 +698,11 @@ public class WorkUnitContextRepositoryTests
                 Port = ClientSettings.DefaultPort,
                 Guid = _clientGuid
             };
-            InsertFinishedAndFailedAssignedAt(_utcNow, settings);
-            InsertFinishedAndFailedAssignedAt(new DateTime(2020, 1, 1), settings);
+            await InsertFinishedAndFailedAssignedAt(_utcNow, settings);
+            await InsertFinishedAndFailedAssignedAt(new DateTime(2020, 1, 1), settings);
         }
 
-        private void InsertFinishedAndFailedAssignedAt(DateTime assigned, ClientSettings settings)
+        private async Task InsertFinishedAndFailedAssignedAt(DateTime assigned, ClientSettings settings)
         {
             var protein = new Protein();
             var finishedWorkUnit = new WorkUnit
@@ -728,9 +728,9 @@ public class WorkUnitContextRepositoryTests
             };
 
             var workUnitModel = CreateWorkUnitModel(settings, finishedWorkUnit, protein, 1);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
             workUnitModel = CreateWorkUnitModel(settings, failedWorkUnit, protein, 1);
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
         }
 
         [TearDown]
@@ -811,7 +811,7 @@ public class WorkUnitContextRepositoryTests
             var protein = new Protein();
 
             var workUnitModel = CreateWorkUnitModel(settings, workUnit, protein, processor: "Ryzen", threads: 16);
-            long workUnitID = _repository.Update(workUnitModel);
+            long workUnitID = await _repository.UpdateAsync(workUnitModel);
 
             _deleteResult = await _repository.DeleteAsync(new WorkUnitRow { ID = workUnitID });
         }

@@ -26,7 +26,7 @@ public class Page<T>
 
 public interface IWorkUnitRepository
 {
-    long Update(WorkUnitModel workUnitModel);
+    Task<long> UpdateAsync(WorkUnitModel workUnitModel);
 
     Task<int> DeleteAsync(WorkUnitRow row);
 
@@ -50,14 +50,14 @@ public class ScopedWorkUnitContextRepositoryProxy : IWorkUnitRepository
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    public long Update(WorkUnitModel workUnitModel)
+    public async Task<long> UpdateAsync(WorkUnitModel workUnitModel)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(_logger, context);
-            return repository.Update(workUnitModel);
+            return await repository.UpdateAsync(workUnitModel).ConfigureAwait(false);
         }
     }
 
@@ -132,14 +132,14 @@ public class WorkUnitContextRepository : IWorkUnitRepository
 
     private readonly IMapper _mapper;
 
-    public long Update(WorkUnitModel workUnitModel)
+    public async Task<long> UpdateAsync(WorkUnitModel workUnitModel)
     {
         if (!ValidateWorkUnit(workUnitModel.WorkUnit))
         {
             return -1;
         }
 
-        var workUnit = GetExistingWorkUnit(_context, workUnitModel.WorkUnit);
+        var workUnit = await GetExistingWorkUnit(_context, workUnitModel.WorkUnit).ConfigureAwait(false);
         var client = GetOrInsertClientEntity(_context, workUnitModel);
         var protein = GetOrInsertProteinEntity(_context, workUnitModel);
         var platform = GetOrInsertPlatformEntity(_context, workUnitModel);
@@ -153,15 +153,15 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.HasProject() &&
         !workUnit.Assigned.IsMinValue();
 
-    private static WorkUnitEntity GetExistingWorkUnit(WorkUnitContext context, WorkUnit workUnit) =>
-        context.WorkUnits
+    private static async Task<WorkUnitEntity> GetExistingWorkUnit(WorkUnitContext context, WorkUnit workUnit) =>
+        await context.WorkUnits
             .Include(x => x.Protein)
             .Include(x => x.Frames)
-            .FirstOrDefault(x => x.Protein.ProjectID == workUnit.ProjectID &&
-                                 x.ProjectRun == workUnit.ProjectRun &&
-                                 x.ProjectClone == workUnit.ProjectClone &&
-                                 x.ProjectGen == workUnit.ProjectGen &&
-                                 x.Assigned == workUnit.Assigned.Normalize());
+            .FirstOrDefaultAsync(x => x.Protein.ProjectID == workUnit.ProjectID &&
+                                      x.ProjectRun == workUnit.ProjectRun &&
+                                      x.ProjectClone == workUnit.ProjectClone &&
+                                      x.ProjectGen == workUnit.ProjectGen &&
+                                      x.Assigned == workUnit.Assigned.Normalize()).ConfigureAwait(false);
 
     private static ClientEntity GetOrInsertClientEntity(WorkUnitContext context, WorkUnitModel workUnitModel)
     {

@@ -21,13 +21,13 @@ public class TestableWorkUnitContextRepository : IWorkUnitRepository
         _connectionString = connectionString;
     }
 
-    public long Update(WorkUnitModel workUnitModel)
+    public async Task<long> UpdateAsync(WorkUnitModel workUnitModel)
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(null, context);
-            return repository.Update(workUnitModel);
+            return await repository.UpdateAsync(workUnitModel).ConfigureAwait(false);
         }
     }
 

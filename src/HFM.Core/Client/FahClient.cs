@@ -218,7 +218,10 @@ namespace HFM.Core.Client
                 var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
 
                 await PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
-                UpdateWorkUnitBenchmarkAndRepository(workUnitModels);
+                foreach (var m in workUnitModels)
+                {
+                    await UpdateWorkUnitRepository(m).ConfigureAwait(false);
+                }
 
                 slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
                    Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
@@ -302,21 +305,13 @@ namespace HFM.Core.Client
             }
         }
 
-        private void UpdateWorkUnitBenchmarkAndRepository(IEnumerable<WorkUnitModel> workUnitModels)
-        {
-            foreach (var m in workUnitModels)
-            {
-                UpdateWorkUnitRepository(m);
-            }
-        }
-
-        private void UpdateWorkUnitRepository(WorkUnitModel workUnitModel)
+        private async Task UpdateWorkUnitRepository(WorkUnitModel workUnitModel)
         {
             if (WorkUnitRepository is not null)
             {
                 try
                 {
-                    if (WorkUnitRepository.Update(workUnitModel) > 0)
+                    if (await WorkUnitRepository.UpdateAsync(workUnitModel).ConfigureAwait(false) > 0)
                     {
                         if (Logger.IsDebugEnabled)
                         {
@@ -331,13 +326,6 @@ namespace HFM.Core.Client
                 }
             }
         }
-
-        private static ICollection<TimeSpan> GetFrameTimes(WorkUnit workUnit, int nextFrame, int count) =>
-            Enumerable.Range(nextFrame, count)
-                .Select(workUnit.GetFrame)
-                .Where(f => f != null)
-                .Select(f => f.Duration)
-                .ToList();
 
         public void Fold(int? slotId)
         {

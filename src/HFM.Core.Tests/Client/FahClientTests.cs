@@ -140,7 +140,7 @@ namespace HFM.Core.Client
             public void ThenTheWorkUnitRepositoryIsUpdated()
             {
                 var mockWorkUnitRepository = Mock.Get(_fahClient.WorkUnitRepository);
-                mockWorkUnitRepository.Verify(x => x.Update(It.IsAny<WorkUnitModel>()), Times.Once);
+                mockWorkUnitRepository.Verify(x => x.UpdateAsync(It.IsAny<WorkUnitModel>()), Times.Once);
             }
         }
 

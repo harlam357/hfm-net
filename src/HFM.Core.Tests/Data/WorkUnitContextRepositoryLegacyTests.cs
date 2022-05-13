@@ -67,7 +67,7 @@ namespace HFM.Core.Data
         {
             Initialize(_testScratchFile);
 
-            Parallel.For(0, 100, i =>
+            Parallel.For(0, 100, async i =>
             {
                 Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
 
@@ -76,7 +76,7 @@ namespace HFM.Core.Data
                 var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
                 workUnitModel.CurrentProtein = BuildProtein1();
 
-                _repository.Update(workUnitModel);
+                await _repository.UpdateAsync(workUnitModel);
             });
 
             Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Count);
@@ -85,42 +85,42 @@ namespace HFM.Core.Data
         #region Insert
 
         [Test]
-        public void WorkUnitContextRepository_Update_Test1()
+        public async Task WorkUnitContextRepository_Update_Test1()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void WorkUnitContextRepository_Update_Test1_CzechCulture()
+        public async Task WorkUnitContextRepository_Update_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public void WorkUnitContextRepository_Update_Test2()
+        public async Task WorkUnitContextRepository_Update_Test2()
         {
             var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
-            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
+            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
-        public void WorkUnitContextRepository_Update_Test3()
+        public async Task WorkUnitContextRepository_Update_Test3()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
+            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
-        public void WorkUnitContextRepository_Update_Test4()
+        public async Task WorkUnitContextRepository_Update_Test4()
         {
             var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
-            UpdateTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
+            await UpdateTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private void UpdateTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
+        private async Task UpdateTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
         {
             Initialize(_testScratchFile);
 
@@ -128,13 +128,13 @@ namespace HFM.Core.Data
             var workUnitModel = new WorkUnitModel(slotModel, workUnit);
             workUnitModel.CurrentProtein = protein;
 
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
 
             var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).ToList();
             verifyAction(rows);
 
             // test code to ensure this unit is NOT written again
-            _repository.Update(workUnitModel);
+            await _repository.UpdateAsync(workUnitModel);
             // verify
             rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).ToList();
             Assert.AreEqual(1, rows.Count);
