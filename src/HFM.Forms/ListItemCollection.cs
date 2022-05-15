@@ -1,142 +1,136 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
 
-namespace HFM.Forms
+namespace HFM.Forms;
+
+/// <summary>
+/// Represents a wrapper around a non-generic list of <see cref="ListItem"/>.
+/// </summary>
+public class ListItemCollection : IList<ListItem>, INotifyCollectionChanged
 {
-    /// <summary>
-    /// Represents a wrapper around a non-generic list of <see cref="ListItem"/>.
-    /// </summary>
-    public class ListItemCollection : IList<ListItem>, INotifyCollectionChanged
+    public ListItemCollection()
     {
-        public ListItemCollection()
+        Items = new List<ListItem>();
+    }
+
+    public ListItemCollection(IList list)
+    {
+        Items = list ?? throw new ArgumentNullException(nameof(list));
+    }
+
+    public int Count => Items.Count;
+
+    protected IList Items { get; }
+
+    public ListItem this[int index]
+    {
+        get => (ListItem)Items[index];
+        set
         {
-            Items = new List<ListItem>();
+            if (index < 0 || index >= Items.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            SetItem(index, value);
         }
+    }
 
-        public ListItemCollection(IList list)
-        {
-            Items = list ?? throw new ArgumentNullException(nameof(list));
-        }
+    public void Add(ListItem item) => AddItem(item);
 
-        public int Count => Items.Count;
+    public void Clear() => ClearItems();
 
-        protected IList Items { get; }
+    public void CopyTo(ListItem[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
 
-        public ListItem this[int index]
-        {
-            get => (ListItem)Items[index];
-            set
-            {
-                if (index < 0 || index >= Items.Count) throw new ArgumentOutOfRangeException(nameof(index));
+    public bool Contains(ListItem item) => Items.Contains(item);
 
-                SetItem(index, value);
-            }
-        }
+    public IEnumerator<ListItem> GetEnumerator() => Items.Cast<ListItem>().GetEnumerator();
 
-        public void Add(ListItem item) => AddItem(item);
+    public int IndexOf(ListItem item) => Items.IndexOf(item);
 
-        public void Clear() => ClearItems();
+    void IList<ListItem>.Insert(int index, ListItem item) => throw new NotSupportedException("Insert at index not supported.");
 
-        public void CopyTo(ListItem[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
+    public bool Remove(ListItem item)
+    {
+        bool result = Items.Contains(item);
+        RemoveItem(item);
+        return result;
+    }
 
-        public bool Contains(ListItem item) => Items.Contains(item);
+    void IList<ListItem>.RemoveAt(int index) => throw new NotSupportedException("Remove at index not supported.");
 
-        public IEnumerator<ListItem> GetEnumerator() => Items.Cast<ListItem>().GetEnumerator();
+    protected virtual void ClearItems()
+    {
+        Items.Clear();
+        OnCollectionChanged(this);
+    }
 
-        public int IndexOf(ListItem item) => Items.IndexOf(item);
+    protected virtual void AddItem(ListItem item)
+    {
+        Items.Add(item);
+        OnCollectionChanged(this);
+    }
 
-        void IList<ListItem>.Insert(int index, ListItem item) => throw new NotSupportedException("Insert at index not supported.");
+    protected virtual void RemoveItem(ListItem item)
+    {
+        Items.Remove(item);
+        OnCollectionChanged(this);
+    }
 
-        public bool Remove(ListItem item)
-        {
-            bool result = Items.Contains(item);
-            RemoveItem(item);
-            return result;
-        }
+    protected virtual void SetItem(int index, ListItem item)
+    {
+        Items[index] = item;
+        OnCollectionChanged(this);
+    }
 
-        void IList<ListItem>.RemoveAt(int index) => throw new NotSupportedException("Remove at index not supported.");
+    bool ICollection<ListItem>.IsReadOnly => Items.IsReadOnly;
 
-        protected virtual void ClearItems()
+    IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
+
+    public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+    protected virtual void OnCollectionChanged(object sender) => CollectionChanged?.Invoke(sender, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+}
+
+public class BindingSourceListItemCollection : ListItemCollection
+{
+    private readonly BindingSource _bindingSource;
+
+    public BindingSourceListItemCollection(BindingSource bindingSource)
+    {
+        _bindingSource = bindingSource;
+        _bindingSource.ListChanged += OnBindingSourceListChanged;
+    }
+
+    protected virtual void OnBindingSourceListChanged(object sender, ListChangedEventArgs e)
+    {
+        // simulates how a ListBox reacts to BindingSource.ListChanged events
+        int position = _bindingSource.Position;
+        if (0 <= position && position < _bindingSource.Count)
         {
             Items.Clear();
-            OnCollectionChanged(this);
+            Items.Add(_bindingSource.Cast<ListItem>().ElementAt(position));
         }
-
-        protected virtual void AddItem(ListItem item)
-        {
-            Items.Add(item);
-            OnCollectionChanged(this);
-        }
-
-        protected virtual void RemoveItem(ListItem item)
-        {
-            Items.Remove(item);
-            OnCollectionChanged(this);
-        }
-
-        protected virtual void SetItem(int index, ListItem item)
-        {
-            Items[index] = item;
-            OnCollectionChanged(this);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "Can use Items.ReadOnly")]
-        bool ICollection<ListItem>.IsReadOnly => Items.IsReadOnly;
-
-        IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        protected virtual void OnCollectionChanged(object sender) => CollectionChanged?.Invoke(sender, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(this);
     }
+}
 
-    public class BindingSourceListItemCollection : ListItemCollection
+/// <summary>
+/// Represents a wrapper around a <see cref="ListBox.SelectedObjectCollection"/> containing <see cref="ListItem"/> values.
+/// </summary>
+public class ListBoxSelectedListItemCollection : ListItemCollection
+{
+    private readonly ListBox.SelectedObjectCollection _selectedItems;
+
+    public ListBoxSelectedListItemCollection(ListBox listBox) : base(listBox.SelectedItems)
     {
-        private readonly BindingSource _bindingSource;
-
-        public BindingSourceListItemCollection(BindingSource bindingSource)
-        {
-            _bindingSource = bindingSource;
-            _bindingSource.ListChanged += OnBindingSourceListChanged;
-        }
-
-        protected virtual void OnBindingSourceListChanged(object sender, ListChangedEventArgs e)
-        {
-            // simulates how a ListBox reacts to BindingSource.ListChanged events
-            int position = _bindingSource.Position;
-            if (0 <= position && position < _bindingSource.Count)
-            {
-                Items.Clear();
-                Items.Add(_bindingSource.Cast<ListItem>().ElementAt(position));
-            }
-            OnCollectionChanged(this);
-        }
+        _selectedItems = listBox.SelectedItems;
+        listBox.SelectedIndexChanged += (_, _) => OnCollectionChanged(this);
     }
 
-    /// <summary>
-    /// Represents a wrapper around a <see cref="ListBox.SelectedObjectCollection"/> containing <see cref="ListItem"/> values.
-    /// </summary>
-    public class ListBoxSelectedListItemCollection : ListItemCollection
-    {
-        private readonly ListBox.SelectedObjectCollection _selectedItems;
+    protected override void ClearItems() => _selectedItems.Clear();
 
-        public ListBoxSelectedListItemCollection(ListBox listBox) : base(listBox.SelectedItems)
-        {
-            _selectedItems = listBox.SelectedItems;
-            listBox.SelectedIndexChanged += (s, e) => OnCollectionChanged(this);
-        }
+    protected override void AddItem(ListItem item) => _selectedItems.Add(item);
 
-        protected override void ClearItems() => _selectedItems.Clear();
+    protected override void RemoveItem(ListItem item) => _selectedItems.Remove(item);
 
-        protected override void AddItem(ListItem item) => _selectedItems.Add(item);
-
-        protected override void RemoveItem(ListItem item) => _selectedItems.Remove(item);
-
-        protected override void SetItem(int index, ListItem item) => _selectedItems[index] = item;
-    }
+    protected override void SetItem(int index, ListItem item) => _selectedItems[index] = item;
 }
