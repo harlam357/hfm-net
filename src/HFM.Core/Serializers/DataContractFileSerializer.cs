@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Xml;
 
 namespace HFM.Core.Serializers
@@ -19,7 +18,6 @@ namespace HFM.Core.Serializers
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void Serialize(string path, T value)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using HFM.Core.Logging;
+﻿using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
@@ -12,7 +9,6 @@ namespace HFM.Forms
 {
     public class CompositionRoot : ICompositionRoot
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "LightInject ILifetime instances.")]
         public void Compose(IServiceRegistry serviceRegistry)
         {
             // MainPresenter - Singleton

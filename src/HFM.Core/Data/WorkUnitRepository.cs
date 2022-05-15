@@ -547,7 +547,6 @@ namespace HFM.Core.Data
 
             public override string SelectSql => WuHistoryTableSelect;
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "No user input.")]
             public override DbCommand GetCreateTableCommand(SqliteConnection connection)
             {
@@ -572,7 +571,6 @@ namespace HFM.Core.Data
 
             public override string TableName => VersionTableName;
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "No user input.")]
             public override DbCommand GetCreateTableCommand(SqliteConnection connection)
             {
