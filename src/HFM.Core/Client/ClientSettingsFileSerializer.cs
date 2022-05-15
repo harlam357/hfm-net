@@ -125,63 +125,33 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
 
         public override string BaseURI => _inner.BaseURI;
 
-        public override void Close()
-        {
-            _inner.Close();
-        }
+        public override void Close() => _inner.Close();
 
         public override int Depth => _inner.Depth;
 
         public override bool EOF => _inner.EOF;
 
-        public override string GetAttribute(int i)
-        {
-            return _inner.GetAttribute(i);
-        }
+        public override string GetAttribute(int i) => _inner.GetAttribute(i);
 
-        public override string GetAttribute(string name, string namespaceURI)
-        {
-            return _inner.GetAttribute(name, namespaceURI);
-        }
+        public override string GetAttribute(string name, string namespaceURI) => _inner.GetAttribute(name, namespaceURI);
 
-        public override string GetAttribute(string name)
-        {
-            return _inner.GetAttribute(name);
-        }
+        public override string GetAttribute(string name) => _inner.GetAttribute(name);
 
         public override bool IsEmptyElement => _inner.IsEmptyElement;
 
         public override string LocalName => _inner.LocalName;
 
-        public override string LookupNamespace(string prefix)
-        {
-            return _inner.LookupNamespace(prefix);
-        }
+        public override string LookupNamespace(string prefix) => _inner.LookupNamespace(prefix);
 
-        public override bool MoveToAttribute(string name, string ns)
-        {
-            return _inner.MoveToAttribute(name, ns);
-        }
+        public override bool MoveToAttribute(string name, string ns) => _inner.MoveToAttribute(name, ns);
 
-        public override bool MoveToAttribute(string name)
-        {
-            return _inner.MoveToAttribute(name);
-        }
+        public override bool MoveToAttribute(string name) => _inner.MoveToAttribute(name);
 
-        public override bool MoveToElement()
-        {
-            return _inner.MoveToElement();
-        }
+        public override bool MoveToElement() => _inner.MoveToElement();
 
-        public override bool MoveToFirstAttribute()
-        {
-            return _inner.MoveToFirstAttribute();
-        }
+        public override bool MoveToFirstAttribute() => _inner.MoveToFirstAttribute();
 
-        public override bool MoveToNextAttribute()
-        {
-            return _inner.MoveToNextAttribute();
-        }
+        public override bool MoveToNextAttribute() => _inner.MoveToNextAttribute();
 
         public override XmlNameTable NameTable => _inner.NameTable;
 
@@ -191,22 +161,13 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
 
         public override string Prefix => _inner.Prefix;
 
-        public override bool Read()
-        {
-            return _inner.Read();
-        }
+        public override bool Read() => _inner.Read();
 
-        public override bool ReadAttributeValue()
-        {
-            return _inner.ReadAttributeValue();
-        }
+        public override bool ReadAttributeValue() => _inner.ReadAttributeValue();
 
         public override ReadState ReadState => _inner.ReadState;
 
-        public override void ResolveEntity()
-        {
-            _inner.ResolveEntity();
-        }
+        public override void ResolveEntity() => _inner.ResolveEntity();
 
         public override string Value => _inner.Value;
     }
