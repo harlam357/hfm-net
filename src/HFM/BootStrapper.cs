@@ -263,7 +263,7 @@ namespace HFM
         }
 
         private static bool ShouldMigrateToWorkUnitContext(string databaseVersion) =>
-            databaseVersion is not null && Version.Parse(databaseVersion) < Version.Parse(Core.Application.Version);
+            databaseVersion is not null && Version.Parse(databaseVersion) < new Version(10, 0, 0);
 
         private void MigrateToWorkUnitContext(ILegacyWorkUnitSource repository)
         {
