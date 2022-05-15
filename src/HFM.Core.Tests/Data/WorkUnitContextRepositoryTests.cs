@@ -148,9 +148,9 @@ public class WorkUnitContextRepositoryTests
         }
 
         [Test]
-        public void ThenPlatformIsMappedToWorkUnitRow()
+        public async Task ThenPlatformIsMappedToWorkUnitRow()
         {
-            var row = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).First();
+            var row = (await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None)).First();
             Assert.AreEqual("7", row.ClientVersion);
             Assert.AreEqual("Windows", row.OperatingSystem);
             Assert.AreEqual("CUDA", row.PlatformImplementation);
@@ -162,24 +162,24 @@ public class WorkUnitContextRepositoryTests
         }
 
         [Test]
-        public void ThenPlatformFieldsCanBeQueried()
+        public async Task ThenPlatformFieldsCanBeQueried()
         {
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.ClientVersion, WorkUnitQueryOperator.Equal, "7"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.OperatingSystem, WorkUnitQueryOperator.GreaterThan, "Linux"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.PlatformImplementation, WorkUnitQueryOperator.GreaterThanOrEqual, "CUDA"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.PlatformProcessor, WorkUnitQueryOperator.LessThan, "Intel"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.PlatformThreads, WorkUnitQueryOperator.LessThanOrEqual, 14), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.DriverVersion, WorkUnitQueryOperator.Like, "1%"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.ComputeVersion, WorkUnitQueryOperator.NotLike, "1%"), BonusCalculation.None).Count);
-            Assert.AreEqual(1, _repository.Fetch(new WorkUnitQuery()
-                .AddParameter(WorkUnitRowColumn.CUDAVersion, WorkUnitQueryOperator.NotEqual, "123"), BonusCalculation.None).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.ClientVersion, WorkUnitQueryOperator.Equal, "7"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.OperatingSystem, WorkUnitQueryOperator.GreaterThan, "Linux"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformImplementation, WorkUnitQueryOperator.GreaterThanOrEqual, "CUDA"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformProcessor, WorkUnitQueryOperator.LessThan, "Intel"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.PlatformThreads, WorkUnitQueryOperator.LessThanOrEqual, 14), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.DriverVersion, WorkUnitQueryOperator.Like, "1%"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.ComputeVersion, WorkUnitQueryOperator.NotLike, "1%"), BonusCalculation.None)).Count);
+            Assert.AreEqual(1, (await _repository.FetchAsync(new WorkUnitQuery()
+                .AddParameter(WorkUnitRowColumn.CUDAVersion, WorkUnitQueryOperator.NotEqual, "123"), BonusCalculation.None)).Count);
         }
 
         [Test]
@@ -840,11 +840,12 @@ public class WorkUnitContextRepositoryTests
         private IWorkUnitRepository _repository;
 
         [SetUp]
-        public virtual void BeforeEach()
+        public virtual Task BeforeEach()
         {
             string path = Path.GetFullPath(@"TestFiles\WorkUnits.db");
             _connectionString = $"Data Source={path}";
             _repository = new TestableWorkUnitContextRepository(_connectionString);
+            return Task.CompletedTask;
         }
 
         [TestFixture]
@@ -853,10 +854,10 @@ public class WorkUnitContextRepositoryTests
             private IList<WorkUnitRow> _result;
 
             [SetUp]
-            public override void BeforeEach()
+            public override async Task BeforeEach()
             {
-                base.BeforeEach();
-                _result = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+                await base.BeforeEach();
+                _result = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
             }
 
             [Test]
@@ -872,13 +873,13 @@ public class WorkUnitContextRepositoryTests
             private IList<WorkUnitRow> _result;
 
             [SetUp]
-            public override void BeforeEach()
+            public override async Task BeforeEach()
             {
-                base.BeforeEach();
+                await base.BeforeEach();
                 var query = new WorkUnitQuery()
                     .AddParameter(WorkUnitRowColumn.ProjectID, WorkUnitQueryOperator.Equal, 6600)
                     .AddParameter(WorkUnitRowColumn.ProjectRun, WorkUnitQueryOperator.Equal, 0);
-                _result = _repository.Fetch(query, BonusCalculation.None);
+                _result = await _repository.FetchAsync(query, BonusCalculation.None);
             }
 
             [Test]
@@ -894,10 +895,10 @@ public class WorkUnitContextRepositoryTests
             private Page<WorkUnitRow> _result;
 
             [SetUp]
-            public override void BeforeEach()
+            public override async Task BeforeEach()
             {
-                base.BeforeEach();
-                _result = _repository.Page(1, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
+                await base.BeforeEach();
+                _result = await _repository.PageAsync(1, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
             }
 
             [Test]
@@ -917,10 +918,10 @@ public class WorkUnitContextRepositoryTests
             private Page<WorkUnitRow> _result;
 
             [SetUp]
-            public override void BeforeEach()
+            public override async Task BeforeEach()
             {
-                base.BeforeEach();
-                _result = _repository.Page(100, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
+                await base.BeforeEach();
+                _result = await _repository.PageAsync(100, 1000, WorkUnitQuery.SelectAll, BonusCalculation.None);
             }
 
             [Test]

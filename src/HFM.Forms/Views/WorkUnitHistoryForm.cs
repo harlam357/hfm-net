@@ -53,7 +53,7 @@ namespace HFM.Forms.Views
             DataViewDeleteButton.BindEnabled(model, nameof(WorkUnitHistoryModel.EditAndDeleteButtonsEnabled));
 
             rdoPanelProduction.DataSource = model;
-            rdoPanelProduction.ValueMember = "BonusCalculation";
+            rdoPanelProduction.ValueMember = nameof(WorkUnitHistoryModel.BonusCalculation);
             ResultsTextBox.BindText(model, nameof(WorkUnitHistoryModel.TotalEntries));
             PageNumberTextBox.BindText(model, nameof(WorkUnitHistoryModel.CurrentPage));
             ResultNumberUpDownControl.DataBindings.Add("Value", model, nameof(WorkUnitHistoryModel.ShowEntriesValue), false, DataSourceUpdateMode.OnPropertyChanged);

@@ -9,7 +9,7 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Models
 {
-    public sealed class WorkUnitHistoryModel : ViewModelBase
+    public sealed class WorkUnitHistoryModel : AsyncViewModelBase
     {
         public IPreferences Preferences { get; }
         public WorkUnitQueryDataContainer QueryContainer { get; }
@@ -30,11 +30,11 @@ namespace HFM.Forms.Models
             _queryList = new List<WorkUnitQuery> { WorkUnitQuery.SelectAll };
             QueryBindingSource = new BindingSource();
             QueryBindingSource.DataSource = _queryList;
-            QueryBindingSource.CurrentItemChanged += (s, e) =>
+            QueryBindingSource.CurrentItemChanged += async (_, _) =>
             {
                 OnPropertyChanged(nameof(EditAndDeleteButtonsEnabled));
                 _currentPage = 1;
-                ResetBindings(true);
+                await ResetBindings(true).ConfigureAwait(true);
             };
 
             _workUnitList = new WorkUnitRowSortableBindingList();
@@ -50,7 +50,7 @@ namespace HFM.Forms.Models
             _page = new Page<WorkUnitRow> { Items = new List<WorkUnitRow>() };
         }
 
-        public override void Load()
+        public override async Task LoadAsync()
         {
             _bonusCalculation = Preferences.Get<BonusCalculation>(Preference.HistoryBonusCalculation);
             _showEntriesValue = Preferences.Get<int>(Preference.ShowEntriesValue);
@@ -64,10 +64,10 @@ namespace HFM.Forms.Models
             _queryList.Add(WorkUnitQuery.SelectAll);
             _queryList.AddRange(QueryContainer.Data.Where(q => q != WorkUnitQuery.SelectAll));
             _queryList.Sort();
-            ResetBindings(true);
+            await ResetBindings(true).ConfigureAwait(true);
         }
 
-        public override void Save()
+        public override Task SaveAsync()
         {
             Preferences.Set(Preference.HistoryBonusCalculation, _bonusCalculation);
             Preferences.Set(Preference.ShowEntriesValue, _showEntriesValue);
@@ -81,6 +81,8 @@ namespace HFM.Forms.Models
             QueryContainer.Data.Clear();
             QueryContainer.Data.AddRange(_queryList.Where(q => q != WorkUnitQuery.SelectAll));
             QueryContainer.Write();
+
+            return Task.CompletedTask;
         }
 
         public void AddQuery(WorkUnitQuery query)
@@ -161,17 +163,19 @@ namespace HFM.Forms.Models
             {
                 _page.Items.Remove(row);
                 _page.TotalItems--;
-                ResetBindings(false);
+                await ResetBindings(false).ConfigureAwait(true);
             }
         }
 
-        public void ResetBindings(bool executeQuery)
+        private async void ExecuteQueryAndResetBindings() => await ResetBindings(true).ConfigureAwait(true);
+
+        public async Task ResetBindings(bool executeQuery)
         {
             Debug.Assert(SelectedWorkUnitQuery != null);
 
             if (executeQuery)
             {
-                _page = Repository.Page(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation);
+                _page = await Repository.PageAsync(CurrentPage, ShowEntriesValue, SelectedWorkUnitQuery, BonusCalculation).ConfigureAwait(true);
             }
             if (_page == null)
             {
@@ -233,36 +237,30 @@ namespace HFM.Forms.Models
             }
         }
 
-        public bool EditAndDeleteButtonsEnabled
-        {
-            get { return SelectedWorkUnitQuery.Name != WorkUnitQuery.SelectAll.Name; }
-        }
+        public bool EditAndDeleteButtonsEnabled => SelectedWorkUnitQuery.Name != WorkUnitQuery.SelectAll.Name;
 
         private BonusCalculation _bonusCalculation;
 
         public BonusCalculation BonusCalculation
         {
-            get { return _bonusCalculation; }
+            get => _bonusCalculation;
             set
             {
                 if (_bonusCalculation != value)
                 {
                     _bonusCalculation = value;
-                    ResetBindings(true);
+                    ExecuteQueryAndResetBindings();
                 }
             }
         }
 
-        public long TotalEntries
-        {
-            get { return _page.TotalItems; }
-        }
+        public long TotalEntries => _page.TotalItems;
 
         private long _currentPage = 1;
 
         public long CurrentPage
         {
-            get { return _currentPage; }
+            get => _currentPage;
             set
             {
                 long newPage = value;
@@ -278,21 +276,18 @@ namespace HFM.Forms.Models
                 if (_currentPage != newPage)
                 {
                     _currentPage = newPage;
-                    ResetBindings(true);
+                    ExecuteQueryAndResetBindings();
                 }
             }
         }
 
-        public long TotalPages
-        {
-            get { return _page.TotalPages > 0 ? _page.TotalPages : 1; }
-        }
+        public long TotalPages => _page.TotalPages > 0 ? _page.TotalPages : 1;
 
         private int _showEntriesValue;
 
         public int ShowEntriesValue
         {
-            get { return _showEntriesValue; }
+            get => _showEntriesValue;
             set
             {
                 if (_showEntriesValue != value)
@@ -300,7 +295,7 @@ namespace HFM.Forms.Models
                     _showEntriesValue = value;
                     OnPropertyChanged();
                     _currentPage = 1;
-                    ResetBindings(true);
+                    ExecuteQueryAndResetBindings();
                 }
             }
         }
@@ -349,10 +344,9 @@ namespace HFM.Forms.Models
 
         #endregion
 
-        public static string[] GetColumnNames()
-        {
+        public static string[] GetColumnNames() =>
             // Indexes Must Match WorkUnitRowColumn enum
-            return new[]
+            new[]
             {
                 "ProjectID",
                 "Run",
@@ -386,6 +380,5 @@ namespace HFM.Forms.Models
                 "Compute Version",
                 "CUDA Version"
             };
-        }
     }
 }

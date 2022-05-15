@@ -41,23 +41,23 @@ public class TestableWorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<IList<WorkUnitRow>> FetchAsync(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(null, context);
-            return repository.Fetch(query, bonusCalculation);
+            return await repository.FetchAsync(query, bonusCalculation).ConfigureAwait(false);
         }
     }
 
-    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<Page<WorkUnitRow>> PageAsync(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(null, context);
-            return repository.Page(page, itemsPerPage, query, bonusCalculation);
+            return await repository.PageAsync(page, itemsPerPage, query, bonusCalculation).ConfigureAwait(false);
         }
     }
 

@@ -569,7 +569,7 @@ namespace HFM.Forms.Views
             set => mnuToolsHistory.Enabled = value;
         }
 
-        private void mnuToolsHistory_Click(object sender, EventArgs e)
+        private async void mnuToolsHistory_Click(object sender, EventArgs e)
         {
             var presenterFactory = new Func<WorkUnitHistoryPresenter>(() =>
             {
@@ -579,7 +579,7 @@ namespace HFM.Forms.Views
                 return presenter;
             });
 
-            _presenter.ToolsHistoryClick(presenterFactory);
+            await _presenter.ToolsHistoryClick(presenterFactory).ConfigureAwait(true);
         }
 
         private void SubscribeToWebMenuControlEvents()

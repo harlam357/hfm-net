@@ -24,46 +24,31 @@ namespace HFM.Core.Data
         private ArtifactFolder _artifacts;
         private IWorkUnitRepository _repository;
 
-        #region Setup and TearDown
-
         [SetUp]
-        public void Init()
-        {
-            SetupTestDataFileCopies();
-        }
+        public void BeforeEach() => SetupTestDataFileCopies();
 
         private void SetupTestDataFileCopies()
         {
             _artifacts = new ArtifactFolder();
 
-            // sometimes the file is not finished
-            // copying before we attempt to open
-            // the copied file.  Halt the thread
-            // for a bit to ensure the copy has
-            // completed.
-
             _testDataFileCopy = _artifacts.GetRandomFilePath();
             File.Copy(TestDataFile, _testDataFileCopy, true);
+            // Halt the thread for a bit to ensure the copy has completed
             Thread.Sleep(100);
 
             _testData2FileCopy = _artifacts.GetRandomFilePath();
             File.Copy(TestData2File, _testData2FileCopy, true);
+            // Halt the thread for a bit to ensure the copy has completed
             Thread.Sleep(100);
 
             _testScratchFile = _artifacts.GetRandomFilePath();
         }
 
         [TearDown]
-        public void Destroy()
-        {
-            _artifacts?.Dispose();
-            (_repository as IDisposable)?.Dispose();
-        }
-
-        #endregion
+        public void AfterEach() => _artifacts?.Dispose();
 
         [Test]
-        public void WorkUnitContextRepository_MultiThread_Test()
+        public async Task WorkUnitContextRepository_MultiThread_Test()
         {
             Initialize(_testScratchFile);
 
@@ -73,70 +58,73 @@ namespace HFM.Core.Data
 
                 var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
                 var slotModel = new SlotModel(new NullClient { Settings = settings });
-                var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i));
-                workUnitModel.CurrentProtein = BuildProtein1();
+                var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i))
+                {
+                    CurrentProtein = BuildProtein1()
+                };
 
                 await _repository.UpdateAsync(workUnitModel);
             });
 
-            Assert.AreEqual(100, _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).Count);
+            var rows = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
+            Assert.AreEqual(100, rows.Count);
         }
 
-        #region Insert
-
         [Test]
-        public async Task WorkUnitContextRepository_Update_Test1()
+        public async Task WorkUnitContextRepository_UpdateAsync_Test1()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            await UpdateAsyncInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_Update_Test1_CzechCulture()
+        public async Task WorkUnitContextRepository_UpdateAsync_Test1_CzechCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
+            await UpdateAsyncInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit1(), BuildProtein1(), BuildWorkUnit1VerifyAction());
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_Update_Test2()
+        public async Task WorkUnitContextRepository_UpdateAsync_Test2()
         {
             var settings = new ClientSettings { Name = "Owner's", Server = "The Path's", Port = ClientSettings.NoPort };
-            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
+            await UpdateAsyncInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit2(), BuildProtein2(), BuildWorkUnit2VerifyAction());
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_Update_Test3()
+        public async Task WorkUnitContextRepository_UpdateAsync_Test3()
         {
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            await UpdateTestInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
+            await UpdateAsyncInternal(settings, SlotIdentifier.NoSlotID, BuildWorkUnit3(), BuildProtein3(), BuildWorkUnit3VerifyAction());
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_Update_Test4()
+        public async Task WorkUnitContextRepository_UpdateAsync_Test4()
         {
             var settings = new ClientSettings { Name = "Owner2", Server = "Path2", Port = ClientSettings.NoPort };
-            await UpdateTestInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
+            await UpdateAsyncInternal(settings, 2, BuildWorkUnit4(), BuildProtein4(), BuildWorkUnit4VerifyAction());
         }
 
-        private async Task UpdateTestInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
+        private async Task UpdateAsyncInternal(ClientSettings settings, int slotID, WorkUnit workUnit, Protein protein, Action<IList<WorkUnitRow>> verifyAction)
         {
             Initialize(_testScratchFile);
 
             var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
-            var workUnitModel = new WorkUnitModel(slotModel, workUnit);
-            workUnitModel.CurrentProtein = protein;
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit)
+            {
+                CurrentProtein = protein
+            };
 
             await _repository.UpdateAsync(workUnitModel);
 
-            var rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).ToList();
+            var rows = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
             verifyAction(rows);
 
             // test code to ensure this unit is NOT written again
             await _repository.UpdateAsync(workUnitModel);
             // verify
-            rows = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None).ToList();
+            rows = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(1, rows.Count);
         }
 
@@ -433,22 +421,18 @@ namespace HFM.Core.Data
             };
         }
 
-        #endregion
-
-        #region Delete
-
         [Test]
         public async Task WorkUnitContextRepository_DeleteAsync_Test()
         {
             // Arrange
             Initialize(_testDataFileCopy);
-            var entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+            var entries = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
             // Assert (pre-condition)
             Assert.AreEqual(44, entries.Count);
             // Act
             Assert.AreEqual(1, await _repository.DeleteAsync(entries[14]));
             // Assert
-            entries = _repository.Fetch(WorkUnitQuery.SelectAll, BonusCalculation.None);
+            entries = await _repository.FetchAsync(WorkUnitQuery.SelectAll, BonusCalculation.None);
             Assert.AreEqual(43, entries.Count);
         }
 
@@ -458,8 +442,6 @@ namespace HFM.Core.Data
             Initialize(_testDataFileCopy);
             Assert.AreEqual(0, await _repository.DeleteAsync(new WorkUnitRow { ID = 100 }));
         }
-
-        #endregion
 
         private void Initialize(string path)
         {

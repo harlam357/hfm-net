@@ -2,6 +2,8 @@
 
 using HFM.Core.WorkUnits;
 
+#pragma warning disable IDE0022 // Use expression body for methods
+
 namespace HFM.Core.Data
 {
     [TestFixture]
@@ -16,13 +18,8 @@ namespace HFM.Core.Data
         private ArtifactFolder _artifacts;
         private IWorkUnitRepository _repository;
 
-        #region Setup and TearDown
-
         [OneTimeSetUp]
-        public void FixtureInit()
-        {
-            SetupTestDataFileCopies();
-        }
+        public void BeforeAll() => SetupTestDataFileCopies();
 
         private void SetupTestDataFileCopies()
         {
@@ -44,29 +41,19 @@ namespace HFM.Core.Data
         }
 
         [OneTimeTearDown]
-        public void FixtureDestroy()
-        {
-            _artifacts?.Dispose();
-            (_repository as IDisposable)?.Dispose();
-        }
-
-        #endregion
-
-        #region Fetch
+        public void AfterAll() => _artifacts?.Dispose();
 
         [Test]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_All_Test()
+        public async Task WorkUnitContextRepository_FetchAsync_All_Test()
         {
-            FetchTestData(44, WorkUnitQuery.SelectAll);
+            await FetchAsync(44, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_Equal_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_Equal_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchEqualCases =
@@ -97,10 +84,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_NotEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_NotEqual_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchNotEqualCases =
@@ -131,10 +117,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_GreaterThan_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchGreaterThanCases =
@@ -165,10 +150,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchGreaterThanOrEqualCases =
@@ -199,10 +183,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_LessThan_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_LessThan_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchLessThanCases =
@@ -233,10 +216,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchLessThanOrEqualCases =
@@ -267,10 +249,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLikeCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_Like_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_Like_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchLikeCases =
@@ -301,10 +282,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_NotLike_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_NotLike_Test(int expected, WorkUnitQuery query)
         {
-            FetchTestData(expected, query);
+            await FetchAsync(expected, query);
         }
 
         private static readonly object[] FetchNotLikeCases =
@@ -334,9 +314,9 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        public void WorkUnitContextRepository_Fetch_Complex_Test1()
+        public async Task WorkUnitContextRepository_FetchAsync_Complex_Test1()
         {
-            FetchTestData(33, new WorkUnitQuery()
+            await FetchAsync(33, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2010, 8, 8))
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan,
@@ -344,9 +324,9 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitContextRepository_Fetch_Complex_Test2()
+        public async Task WorkUnitContextRepository_FetchAsync_Complex_Test2()
         {
-            FetchTestData(3, new WorkUnitQuery()
+            await FetchAsync(3, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.GreaterThan,
                     5000)
                 .AddParameter(WorkUnitRowColumn.Atoms, WorkUnitQueryOperator.LessThanOrEqual,
@@ -354,19 +334,16 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_All_Test2()
+        public async Task WorkUnitContextRepository_FetchAsync_All_Test2()
         {
-            // Select All
-            FetchTestData2(253, WorkUnitQuery.SelectAll);
+            await FetchAsync2(253, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_Equal_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_Equal_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchEqualCases2 =
@@ -397,10 +374,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_NotEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchNotEqualCases2 =
@@ -431,10 +407,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_GreaterThan_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchGreaterThanCases2 =
@@ -465,10 +440,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchGreaterThanOrEqualCases2 =
@@ -499,10 +473,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_LessThan_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_LessThan_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchLessThanCases2 =
@@ -533,10 +506,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchLessThanOrEqualCases2 =
@@ -567,10 +539,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchLikeCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_Like_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_Like_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchLikeCases2 =
@@ -601,10 +572,9 @@ namespace HFM.Core.Data
 
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Fetch")]
-        public void WorkUnitContextRepository_Fetch_NotLike_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_FetchAsync_NotLike_Test2(int expected, WorkUnitQuery query)
         {
-            FetchTestData2(expected, query);
+            await FetchAsync2(expected, query);
         }
 
         private static readonly object[] FetchNotLikeCases2 =
@@ -634,9 +604,9 @@ namespace HFM.Core.Data
         };
 
         [Test]
-        public void WorkUnitContextRepository_Fetch_Complex_Test3()
+        public async Task WorkUnitContextRepository_FetchAsync_Complex_Test3()
         {
-            FetchTestData2(51, new WorkUnitQuery()
+            await FetchAsync2(51, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.GreaterThan,
                     new DateTime(2012, 5, 29))
                 .AddParameter(WorkUnitRowColumn.Assigned, WorkUnitQueryOperator.LessThan,
@@ -644,209 +614,177 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public void WorkUnitContextRepository_Fetch_Complex_Test4()
+        public async Task WorkUnitContextRepository_FetchAsync_Complex_Test4()
         {
-            FetchTestData2(77, new WorkUnitQuery()
+            await FetchAsync2(77, new WorkUnitQuery()
                 .AddParameter(WorkUnitRowColumn.SlotName, WorkUnitQueryOperator.GreaterThanOrEqual,
                     "Ubuntu VM SMP - Media Server")
                 .AddParameter(WorkUnitRowColumn.SlotName, WorkUnitQueryOperator.LessThanOrEqual,
                     "n"));
         }
 
-        private void FetchTestData(int count, WorkUnitQuery query)
+        private async Task FetchAsync(int count, WorkUnitQuery query)
         {
             Initialize(_testDataFileCopy);
-            FetchInternal(count, query, BonusCalculation.DownloadTime);
-        }
-
-        private void FetchTestData2(int count, WorkUnitQuery query)
-        {
-            Initialize(_testData2FileCopy);
-            FetchInternal(count, query, BonusCalculation.FrameTime);
-        }
-
-        private void FetchInternal(int count, WorkUnitQuery query, BonusCalculation bonusCalculation)
-        {
-            var entries = _repository.Fetch(query, bonusCalculation);
+            var entries = await _repository.FetchAsync(query, BonusCalculation.DownloadTime);
             Assert.AreEqual(count, entries.Count);
         }
 
-        #endregion
-
-        #region Page
+        private async Task FetchAsync2(int count, WorkUnitQuery query)
+        {
+            Initialize(_testData2FileCopy);
+            var entries = await _repository.FetchAsync(query, BonusCalculation.FrameTime);
+            Assert.AreEqual(count, entries.Count);
+        }
 
         [Test]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_All_Test1()
+        public async Task WorkUnitContextRepository_PageAsync_All_Test1()
         {
-            // Select All
-            PageTestData(44, WorkUnitQuery.SelectAll);
+            await PageAsync(44, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_Equal_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_Equal_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_NotEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_NotEqual_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_GreaterThan_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_GreaterThan_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_GreaterThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_LessThan_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_LessThan_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_LessThanOrEqual_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLikeCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_Like_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_Like_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_NotLike_Test(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_NotLike_Test(int expected, WorkUnitQuery query)
         {
-            PageTestData(expected, query);
+            await PageAsync(expected, query);
         }
 
         [Test]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_All_Test2()
+        public async Task WorkUnitContextRepository_PageAsync_All_Test2()
         {
-            // Select All
-            PageTestData2(253, WorkUnitQuery.SelectAll);
+            await PageAsync2(253, WorkUnitQuery.SelectAll);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_Equal_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_Equal_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchNotEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_NotEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_NotEqual_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_GreaterThan_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_GreaterThan_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchGreaterThanOrEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_GreaterThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_LessThan_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_LessThan_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLessThanOrEqualCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_LessThanOrEqual_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchLikeCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_Like_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_Like_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
         [Test]
         [TestCaseSource(nameof(FetchNotLikeCases2))]
-        [Category("HFM.Core.WorkUnitRepository.Page")]
-        public void WorkUnitContextRepository_Page_NotLike_Test2(int expected, WorkUnitQuery query)
+        public async Task WorkUnitContextRepository_PageAsync_NotLike_Test2(int expected, WorkUnitQuery query)
         {
-            PageTestData2(expected, query);
+            await PageAsync2(expected, query);
         }
 
-        private void PageTestData(long totalItems, WorkUnitQuery query)
+        private async Task PageAsync(long totalItems, WorkUnitQuery query)
         {
             const long itemsPerPage = 10;
 
             Initialize(_testDataFileCopy);
-            var page = _repository.Page(1, itemsPerPage, query, BonusCalculation.DownloadTime);
+            var page = await _repository.PageAsync(1, itemsPerPage, query, BonusCalculation.DownloadTime);
             int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
             Assert.AreEqual(totalItems, page.TotalItems);
             Assert.AreEqual(expectedPages, page.TotalPages);
         }
 
-        private void PageTestData2(long totalItems, WorkUnitQuery query)
+        private async Task PageAsync2(long totalItems, WorkUnitQuery query)
         {
             const long itemsPerPage = 10;
 
             Initialize(_testData2FileCopy);
-            var page = _repository.Page(1, itemsPerPage, query, BonusCalculation.FrameTime);
+            var page = await _repository.PageAsync(1, itemsPerPage, query, BonusCalculation.FrameTime);
             int expectedPages = (int)Math.Ceiling(totalItems / (double)itemsPerPage);
             Assert.AreEqual(totalItems, page.TotalItems);
             Assert.AreEqual(expectedPages, page.TotalPages);
         }
 
-        #endregion
-
-        #region Count
-
         [Test]
-        public async Task WorkUnitContextRepository_CountCompleted_Test1()
+        public async Task WorkUnitContextRepository_CountCompletedAsync_Test1()
         {
             Initialize(_testDataFileCopy);
             long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", null);
@@ -854,7 +792,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_CountCompleted_Test2()
+        public async Task WorkUnitContextRepository_CountCompletedAsync_Test2()
         {
             Initialize(_testDataFileCopy);
             long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
@@ -862,7 +800,7 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_CountFailed_Test1()
+        public async Task WorkUnitContextRepository_CountFailedAsync_Test1()
         {
             Initialize(_testData2FileCopy);
             long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", null);
@@ -870,14 +808,12 @@ namespace HFM.Core.Data
         }
 
         [Test]
-        public async Task WorkUnitContextRepository_CountFailed_Test2()
+        public async Task WorkUnitContextRepository_CountFailedAsync_Test2()
         {
             Initialize(_testData2FileCopy);
             long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
             Assert.AreEqual(0, count);
         }
-
-        #endregion
 
         private void Initialize(string path)
         {

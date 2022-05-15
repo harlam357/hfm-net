@@ -30,9 +30,9 @@ public interface IWorkUnitRepository
 
     Task<int> DeleteAsync(WorkUnitRow row);
 
-    IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation);
+    Task<IList<WorkUnitRow>> FetchAsync(WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-    Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
+    Task<Page<WorkUnitRow>> PageAsync(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
     Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime);
 
@@ -72,25 +72,25 @@ public class ScopedWorkUnitContextRepositoryProxy : IWorkUnitRepository
         }
     }
 
-    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<IList<WorkUnitRow>> FetchAsync(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(_logger, context);
-            return repository.Fetch(query, bonusCalculation);
+            return await repository.FetchAsync(query, bonusCalculation).ConfigureAwait(false);
         }
     }
 
-    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<Page<WorkUnitRow>> PageAsync(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(_logger, context);
-            return repository.Page(page, itemsPerPage, query, bonusCalculation);
+            return await repository.PageAsync(page, itemsPerPage, query, bonusCalculation).ConfigureAwait(false);
         }
     }
 
@@ -388,12 +388,12 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         return await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public IList<WorkUnitRow> Fetch(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<IList<WorkUnitRow>> FetchAsync(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var sw = Stopwatch.StartNew();
         try
         {
-            return FetchInternal(query, bonusCalculation);
+            return await FetchInternal(query, bonusCalculation).ConfigureAwait(false);
         }
         finally
         {
@@ -401,7 +401,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    private IList<WorkUnitRow> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
+    private async Task<IList<WorkUnitRow>> FetchInternal(WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         IQueryable<WorkUnitEntity> q = WorkUnitQuery(_context, bonusCalculation);
 
@@ -410,15 +410,16 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             q = q.Where(p);
         }
 
-        return _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        var workUnits = await q.ToListAsync().ConfigureAwait(false);
+        return _mapper.Map<IList<WorkUnitRow>>(workUnits);
     }
 
-    public Page<WorkUnitRow> Page(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    public async Task<Page<WorkUnitRow>> PageAsync(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         var sw = Stopwatch.StartNew();
         try
         {
-            return PageInternal(page, itemsPerPage, query, bonusCalculation);
+            return await PageInternal(page, itemsPerPage, query, bonusCalculation).ConfigureAwait(false);
         }
         finally
         {
@@ -426,7 +427,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    private Page<WorkUnitRow> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
+    private async Task<Page<WorkUnitRow>> PageInternal(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation)
     {
         IQueryable<WorkUnitEntity> q = WorkUnitQuery(_context, bonusCalculation);
 
@@ -435,7 +436,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             q = q.Where(p);
         }
 
-        long count = q.LongCount();
+        long count = await q.LongCountAsync().ConfigureAwait(false);
 
         q = q
             .Skip((int)((page - 1) * itemsPerPage))
@@ -447,7 +448,8 @@ public class WorkUnitContextRepository : IWorkUnitRepository
             totalPages++;
         }
 
-        var items = _mapper.Map<IList<WorkUnitRow>>(q.ToList());
+        var workUnits = await q.ToListAsync().ConfigureAwait(false);
+        var items = _mapper.Map<IList<WorkUnitRow>>(workUnits);
         return new Page<WorkUnitRow>
         {
             CurrentPage = page,

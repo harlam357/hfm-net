@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 using HFM.Core;
 using HFM.Core.Client;
@@ -683,18 +676,22 @@ namespace HFM.Forms.Presenters
             presenter.Show();
         }
 
-        private IFormPresenter _historyPresenter;
+        private IAsyncFormPresenter _historyPresenter;
 
-        public void ToolsHistoryClick(Func<WorkUnitHistoryPresenter> presenterFactory)
+        public async Task ToolsHistoryClick(Func<WorkUnitHistoryPresenter> presenterFactory)
         {
             try
             {
                 if (_historyPresenter is null)
                 {
                     _historyPresenter = presenterFactory();
-                    _historyPresenter.Closed += (s, e) => _historyPresenter = null;
+                    _historyPresenter.Closed += (_, _) => _historyPresenter = null;
                 }
-                _historyPresenter?.Show();
+                var task = _historyPresenter?.ShowAsync();
+                if (task is not null)
+                {
+                    await task.ConfigureAwait(true);
+                }
             }
             catch (Exception ex)
             {

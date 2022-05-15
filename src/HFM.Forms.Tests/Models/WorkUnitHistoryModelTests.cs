@@ -132,7 +132,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void WorkUnitHistoryModel_ResetBindings_Test()
+        public async Task WorkUnitHistoryModel_ResetBindings_Test()
         {
             // Arrange
             Assert.AreEqual(1, _model.QueryBindingSource.Count);
@@ -142,14 +142,14 @@ namespace HFM.Forms.Models
             Assert.AreEqual(2, _model.QueryBindingSource.Count);
 
             _mockRepository
-                .Setup(x => x.Page(
+                .Setup(x => x.PageAsync(
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<WorkUnitQuery>(),
                     It.IsAny<BonusCalculation>()))
-                .Returns(new Page<WorkUnitRow>());
+                .Returns(Task.FromResult(new Page<WorkUnitRow>()));
             // Act
-            _model.ResetBindings(true);
+            await _model.ResetBindings(true);
             // Assert
             _mockRepository.Verify();
         }

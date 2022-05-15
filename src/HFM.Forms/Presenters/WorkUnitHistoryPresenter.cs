@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Forms.Presenters
 {
-    public class WorkUnitHistoryPresenter : FormPresenter<WorkUnitHistoryModel>
+    public class WorkUnitHistoryPresenter : AsyncFormPresenter<WorkUnitHistoryModel>
     {
         public WorkUnitHistoryModel Model { get; }
         public ILogger Logger { get; }
@@ -35,14 +35,14 @@ namespace HFM.Forms.Presenters
             ProteinService = proteinService ?? NullProteinService.Instance;
         }
 
-        public override void Show()
+        public override async Task ShowAsync()
         {
             if (Form is null)
             {
-                Model.Load();
+                await Model.LoadAsync().ConfigureAwait(true);
 
                 Form = OnCreateForm();
-                Form.Closed += OnClosed;
+                Form.Closed += async (s, e) => await OnClosed(s, e).ConfigureAwait(true);
             }
 
             Form.Show();
@@ -61,12 +61,12 @@ namespace HFM.Forms.Presenters
             return new WorkUnitHistoryForm(this);
         }
 
-        public void ExportClick(FileDialogPresenter saveFile)
+        public async void ExportClick(FileDialogPresenter saveFile)
         {
-            ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
+            await ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowCsvFileSerializer() });
         }
 
-        internal void ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitRow>>> serializers)
+        internal async Task ExportClick(FileDialogPresenter saveFile, IList<IFileSerializer<List<WorkUnitRow>>> serializers)
         {
             saveFile.Filter = serializers.GetFileTypeFilters();
             if (saveFile.ShowDialog() == DialogResult.OK)
@@ -74,8 +74,8 @@ namespace HFM.Forms.Presenters
                 try
                 {
                     var serializer = serializers[saveFile.FilterIndex - 1];
-                    var value = Model.Repository.Fetch(Model.SelectedWorkUnitQuery, Model.BonusCalculation).Cast<WorkUnitRow>().ToList();
-                    serializer.Serialize(saveFile.FileName, value);
+                    var value = await Model.Repository.FetchAsync(Model.SelectedWorkUnitQuery, Model.BonusCalculation).ConfigureAwait(true);
+                    serializer.Serialize(saveFile.FileName, value as List<WorkUnitRow> ?? value.ToList());
                 }
                 catch (Exception ex)
                 {

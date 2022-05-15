@@ -20,37 +20,37 @@ namespace HFM.Forms
     public class WorkUnitHistoryPresenterTests
     {
         [Test]
-        public void WorkUnitHistoryPresenter_Show_ShowsViewAndBringsToFront()
+        public async Task WorkUnitHistoryPresenter_ShowAsync_ShowsViewAndBringsToFront()
         {
             // Arrange
             var presenter = CreatePresenter();
             // Act
-            presenter.Show();
+            await presenter.ShowAsync();
             // Assert
             Assert.IsTrue(presenter.MockForm.Shown);
             Assert.AreEqual(1, presenter.MockForm.Invocations.Count(x => x.Name == nameof(IWin32Form.BringToFront)));
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_Show_ShowsViewAndSetsWindowStateToNormal_Test()
+        public async Task WorkUnitHistoryPresenter_ShowAsync_ShowsViewAndSetsWindowStateToNormal_Test()
         {
             // Arrange
             var presenter = CreatePresenter();
-            presenter.Show();
+            await presenter.ShowAsync();
             Assert.IsTrue(presenter.MockForm.Shown);
             Assert.AreEqual(FormWindowState.Normal, presenter.Form.WindowState);
             presenter.Form.WindowState = FormWindowState.Minimized;
             // Act
-            presenter.Show();
+            await presenter.ShowAsync();
             // Assert
             Assert.AreEqual(FormWindowState.Normal, presenter.Form.WindowState);
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_Close_RaisesClosedEvent()
+        public async Task WorkUnitHistoryPresenter_Close_RaisesClosedEvent()
         {
             var presenter = CreatePresenter();
-            presenter.Show();
+            await presenter.ShowAsync();
             bool presenterClosedFired = false;
             presenter.Closed += (s, e) => presenterClosedFired = true;
             // Act
@@ -237,17 +237,19 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_ExportClick_ProvidesSerializerWithFileNameAndRows()
+        public async Task WorkUnitHistoryPresenter_ExportClick_ProvidesSerializerWithFileNameAndRows()
         {
             // Arrange
             var presenter = CreatePresenter();
-            var workUnitRows = new[] { new WorkUnitRow() };
+            IList<WorkUnitRow> workUnitRows = new[] { new WorkUnitRow() };
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(workUnitRows);
+            mockRepository
+                .Setup(x => x.FetchAsync(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>()))
+                .Returns(Task.FromResult(workUnitRows));
             var saveFile = CreateSaveFileDialogView();
             var serializer = new WorkUnitRowFileSerializerSavesFileNameAndRows();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
+            await presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { serializer });
             // Assert
             Assert.AreEqual("test.csv", serializer.FileName);
             Assert.IsTrue(workUnitRows.SequenceEqual(serializer.Rows));
@@ -275,15 +277,18 @@ namespace HFM.Forms
         }
 
         [Test]
-        public void WorkUnitHistoryPresenter_ExportClick_ShowsMessageBoxWhenSerializerThrowsException()
+        public async Task WorkUnitHistoryPresenter_ExportClick_ShowsMessageBoxWhenSerializerThrowsException()
         {
             // Arrange
             var presenter = CreatePresenter();
+            IList<WorkUnitRow> workUnitRows = Array.Empty<WorkUnitRow>();
             var mockRepository = Mock.Get(presenter.Model.Repository);
-            mockRepository.Setup(x => x.Fetch(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>())).Returns(Array.Empty<WorkUnitRow>());
+            mockRepository
+                .Setup(x => x.FetchAsync(It.IsAny<WorkUnitQuery>(), It.IsAny<BonusCalculation>()))
+                .Returns(Task.FromResult(workUnitRows));
             var saveFile = CreateSaveFileDialogView();
             // Act
-            presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
+            await presenter.ExportClick(saveFile, new List<IFileSerializer<List<WorkUnitRow>>> { new WorkUnitRowFileSerializerThrows() });
             // Assert
             var mockMessageBox = (MockMessageBoxPresenter)presenter.MessageBox;
             Assert.AreEqual(1, mockMessageBox.Invocations.Count);
