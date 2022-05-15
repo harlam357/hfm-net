@@ -1,20 +1,31 @@
-﻿using System;
+﻿using HFM.Forms.Views;
 
-using HFM.Forms.Views;
+namespace HFM.Forms.Presenters;
 
-namespace HFM.Forms.Presenters
+/// <summary>
+/// Defines a presenter that shows a non-modal window.
+/// </summary>
+public interface IFormPresenter : IDisposable
 {
-    /// <summary>
-    /// Defines a presenter that shows a non-modal window.
-    /// </summary>
-    public interface IFormPresenter : IDisposable
-    {
-        IWin32Form Form { get; }
+    IWin32Form Form { get; }
 
-        void Show();
+    void Show();
 
-        void Close();
+    void Close();
 
-        event EventHandler Closed;
-    }
+    event EventHandler Closed;
+}
+
+/// <summary>
+/// Defines a presenter that shows a non-modal window.
+/// </summary>
+public interface IAsyncFormPresenter : IDisposable
+{
+    IWin32Form Form { get; }
+
+    Task ShowAsync();
+
+    void Close();
+
+    event EventHandler Closed;
 }
