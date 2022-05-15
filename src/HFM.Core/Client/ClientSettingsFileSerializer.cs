@@ -31,15 +31,23 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
 
     public List<ClientSettings> Deserialize(string path)
     {
+        List<ClientSettings> result;
+
         using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
         using (var reader = XmlReader.Create(fileStream))
         using (var noNamespaceReader = new NoNamespaceXmlReader(reader))
         {
             var serializer = new DataContractSerializer(typeof(List<ClientSettings>));
-            var value = (List<ClientSettings>)serializer.ReadObject(noNamespaceReader);
-            Decrypt(value);
-            return value;
+            result = (List<ClientSettings>)serializer.ReadObject(noNamespaceReader);
+            Decrypt(result);
         }
+
+        if (RequiresGuids(result))
+        {
+            Serialize(path, result);
+        }
+
+        return result;
     }
 
     public void Serialize(string path, List<ClientSettings> value)
@@ -60,6 +68,9 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
         }
     }
 
+    private static bool RequiresGuids(IEnumerable<ClientSettings> collection) =>
+        collection.Any(x => x.Guid == Guid.Empty);
+
     private static void GenerateRequiredGuids(IEnumerable<ClientSettings> collection)
     {
         foreach (var settings in collection.Where(x => x.Guid == Guid.Empty))
@@ -67,8 +78,6 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
             settings.Guid = Guid.NewGuid();
         }
     }
-
-    #region Encryption
 
     private void Encrypt(IEnumerable<ClientSettings> value)
     {
@@ -109,8 +118,6 @@ public class ClientSettingsFileSerializer : IFileSerializer<List<ClientSettings>
             }
         }
     }
-
-    #endregion
 
     private class NoNamespaceXmlReader : XmlReader
     {
