@@ -210,8 +210,9 @@ namespace HFM
                 if (File.Exists(filePath))
                 {
                     var repository = Container.GetInstance<WorkUnitRepository>();
+#if DEBUG
                     //var repository = new WorkUnitRepository(null, CreateProteinService());
-
+#endif
                     repository.Initialize(filePath);
                     if (repository.RequiresUpgrade())
                     {

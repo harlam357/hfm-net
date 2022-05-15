@@ -4,7 +4,6 @@ namespace HFM.Core
 {
     public class CompositionRoot : ICompositionRoot
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "LightInject ILifetime instances.")]
         public void Compose(IServiceRegistry serviceRegistry)
         {
             // ILogger - Singleton
@@ -18,7 +17,9 @@ namespace HFM.Core
 
             // IWorkUnitRepository - Singleton
             serviceRegistry.Register<Data.IWorkUnitRepository, Data.ScopedWorkUnitContextRepositoryProxy>(new PerContainerLifetime());
-            serviceRegistry.Register<Data.WorkUnitRepository>(new PerContainerLifetime());
+
+            // WorkUnitRepository - Transient
+            serviceRegistry.Register<Data.WorkUnitRepository>(new PerRequestLifeTime());
 
             // WorkUnitContext - Scoped
             serviceRegistry.AddDbContext(CreateWorkUnitContext);
