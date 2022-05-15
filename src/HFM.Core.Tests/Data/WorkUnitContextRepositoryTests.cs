@@ -739,8 +739,9 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public async Task WhenClientStartTimeIsNullThenRepositoryReturnsAllFinishedAndFailedCounts()
         {
-            long finished = await _repository.CountCompletedAsync("GTX3090 Slot 01", null);
-            long failed = await _repository.CountFailedAsync("GTX3090 Slot 01", null);
+            var slotIdentifier = SlotIdentifier.FromName("GTX3090 Slot 01", null, _clientGuid);
+            long finished = await _repository.CountCompletedAsync(slotIdentifier, null);
+            long failed = await _repository.CountFailedAsync(slotIdentifier, null);
             Assert.AreEqual(2, finished);
             Assert.AreEqual(2, failed);
         }
@@ -748,8 +749,9 @@ public class WorkUnitContextRepositoryTests
         [Test]
         public async Task WhenClientStartTimeIsNotNullThenRepositoryReturnsCountsFinishedAfterDateTime()
         {
-            long finished = await _repository.CountCompletedAsync("GTX3090 Slot 01", _utcNow);
-            long failed = await _repository.CountFailedAsync("GTX3090 Slot 01", _utcNow);
+            var slotIdentifier = SlotIdentifier.FromName("GTX3090 Slot 01", null, _clientGuid);
+            long finished = await _repository.CountCompletedAsync(slotIdentifier, _utcNow);
+            long failed = await _repository.CountFailedAsync(slotIdentifier, _utcNow);
             Assert.AreEqual(1, finished);
             Assert.AreEqual(1, failed);
         }

@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
-
+﻿using HFM.Core.Client;
 using HFM.Core.WorkUnits;
+
+using NUnit.Framework;
 
 #pragma warning disable IDE0022 // Use expression body for methods
 
@@ -787,7 +788,8 @@ namespace HFM.Core.Data
         public async Task WorkUnitContextRepository_CountCompletedAsync_Test1()
         {
             Initialize(_testDataFileCopy);
-            long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", null);
+            var slotIdentifer = SlotIdentifier.FromName("nVidia GPU - GTX285 - 1", null, Guid.Empty);
+            long count = await _repository.CountCompletedAsync(slotIdentifer, null);
             Assert.AreEqual(11, count);
         }
 
@@ -795,7 +797,8 @@ namespace HFM.Core.Data
         public async Task WorkUnitContextRepository_CountCompletedAsync_Test2()
         {
             Initialize(_testDataFileCopy);
-            long count = await _repository.CountCompletedAsync("nVidia GPU - GTX285 - 1", new DateTime(2010, 8, 21));
+            var slotIdentifer = SlotIdentifier.FromName("nVidia GPU - GTX285 - 1", null, Guid.Empty);
+            long count = await _repository.CountCompletedAsync(slotIdentifer, new DateTime(2010, 8, 21));
             Assert.AreEqual(6, count);
         }
 
@@ -803,7 +806,8 @@ namespace HFM.Core.Data
         public async Task WorkUnitContextRepository_CountFailedAsync_Test1()
         {
             Initialize(_testData2FileCopy);
-            long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", null);
+            var slotIdentifer = SlotIdentifier.FromName("nVidia GPU - GTX470", null, Guid.Empty);
+            long count = await _repository.CountFailedAsync(slotIdentifer, null);
             Assert.AreEqual(1, count);
         }
 
@@ -811,7 +815,8 @@ namespace HFM.Core.Data
         public async Task WorkUnitContextRepository_CountFailedAsync_Test2()
         {
             Initialize(_testData2FileCopy);
-            long count = await _repository.CountFailedAsync("nVidia GPU - GTX470", new DateTime(2012, 2, 1));
+            var slotIdentifer = SlotIdentifier.FromName("nVidia GPU - GTX470", null, Guid.Empty);
+            long count = await _repository.CountFailedAsync(slotIdentifer, new DateTime(2012, 2, 1));
             Assert.AreEqual(0, count);
         }
 

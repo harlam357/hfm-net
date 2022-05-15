@@ -289,13 +289,16 @@ namespace HFM.Core.Client
             slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
             slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
 
-            var clientRun = Messages.ClientRun;
-            if (WorkUnitRepository is not null && clientRun is not null)
+            if (WorkUnitRepository is not null && Messages.ClientRun is not null)
             {
-                slotModel.TotalRunCompletedUnits = (int)await WorkUnitRepository.CountCompletedAsync(slotModel.Name, clientRun.Data.StartTime).ConfigureAwait(false);
-                slotModel.TotalCompletedUnits = (int)await WorkUnitRepository.CountCompletedAsync(slotModel.Name, null).ConfigureAwait(false);
-                slotModel.TotalRunFailedUnits = (int)await WorkUnitRepository.CountFailedAsync(slotModel.Name, clientRun.Data.StartTime).ConfigureAwait(false);
-                slotModel.TotalFailedUnits = (int)await WorkUnitRepository.CountFailedAsync(slotModel.Name, null).ConfigureAwait(false);
+                var r = WorkUnitRepository;
+                var slotIdentifier = slotModel.SlotIdentifier;
+                var clientStartTime = Messages.ClientRun.Data.StartTime;
+
+                slotModel.TotalRunCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
+                slotModel.TotalCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, null).ConfigureAwait(false);
+                slotModel.TotalRunFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
+                slotModel.TotalFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, null).ConfigureAwait(false);
             }
 
             // Update the WorkUnitModel if we have a current unit index

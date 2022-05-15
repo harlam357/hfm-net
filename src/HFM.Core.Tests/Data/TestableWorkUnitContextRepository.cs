@@ -1,4 +1,5 @@
-﻿using HFM.Core.Logging;
+﻿using HFM.Core.Client;
+using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
 using Microsoft.Data.Sqlite;
@@ -61,23 +62,23 @@ public class TestableWorkUnitContextRepository : IWorkUnitRepository
         }
     }
 
-    public async Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountCompletedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
         var context = CreateWorkUnitContext();
         await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(null, context);
-            return await repository.CountCompletedAsync(clientName, clientStartTime).ConfigureAwait(false);
+            return await repository.CountCompletedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
         }
     }
 
-    public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountFailedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
         var context = CreateWorkUnitContext();
         await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(null, context);
-            return await repository.CountFailedAsync(clientName, clientStartTime).ConfigureAwait(false);
+            return await repository.CountFailedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
         }
     }
 

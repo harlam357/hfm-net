@@ -34,9 +34,9 @@ public interface IWorkUnitRepository
 
     Task<Page<WorkUnitRow>> PageAsync(long page, long itemsPerPage, WorkUnitQuery query, BonusCalculation bonusCalculation);
 
-    Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime);
+    Task<long> CountCompletedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime);
 
-    Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime);
+    Task<long> CountFailedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime);
 }
 
 public class ScopedWorkUnitContextRepositoryProxy : IWorkUnitRepository
@@ -94,25 +94,25 @@ public class ScopedWorkUnitContextRepositoryProxy : IWorkUnitRepository
         }
     }
 
-    public async Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountCompletedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
         await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(_logger, context);
-            return await repository.CountCompletedAsync(clientName, clientStartTime).ConfigureAwait(false);
+            return await repository.CountCompletedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
         }
     }
 
-    public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountFailedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
         await using (context.ConfigureAwait(false))
         {
             var repository = new WorkUnitContextRepository(_logger, context);
-            return await repository.CountFailedAsync(clientName, clientStartTime).ConfigureAwait(false);
+            return await repository.CountFailedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
         }
     }
 }
@@ -516,33 +516,29 @@ public class WorkUnitContextRepository : IWorkUnitRepository
                 // ReSharper restore SpecifyACultureInStringConversionExplicitly
             });
 
-    public async Task<long> CountCompletedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountCompletedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
-        var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
-
-        var query = QueryWorkUnitsByClientName(_context, slotIdentifier.ClientIdentifier.Name);
+        var query = QueryWorkUnitsByClient(_context, slotIdentifier.ClientIdentifier);
         query = WhereResultIsFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
         return await query.LongCountAsync().ConfigureAwait(false);
     }
 
-    public async Task<long> CountFailedAsync(string clientName, DateTime? clientStartTime)
+    public async Task<long> CountFailedAsync(SlotIdentifier slotIdentifier, DateTime? clientStartTime)
     {
-        var slotIdentifier = SlotIdentifier.FromName(clientName, String.Empty, Guid.Empty);
-
-        var query = QueryWorkUnitsByClientName(_context, slotIdentifier.ClientIdentifier.Name);
+        var query = QueryWorkUnitsByClient(_context, slotIdentifier.ClientIdentifier);
         query = WhereResultIsNotFinishedUnit(query);
         query = WhereClientSlot(query, slotIdentifier.SlotID);
         query = WhereFinishedAfterClientStart(query, clientStartTime);
         return await query.LongCountAsync().ConfigureAwait(false);
     }
 
-    private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientName(WorkUnitContext context, string clientName) =>
+    private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClient(WorkUnitContext context, ClientIdentifier client) =>
         context.WorkUnits
             .AsNoTracking()
             .Include(x => x.Client)
-            .Where(x => x.Client.Name == clientName);
+            .Where(x => client.HasGuid ? x.Client.Guid == client.Guid.ToString() : x.Client.Name == client.Name);
 
     private static IQueryable<WorkUnitEntity> WhereResultIsFinishedUnit(IQueryable<WorkUnitEntity> query) =>
         query.Where(x => x.Result == WorkUnitResultString.FinishedUnit);
