@@ -106,7 +106,8 @@ public partial class WorkUnitContext
                 ? TimeSpan.FromDays(frameTime * frames / oneDayInSeconds)
                 : finishedDateTime.Subtract(assignedDateTime),
             BonusCalculation.FrameTime => TimeSpan.FromDays(frameTime * frames / oneDayInSeconds),
-            BonusCalculation.None => TimeSpan.FromDays(expirationDays)
+            BonusCalculation.None => TimeSpan.FromDays(expirationDays),
+            _ => TimeSpan.FromDays(expirationDays)
         };
     }
 }

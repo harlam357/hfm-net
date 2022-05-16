@@ -54,7 +54,7 @@ namespace HFM.Core.Data
 
             Parallel.For(0, 100, async i =>
             {
-                Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Thread.CurrentThread.ManagedThreadId);
+                Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Environment.CurrentManagedThreadId);
 
                 var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
                 var slotModel = new SlotModel(new NullClient { Settings = settings });

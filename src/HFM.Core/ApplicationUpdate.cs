@@ -55,7 +55,7 @@ namespace HFM.Core
                 if (!String.IsNullOrEmpty(SHA1))
                 {
                     string hash = CalculateHash(stream, HashProvider.SHA1);
-                    if (String.Compare(SHA1, hash, StringComparison.OrdinalIgnoreCase) != 0)
+                    if (!String.Equals(SHA1, hash, StringComparison.OrdinalIgnoreCase))
                     {
                         throw new IOException("SHA1 file hash is not correct.");
                     }
@@ -64,7 +64,7 @@ namespace HFM.Core
                 if (!String.IsNullOrEmpty(MD5))
                 {
                     string hash = CalculateHash(stream, HashProvider.MD5);
-                    if (String.Compare(MD5, hash, StringComparison.OrdinalIgnoreCase) != 0)
+                    if (!String.Equals(MD5, hash, StringComparison.OrdinalIgnoreCase))
                     {
                         throw new IOException("MD5 file hash is not correct.");
                     }

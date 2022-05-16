@@ -1,6 +1,4 @@
-
-using System;
-using System.Net;
+﻿using System.Net;
 
 namespace HFM.Core.Net
 {
@@ -15,7 +13,7 @@ namespace HFM.Core.Net
         {
             if (ValidateRequired(username, password, out _))
             {
-                if (username.Contains("\\"))
+                if (username.Contains('\\'))
                 {
                     string[] domainAndUsername = username.Split('\\');
                     string domain = domainAndUsername[0];

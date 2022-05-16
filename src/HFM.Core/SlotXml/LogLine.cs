@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
@@ -32,7 +31,7 @@ namespace HFM.Core.SlotXml
                 else if (result == null)
                 {
                     result = new StringBuilder();
-                    result.Append(value.Substring(0, i));
+                    result.Append(value.AsSpan(0, i));
                 }
             }
 
