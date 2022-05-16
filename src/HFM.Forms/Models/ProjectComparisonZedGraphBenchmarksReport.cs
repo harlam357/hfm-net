@@ -21,7 +21,7 @@ namespace HFM.Forms.Models
             Preferences = preferences ?? new InMemoryPreferencesProvider();
         }
 
-        public override void Generate(IBenchmarksReportSource source)
+        public override async Task Generate(IBenchmarksReportSource source)
         {
             var slotIdentifier = source.SlotIdentifier;
             var projects = source.Projects;
@@ -33,7 +33,7 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = Benchmarks.GetBenchmarks(slotIdentifier.Value, projects)
+            var benchmarks = (await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, projects).ConfigureAwait(true))
                 .OrderBy(x => x.SlotIdentifier.Name)
                 .ThenBy(x => x.BenchmarkIdentifier.Threads)
                 .ToList();
@@ -55,9 +55,7 @@ namespace HFM.Forms.Models
                 var ppd = new List<double>();
                 foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.BenchmarkIdentifier.Processor, x.BenchmarkIdentifier.Threads)))
                 {
-                    PointPairList points;
-                    string label;
-                    (points, label) = BuildSlotPoints(group.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal);
+                    (PointPairList points, string label) = BuildSlotPoints(group.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal);
 
                     if (points.Count > 0)
                     {

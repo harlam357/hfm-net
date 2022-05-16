@@ -27,7 +27,7 @@ namespace HFM.Forms.Models
             ClientConfiguration = clientConfiguration;
         }
 
-        public override void Generate(IBenchmarksReportSource source)
+        public override async Task Generate(IBenchmarksReportSource source)
         {
             var benchmarkText = new List<string>();
 
@@ -53,7 +53,7 @@ namespace HFM.Forms.Models
                     continue;
                 }
 
-                var benchmarks = Benchmarks.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber)
+                var benchmarks = (await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, protein.ProjectNumber).ConfigureAwait(true))
                     .OrderBy(x => x.SlotIdentifier.Name)
                     .ThenBy(x => x.BenchmarkIdentifier.Threads);
 

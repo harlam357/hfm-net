@@ -93,9 +93,9 @@ public class ProteinBenchmarkRepositoryTests
         public class WhenGettingBenchmarks : GivenPopulatedDatabase
         {
             [Test]
-            public void ThenBenchmarksAreReturnedForAllSlots()
+            public async Task ThenBenchmarksAreReturnedForAllSlots()
             {
-                var actual = _repository.GetBenchmarks(SlotIdentifier.AllSlots, 18213);
+                var actual = await _repository.GetBenchmarksAsync(SlotIdentifier.AllSlots, 18213);
                 Assert.AreEqual(2, actual.Count);
 
                 var x = actual.ElementAt(0);
@@ -126,12 +126,12 @@ public class ProteinBenchmarkRepositoryTests
             }
 
             [Test]
-            public void ThenBenchmarksAreReturnedSpecificSlot()
+            public async Task ThenBenchmarksAreReturnedSpecificSlot()
             {
                 var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));
                 var s = new SlotIdentifier(c, 2);
 
-                var actual = _repository.GetBenchmarks(s, 18213);
+                var actual = await _repository.GetBenchmarksAsync(s, 18213);
                 Assert.AreEqual(1, actual.Count);
 
                 var b = actual.ElementAt(0);
@@ -149,9 +149,9 @@ public class ProteinBenchmarkRepositoryTests
             }
 
             [Test]
-            public void ThenBenchmarksAreReturnedForAllSlotsAndMultipleProjects()
+            public async Task ThenBenchmarksAreReturnedForAllSlotsAndMultipleProjects()
             {
-                var actual = _repository.GetBenchmarks(SlotIdentifier.AllSlots, new[] { 17910, 18213, 17908 });
+                var actual = await _repository.GetBenchmarksAsync(SlotIdentifier.AllSlots, new[] { 17910, 18213, 17908 });
                 Assert.AreEqual(4, actual.Count);
                 Assert.AreEqual(17908, actual.ElementAt(0).BenchmarkIdentifier.ProjectID);
                 Assert.AreEqual(17910, actual.ElementAt(1).BenchmarkIdentifier.ProjectID);

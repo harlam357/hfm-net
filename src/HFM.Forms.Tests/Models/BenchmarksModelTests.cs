@@ -453,9 +453,10 @@ namespace HFM.Forms.Models
 
             }
 
-            public override void Generate(IBenchmarksReportSource source)
+            public override Task Generate(IBenchmarksReportSource source)
             {
                 Result = new List<string> { Text };
+                return Task.CompletedTask;
             }
         }
 

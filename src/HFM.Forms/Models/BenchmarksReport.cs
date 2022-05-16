@@ -1,54 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Text;
+﻿using System.Globalization;
 
 using HFM.Core.Client;
-using HFM.Core.WorkUnits;
-using HFM.Preferences;
 using HFM.Proteins;
 
-namespace HFM.Forms.Models
+namespace HFM.Forms.Models;
+
+public interface IBenchmarksReportSource
 {
-    public interface IBenchmarksReportSource
+    SlotIdentifier? SlotIdentifier { get; }
+
+    IReadOnlyCollection<int> Projects { get; }
+
+    IReadOnlyList<Color> Colors { get; }
+}
+
+public abstract class BenchmarksReport
+{
+    public string Key { get; }
+
+    public object Result { get; protected set; }
+
+    protected BenchmarksReport(string key)
     {
-        SlotIdentifier? SlotIdentifier { get; }
-
-        IReadOnlyCollection<int> Projects { get; }
-
-        IReadOnlyList<Color> Colors { get; }
+        Key = key ?? throw new ArgumentNullException(nameof(key));
     }
 
-    public abstract class BenchmarksReport
+    public abstract Task Generate(IBenchmarksReportSource source);
+
+    protected static IEnumerable<string> EnumerateProjectInformation(Protein protein)
     {
-        public string Key { get; }
+        yield return String.Format(CultureInfo.InvariantCulture, " Project ID: {0}", protein.ProjectNumber);
+        yield return String.Format(CultureInfo.InvariantCulture, " Core: {0}", protein.Core);
+        yield return String.Format(CultureInfo.InvariantCulture, " Credit: {0}", protein.Credit);
+        yield return String.Format(CultureInfo.InvariantCulture, " Frames: {0}", protein.Frames);
+    }
 
-        public object Result { get; protected set; }
-
-        protected BenchmarksReport(string key)
+    protected static double GetPPD(Protein protein, TimeSpan frameTime, bool calculateBonus)
+    {
+        if (calculateBonus)
         {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
+            var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
+            return protein.GetBonusPPD(frameTime, unitTime);
         }
-
-        public abstract void Generate(IBenchmarksReportSource source);
-
-        protected static IEnumerable<string> EnumerateProjectInformation(Protein protein)
-        {
-            yield return String.Format(CultureInfo.InvariantCulture, " Project ID: {0}", protein.ProjectNumber);
-            yield return String.Format(CultureInfo.InvariantCulture, " Core: {0}", protein.Core);
-            yield return String.Format(CultureInfo.InvariantCulture, " Credit: {0}", protein.Credit);
-            yield return String.Format(CultureInfo.InvariantCulture, " Frames: {0}", protein.Frames);
-        }
-
-        protected static double GetPPD(Protein protein, TimeSpan frameTime, bool calculateBonus)
-        {
-            if (calculateBonus)
-            {
-                var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
-                return protein.GetBonusPPD(frameTime, unitTime);
-            }
-            return protein.GetPPD(frameTime);
-        }
+        return protein.GetPPD(frameTime);
     }
 }

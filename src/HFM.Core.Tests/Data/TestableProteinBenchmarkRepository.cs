@@ -52,23 +52,23 @@ public class TestableProteinBenchmarkRepository : IProteinBenchmarkRepository
         }
     }
 
-    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID)
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new ProteinBenchmarkRepository(null, context);
-            return repository.GetBenchmarks(slotIdentifier, projectID);
+            return await repository.GetBenchmarksAsync(slotIdentifier, projectID).ConfigureAwait(false);
         }
     }
 
-    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new ProteinBenchmarkRepository(null, context);
-            return repository.GetBenchmarks(slotIdentifier, projects);
+            return await repository.GetBenchmarksAsync(slotIdentifier, projects).ConfigureAwait(false);
         }
     }
 

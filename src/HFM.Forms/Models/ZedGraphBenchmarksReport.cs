@@ -93,7 +93,7 @@ namespace HFM.Forms.Models
 
         }
 
-        public sealed override void Generate(IBenchmarksReportSource source)
+        public sealed override async Task Generate(IBenchmarksReportSource source)
         {
             var slotIdentifier = source.SlotIdentifier;
             var projectID = GetProjectID(source);
@@ -106,7 +106,7 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = SortBenchmarks(Benchmarks.GetBenchmarks(slotIdentifier.Value, protein.ProjectNumber));
+            var benchmarks = SortBenchmarks(await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, protein.ProjectNumber).ConfigureAwait(true));
 
             var zg = CreateZedGraphControl();
             try

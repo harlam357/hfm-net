@@ -232,12 +232,12 @@ public class BenchmarksModel : AsyncViewModelBase, IBenchmarksReportSource
         }
     }
 
-    protected virtual void OnSelectedSlotProjectListItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+    protected virtual async void OnSelectedSlotProjectListItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (SelectedSlotProjectListItems.Count > 0)
         {
             SelectedSlotProject = SelectedSlotProjectListItems.First().GetValue<ValueItem<int>>();
-            RunReports();
+            await RunReports().ConfigureAwait(true);
         }
         else
         {
@@ -299,13 +299,13 @@ public class BenchmarksModel : AsyncViewModelBase, IBenchmarksReportSource
     }
 
     // Reports
-    public void RunReports()
+    public async Task RunReports()
     {
         System.Diagnostics.Debug.WriteLine(nameof(RunReports));
 
         foreach (var report in Reports)
         {
-            report.Generate(this);
+            await report.Generate(this).ConfigureAwait(true);
             switch (report.Key)
             {
                 case TextBenchmarksReport.KeyName:
