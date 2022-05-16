@@ -177,8 +177,3 @@ csharp_style_expression_bodied_operators = when_on_single_line:suggestion
 # Taking all Visual Studio defaults
 
 # Specific Code files
-[HyperTypeDescriptor.cs]
-generated_code = true
-
-[PetaPoco.cs]
-generated_code = true
