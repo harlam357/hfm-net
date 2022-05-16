@@ -50,7 +50,7 @@ namespace HFM.Core.Client
 
         public virtual string SlotTypeString { get; set; }
 
-        public string Processor => Description?.Processor;
+        public virtual string Processor => Description?.Processor;
 
         public int? Threads => Description is CPUSlotDescription cpu ? cpu.CPUThreads : null;
 
@@ -165,6 +165,21 @@ namespace HFM.Core.Client
                     sb.Append($" ({Client.Platform.ClientVersion})");
                 }
                 return sb.ToString();
+            }
+        }
+
+        public override string Processor
+        {
+            get
+            {
+                if (ShowVersions && WorkUnitModel.WorkUnit.Platform?.Implementation is "CUDA" or "OpenCL")
+                {
+                    var platform = WorkUnitModel.WorkUnit.Platform;
+                    var sb = new StringBuilder(base.Processor);
+                    sb.Append($" ({platform.Implementation} {platform.DriverVersion})");
+                    return sb.ToString();
+                }
+                return base.Processor;
             }
         }
 

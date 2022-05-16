@@ -2,6 +2,7 @@
 
 using HFM.Core.Client.Mocks;
 using HFM.Core.WorkUnits;
+using HFM.Preferences;
 
 using Moq;
 
@@ -134,6 +135,14 @@ namespace HFM.Core.Client
                 Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
                 Assert.AreEqual(0, slot01.WorkUnitModel.ID);
+            }
+
+            [Test]
+            public void ThenGpuSlotProcessorShowsPlatformImplementationAndDriverVersion()
+            {
+                _fahClient.Preferences.Set(Preference.DisplayVersions, true);
+                var slot01 = _fahClient.Slots.ElementAt(1);
+                Assert.AreEqual("Geforce RTX 2060 (CUDA 456.71)", slot01.Processor);
             }
 
             [Test]
