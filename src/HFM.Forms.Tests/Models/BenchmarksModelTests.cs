@@ -17,7 +17,7 @@ namespace HFM.Forms.Models
     public class BenchmarksModelTests
     {
         [Test]
-        public void BenchmarksModel_Load_FromPreferences()
+        public async Task BenchmarksModel_LoadAsync_FromPreferences()
         {
             // Arrange
             var model = CreateModel();
@@ -27,7 +27,7 @@ namespace HFM.Forms.Models
             var color = Color.AliceBlue;
             preferences.Set(Preference.GraphColors, new List<Color> { color });
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreEqual(new Point(10, 20), model.FormLocation);
             Assert.AreEqual(new Size(30, 40), model.FormSize);
@@ -35,7 +35,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_Load_FirstSelectedGraphColor()
+        public async Task BenchmarksModel_LoadAsync_FirstSelectedGraphColor()
         {
             // Arrange
             var model = CreateModel();
@@ -43,20 +43,20 @@ namespace HFM.Forms.Models
             var color = Color.AliceBlue;
             preferences.Set(Preference.GraphColors, new List<Color> { color });
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreEqual(color, model.SelectedGraphColorItem.Value);
             Assert.AreEqual(color, model.SelectedGraphColor);
         }
 
         [Test]
-        public void BenchmarksModel_Load_SlotsAndProjectsFromBenchmarks()
+        public async Task BenchmarksModel_LoadAsync_SlotsAndProjectsFromBenchmarks()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
             var model = CreateModel(benchmarks);
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert (slots)
             Assert.AreEqual(2, model.SlotIdentifiers.Count);
             Assert.AreEqual(SlotIdentifier.AllSlots, model.SelectedSlotIdentifier.Value);
@@ -66,7 +66,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_Load_SlotIdentifiersRaisesOneListChangedEvent()
+        public async Task BenchmarksModel_LoadAsync_SlotIdentifiersRaisesOneListChangedEvent()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
@@ -74,13 +74,13 @@ namespace HFM.Forms.Models
             int listChanged = 0;
             model.SlotIdentifiers.ListChanged += (s, e) => listChanged++;
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreEqual(1, listChanged);
         }
 
         [Test]
-        public void BenchmarksModel_Load_SlotProjectsRaisesOneListChangedEvent()
+        public async Task BenchmarksModel_LoadAsync_SlotProjectsRaisesOneListChangedEvent()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
@@ -88,13 +88,13 @@ namespace HFM.Forms.Models
             int listChanged = 0;
             model.SlotProjects.ListChanged += (s, e) => listChanged++;
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreEqual(1, listChanged);
         }
 
         [Test]
-        public void BenchmarksModel_Save_ToPreferences()
+        public async Task BenchmarksModel_SaveAsync_ToPreferences()
         {
             // Arrange
             var model = CreateModel();
@@ -104,7 +104,7 @@ namespace HFM.Forms.Models
             var color = Color.SaddleBrown;
             model.GraphColors.Add(new ListItem(color.Name, new ValueItem<Color>(color)));
             // Act
-            model.Save();
+            await model.SaveAsync();
             // Assert
             Assert.AreEqual(new Point(50, 60), preferences.Get<Point>(Preference.BenchmarksFormLocation));
             Assert.AreEqual(new Size(70, 80), preferences.Get<Size>(Preference.BenchmarksFormSize));
@@ -128,12 +128,12 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_SelectedSlotIdentifier_RefreshesSlotProjects()
+        public async Task BenchmarksModel_SelectedSlotIdentifier_RefreshesSlotProjects()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
             var model = CreateModel(benchmarks);
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
             // Assert
@@ -142,13 +142,13 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_SelectedSlotProject_IsSetFromDefaultProjectID()
+        public async Task BenchmarksModel_SelectedSlotProject_IsSetFromDefaultProjectID()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
             var model = CreateModel(benchmarks);
             model.DefaultProjectID = 65432;
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.SetDefaultSlotProject();
             // Assert
@@ -158,12 +158,12 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_SelectedSlotProject_IsSetWhenProjectListItemIsSelected()
+        public async Task BenchmarksModel_SelectedSlotProject_IsSetWhenProjectListItemIsSelected()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
             var model = CreateModel(benchmarks);
-            model.Load();
+            await model.LoadAsync();
             model.SelectedSlotProjectListItems.Clear();
             Assert.IsNull(model.SelectedSlotProject);
             // Act
@@ -175,7 +175,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_Protein_IsSetFromProteinServiceWhenProjectListItemIsSelected()
+        public async Task BenchmarksModel_Protein_IsSetFromProteinServiceWhenProjectListItemIsSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
@@ -183,20 +183,20 @@ namespace HFM.Forms.Models
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarks);
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreSame(protein, model.Protein);
         }
 
         [Test]
-        public void BenchmarksModel_Protein_IsSetNullWhenProjectListItemIsNotSelected()
+        public async Task BenchmarksModel_Protein_IsSetNullWhenProjectListItemIsNotSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarks);
-            model.Load();
+            await model.LoadAsync();
             Assert.IsNotNull(model.Protein);
             // Act
             model.SelectedSlotProjectListItems.Clear();
@@ -205,14 +205,14 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_Protein_IsSetNullWhenProjectDoesNotExistInProteinService()
+        public async Task BenchmarksModel_Protein_IsSetNullWhenProjectDoesNotExistInProteinService()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
             var proteinService = CreateProteinService(protein);
             var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
             var model = CreateModel(proteinService, benchmarks);
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.SelectedSlotIdentifier = model.SlotIdentifierValueItems.Last();
             // Assert
@@ -220,7 +220,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_AsIBenchmarkReportSource()
+        public async Task BenchmarksModel_AsIBenchmarkReportSource()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
@@ -228,7 +228,7 @@ namespace HFM.Forms.Models
             var preferences = model.Preferences;
             preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             IBenchmarksReportSource source = model;
             Assert.AreEqual(model.SelectedSlotIdentifier.Value, source.SlotIdentifier);
@@ -237,14 +237,14 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_AsIBenchmarkReportSource_WhenSelectedSlotIdentifierIsNull()
+        public async Task BenchmarksModel_AsIBenchmarkReportSource_WhenSelectedSlotIdentifierIsNull()
         {
             // Arrange
             var benchmarks = CreateBenchmarkRepositoryWithTwoSlotsAndProjects();
             var model = CreateModel(benchmarks);
             var preferences = model.Preferences;
             preferences.Set(Preference.GraphColors, new List<Color> { Color.AliceBlue });
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.SelectedSlotIdentifier = null;
             // Assert
@@ -255,7 +255,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarksModel_BenchmarkText_IsPopulatedFromTextBenchmarksReportWhenProjectIsSelected()
+        public async Task BenchmarksModel_BenchmarkText_IsPopulatedFromTextBenchmarksReportWhenProjectIsSelected()
         {
             // Arrange
             var protein = new Protein { ProjectNumber = 12345 };
@@ -263,14 +263,14 @@ namespace HFM.Forms.Models
             var benchmarks = CreateBenchmarkRepositoryWithOneSlotAndProject();
             var model = CreateModel(proteinService, benchmarks, new[] { new MockTextBenchmarksReport() });
             // Act
-            model.Load();
+            await model.LoadAsync();
             // Assert
             Assert.AreEqual(1, model.BenchmarkText.Count);
             Assert.AreEqual(MockTextBenchmarksReport.Text, model.BenchmarkText.First());
         }
 
         [Test]
-        public void BenchmarkModel_MoveSelectedGraphColorUp_DoesNotMoveTheColorAtIndexZero()
+        public async Task BenchmarkModel_MoveSelectedGraphColorUp_DoesNotMoveTheColorAtIndexZero()
         {
             // Arrange
             var model = CreateModel();
@@ -278,7 +278,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.MoveSelectedGraphColorUp();
             // Assert
@@ -287,7 +287,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_MoveSelectedGraphColorUp_MovesTheColorUpOneIndex()
+        public async Task BenchmarkModel_MoveSelectedGraphColorUp_MovesTheColorUpOneIndex()
         {
             // Arrange
             var model = CreateModel();
@@ -295,7 +295,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             model.SelectedGraphColorItem = model.GraphColors.Last().GetValue<ValueItem<Color>>();
             // Act
             model.MoveSelectedGraphColorUp();
@@ -305,7 +305,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_MoveSelectedGraphColorDown_DoesNotMoveTheColorAtIndexN()
+        public async Task BenchmarkModel_MoveSelectedGraphColorDown_DoesNotMoveTheColorAtIndexN()
         {
             // Arrange
             var model = CreateModel();
@@ -313,7 +313,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             model.SelectedGraphColorItem = model.GraphColors.Last().GetValue<ValueItem<Color>>();
             // Act
             model.MoveSelectedGraphColorDown();
@@ -323,7 +323,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_MoveSelectedGraphColorDown_MovesTheColorDownOneIndex()
+        public async Task BenchmarkModel_MoveSelectedGraphColorDown_MovesTheColorDownOneIndex()
         {
             // Arrange
             var model = CreateModel();
@@ -331,7 +331,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.MoveSelectedGraphColorDown();
             // Assert
@@ -340,7 +340,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_AddGraphColor_ReturnsFalseWhenColorAlreadyExists()
+        public async Task BenchmarkModel_AddGraphColor_ReturnsFalseWhenColorAlreadyExists()
         {
             // Arrange
             var model = CreateModel();
@@ -348,7 +348,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             // Act
             bool result = model.AddGraphColor(color0);
             // Assert
@@ -356,7 +356,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_AddGraphColor_ReturnsTrueAndAddsNewColorToTheEndOfTheList()
+        public async Task BenchmarkModel_AddGraphColor_ReturnsTrueAndAddsNewColorToTheEndOfTheList()
         {
             // Arrange
             var model = CreateModel();
@@ -365,7 +365,7 @@ namespace HFM.Forms.Models
             var color1 = Color.SaddleBrown;
             var color2 = Color.ForestGreen;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             // Act
             bool result = model.AddGraphColor(color2);
             // Assert
@@ -377,7 +377,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_DeleteSelectedGraphColor_DoesNotRemoveColorWhenSelectedColorIsNull()
+        public async Task BenchmarkModel_DeleteSelectedGraphColor_DoesNotRemoveColorWhenSelectedColorIsNull()
         {
             // Arrange
             var model = CreateModel();
@@ -385,7 +385,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             model.SelectedGraphColorItem = null;
             // Act
             model.DeleteSelectedGraphColor();
@@ -396,7 +396,7 @@ namespace HFM.Forms.Models
         }
 
         [Test]
-        public void BenchmarkModel_DeleteSelectedGraphColor_RemovesTheColorAndSetsNewSelectedColor()
+        public async Task BenchmarkModel_DeleteSelectedGraphColor_RemovesTheColorAndSetsNewSelectedColor()
         {
             // Arrange
             var model = CreateModel();
@@ -404,7 +404,7 @@ namespace HFM.Forms.Models
             var color0 = Color.AliceBlue;
             var color1 = Color.SaddleBrown;
             preferences.Set(Preference.GraphColors, new List<Color> { color0, color1 });
-            model.Load();
+            await model.LoadAsync();
             // Act
             model.DeleteSelectedGraphColor();
             // Assert
@@ -429,7 +429,7 @@ namespace HFM.Forms.Models
         {
             var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
-            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slotIdentifier });
+            benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slotIdentifier }));
             benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
             return benchmarks.Object;
         }
@@ -439,7 +439,7 @@ namespace HFM.Forms.Models
             var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slot0 = CreateSlotIdentifier("Test", 0);
             var slot1 = CreateSlotIdentifier("Test", 1);
-            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slot0, slot1 });
+            benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slot0, slot1 }));
             benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 23456, 65432 });
             return benchmarks.Object;
         }

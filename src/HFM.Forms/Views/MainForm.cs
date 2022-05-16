@@ -547,12 +547,12 @@ namespace HFM.Forms.Views
             }
         }
 
-        private void mnuToolsBenchmarks_Click(object sender, EventArgs e)
+        private async void mnuToolsBenchmarks_Click(object sender, EventArgs e)
         {
             var scope = _presenter.ServiceScopeFactory.CreateScope();
             var presenter = scope.ServiceProvider.GetRequiredService<BenchmarksPresenter>();
             presenter.Closed += delegate { scope.Dispose(); };
-            _presenter.ToolsBenchmarksClick(presenter);
+            await _presenter.ToolsBenchmarksClick(presenter).ConfigureAwait(true);
         }
 
         private void mnuToolsPointsCalculator_Click(object sender, EventArgs e)

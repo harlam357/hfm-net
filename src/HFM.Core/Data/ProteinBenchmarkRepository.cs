@@ -9,7 +9,7 @@ namespace HFM.Core.Data;
 
 public interface IProteinBenchmarkRepository
 {
-    ICollection<SlotIdentifier> GetSlotIdentifiers();
+    Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync();
 
     ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
 
@@ -31,14 +31,14 @@ public class ScopedProteinBenchmarkRepositoryProxy : IProteinBenchmarkRepository
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    public ICollection<SlotIdentifier> GetSlotIdentifiers()
+    public async Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync()
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new ProteinBenchmarkRepository(_logger, context);
-            return repository.GetSlotIdentifiers();
+            return await repository.GetSlotIdentifiersAsync().ConfigureAwait(false);
         }
     }
 
@@ -101,21 +101,21 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public ICollection<SlotIdentifier> GetSlotIdentifiers()
+    public async Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync()
     {
-        var clients = _context.Clients
+        var clients = (await _context.Clients
             .Where(x => x.Guid != null)
-            .AsEnumerable()
+            .ToListAsync().ConfigureAwait(false))
             .Select(x => (
                 ClientID: x.ID,
                 ClientIdentifier: ClientIdentifier.FromConnectionString(x.Name, x.ConnectionString,
                     x.Guid is null ? Guid.Empty : Guid.Parse(x.Guid))));
 
-        var clientSlots = _context.WorkUnits
+        var clientSlots = (await _context.WorkUnits
             .Where(x => x.Frames.Count != 0)
             .Select(x => new { x.ClientID, x.ClientSlot })
             .Distinct()
-            .AsEnumerable()
+            .ToListAsync().ConfigureAwait(false))
             .ToLookup(x => x.ClientID, x => x.ClientSlot);
 
         var slotIdentifiers = new List<SlotIdentifier>();
@@ -221,7 +221,7 @@ public class NullProteinBenchmarkRepository : IProteinBenchmarkRepository
 {
     public static NullProteinBenchmarkRepository Instance { get; } = new();
 
-    public ICollection<SlotIdentifier> GetSlotIdentifiers() => Array.Empty<SlotIdentifier>();
+    public async Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync() => await Task.FromResult(Array.Empty<SlotIdentifier>()).ConfigureAwait(false);
 
     public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) => Array.Empty<int>();
 

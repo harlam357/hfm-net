@@ -23,19 +23,19 @@ namespace HFM.Forms.Presenters
     public class BenchmarkPresenterTests
     {
         [Test]
-        public void BenchmarkPresenter_Show_ShowsView()
+        public async Task BenchmarkPresenter_Show_ShowsView()
         {
             // Arrange
             var model = CreateModel();
             var presenter = new MockFormBenchmarksPresenter(model);
             // Act
-            presenter.Show();
+            await presenter.ShowAsync();
             // Assert
             Assert.IsTrue(presenter.MockForm.Shown);
         }
 
         [Test]
-        public void BenchmarkPresenter_DescriptionLinkClicked_StartsLocalProcess()
+        public async Task BenchmarkPresenter_DescriptionLinkClicked_StartsLocalProcess()
         {
             // Arrange
             var dataContainer = new ProteinDataContainer();
@@ -45,7 +45,7 @@ namespace HFM.Forms.Presenters
             var model = CreateModel(proteinService, benchmarks);
             using (var presenter = new MockFormBenchmarksPresenter(model))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 var localProcess = new MockLocalProcessService();
                 // Act
                 presenter.DescriptionLinkClicked(localProcess);
@@ -56,14 +56,14 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_DescriptionLinkClicked_ShowsMessageBoxWhenLocalProcessFailsToStart()
+        public async Task BenchmarkPresenter_DescriptionLinkClicked_ShowsMessageBoxWhenLocalProcessFailsToStart()
         {
             // Arrange
             var model = CreateModel();
             var messageBox = new MockMessageBoxPresenter();
             using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 var localProcess = new LocalProcessServiceThrows();
                 // Act
                 presenter.DescriptionLinkClicked(localProcess);
@@ -74,14 +74,14 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_AddGraphColorClicked_AddsNewColorToGraphColors()
+        public async Task BenchmarkPresenter_AddGraphColorClicked_AddsNewColorToGraphColors()
         {
             // Arrange
             var model = CreateModel();
             model.Preferences.Set(Preference.GraphColors, new List<Color>());
             using (var presenter = new MockFormBenchmarksPresenter(model))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 var dialog = new MockColorDialogPresenter(window => DialogResult.OK);
                 dialog.Color = Color.FromArgb(72, 134, 186);
                 // Act
@@ -93,7 +93,7 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_AddGraphColorClicked_ShowsMessageBoxAndDoesNotAddExistingColor()
+        public async Task BenchmarkPresenter_AddGraphColorClicked_ShowsMessageBoxAndDoesNotAddExistingColor()
         {
             // Arrange
             var model = CreateModel();
@@ -102,7 +102,7 @@ namespace HFM.Forms.Presenters
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 var dialog = new MockColorDialogPresenter(window => DialogResult.OK);
                 dialog.Color = color;
                 // Act
@@ -114,7 +114,7 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_DeleteGraphColorClicked_ShowsMessageBoxWhenSelectedGraphColorItemIsNull()
+        public async Task BenchmarkPresenter_DeleteGraphColorClicked_ShowsMessageBoxWhenSelectedGraphColorItemIsNull()
         {
             // Arrange
             var model = CreateModel();
@@ -122,7 +122,7 @@ namespace HFM.Forms.Presenters
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 Assert.IsNull(presenter.Model.SelectedGraphColorItem);
                 // Act
                 presenter.DeleteGraphColorClicked();
@@ -132,7 +132,7 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_DeleteGraphColorClicked_ShowsMessageBoxWhenThreeOrLessGraphColors()
+        public async Task BenchmarkPresenter_DeleteGraphColorClicked_ShowsMessageBoxWhenThreeOrLessGraphColors()
         {
             // Arrange
             var model = CreateModel();
@@ -143,7 +143,7 @@ namespace HFM.Forms.Presenters
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 Assert.AreEqual(3, presenter.Model.GraphColors.Count);
                 // Act
                 presenter.DeleteGraphColorClicked();
@@ -154,7 +154,7 @@ namespace HFM.Forms.Presenters
         }
 
         [Test]
-        public void BenchmarkPresenter_DeleteGraphColorClicked_DeletesColor()
+        public async Task BenchmarkPresenter_DeleteGraphColorClicked_DeletesColor()
         {
             // Arrange
             var model = CreateModel();
@@ -166,7 +166,7 @@ namespace HFM.Forms.Presenters
             var messageBox = new MockMessageBoxPresenter((o, t, c) => DialogResult.Yes);
             using (var presenter = new MockFormBenchmarksPresenter(model, messageBox))
             {
-                presenter.Show();
+                await presenter.ShowAsync();
                 Assert.AreEqual(4, presenter.Model.GraphColors.Count);
                 // Act
                 presenter.DeleteGraphColorClicked();
@@ -185,18 +185,8 @@ namespace HFM.Forms.Presenters
         {
             var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
-            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slotIdentifier });
+            benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slotIdentifier }));
             benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
-            return benchmarks.Object;
-        }
-
-        private static IProteinBenchmarkRepository CreateBenchmarkRepositoryWithTwoSlotsAndProjects()
-        {
-            var benchmarks = new Mock<IProteinBenchmarkRepository>();
-            var slot0 = CreateSlotIdentifier("Test", 0);
-            var slot1 = CreateSlotIdentifier("Test", 1);
-            benchmarks.Setup(x => x.GetSlotIdentifiers()).Returns(new[] { slot0, slot1 });
-            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 23456, 65432 });
             return benchmarks.Object;
         }
 

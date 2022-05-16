@@ -662,7 +662,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public void ToolsBenchmarksClick(BenchmarksPresenter presenter)
+        public async Task ToolsBenchmarksClick(BenchmarksPresenter presenter)
         {
             int projectID = 0;
 
@@ -673,7 +673,7 @@ namespace HFM.Forms.Presenters
             }
 
             presenter.Model.DefaultProjectID = projectID;
-            presenter.Show();
+            await presenter.ShowAsync().ConfigureAwait(true);
         }
 
         private IAsyncFormPresenter _historyPresenter;

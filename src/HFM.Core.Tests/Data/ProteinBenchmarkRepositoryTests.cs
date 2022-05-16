@@ -27,9 +27,9 @@ public class ProteinBenchmarkRepositoryTests
         public class WhenFetchingSlotIdentifiers : GivenPopulatedDatabase
         {
             [Test]
-            public void ThenSlotIdentifiersAreReturned()
+            public async Task ThenSlotIdentifiersAreReturned()
             {
-                var actual = _repository.GetSlotIdentifiers();
+                var actual = await _repository.GetSlotIdentifiersAsync();
                 Assert.AreEqual(3, actual.Count);
                 foreach (var s in actual)
                 {

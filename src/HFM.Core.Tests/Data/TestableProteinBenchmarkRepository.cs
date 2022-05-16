@@ -22,13 +22,13 @@ public class TestableProteinBenchmarkRepository : IProteinBenchmarkRepository
         _connectionString = connectionString;
     }
 
-    public ICollection<SlotIdentifier> GetSlotIdentifiers()
+    public async Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync()
     {
         var context = CreateWorkUnitContext();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new ProteinBenchmarkRepository(null, context);
-            return repository.GetSlotIdentifiers();
+            return await repository.GetSlotIdentifiersAsync().ConfigureAwait(false);
         }
     }
 
