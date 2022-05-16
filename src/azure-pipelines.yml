@@ -50,6 +50,7 @@ stages:
       inputs:
         command: 'restore'
         projects: '$(solution)'
+        restoreArguments: '--locked-mode'
         verbosityRestore: 'Normal'
         
     - task: DotNetCoreCLI@2
