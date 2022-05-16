@@ -40,7 +40,7 @@ namespace HFM.Core
             serviceRegistry.Initialize<Data.WorkUnitQueryDataContainer>((_, instance) => instance.Read());
 
             // IProteinBenchmarkRepository - Singleton
-            serviceRegistry.Register<Data.IProteinBenchmarkRepository, Data.ScopedProteinBenchmarkRepository>(new PerContainerLifetime());
+            serviceRegistry.Register<Data.IProteinBenchmarkRepository, Data.ScopedProteinBenchmarkRepositoryProxy>(new PerContainerLifetime());
 
             // IEocStatsService - Singleton
             serviceRegistry.Register<Services.IEocStatsService, Services.EocStatsService>(new PerContainerLifetime());

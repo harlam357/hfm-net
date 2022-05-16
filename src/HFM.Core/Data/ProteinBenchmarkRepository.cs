@@ -20,43 +20,90 @@ public interface IProteinBenchmarkRepository
     ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects);
 }
 
-public class ScopedProteinBenchmarkRepository : ProteinBenchmarkRepository
+public class ScopedProteinBenchmarkRepositoryProxy : IProteinBenchmarkRepository
 {
+    private readonly ILogger _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ScopedProteinBenchmarkRepository(ILogger logger, IServiceScopeFactory serviceScopeFactory) : base(logger)
+    public ScopedProteinBenchmarkRepositoryProxy(ILogger logger, IServiceScopeFactory serviceScopeFactory)
     {
+        _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    protected override WorkUnitContext CreateWorkUnitContext()
+    public ICollection<SlotIdentifier> GetSlotIdentifiers()
     {
-        var scope = _serviceScopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(_logger, context);
+            return repository.GetSlotIdentifiers();
+        }
+    }
+
+    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(_logger, context);
+            return repository.GetBenchmarkProjects(slotIdentifier);
+        }
+    }
+
+    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(_logger, context);
+            return repository.GetBenchmark(slotIdentifier, benchmarkIdentifier);
+        }
+    }
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(_logger, context);
+            return repository.GetBenchmarks(slotIdentifier, projectID);
+        }
+    }
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(_logger, context);
+            return repository.GetBenchmarks(slotIdentifier, projects);
+        }
     }
 }
 
-public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
+public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
 {
     private const int DefaultMaxFrames = 300;
 
     public ILogger Logger { get; }
 
-    protected ProteinBenchmarkRepository() : this(null)
-    {
+    private readonly WorkUnitContext _context;
 
-    }
-
-    protected ProteinBenchmarkRepository(ILogger logger)
+    public ProteinBenchmarkRepository(ILogger logger, WorkUnitContext context)
     {
         Logger = logger ?? NullLogger.Instance;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public ICollection<SlotIdentifier> GetSlotIdentifiers()
     {
-        using var context = CreateWorkUnitContext();
-
-        var clients = context.Clients
+        var clients = _context.Clients
             .Where(x => x.Guid != null)
             .AsEnumerable()
             .Select(x => (
@@ -64,7 +111,7 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 ClientIdentifier: ClientIdentifier.FromConnectionString(x.Name, x.ConnectionString,
                     x.Guid is null ? Guid.Empty : Guid.Parse(x.Guid))));
 
-        var clientSlots = context.WorkUnits
+        var clientSlots = _context.WorkUnits
             .Where(x => x.Frames.Count != 0)
             .Select(x => new { x.ClientID, x.ClientSlot })
             .Distinct()
@@ -81,23 +128,17 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         return slotIdentifiers;
     }
 
-    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
-    {
-        using var context = CreateWorkUnitContext();
-
-        return QueryWorkUnitsByClientSlot(slotIdentifier, context)
+    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) =>
+        QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Where(x => x.Frames.Count != 0)
             .Select(x => x.Protein.ProjectID)
             .Distinct()
             .OrderBy(x => x)
             .ToList();
-    }
 
     public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
     {
-        using var context = CreateWorkUnitContext();
-
-        var frames = QueryWorkUnitsByClientSlot(slotIdentifier, context)
+        var frames = QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Include(x => x.Platform)
             .Where(x =>
                 x.Protein.ProjectID == benchmarkIdentifier.ProjectID &&
@@ -123,11 +164,8 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID) =>
         GetBenchmarks(slotIdentifier, new[] { projectID });
 
-    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
-    {
-        using var context = CreateWorkUnitContext();
-
-        return QueryWorkUnitsByClientSlot(slotIdentifier, context)
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects) =>
+        QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Include(x => x.Protein)
             .Include(x => x.Client)
             .Include(x => x.Platform)
@@ -160,7 +198,6 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 };
             })
             .ToList();
-    }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientSlot(SlotIdentifier slotIdentifier, WorkUnitContext context)
     {
@@ -178,8 +215,6 @@ public abstract class ProteinBenchmarkRepository : IProteinBenchmarkRepository
 
         return query;
     }
-
-    protected abstract WorkUnitContext CreateWorkUnitContext();
 }
 
 public class NullProteinBenchmarkRepository : IProteinBenchmarkRepository

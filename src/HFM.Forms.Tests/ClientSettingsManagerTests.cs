@@ -29,14 +29,19 @@ namespace HFM.Forms
         {
             // Arrange
             var manager = new ClientSettingsManager(null);
-            // Act
-            var settings = manager.Read("..\\..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", 1);
-            // Assert
-            Assert.IsNotNull(settings);
-            Assert.AreEqual(1, settings.Count());
-            Assert.AreEqual("..\\..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", manager.FileName);
-            Assert.AreEqual(1, manager.FilterIndex);
-            Assert.AreEqual(".hfmx", manager.FileExtension);
+            using (var artifacts = new ArtifactFolder())
+            {
+                string path = Path.Combine(artifacts.Path, "ClientSettings_0_9_11.hfmx");
+                File.Copy("..\\..\\..\\TestFiles\\ClientSettings_0_9_11.hfmx", path);
+                // Act
+                var settings = manager.Read(path, 1);
+                // Assert
+                Assert.IsNotNull(settings);
+                Assert.AreEqual(1, settings.Count());
+                Assert.AreEqual(path, manager.FileName);
+                Assert.AreEqual(1, manager.FilterIndex);
+                Assert.AreEqual(".hfmx", manager.FileExtension);
+            }
         }
 
         [Test]

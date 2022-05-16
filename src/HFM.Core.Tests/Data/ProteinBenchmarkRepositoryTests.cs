@@ -13,7 +13,7 @@ public class ProteinBenchmarkRepositoryTests
     public class GivenPopulatedDatabase : ProteinBenchmarkRepositoryTests
     {
         private string _connectionString;
-        private ProteinBenchmarkRepository _repository;
+        private IProteinBenchmarkRepository _repository;
 
         [SetUp]
         public virtual void BeforeEach()

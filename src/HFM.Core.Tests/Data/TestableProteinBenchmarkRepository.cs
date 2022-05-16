@@ -1,11 +1,13 @@
-﻿using HFM.Core.Logging;
+﻿using HFM.Core.Client;
+using HFM.Core.Logging;
+using HFM.Core.WorkUnits;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 
 namespace HFM.Core.Data;
 
-public class TestableProteinBenchmarkRepository : ProteinBenchmarkRepository
+public class TestableProteinBenchmarkRepository : IProteinBenchmarkRepository
 {
     private readonly SqliteConnection _connection;
     private readonly string _connectionString;
@@ -20,9 +22,59 @@ public class TestableProteinBenchmarkRepository : ProteinBenchmarkRepository
         _connectionString = connectionString;
     }
 
+    public ICollection<SlotIdentifier> GetSlotIdentifiers()
+    {
+        var context = CreateWorkUnitContext();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return repository.GetSlotIdentifiers();
+        }
+    }
+
+    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
+    {
+        var context = CreateWorkUnitContext();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return repository.GetBenchmarkProjects(slotIdentifier);
+        }
+    }
+
+    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
+    {
+        var context = CreateWorkUnitContext();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return repository.GetBenchmark(slotIdentifier, benchmarkIdentifier);
+        }
+    }
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, int projectID)
+    {
+        var context = CreateWorkUnitContext();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return repository.GetBenchmarks(slotIdentifier, projectID);
+        }
+    }
+
+    public ICollection<ProteinBenchmark> GetBenchmarks(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
+    {
+        var context = CreateWorkUnitContext();
+        using (context)
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return repository.GetBenchmarks(slotIdentifier, projects);
+        }
+    }
+
     private static readonly object _CreateLock = new();
 
-    protected override WorkUnitContext CreateWorkUnitContext()
+    private WorkUnitContext CreateWorkUnitContext()
     {
         var context = new WorkUnitContext(builder =>
         {
