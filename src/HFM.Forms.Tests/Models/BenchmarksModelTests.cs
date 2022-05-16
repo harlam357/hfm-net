@@ -430,7 +430,7 @@ namespace HFM.Forms.Models
             var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
             benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slotIdentifier }));
-            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
+            benchmarks.Setup(x => x.GetBenchmarkProjectsAsync(It.IsAny<SlotIdentifier>())).Returns(Task.FromResult((ICollection<int>)new[] { 12345 }));
             return benchmarks.Object;
         }
 
@@ -440,7 +440,7 @@ namespace HFM.Forms.Models
             var slot0 = CreateSlotIdentifier("Test", 0);
             var slot1 = CreateSlotIdentifier("Test", 1);
             benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slot0, slot1 }));
-            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 23456, 65432 });
+            benchmarks.Setup(x => x.GetBenchmarkProjectsAsync(It.IsAny<SlotIdentifier>())).Returns(Task.FromResult((ICollection<int>)new[] { 23456, 65432 }));
             return benchmarks.Object;
         }
 

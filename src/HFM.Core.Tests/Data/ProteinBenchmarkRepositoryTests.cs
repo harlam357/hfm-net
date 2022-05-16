@@ -43,18 +43,18 @@ public class ProteinBenchmarkRepositoryTests
         public class WhenGettingBenchmarkProjects : GivenPopulatedDatabase
         {
             [Test]
-            public void ThenBenchmarkProjectsAreReturnedForAllSlots()
+            public async Task ThenBenchmarkProjectsAreReturnedForAllSlots()
             {
-                var actual = _repository.GetBenchmarkProjects(SlotIdentifier.AllSlots);
+                var actual = await _repository.GetBenchmarkProjectsAsync(SlotIdentifier.AllSlots);
                 Assert.AreEqual(6, actual.Count);
             }
 
             [Test]
-            public void ThenBenchmarkProjectsAreReturnedSpecificSlot()
+            public async Task ThenBenchmarkProjectsAreReturnedSpecificSlot()
             {
                 var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));
                 var s = new SlotIdentifier(c, 2);
-                var actual = _repository.GetBenchmarkProjects(s);
+                var actual = await _repository.GetBenchmarkProjectsAsync(s);
                 Assert.AreEqual(2, actual.Count);
             }
         }

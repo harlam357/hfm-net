@@ -247,13 +247,13 @@ public class BenchmarksModel : AsyncViewModelBase, IBenchmarksReportSource
         SetProtein();
     }
 
-    private void RefreshSlotProjects()
+    private async void RefreshSlotProjects()
     {
         SlotProjects.Clear();
 
         if (SelectedSlotIdentifier != null)
         {
-            var projects = Benchmarks.GetBenchmarkProjects(SelectedSlotIdentifier.Value)
+            var projects = (await Benchmarks.GetBenchmarkProjectsAsync(SelectedSlotIdentifier.Value).ConfigureAwait(true))
                 .Select(x => new ListItem(x.ToString(), new ValueItem<int>(x)));
 
             foreach (var project in projects)

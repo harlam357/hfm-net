@@ -186,7 +186,7 @@ namespace HFM.Forms.Presenters
             var benchmarks = new Mock<IProteinBenchmarkRepository>();
             var slotIdentifier = CreateSlotIdentifier("Test", SlotIdentifier.NoSlotID);
             benchmarks.Setup(x => x.GetSlotIdentifiersAsync()).Returns(Task.FromResult((ICollection<SlotIdentifier>)new[] { slotIdentifier }));
-            benchmarks.Setup(x => x.GetBenchmarkProjects(It.IsAny<SlotIdentifier>())).Returns(new[] { 12345 });
+            benchmarks.Setup(x => x.GetBenchmarkProjectsAsync(It.IsAny<SlotIdentifier>())).Returns(Task.FromResult((ICollection<int>)new[] { 12345 }));
             return benchmarks.Object;
         }
 

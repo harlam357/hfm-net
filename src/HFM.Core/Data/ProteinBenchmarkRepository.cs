@@ -11,7 +11,7 @@ public interface IProteinBenchmarkRepository
 {
     Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync();
 
-    ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier);
+    Task<ICollection<int>> GetBenchmarkProjectsAsync(SlotIdentifier slotIdentifier);
 
     ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier);
 
@@ -42,14 +42,14 @@ public class ScopedProteinBenchmarkRepositoryProxy : IProteinBenchmarkRepository
         }
     }
 
-    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier)
+    public async Task<ICollection<int>> GetBenchmarkProjectsAsync(SlotIdentifier slotIdentifier)
     {
         using var scope = _serviceScopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        using (context)
+        await using (context.ConfigureAwait(false))
         {
             var repository = new ProteinBenchmarkRepository(_logger, context);
-            return repository.GetBenchmarkProjects(slotIdentifier);
+            return await repository.GetBenchmarkProjectsAsync(slotIdentifier).ConfigureAwait(false);
         }
     }
 
@@ -128,13 +128,13 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
         return slotIdentifiers;
     }
 
-    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) =>
-        QueryWorkUnitsByClientSlot(slotIdentifier, _context)
+    public async Task<ICollection<int>> GetBenchmarkProjectsAsync(SlotIdentifier slotIdentifier) =>
+        await QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Where(x => x.Frames.Count != 0)
             .Select(x => x.Protein.ProjectID)
             .Distinct()
             .OrderBy(x => x)
-            .ToList();
+            .ToListAsync().ConfigureAwait(false);
 
     public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
     {
@@ -223,7 +223,7 @@ public class NullProteinBenchmarkRepository : IProteinBenchmarkRepository
 
     public async Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync() => await Task.FromResult(Array.Empty<SlotIdentifier>()).ConfigureAwait(false);
 
-    public ICollection<int> GetBenchmarkProjects(SlotIdentifier slotIdentifier) => Array.Empty<int>();
+    public async Task<ICollection<int>> GetBenchmarkProjectsAsync(SlotIdentifier slotIdentifier) => await Task.FromResult(Array.Empty<int>()).ConfigureAwait(false);
 
     public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier) => null;
 
