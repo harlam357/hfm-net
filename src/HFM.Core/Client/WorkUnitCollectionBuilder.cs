@@ -170,7 +170,7 @@ namespace HFM.Core.Client
             string implementation = slotDescription.SlotType switch
             {
                 SlotType.Unknown => null,
-                SlotType.CPU => SlotType.CPU.ToString(),
+                SlotType.CPU => WorkUnitPlatformImplementation.CPU,
                 SlotType.GPU => unitRun.Data.Platform,
                 _ => null,
             };
