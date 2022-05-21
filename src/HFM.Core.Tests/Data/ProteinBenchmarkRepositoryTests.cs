@@ -1,6 +1,10 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
+using HFM.Log;
+using HFM.Proteins;
+
+using Microsoft.Data.Sqlite;
 
 using NUnit.Framework;
 
@@ -162,6 +166,77 @@ public class ProteinBenchmarkRepositoryTests
                 Assert.AreEqual(100, actual.ElementAt(2).FrameTimes.Count);
                 Assert.AreEqual(100, actual.ElementAt(3).FrameTimes.Count);
             }
+        }
+    }
+
+    [TestFixture]
+    public class GivenCompletedWorkUnitWithNoPlatform : ProteinBenchmarkRepositoryTests
+    {
+        private SqliteConnection _connection;
+        private IProteinBenchmarkRepository _repository;
+
+        private readonly string _clientName = "GTX3090";
+        private readonly Guid _clientGuid = Guid.NewGuid();
+        private readonly int _projectID = 1;
+        private readonly DateTime _utcNow = DateTime.UtcNow;
+
+        [SetUp]
+        public async Task BeforeEach()
+        {
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+            _repository = new TestableProteinBenchmarkRepository(_connection);
+
+            var settings = new ClientSettings
+            {
+                Name = _clientName,
+                Guid = _clientGuid
+            };
+            var client = new NullClient
+            {
+                Settings = settings,
+                Platform = new ClientPlatform("7", "Windows")
+            };
+            var slotModel = new SlotModel(client)
+            {
+                Description = new UnknownSlotDescription()
+            };
+            var workUnit = new WorkUnit
+            {
+                ProjectID = _projectID,
+                Assigned = _utcNow,
+                Finished = _utcNow.AddHours(6),
+                UnitResult = WorkUnitResult.FinishedUnit,
+                Frames = new Dictionary<int, LogLineFrameData>
+                {
+                    { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.FromMinutes(3) } }
+                }
+            };
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit)
+            {
+                CurrentProtein = new Protein
+                {
+                    ProjectNumber = 1
+                }
+            };
+
+            var workUnitRepository = new TestableWorkUnitContextRepository(_connection);
+            await workUnitRepository.UpdateAsync(workUnitModel);
+        }
+
+        private class UnknownSlotDescription : SlotDescription
+        {
+            public override SlotType SlotType => SlotType.Unknown;
+        }
+
+        [TearDown]
+        public void AfterEach() => _connection?.Dispose();
+
+        [Test]
+        public void ThenBenchmarksWithoutPlatformDoNotThrowOnRetrieval()
+        {
+            var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
+            Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, _projectID));
         }
     }
 }

@@ -181,7 +181,7 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                         x.Client.Name, x.Client.ConnectionString, Guid.Parse(x.Client.Guid)),
                             x.ClientSlot ?? SlotIdentifier.NoSlotID),
                 BenchmarkIdentifier: new ProteinBenchmarkIdentifier(
-                    x.Protein.ProjectID, x.Platform.Processor, x.Platform.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
+                    x.Protein.ProjectID, x.Platform?.Processor, x.Platform?.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
             .Select(x =>
             {
                 var frames = x
