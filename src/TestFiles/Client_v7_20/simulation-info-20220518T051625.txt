@@ -1,0 +1,3 @@
+PyON 1 simulation-info
+{"user": "toTOW", "team": "51", "project": 18041, "run": 4, "clone": 8, "gen": 59, "core_type": 34, "core": "OPENMM_22", "total_iterations": 100, "iterations_done": 50, "energy": 0, "temperature": 0, "start_time": "2022-05-18T11:22:28Z", "timeout": 0, "deadline": 1653045748, "eta": 20277, "progress": 0.50423, "slot": 1}
+---

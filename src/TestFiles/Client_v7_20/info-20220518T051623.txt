@@ -1,0 +1,70 @@
+PyON 1 info
+[
+  [
+    "FAHClient",
+    ["Version", "7.6.13"],
+    ["Author", "Joseph Coffland <joseph@cauldrondevelopment.com>"],
+    ["Copyright", "2020 foldingathome.org"],
+    ["Homepage", "https://foldingathome.org/"],
+    ["Date", "Apr 28 2020"],
+    ["Time", "04:20:16"],
+    ["Revision", "5a652817f46116b6e135503af97f18e094414e3b"],
+    ["Branch", "master"],
+    ["Compiler", "GNU 8.3.0"],
+    ["Options", "-std=c++11 -ffunction-sections -fdata-sections -O3 -funroll-loops -fno-pie"],
+    ["Platform", "linux2 4.19.0-5-amd64"],
+    ["Bits", "64"],
+    ["Mode", "Release"],
+    ["Args", " --child /etc/fahclient/config.xml --run-as fahclient --pid-file=/var/run/fahclient.pid --daemon"],
+    ["Config", "/etc/fahclient/config.xml"]
+  ],
+  [
+    "CBang",
+    ["Date", "Apr 25 2020"],
+    ["Time", "00:07:53"],
+    ["Revision", "ea081a3b3b0f4a37c4d0440b4f1bc184197c7797"],
+    ["Branch", "master"],
+    ["Compiler", "GNU 8.3.0"],
+    ["Options", "-std=c++11 -ffunction-sections -fdata-sections -O3 -funroll-loops -fno-pie -fPIC"],
+    ["Platform", "linux2 4.19.0-5-amd64"],
+    ["Bits", "64"],
+    ["Mode", "Release"]
+  ],
+  [
+    "System",
+    ["CPU", "           Intel(R) Xeon(R) CPU @ 2.00GHz"],
+    ["CPU ID", "GenuineIntel Family 6 Model 85 Stepping 3"],
+    ["CPUs", "2"],
+    ["Memory", "7.79GiB"],
+    ["Free Memory", "7.48GiB"],
+    ["Threads", "POSIX_THREADS"],
+    ["OS Version", "4.19"],
+    ["Has Battery", "false"],
+    ["On Battery", "false"],
+    ["UTC Offset", "0"],
+    ["PID", "460"],
+    ["CWD", "/var/lib/fahclient"],
+    ["OS", "Linux 4.19.0-20-cloud-amd64 x86_64"],
+    ["OS Arch", "AMD64"],
+    ["GPUs", "2"],
+    ["GPU 0", "Bus:0 Slot:4 Func:0 NVIDIA:7 TU104GL [Tesla T4]"],
+    ["GPU 1", "Bus:0 Slot:5 Func:0 NVIDIA:7 TU104GL [Tesla T4]"],
+    ["CUDA Device 0", "Platform:0 Device:0 Bus:0 Slot:4 Compute:7.5 Driver:11.4"],
+    ["CUDA Device 1", "Platform:0 Device:1 Bus:0 Slot:5 Compute:7.5 Driver:11.4"],
+    ["OpenCL Device 0", "Platform:0 Device:0 Bus:0 Slot:4 Compute:3.0 Driver:470.82"],
+    ["OpenCL Device 1", "Platform:0 Device:1 Bus:0 Slot:5 Compute:3.0 Driver:470.82"]
+  ],
+  [
+    "libFAH",
+    ["Date", "Apr 15 2020"],
+    ["Time", "21:43:24"],
+    ["Revision", "216968bc7025029c841ed6e36e81a03a316890d3"],
+    ["Branch", "master"],
+    ["Compiler", "GNU 8.3.0"],
+    ["Options", "-std=c++11 -ffunction-sections -fdata-sections -O3 -funroll-loops -fno-pie"],
+    ["Platform", "linux2 4.19.0-5-amd64"],
+    ["Bits", "64"],
+    ["Mode", "Release"]
+  ]
+]
+---

@@ -1,0 +1,20 @@
+PyON 1 slots
+[
+  {
+    "id": "00",
+    "status": "RUNNING",
+    "description": "gpu:0:TU104GL [Tesla T4]",
+    "options": {},
+    "reason": "",
+    "idle": False
+  },
+  {
+    "id": "01",
+    "status": "RUNNING",
+    "description": "gpu:1:TU104GL [Tesla T4]",
+    "options": {},
+    "reason": "",
+    "idle": False
+  }
+]
+---

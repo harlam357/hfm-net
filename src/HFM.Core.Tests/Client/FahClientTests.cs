@@ -109,6 +109,8 @@ namespace HFM.Core.Client
         [TestFixture]
         public class GivenConnectedClientRetrievesData : FahClientTests
         {
+            // Version 7.6.21
+
             private MockFahClient _fahClient;
 
             [SetUp]
@@ -150,6 +152,55 @@ namespace HFM.Core.Client
             {
                 var mockWorkUnitRepository = Mock.Get(_fahClient.WorkUnitRepository);
                 mockWorkUnitRepository.Verify(x => x.UpdateAsync(It.IsAny<WorkUnitModel>()), Times.Once);
+            }
+        }
+
+        [TestFixture]
+        public class GivenConnectedClientRetrievesDataFromOlderClient : FahClientTests
+        {
+            // Version 7.6.13
+
+            private MockFahClient _fahClient;
+
+            [SetUp]
+            public async Task BeforeEach()
+            {
+                _fahClient = MockFahClient.Create("test");
+                await _fahClient.Connect();
+                await _fahClient.LoadMessagesFrom(@"..\..\..\..\TestFiles\Client_v7_20");
+                _fahClient.RefreshSlots();
+                await _fahClient.Retrieve();
+            }
+
+            [Test]
+            public void ThenSlotsAreUpdated()
+            {
+                var slot00 = _fahClient.Slots.ElementAt(0);
+                Assert.AreEqual("Tesla T4", slot00.Processor);
+                Assert.AreEqual(1, slot00.WorkUnitQueue.Count);
+                Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
+                Assert.AreEqual(1, slot00.WorkUnitModel.ID);
+
+                var slot01 = _fahClient.Slots.ElementAt(1);
+                Assert.AreEqual("Tesla T4", slot01.Processor);
+                Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
+                Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
+                Assert.AreEqual(2, slot01.WorkUnitModel.ID);
+            }
+
+            [Test]
+            public void ThenGpuSlotProcessorShowsPlatformImplementationAndDriverVersion()
+            {
+                _fahClient.Preferences.Set(Preference.DisplayVersions, true);
+                var slot01 = _fahClient.Slots.ElementAt(1);
+                Assert.AreEqual("Tesla T4 (CUDA 470.82)", slot01.Processor);
+            }
+
+            [Test]
+            public void ThenTheWorkUnitRepositoryIsUpdated()
+            {
+                var mockWorkUnitRepository = Mock.Get(_fahClient.WorkUnitRepository);
+                mockWorkUnitRepository.Verify(x => x.UpdateAsync(It.IsAny<WorkUnitModel>()), Times.Exactly(2));
             }
         }
 

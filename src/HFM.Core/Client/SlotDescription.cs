@@ -33,6 +33,7 @@ public class GPUSlotDescription : SlotDescription
 
     public int? GPUBus { get; set; }
     public int? GPUSlot { get; set; }
+    public int? GPUDevice { get; set; }
     public string GPUPrefix { get; set; }
 
     public static new GPUSlotDescription Parse(string value)
@@ -42,6 +43,7 @@ public class GPUSlotDescription : SlotDescription
             Value = value
         };
         d.SetGPUBusAndSlot(value);
+        d.SetDevice(value);
         d.SetGPUPrefix(value);
         d.SetProcessor(value);
         return d;
@@ -59,12 +61,30 @@ public class GPUSlotDescription : SlotDescription
         }
     }
 
+    private void SetDevice(string description)
+    {
+        var match = Regex.Match(description, @"gpu\:(?<GPUDevice>\d+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+        if (match.Success &&
+            Int32.TryParse(match.Groups["GPUDevice"].Value, out var device))
+        {
+            GPUDevice = device;
+        }
+    }
+
     private void SetGPUPrefix(string description)
     {
         var match = Regex.Match(description, @"gpu\:\d+\:\d+ (?<GPUPrefix>.+) \[", RegexOptions.Singleline | RegexOptions.IgnoreCase);
         if (match.Success)
         {
             GPUPrefix = match.Groups["GPUPrefix"].Value;
+        }
+        else
+        {
+            match = Regex.Match(description, @"gpu\:\d+\:(?<GPUPrefix>.+) \[", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                GPUPrefix = match.Groups["GPUPrefix"].Value;
+            }
         }
     }
 

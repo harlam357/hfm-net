@@ -1,0 +1,6 @@
+PyON 1 units
+[
+  {"id": "02", "state": "RUNNING", "error": "NO_ERROR", "project": 18041, "run": 4, "clone": 8, "gen": 59, "core": "0x22", "unit": "0x000000080000003b0000467900000004", "percentdone": "50.42%", "eta": "5 hours 37 mins", "ppd": "1250375", "creditestimate": "591902", "waitingon": "", "nextattempt": "0.00 secs", "timeremaining": "1.75 days", "totalframes": 100, "framesdone": 50, "assigned": "2022-05-18T11:22:28Z", "timeout": "2022-05-19T23:22:28Z", "deadline": "2022-05-20T11:22:28Z", "ws": "34.72.228.44", "cs": "128.252.203.14", "attempts": 0, "slot": "01", "tpf": "6 mins 49 secs", "basecredit": "335000"},
+  {"id": "01", "state": "RUNNING", "error": "NO_ERROR", "project": 18036, "run": 1, "clone": 48, "gen": 99, "core": "0x22", "unit": "0x00000030000000630000467400000001", "percentdone": "77.51%", "eta": "1 hours 12 mins", "ppd": "1131449", "creditestimate": "252743", "waitingon": "", "nextattempt": "0.00 secs", "timeremaining": "1.82 days", "totalframes": 100, "framesdone": 77, "assigned": "2022-05-18T13:04:00Z", "timeout": "2022-05-20T01:04:00Z", "deadline": "2022-05-20T13:04:00Z", "ws": "34.72.228.44", "cs": "128.252.203.14", "attempts": 0, "slot": "00", "tpf": "3 mins 13 secs", "basecredit": "98000"}
+]
+---

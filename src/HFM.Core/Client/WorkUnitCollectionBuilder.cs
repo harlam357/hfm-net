@@ -175,12 +175,27 @@ namespace HFM.Core.Client
                 _ => null,
             };
 
-            if (String.IsNullOrEmpty(implementation)) return;
+            if (String.IsNullOrEmpty(implementation))
+            {
+                return;
+            }
 
             if (systemInfo is not null && slotDescription is GPUSlotDescription gpu)
             {
-                string targetGPU = String.Format(CultureInfo.InvariantCulture, "Bus:{0} Slot:{1}", gpu.GPUBus, gpu.GPUSlot);
-                var gpuInfo = systemInfo.GPUInfos.Values.FirstOrDefault(x => x.GPU != null && x.GPU.StartsWith(targetGPU, StringComparison.Ordinal));
+                GPUInfo gpuInfo = null;
+
+                if (gpu.GPUBus.HasValue && gpu.GPUSlot.HasValue)
+                {
+                    string targetGPU = String.Format(CultureInfo.InvariantCulture, "Bus:{0} Slot:{1}", gpu.GPUBus, gpu.GPUSlot);
+                    gpuInfo = systemInfo.GPUInfos.Values.FirstOrDefault(x => x.GPU != null && x.GPU.StartsWith(targetGPU, StringComparison.Ordinal));
+                }
+
+                if (gpuInfo is null && gpu.GPUDevice.HasValue)
+                {
+                    var device = gpu.GPUDevice.Value;
+                    _ = systemInfo.GPUInfos.TryGetValue(device, out gpuInfo);
+                }
+
                 if (gpuInfo is not null)
                 {
                     var cuda = GPUDeviceDescription.Parse(gpuInfo.CUDADevice);
