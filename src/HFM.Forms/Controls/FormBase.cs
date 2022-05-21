@@ -1,18 +1,9 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-
-namespace HFM.Forms.Controls
+﻿namespace HFM.Forms.Controls
 {
     public partial class FormBase : Form
     {
         public FormBase()
         {
-            // https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            Font = new Font(new FontFamily("Microsoft Sans Serif"), 8f);
-#pragma warning restore CA2000 // Dispose objects before losing scope
-            // later, replace with https://devblogs.microsoft.com/dotnet/whats-new-in-windows-forms-in-net-6-0-preview-5/#application-wide-default-font
-
             InitializeComponent();
             Icon = Properties.Resources.hfm_48_48;
         }
