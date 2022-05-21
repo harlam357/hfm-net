@@ -13,6 +13,11 @@ public class GPUDeviceDescription
 
     public static GPUDeviceDescription Parse(string value)
     {
+        if (value is null)
+        {
+            return null;
+        }
+
         var match = Regex.Match(value, @"Platform:(?<Platform>\d+) Device:(?<Device>\d+) Bus:(?<Bus>\d+) Slot:(?<Slot>\d+) Compute:(?<Compute>[\d\.]+) Driver:(?<Driver>[\d\.]+)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
         if (match.Success &&
             Int32.TryParse(match.Groups["Platform"].Value, out var platform) &&
