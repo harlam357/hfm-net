@@ -76,7 +76,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(630, workUnit.ProjectRun);
         Assert.AreEqual(0, workUnit.ProjectClone);
         Assert.AreEqual(59, workUnit.ProjectGen);
-        Assert.AreEqual(null, workUnit.Platform);
+        Assert.AreEqual(new WorkUnitPlatform(WorkUnitPlatformImplementation.CPU), workUnit.Platform);
         Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
         Assert.AreEqual(10, workUnit.FramesObserved);
         Assert.AreEqual(33, workUnit.CurrentFrame.ID);
@@ -167,7 +167,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(7, workUnit.ProjectRun);
         Assert.AreEqual(364, workUnit.ProjectClone);
         Assert.AreEqual(252, workUnit.ProjectGen);
-        Assert.AreEqual(null, workUnit.Platform);
+        Assert.AreEqual(new WorkUnitPlatform(WorkUnitPlatformImplementation.CPU), workUnit.Platform);
         Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
         Assert.AreEqual(53, workUnit.FramesObserved);
         Assert.AreEqual(53, workUnit.CurrentFrame.ID);
@@ -259,7 +259,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(192, workUnit.ProjectRun);
         Assert.AreEqual(0, workUnit.ProjectClone);
         Assert.AreEqual(58, workUnit.ProjectGen);
-        Assert.AreEqual(null, workUnit.Platform);
+        Assert.AreEqual(new WorkUnitPlatform(WorkUnitPlatformImplementation.CPU), workUnit.Platform);
         Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
         Assert.AreEqual(3, workUnit.FramesObserved);
         Assert.AreEqual(95, workUnit.CurrentFrame.ID);
@@ -305,13 +305,12 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(44695, workUnit.ProjectRun);
         Assert.AreEqual(3, workUnit.ProjectClone);
         Assert.AreEqual(2, workUnit.ProjectGen);
-        Assert.AreEqual(new WorkUnitPlatform("CUDA")
-            {
-                DriverVersion = "456.71",
-                ComputeVersion = "7.5",
-                CUDAVersion = "11.1"
-            },
-            workUnit.Platform);
+        Assert.AreEqual(new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA)
+        {
+            DriverVersion = "456.71",
+            ComputeVersion = "7.5",
+            CUDAVersion = "11.1"
+        }, workUnit.Platform);
         Assert.AreEqual(WorkUnitResult.Unknown, workUnit.UnitResult);
         Assert.AreEqual(75, workUnit.FramesObserved);
         Assert.AreEqual(74, workUnit.CurrentFrame.ID);

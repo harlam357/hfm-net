@@ -45,7 +45,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
-                Platform = new WorkUnitPlatform("CUDA")
+                Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA)
                 {
                     DriverVersion = "123",
                     ComputeVersion = "456",
@@ -644,7 +644,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectRun = 2,
                 ProjectClone = 3,
                 ProjectGen = 4,
-                Platform = new WorkUnitPlatform("CUDA"),
+                Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA),
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6)
             };
@@ -785,7 +785,7 @@ public class WorkUnitContextRepositoryTests
                 ProjectGen = 4,
                 Assigned = _assigned,
                 Finished = _assigned.AddHours(6),
-                Platform = new WorkUnitPlatform("CPU"),
+                Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CPU),
                 Frames = new Dictionary<int, LogLineFrameData>
                 {
                     {

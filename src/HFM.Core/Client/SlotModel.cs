@@ -172,7 +172,9 @@ namespace HFM.Core.Client
         {
             get
             {
-                if (ShowVersions && WorkUnitModel.WorkUnit.Platform?.Implementation is "CUDA" or "OpenCL")
+                if (ShowVersions && WorkUnitModel.WorkUnit.Platform?.Implementation
+                        is WorkUnitPlatformImplementation.CUDA
+                        or WorkUnitPlatformImplementation.OpenCL)
                 {
                     var platform = WorkUnitModel.WorkUnit.Platform;
                     var sb = new StringBuilder(base.Processor);

@@ -167,7 +167,15 @@ namespace HFM.Core.Client
 
         private static void PopulateWorkUnitPlatform(SlotDescription slotDescription, WorkUnit workUnit, UnitRun unitRun, SystemInfo systemInfo)
         {
-            if (String.IsNullOrEmpty(unitRun.Data.Platform)) return;
+            string implementation = slotDescription.SlotType switch
+            {
+                SlotType.Unknown => null,
+                SlotType.CPU => SlotType.CPU.ToString(),
+                SlotType.GPU => unitRun.Data.Platform,
+                _ => null,
+            };
+
+            if (String.IsNullOrEmpty(implementation)) return;
 
             if (systemInfo is not null && slotDescription is GPUSlotDescription gpu)
             {
@@ -177,9 +185,9 @@ namespace HFM.Core.Client
                 {
                     var cuda = GPUDeviceDescription.Parse(gpuInfo.CUDADevice);
                     var openCL = GPUDeviceDescription.Parse(gpuInfo.OpenCLDevice);
-                    var platformIsCUDA = unitRun.Data.Platform.Equals("CUDA", StringComparison.Ordinal);
+                    var platformIsCUDA = implementation.Equals(WorkUnitPlatformImplementation.CUDA, StringComparison.Ordinal);
 
-                    workUnit.Platform = new WorkUnitPlatform(unitRun.Data.Platform)
+                    workUnit.Platform = new WorkUnitPlatform(implementation)
                     {
                         DriverVersion = openCL?.Driver,
                         ComputeVersion = platformIsCUDA ? cuda?.Compute : openCL?.Compute,
@@ -188,7 +196,7 @@ namespace HFM.Core.Client
                 }
             }
 
-            workUnit.Platform ??= new WorkUnitPlatform(unitRun.Data.Platform);
+            workUnit.Platform ??= new WorkUnitPlatform(implementation);
         }
 
         private static bool IsTerminating(WorkUnit workUnit) =>

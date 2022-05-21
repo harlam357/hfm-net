@@ -4,6 +4,13 @@ using HFM.Log;
 
 namespace HFM.Core.WorkUnits;
 
+public static class WorkUnitPlatformImplementation
+{
+    public const string CPU = nameof(CPU);
+    public const string CUDA = nameof(CUDA);
+    public const string OpenCL = nameof(OpenCL);
+}
+
 public record WorkUnitPlatform(string Implementation)
 {
     public string DriverVersion { get; init; }
