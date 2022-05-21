@@ -50,6 +50,8 @@ namespace HFM.Core.Client
 
         public virtual string SlotTypeString { get; set; }
 
+        string IProteinBenchmarkDetailSource.Processor => Description?.Processor;
+
         public virtual string Processor => Description?.Processor;
 
         public int? Threads => Description is CPUSlotDescription cpu ? cpu.CPUThreads : null;
