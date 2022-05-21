@@ -192,6 +192,10 @@ namespace HFM.Core.Client
             public void ThenGpuSlotProcessorShowsPlatformImplementationAndDriverVersion()
             {
                 _fahClient.Preferences.Set(Preference.DisplayVersions, true);
+                var slot00 = _fahClient.Slots.ElementAt(0);
+                Assert.AreEqual("Tesla T4 (CUDA 470.82)", slot00.Processor);
+
+                _fahClient.Preferences.Set(Preference.DisplayVersions, true);
                 var slot01 = _fahClient.Slots.ElementAt(1);
                 Assert.AreEqual("Tesla T4 (CUDA 470.82)", slot01.Processor);
             }

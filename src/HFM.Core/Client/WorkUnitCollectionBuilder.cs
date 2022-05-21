@@ -182,32 +182,38 @@ namespace HFM.Core.Client
 
             if (systemInfo is not null && slotDescription is GPUSlotDescription gpu)
             {
-                GPUInfo gpuInfo = null;
-
+                string targetGPU = null;
                 if (gpu.GPUBus.HasValue && gpu.GPUSlot.HasValue)
                 {
-                    string targetGPU = String.Format(CultureInfo.InvariantCulture, "Bus:{0} Slot:{1}", gpu.GPUBus, gpu.GPUSlot);
-                    gpuInfo = systemInfo.GPUInfos.Values.FirstOrDefault(x => x.GPU != null && x.GPU.StartsWith(targetGPU, StringComparison.Ordinal));
+                    targetGPU = String.Format(CultureInfo.InvariantCulture, "Bus:{0} Slot:{1}", gpu.GPUBus, gpu.GPUSlot);
+                }
+                else if (gpu.GPUDevice.HasValue)
+                {
+                    targetGPU = String.Format(CultureInfo.InvariantCulture, "Device:{0}", gpu.GPUDevice);
                 }
 
-                if (gpuInfo is null && gpu.GPUDevice.HasValue)
+                if (targetGPU is not null)
                 {
-                    var device = gpu.GPUDevice.Value;
-                    _ = systemInfo.GPUInfos.TryGetValue(device, out gpuInfo);
-                }
+                    string cudaDevice = systemInfo.GPUInfos.Values
+                        .Select(x => x.CUDADevice)
+                        .FirstOrDefault(x => x is not null && x.Contains(targetGPU, StringComparison.Ordinal));
+                    var cuda = GPUDeviceDescription.Parse(cudaDevice);
+                    string openCLDevice = systemInfo.GPUInfos.Values
+                        .Select(x => x.OpenCLDevice)
+                        .FirstOrDefault(x => x is not null && x.Contains(targetGPU, StringComparison.Ordinal));
+                    var openCL = GPUDeviceDescription.Parse(openCLDevice);
 
-                if (gpuInfo is not null)
-                {
-                    var cuda = GPUDeviceDescription.Parse(gpuInfo.CUDADevice);
-                    var openCL = GPUDeviceDescription.Parse(gpuInfo.OpenCLDevice);
-                    var platformIsCUDA = implementation.Equals(WorkUnitPlatformImplementation.CUDA, StringComparison.Ordinal);
-
-                    workUnit.Platform = new WorkUnitPlatform(implementation)
+                    if (cuda is not null || openCL is not null)
                     {
-                        DriverVersion = openCL?.Driver,
-                        ComputeVersion = platformIsCUDA ? cuda?.Compute : openCL?.Compute,
-                        CUDAVersion = platformIsCUDA ? cuda?.Driver : null
-                    };
+                        var platformIsCUDA = implementation.Equals(WorkUnitPlatformImplementation.CUDA, StringComparison.Ordinal);
+
+                        workUnit.Platform = new WorkUnitPlatform(implementation)
+                        {
+                            DriverVersion = openCL?.Driver,
+                            ComputeVersion = platformIsCUDA ? cuda?.Compute : openCL?.Compute,
+                            CUDAVersion = platformIsCUDA ? cuda?.Driver : null
+                        };
+                    }
                 }
             }
 
