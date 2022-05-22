@@ -59,14 +59,14 @@ namespace HFM.Forms.Views
 
             model.PropertyChanged += (s, e) => ModelPropertyChanged((BenchmarksModel)s, e);
             model.SelectedSlotProjectListItems = new ListBoxSelectedListItemCollection(projectsListBox);
-            projectsListBox.DataSource = model.SlotProjects;
             projectsListBox.DisplayMember = nameof(ListItem.DisplayMember);
             projectsListBox.ValueMember = nameof(ListItem.ValueMember);
+            projectsListBox.DataSource = model.SlotProjects;
             model.SetDefaultSlotProject();
 
-            lstColors.DataSource = model.GraphColors;
             lstColors.DisplayMember = nameof(ListItem.DisplayMember);
             lstColors.ValueMember = nameof(ListItem.ValueMember);
+            lstColors.DataSource = model.GraphColors;
             lstColors.BindSelectedValue(model, nameof(BenchmarksModel.SelectedGraphColorItem));
 
             colorPreviewPictureBox.DataBindings.Add(nameof(PictureBox.BackColor), model, nameof(BenchmarksModel.SelectedGraphColor), false, DataSourceUpdateMode.OnPropertyChanged);
