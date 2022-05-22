@@ -130,6 +130,13 @@ public class ProteinBenchmarkRepositoryTests
             }
 
             [Test]
+            public async Task ThenMaximumCountOfBenchmarksAreReturnedForAllSlots()
+            {
+                var actual = await _repository.GetBenchmarksAsync(SlotIdentifier.AllSlots, 18213, 1);
+                Assert.AreEqual(1, actual.Count);
+            }
+
+            [Test]
             public async Task ThenBenchmarksAreReturnedSpecificSlot()
             {
                 var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));

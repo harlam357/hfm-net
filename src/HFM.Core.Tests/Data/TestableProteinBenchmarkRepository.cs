@@ -62,6 +62,16 @@ public class TestableProteinBenchmarkRepository : IProteinBenchmarkRepository
         }
     }
 
+    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID, int count)
+    {
+        var context = CreateWorkUnitContext();
+        await using (context.ConfigureAwait(false))
+        {
+            var repository = new ProteinBenchmarkRepository(null, context);
+            return await repository.GetBenchmarksAsync(slotIdentifier, projectID, count).ConfigureAwait(false);
+        }
+    }
+
     public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
     {
         var context = CreateWorkUnitContext();
