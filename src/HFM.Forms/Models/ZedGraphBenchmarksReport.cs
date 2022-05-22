@@ -41,7 +41,13 @@ namespace HFM.Forms.Models
                 var processorAndThreads = benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType);
                 if (!String.IsNullOrWhiteSpace(processorAndThreads))
                 {
-                    return String.Join(" / ", benchmark.SlotIdentifier.Name, processorAndThreads);
+                    const int maxNameLength = 30;
+                    string name = benchmark.SlotIdentifier.Name;
+                    if (name is not null && name.Length > maxNameLength)
+                    {
+                        name = name[..maxNameLength];
+                    }
+                    return String.Join(" / ", name, processorAndThreads);
                 }
             }
             return benchmark.SlotIdentifier.Name;
@@ -106,7 +112,10 @@ namespace HFM.Forms.Models
                 return;
             }
 
-            var benchmarks = SortBenchmarks(await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, protein.ProjectNumber).ConfigureAwait(true));
+            IEnumerable<ProteinBenchmark> benchmarks = await Benchmarks
+                .GetBenchmarksAsync(slotIdentifier.Value, protein.ProjectNumber, colors.Count)
+                .ConfigureAwait(true);
+            benchmarks = SortBenchmarks(benchmarks);
 
             var zg = CreateZedGraphControl();
             try
