@@ -35,7 +35,7 @@ namespace HFM.Forms.Models
 
         protected static string GetSlotNameAndProcessor(ProteinBenchmark benchmark, Protein protein)
         {
-            if (protein != null)
+            if (protein is not null)
             {
                 var slotType = ConvertToSlotType.FromCoreName(protein.Core);
                 var processorAndThreads = benchmark.BenchmarkIdentifier.ToProcessorAndThreadsString(slotType);
@@ -85,10 +85,8 @@ namespace HFM.Forms.Models
             return value + roundTo;
         }
 
-        protected static void FillGraphPane(GraphPane pane)
-        {
+        protected static void FillGraphPane(GraphPane pane) =>
             pane.Fill = new Fill(Color.FromArgb(250, 250, 255));
-        }
     }
 
     public abstract class ZedGraphBarGraphBenchmarksReport : ZedGraphBenchmarksReport
@@ -152,10 +150,8 @@ namespace HFM.Forms.Models
             Result = zg;
         }
 
-        private static int? GetProjectID(IBenchmarksReportSource source)
-        {
-            return source.Projects.Count > 0 ? source.Projects.First() : null;
-        }
+        private static int? GetProjectID(IBenchmarksReportSource source) =>
+            source.Projects.Count > 0 ? source.Projects.First() : null;
 
         private Protein GetProtein(int? projectID)
         {
@@ -163,10 +159,8 @@ namespace HFM.Forms.Models
             return ProteinService.Get(projectID.Value);
         }
 
-        protected virtual IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks)
-        {
-            return benchmarks.OrderBy(x => x.MinimumFrameTime + x.AverageFrameTime);
-        }
+        protected virtual IEnumerable<ProteinBenchmark> SortBenchmarks(IEnumerable<ProteinBenchmark> benchmarks) =>
+            benchmarks.OrderBy(x => x.MinimumFrameTime + x.AverageFrameTime);
 
         protected abstract double[] GetYPoints(Protein protein, ProteinBenchmark benchmark);
 
@@ -179,10 +173,7 @@ namespace HFM.Forms.Models
             xAxis.Type = AxisType.Text;
         }
 
-        protected virtual void ConfigureYAxis(YAxis yAxis, double yMaximum)
-        {
-            yAxis.Title.Text = Key;
-        }
+        protected virtual void ConfigureYAxis(YAxis yAxis, double yMaximum) => yAxis.Title.Text = Key;
 
         private static void AddBar(GraphPane pane, string label, double[] yPoints, Color color)
         {
@@ -190,10 +181,8 @@ namespace HFM.Forms.Models
             barItem.Bar.Fill = new Fill(color, Color.White, color);
         }
 
-        private static void FillChart(Chart chart)
-        {
+        private static void FillChart(Chart chart) =>
             chart.Fill = new Fill(Color.White, Color.FromArgb(255, 255, 166), 90F);
-        }
     }
 
     public class FrameTimeZedGraphBenchmarksReport : ZedGraphBarGraphBenchmarksReport
@@ -206,14 +195,12 @@ namespace HFM.Forms.Models
 
         }
 
-        protected override double[] GetYPoints(Protein protein, ProteinBenchmark benchmark)
-        {
-            return new[]
+        protected override double[] GetYPoints(Protein protein, ProteinBenchmark benchmark) =>
+            new[]
             {
                 benchmark.MinimumFrameTime.TotalSeconds,
                 benchmark.AverageFrameTime.TotalSeconds
             };
-        }
     }
 
     public class ProductionZedGraphBenchmarksReport : ZedGraphBarGraphBenchmarksReport
