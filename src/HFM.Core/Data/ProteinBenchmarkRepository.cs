@@ -183,8 +183,9 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects) =>
         await GetBenchmarksAsync(slotIdentifier, projects, null).ConfigureAwait(false);
 
-    private async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects, int? count) =>
-        (await QueryWorkUnitsByClientSlot(slotIdentifier, _context)
+    private async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects, int? count)
+    {
+        var query = await QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Include(x => x.Protein)
             .Include(x => x.Client)
             .Include(x => x.Platform)
@@ -193,7 +194,9 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 .OrderByDescending(y => y.FrameID))
             .Where(x => projects.Contains(x.Protein.ProjectID) && x.Frames.Any())
             .OrderByDescending(x => x.ID)
-            .ToListAsync().ConfigureAwait(false))
+            .ToListAsync().ConfigureAwait(false);
+
+        return query
             .GroupBy(x =>
                 (SlotIdentifier: new SlotIdentifier(
                     ClientIdentifier.FromConnectionString(
@@ -219,6 +222,7 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
             })
             .TakeWhile((_, i) => !count.HasValue || i < count)
             .ToList();
+    }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientSlot(SlotIdentifier slotIdentifier, WorkUnitContext context)
     {
