@@ -183,8 +183,9 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
     public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects) =>
         await GetBenchmarksAsync(slotIdentifier, projects, null).ConfigureAwait(false);
 
-    private async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects, int? count) =>
-        (await QueryWorkUnitsByClientSlot(slotIdentifier, _context)
+    private async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects, int? count)
+    {
+        var query = await QueryWorkUnitsByClientSlot(slotIdentifier, _context)
             .Include(x => x.Protein)
             .Include(x => x.Client)
             .Include(x => x.Platform)
@@ -193,11 +194,13 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 .OrderByDescending(y => y.FrameID))
             .Where(x => projects.Contains(x.Protein.ProjectID) && x.Frames.Any())
             .OrderByDescending(x => x.ID)
-            .ToListAsync().ConfigureAwait(false))
+            .ToListAsync().ConfigureAwait(false);
+
+        return query
             .GroupBy(x =>
                 (SlotIdentifier: new SlotIdentifier(
                     ClientIdentifier.FromConnectionString(
-                        x.Client.Name, x.Client.ConnectionString, Guid.Parse(x.Client.Guid)),
+                        x.Client.Name, x.Client.ConnectionString, x.Client.Guid is null ? Guid.Empty : Guid.Parse(x.Client.Guid)),
                             x.ClientSlot ?? SlotIdentifier.NoSlotID),
                 BenchmarkIdentifier: new ProteinBenchmarkIdentifier(
                     x.Protein.ProjectID, x.Platform?.Processor, x.Platform?.Threads ?? ProteinBenchmarkIdentifier.NoThreads)))
@@ -219,6 +222,7 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
             })
             .TakeWhile((_, i) => !count.HasValue || i < count)
             .ToList();
+    }
 
     private static IQueryable<WorkUnitEntity> QueryWorkUnitsByClientSlot(SlotIdentifier slotIdentifier, WorkUnitContext context)
     {
