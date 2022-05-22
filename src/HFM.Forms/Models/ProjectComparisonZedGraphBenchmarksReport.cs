@@ -53,9 +53,16 @@ namespace HFM.Forms.Models
 
                 int i = 0;
                 var ppd = new List<double>();
-                foreach (var group in benchmarks.GroupBy(x => (x.SlotIdentifier, x.BenchmarkIdentifier.Processor, x.BenchmarkIdentifier.Threads)))
+
+                var slotPoints = benchmarks
+                    .GroupBy(x => (x.SlotIdentifier, x.BenchmarkIdentifier.Processor, x.BenchmarkIdentifier.Threads))
+                    .Select(g => BuildSlotPoints(g.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal))
+                    .OrderByDescending(x => x.Points.Max(y => y.Y))
+                    .Take(colors.Count);
+
+                foreach (var x in slotPoints)
                 {
-                    (PointPairList points, string label) = BuildSlotPoints(group.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal);
+                    (PointPairList points, string label) = x;
 
                     if (points.Count > 0)
                     {
