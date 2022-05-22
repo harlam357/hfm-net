@@ -206,13 +206,14 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 var frames = x
                     .SelectMany(y => y.Frames)
                     .Take(DefaultMaxFrames)
+                    .Select(y => new ProteinBenchmarkFrameTime(y.Duration))
                     .ToList();
 
                 return new ProteinBenchmark
                 {
                     SlotIdentifier = x.Key.SlotIdentifier,
                     BenchmarkIdentifier = x.Key.BenchmarkIdentifier,
-                    FrameTimes = frames.Select(y => new ProteinBenchmarkFrameTime(y.Duration)).ToList(),
+                    FrameTimes = frames,
                     MinimumFrameTime = frames.Min(y => y.Duration)
                 };
             })
