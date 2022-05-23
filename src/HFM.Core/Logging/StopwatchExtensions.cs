@@ -1,13 +1,8 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace HFM.Core.Logging
+namespace HFM.Core.Logging;
+
+public static class StopwatchExtensions
 {
-    internal static class StopwatchExtensions
-    {
-        internal static string GetExecTime(this Stopwatch sw)
-        {
-            return $"{sw.ElapsedMilliseconds:#,##0} ms";
-        }
-    }
+    public static string GetExecTime(this Stopwatch sw) => $"{sw.ElapsedMilliseconds:#,##0} ms";
 }

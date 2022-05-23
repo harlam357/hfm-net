@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace HFM.Core.WorkUnits
 {
@@ -14,7 +12,7 @@ namespace HFM.Core.WorkUnits
     public readonly struct ProteinBenchmarkIdentifier : IEquatable<ProteinBenchmarkIdentifier>, IComparable<ProteinBenchmarkIdentifier>, IComparable
     {
         internal const string NoProcessor = null;
-        internal const int NoThreads = 0;
+        public const int NoThreads = 0;
 
         public ProteinBenchmarkIdentifier(int projectID)
         {

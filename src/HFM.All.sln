@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Preferences.Tests", "HF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.ApplicationUpdate.Console", "HFM.ApplicationUpdate.Console\HFM.ApplicationUpdate.Console.csproj", "{D1DA043A-6B7F-462F-96D0-5865DDDB9842}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.Data.Sqlite", "HFM.Core.Data.Sqlite\HFM.Core.Data.Sqlite.csproj", "{9E38DCBE-CC76-4ECF-AE7E-5DA575806288}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HFM.Core.Data.Sqlite.Tests", "HFM.Core.Data.Sqlite.Tests\HFM.Core.Data.Sqlite.Tests.csproj", "{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,14 @@ Global
 		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1DA043A-6B7F-462F-96D0-5865DDDB9842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E38DCBE-CC76-4ECF-AE7E-5DA575806288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E38DCBE-CC76-4ECF-AE7E-5DA575806288}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E38DCBE-CC76-4ECF-AE7E-5DA575806288}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E38DCBE-CC76-4ECF-AE7E-5DA575806288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

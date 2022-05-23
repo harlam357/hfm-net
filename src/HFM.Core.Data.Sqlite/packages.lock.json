@@ -1,31 +1,15 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0-windows7.0": {
-      "LightInject": {
-        "type": "Direct",
-        "requested": "[6.4.1, )",
-        "resolved": "6.4.1",
-        "contentHash": "PWmsA9RnMBlrTnZQIr0qZDWj/hmgbM6PcSWr31mLcH6vcrGFlGjcxouLCH/uMNC6Lmf8z84Eue1u4pu3WZUghA=="
-      },
-      "LightInject.Microsoft.DependencyInjection": {
-        "type": "Direct",
-        "requested": "[3.4.1, )",
-        "resolved": "3.4.1",
-        "contentHash": "fXjvnJIuEKUOHnROw+v7AoebIHp5PfBgV59Jtqopcs8e1WlRb7Ev/DKb4MaeLAGboS1KZOZN00nkYurz606jEg==",
-        "dependencies": {
-          "LightInject": "6.4.1",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0"
-        }
-      },
-      "Microsoft.EntityFrameworkCore.Design": {
+    "net6.0": {
+      "Microsoft.EntityFrameworkCore.Sqlite": {
         "type": "Direct",
         "requested": "[6.0.4, )",
         "resolved": "6.0.4",
-        "contentHash": "NOAtatJPq/xDa+vqfxL5+OwCKv83N/JX/IPgY6VQZ95KUtV9uuC+mVPsremG3a9UM3tPfK4CXMh1rwiaZHYCPQ==",
+        "contentHash": "nn3UB4PxqnECcEWJPcIKrcuGnevf/lPd/LqFgLVYgqYe8teVqpI/yCKSDOPkEkrAbjWAB0Sgx+q59XpT5YphKQ==",
         "dependencies": {
-          "Humanizer.Core": "2.8.26",
-          "Microsoft.EntityFrameworkCore.Relational": "6.0.4"
+          "Microsoft.EntityFrameworkCore.Sqlite.Core": "6.0.4",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.0.6"
         }
       },
       "AutoMapper": {
@@ -57,11 +41,6 @@
         "dependencies": {
           "Newtonsoft.Json": "11.0.1"
         }
-      },
-      "Humanizer.Core": {
-        "type": "Transitive",
-        "resolved": "2.8.26",
-        "contentHash": "OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A=="
       },
       "Microsoft.CSharp": {
         "type": "Transitive",
@@ -107,15 +86,6 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "6.0.4",
           "Microsoft.Extensions.Configuration.Abstractions": "6.0.0"
-        }
-      },
-      "Microsoft.EntityFrameworkCore.Sqlite": {
-        "type": "Transitive",
-        "resolved": "6.0.4",
-        "contentHash": "nn3UB4PxqnECcEWJPcIKrcuGnevf/lPd/LqFgLVYgqYe8teVqpI/yCKSDOPkEkrAbjWAB0Sgx+q59XpT5YphKQ==",
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore.Sqlite.Core": "6.0.4",
-          "SQLitePCLRaw.bundle_e_sqlite3": "2.0.6"
         }
       },
       "Microsoft.EntityFrameworkCore.Sqlite.Core": {
@@ -326,11 +296,6 @@
           "System.Text.Encodings.Web": "6.0.0"
         }
       },
-      "ZedGraph": {
-        "type": "Transitive",
-        "resolved": "5.1.6",
-        "contentHash": "4y31dD1Yr3xVxhvusltjnLusnOWL40iwZ5qhzBb4I1hCodEsaZI/3qXKD7fRaYq+l38CeMuCcZyuawqBkmL3RQ=="
-      },
       "hfm.core": {
         "type": "Project",
         "dependencies": {
@@ -341,21 +306,6 @@
           "HFM.Proteins": "0.3.0",
           "System.Net.Http.Json": "6.0.0",
           "protobuf-net": "3.0.101"
-        }
-      },
-      "hfm.core.data.sqlite": {
-        "type": "Project",
-        "dependencies": {
-          "HFM.Core": "1.0.0",
-          "Microsoft.EntityFrameworkCore.Sqlite": "6.0.4"
-        }
-      },
-      "hfm.forms": {
-        "type": "Project",
-        "dependencies": {
-          "HFM.Core": "1.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "ZedGraph": "5.1.6"
         }
       },
       "hfm.preferences": {

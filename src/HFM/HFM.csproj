@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HFM.Core.Data.Sqlite\HFM.Core.Data.Sqlite.csproj" />
     <ProjectReference Include="..\HFM.Forms\HFM.Forms.csproj" />
   </ItemGroup>
 

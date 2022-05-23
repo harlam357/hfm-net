@@ -18,7 +18,6 @@
     <PackageReference Include="HFM.Client" Version="0.6.0" />
     <PackageReference Include="HFM.Log" Version="0.4.0" />
     <PackageReference Include="HFM.Proteins" Version="0.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>

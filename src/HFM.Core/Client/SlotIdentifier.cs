@@ -5,7 +5,7 @@ namespace HFM.Core.Client
 {
     public readonly struct SlotIdentifier : IEquatable<SlotIdentifier>, IComparable<SlotIdentifier>, IComparable
     {
-        internal const int NoSlotID = -1;
+        public const int NoSlotID = -1;
 
         public static SlotIdentifier AllSlots => new(0, "All Slots");
 
@@ -89,7 +89,7 @@ namespace HFM.Core.Client
 
         private static readonly Regex NameSlotRegex = new(@"(?<Name>.+) Slot (?<Slot>\d\d)$", RegexOptions.ExplicitCapture);
 
-        internal static SlotIdentifier FromName(string name, string connectionString, Guid guid)
+        public static SlotIdentifier FromName(string name, string connectionString, Guid guid)
         {
             var match = name is null ? null : NameSlotRegex.Match(name);
             return match is { Success: true }

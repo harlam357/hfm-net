@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <RootNamespace>HFM.Core.Data</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <SignAssembly>true</SignAssembly>
+    <NoWarn>$(NoWarn);0618</NoWarn>
+    <AssemblyOriginatorKeyFile>..\harlam357.snk</AssemblyOriginatorKeyFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+    <Compile Include="..\HFM.Core.Tests\ArtifactFolder.cs" Link="ArtifactFolder.cs" />
+    <Compile Include="..\HFM.Core.Tests\Logging\ConsoleLogger.cs" Link="Logging\ConsoleLogger.cs" />
+    <Compile Include="..\HFM.Core.Tests\Logging\TestLogger.cs" Link="Logging\TestLogger.cs" />
+    <Compile Include="..\HFM.Core.Tests\WorkUnits\UnitInfoExtensions.cs" Link="WorkUnits\UnitInfoExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="TestFiles\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.17.2" />
+    <PackageReference Include="nunit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HFM.Core.Data.Sqlite\HFM.Core.Data.Sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logging\" />
+    <Folder Include="WorkUnits\" />
+  </ItemGroup>
+
+</Project>

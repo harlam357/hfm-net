@@ -100,7 +100,7 @@ namespace HFM.Core.Client
 
         internal static readonly Regex ServerPortRegex = new(@"(?<Server>.+)[-:](?<Port>\d+)$", RegexOptions.ExplicitCapture);
 
-        internal static ClientIdentifier FromConnectionString(string name, string connectionString, Guid guid)
+        public static ClientIdentifier FromConnectionString(string name, string connectionString, Guid guid)
         {
             var match = connectionString is null ? null : ServerPortRegex.Match(connectionString);
             return match is { Success: true }
@@ -108,6 +108,6 @@ namespace HFM.Core.Client
                 : new ClientIdentifier(name, connectionString, ClientSettings.NoPort, guid);
         }
 
-        internal static ClientIdentifier FromGuid(Guid guid) => new(null, null, ClientSettings.DefaultPort, guid);
+        public static ClientIdentifier FromGuid(Guid guid) => new(null, null, ClientSettings.DefaultPort, guid);
     }
 }

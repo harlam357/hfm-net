@@ -58,7 +58,7 @@ namespace HFM.Core.WorkUnits
                 _ => WorkUnitResult.Unknown
             };
 
-        internal static string FromWorkUnitResult(WorkUnitResult result) =>
+        public static string FromWorkUnitResult(WorkUnitResult result) =>
             result switch
             {
                 WorkUnitResult.FinishedUnit => FinishedUnit,
