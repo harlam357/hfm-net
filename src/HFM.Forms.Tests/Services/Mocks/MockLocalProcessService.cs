@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace HFM.Core.Services.Mocks
+﻿namespace HFM.Forms.Services.Mocks
 {
     public class MockLocalProcessService : LocalProcessService
     {

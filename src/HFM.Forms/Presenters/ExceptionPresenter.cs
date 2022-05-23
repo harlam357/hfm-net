@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Text;
 
 using HFM.Core.Logging;
-using HFM.Core.Services;
+using HFM.Forms.Services;
 using HFM.Forms.Internal;
 using HFM.Forms.Views;
 

@@ -9,6 +9,7 @@ using HFM.Core.Services;
 using HFM.Core.WorkUnits;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
+using HFM.Forms.Services;
 using HFM.Forms.Views;
 using HFM.Preferences;
 using HFM.Proteins;

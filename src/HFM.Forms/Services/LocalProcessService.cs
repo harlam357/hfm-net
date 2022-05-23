@@ -1,7 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace HFM.Core.Services
+namespace HFM.Forms.Services
 {
     public abstract class LocalProcessService
     {

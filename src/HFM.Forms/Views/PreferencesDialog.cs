@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms;
 
 using HFM.Core.Net;
 using HFM.Core.Services;
@@ -12,6 +8,7 @@ using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;
 using HFM.Forms.Presenters;
+using HFM.Forms.Services;
 using HFM.Preferences;
 
 namespace HFM.Forms.Views

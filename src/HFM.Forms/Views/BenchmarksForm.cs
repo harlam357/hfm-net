@@ -1,10 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 
-using HFM.Core.Services;
+using HFM.Forms.Services;
 using HFM.Forms.Controls;
 using HFM.Forms.Internal;
 using HFM.Forms.Models;

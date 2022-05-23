@@ -1,10 +1,7 @@
-﻿using System;
-
-using HFM.Core.Logging;
-using HFM.Core.Services;
+﻿using HFM.Core.Logging;
 using HFM.Forms.Presenters;
 
-namespace HFM.Forms.Internal
+namespace HFM.Forms.Services
 {
     internal static class LocalProcessServiceExtensions
     {

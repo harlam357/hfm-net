@@ -12,9 +12,6 @@ internal class CompositionRoot : ICompositionRoot
         // EocStatsScheduledTask - Singleton
         serviceRegistry.Register<ScheduledTasks.EocStatsScheduledTask>(new PerContainerLifetime());
 
-        // LocalProcessService - Singleton
-        serviceRegistry.RegisterInstance(Services.LocalProcessService.Default);
-
         // ApplicationUpdateService - Scoped
         serviceRegistry.Register<ApplicationUpdateService>(new PerScopeLifetime());
     }

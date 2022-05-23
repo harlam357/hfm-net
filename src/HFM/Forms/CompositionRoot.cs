@@ -1,5 +1,5 @@
 ﻿using HFM.Core.Logging;
-using HFM.Core.Services;
+using HFM.Forms.Services;
 using HFM.Forms.Presenters;
 using HFM.Forms.Views;
 
@@ -65,6 +65,7 @@ namespace HFM.Forms
                 .Register<WorkUnitQueryPresenter>(new PerScopeLifetime());
 
             // Singleton Services
+            serviceRegistry.RegisterInstance(LocalProcessService.Default);
             serviceRegistry.Register<IAutoRunConfiguration, RegistryAutoRunConfiguration>(new PerContainerLifetime());
         }
     }
