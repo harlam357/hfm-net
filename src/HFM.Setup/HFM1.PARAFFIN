@@ -22,6 +22,7 @@
     <ComponentGroup Id="group_hfm">
       <ComponentRef Id="comp_1DA6408D254A4388891A1DA8853C95EB" />
       <ComponentRef Id="comp_4BE6642D99FE4B53A3E60779BF0A9491" />
+      <ComponentRef Id="comp_4D53129BD4854CB7BD4BF04319120CF5" />
       <ComponentRef Id="comp_060039E1747E4407AEBF0F9DAF2C7B2D" />
       <ComponentRef Id="comp_E7BC635F41E54308B0FE436C63E94766" />
       <ComponentRef Id="comp_060B7C1B4CAF443DA5341ADD88D599FA" />
@@ -86,6 +87,9 @@
       </Component>
       <Component Id="comp_4BE6642D99FE4B53A3E60779BF0A9491" Guid="099FCEC0-DD78-4996-B174-84BD99B5DB9A">
         <File Id="file_DED8566B345E4036A4E7697498382DEE" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\HFM.Client.dll" />
+      </Component>
+      <Component Id="comp_4D53129BD4854CB7BD4BF04319120CF5" Guid="92B08344-5FD1-4D59-AE40-BED5EBEFCA5B">
+        <File Id="file_B4A04B64EAD7407BBC8C41C9027DECC5" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\HFM.Core.Data.Sqlite.dll" />
       </Component>
       <Component Id="comp_060039E1747E4407AEBF0F9DAF2C7B2D" Guid="EC846671-EDC2-4BC2-BEA7-0A302B7AE131">
         <File Id="file_AC57FC246EE64D3B8E998650B1373922" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\HFM.Core.dll" />
