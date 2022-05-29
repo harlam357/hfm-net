@@ -181,7 +181,7 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        public bool FormClosing(ICollection<string> formColumns)
+        public bool FormClosing(ICollection<string> formColumns, LocalProcessService process)
         {
             Model.FormColumns.Reset(formColumns);
 
@@ -190,12 +190,12 @@ namespace HFM.Forms.Presenters
                 return true;
             }
 
-            CheckForAndFireUpdateProcess(_applicationUpdateModel);
+            CheckForAndFireUpdateProcess(_applicationUpdateModel, process);
 
             return false;
         }
 
-        private void CheckForAndFireUpdateProcess(ApplicationUpdateModel update)
+        private void CheckForAndFireUpdateProcess(ApplicationUpdateModel update, LocalProcessService process)
         {
             if (update != null && update.SelectedUpdateFileIsReadyToBeExecuted)
             {
@@ -203,7 +203,7 @@ namespace HFM.Forms.Presenters
                 Logger.Info($"Firing update file '{path}'...");
                 try
                 {
-                    Process.Start(path);
+                    process.Start(path);
                 }
                 catch (Exception ex)
                 {

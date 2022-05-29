@@ -346,7 +346,7 @@ namespace HFM.Forms.Views
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             var formColumns = GetFormColumns();
-            e.Cancel = _presenter.FormClosing(formColumns);
+            e.Cancel = _presenter.FormClosing(formColumns, LocalProcessService.Default);
         }
 
         // Data Grid View Handlers
