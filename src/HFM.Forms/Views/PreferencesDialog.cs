@@ -344,9 +344,9 @@ namespace HFM.Forms.Views
             _presenter.TestExtremeOverclockingUser(LocalProcessService.Default);
         }
 
-        private void optionsTestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void optionsTestFahUserIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _presenter.TestFoldingAtHomeUser(LocalProcessService.Default);
+            await _presenter.TestFoldingAtHomeUser(LocalProcessService.Default, FahUserService.Default).ConfigureAwait(true);
         }
 
         private void optionsTestFahTeamIDLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

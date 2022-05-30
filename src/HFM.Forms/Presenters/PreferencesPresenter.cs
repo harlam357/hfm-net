@@ -93,11 +93,13 @@ namespace HFM.Forms.Presenters
             TestUrl(localProcess, url, caption);
         }
 
-        public void TestFoldingAtHomeUser(LocalProcessService localProcess)
+        public async Task TestFoldingAtHomeUser(LocalProcessService localProcess, FahUserService userService)
         {
-            string url = String.Concat(FahUrl.UserBaseUrl, Model.OptionsModel.FahUserID);
-            string caption = "FAH User Stats page";
-            TestUrl(localProcess, url, caption);
+            var fahUser = await userService.FindUserAndLogError(Model.OptionsModel.FahUserID, Logger).ConfigureAwait(true);
+
+            string fileName = new Uri(String.Concat(FahUrl.UserBaseUrl, fahUser.ID)).AbsoluteUri;
+            const string errorMessage = "An error occurred while attempting to open the FAH user stats page.";
+            localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
 
         public void TestExtremeOverclockingTeam(LocalProcessService localProcess)

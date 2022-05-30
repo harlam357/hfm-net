@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using HFM.Core.Logging;
+﻿using HFM.Core.Logging;
 using HFM.Core.Services;
 
-namespace HFM.Forms.Internal
+namespace HFM.Forms.Services
 {
     internal static class FahUserServiceExtensions
     {
