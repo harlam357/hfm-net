@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HFM.Core.ApplicationUpdates;
 
 using NUnit.Framework;
-
-using HFM.Core;
 
 namespace HFM.Forms.Models
 {

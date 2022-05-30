@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using HFM.Core;
+using HFM.Core.ApplicationUpdates;
 using HFM.Core.Logging;
 using HFM.Core.Net;
 using HFM.Forms.Models;

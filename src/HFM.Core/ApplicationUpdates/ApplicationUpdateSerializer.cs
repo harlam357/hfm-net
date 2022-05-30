@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 using HFM.Core.Serializers;
 
-namespace HFM.Core
+namespace HFM.Core.ApplicationUpdates
 {
     public class ApplicationUpdateSerializer : ISerializer<ApplicationUpdate>
     {

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
 
 using HFM.Core;
+using HFM.Core.ApplicationUpdates;
 
 namespace HFM.ApplicationUpdate.Console
 {
@@ -20,7 +17,7 @@ namespace HFM.ApplicationUpdate.Console
             System.Console.WriteLine("Version: {0}", fileVersion);
             System.Console.WriteLine("UpdateDate: {0}", updateDate);
 
-            var update = new Core.ApplicationUpdate
+            var update = new Core.ApplicationUpdates.ApplicationUpdate
             {
                 Version = fileVersion.ToString(),
                 UpdateDate = updateDate

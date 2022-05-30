@@ -5,7 +5,7 @@ using System.IO;
 
 using HFM.Core.Internal;
 
-namespace HFM.Core
+namespace HFM.Core.ApplicationUpdates
 {
     [Serializable]
     public class ApplicationUpdate

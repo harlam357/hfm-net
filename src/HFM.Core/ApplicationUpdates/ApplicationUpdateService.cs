@@ -5,7 +5,7 @@ using System.Net.Cache;
 using HFM.Core.Net;
 using HFM.Preferences;
 
-namespace HFM.Core
+namespace HFM.Core.ApplicationUpdates
 {
     public interface IApplicationUpdateService
     {

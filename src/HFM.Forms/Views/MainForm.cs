@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 
-using HFM.Core;
+using HFM.Core.ApplicationUpdates;
 using HFM.Core.Client;
 using HFM.Core.Services;
 using HFM.Core.WorkUnits;

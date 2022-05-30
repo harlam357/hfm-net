@@ -1,12 +1,11 @@
 ﻿using LightInject;
 
-namespace HFM.Core;
+namespace HFM.Core.ApplicationUpdates;
 
 internal class CompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        // ApplicationUpdateService - Scoped
         serviceRegistry.Register<ApplicationUpdateService>(new PerScopeLifetime());
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
-
-namespace HFM.Core
+namespace HFM.Core.ApplicationUpdates
 {
     [TestFixture]
     public class ApplicationUpdateServiceTests
