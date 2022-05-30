@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 using HFM.Preferences;
 
@@ -31,7 +28,7 @@ namespace HFM.Core.Client
                     Directory.CreateDirectory(cacheDirectory);
                 }
 
-                using (var stream = Internal.FileSystem.TryFileOpen(fahLogPath, mode, FileAccess.Write, FileShare.Read, sleep, timeout))
+                using (var stream = Core.Internal.FileSystem.TryFileOpen(fahLogPath, mode, FileAccess.Write, FileShare.Read, sleep, timeout))
                 using (var writer = new StreamWriter(stream))
                 {
                     foreach (var chunk in logText.GetChunks())

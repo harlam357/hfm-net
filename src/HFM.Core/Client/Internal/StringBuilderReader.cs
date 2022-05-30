@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
-namespace HFM.Core.Client
+namespace HFM.Core.Client.Internal
 {
     // Shim to provide FahLogReader a TextReader implementation that reads content from a StringBuilder.
     [Serializable]
@@ -19,10 +16,7 @@ namespace HFM.Core.Client
             _length = s.Length;
         }
 
-        public override void Close()
-        {
-            Dispose(true);
-        }
+        public override void Close() => Dispose(true);
 
         protected override void Dispose(bool disposing)
         {
@@ -64,9 +58,6 @@ namespace HFM.Core.Client
             return str1;
         }
 
-        public override Task<string> ReadLineAsync()
-        {
-            return Task.FromResult(ReadLine());
-        }
+        public override Task<string> ReadLineAsync() => Task.FromResult(ReadLine());
     }
 }

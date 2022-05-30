@@ -219,7 +219,7 @@ namespace HFM.Core.Client
 
         private async Task UpdateLogFromStringBuilder(StringBuilder value)
         {
-            using (var textReader = new StringBuilderReader(value))
+            using (var textReader = new Internal.StringBuilderReader(value))
             using (var reader = new FahClientLogTextReader(textReader))
             {
                 await Log.ReadAsync(reader).ConfigureAwait(false);
