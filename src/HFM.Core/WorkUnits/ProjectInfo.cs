@@ -1,53 +1,19 @@
-﻿namespace HFM.Core.WorkUnits
+﻿namespace HFM.Core.WorkUnits;
+
+public interface IProjectInfo
 {
-    public interface IProjectInfo
-    {
-        /// <summary>
-        /// Project ID Number
-        /// </summary>
-        int ProjectID { get; }
+    int ProjectID { get; }
+    int ProjectRun { get; }
+    int ProjectClone { get; }
+    int ProjectGen { get; }
+}
 
-        /// <summary>
-        /// Project ID (Run)
-        /// </summary>
-        int ProjectRun { get; }
+public class ProjectInfo : IProjectInfo
+{
+    public int ProjectID { get; set; }
+    public int ProjectRun { get; set; }
+    public int ProjectClone { get; set; }
+    public int ProjectGen { get; set; }
 
-        /// <summary>
-        /// Project ID (Clone)
-        /// </summary>
-        int ProjectClone { get; }
-
-        /// <summary>
-        /// Project ID (Gen)
-        /// </summary>
-        int ProjectGen { get; }
-    }
-
-    public class ProjectInfo : IProjectInfo
-    {
-        /// <summary>
-        /// Project ID Number
-        /// </summary>
-        public int ProjectID { get; set; }
-
-        /// <summary>
-        /// Project ID (Run)
-        /// </summary>
-        public int ProjectRun { get; set; }
-
-        /// <summary>
-        /// Project ID (Clone)
-        /// </summary>
-        public int ProjectClone { get; set; }
-
-        /// <summary>
-        /// Project ID (Gen)
-        /// </summary>
-        public int ProjectGen { get; set; }
-
-        public override string ToString()
-        {
-            return this.ToProjectString();
-        }
-    }
+    public override string ToString() => this.ToProjectString();
 }
