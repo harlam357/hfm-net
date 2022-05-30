@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 
 using AutoMapper;
 
@@ -14,18 +10,7 @@ using HFM.Preferences;
 
 namespace HFM.Core.SlotXml
 {
-    public readonly struct XmlBuilderResult
-    {
-        public XmlBuilderResult(string slotSummaryFile, ICollection<string> slotDetailFiles)
-        {
-            SlotSummaryFile = slotSummaryFile;
-            SlotDetailFiles = slotDetailFiles;
-        }
-
-        public string SlotSummaryFile { get; }
-
-        public ICollection<string> SlotDetailFiles { get; }
-    }
+    public readonly record struct XmlBuilderResult(string SlotSummaryFile, ICollection<string> SlotDetailFiles);
 
     public class XmlBuilder
     {

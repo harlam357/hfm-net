@@ -1,8 +1,4 @@
-﻿
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing;
 using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
@@ -12,21 +8,7 @@ using HFM.Preferences;
 
 namespace HFM.Core.SlotXml
 {
-    public struct HtmlBuilderResult
-    {
-        public HtmlBuilderResult(ICollection<string> cssFiles, ICollection<string> slotSummaryFiles, ICollection<string> slotDetailFiles)
-        {
-            CssFiles = cssFiles;
-            SlotSummaryFiles = slotSummaryFiles;
-            SlotDetailFiles = slotDetailFiles;
-        }
-
-        public ICollection<string> CssFiles { get; set; }
-
-        public ICollection<string> SlotSummaryFiles { get; set; }
-
-        public ICollection<string> SlotDetailFiles { get; set; }
-    }
+    public readonly record struct HtmlBuilderResult(ICollection<string> CssFiles, ICollection<string> SlotSummaryFiles, ICollection<string> SlotDetailFiles);
 
     public class HtmlBuilder
     {
