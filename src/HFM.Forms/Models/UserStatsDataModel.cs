@@ -81,7 +81,15 @@ namespace HFM.Forms.Models
             else
             {
                 var action = new Action(() => OnPropertyChanged(null));
-                synchronizeInvoke.BeginInvoke(action, null);
+                try
+                {
+                    synchronizeInvoke.BeginInvoke(action, null);
+                }
+                catch (InvalidOperationException)
+                {
+                    // this can occur on startup when this model is
+                    // updated before the window handle is created
+                }
             }
         }
 

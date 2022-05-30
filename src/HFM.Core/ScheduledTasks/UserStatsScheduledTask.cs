@@ -7,29 +7,31 @@ namespace HFM.Core.ScheduledTasks;
 
 public class UserStatsScheduledTask : ScheduledTask
 {
-    public IPreferences Preferences { get; }
-
-    public ILogger Logger { get; }
-
-    public IUserStatsService StatsService { get; }
+    private readonly IPreferences _preferences;
+    private readonly ILogger _logger;
+    private readonly IUserStatsService _statsService;
 
     public UserStatsDataContainer DataContainer { get; }
 
     public UserStatsScheduledTask(IPreferences preferences, ILogger logger, IUserStatsService userStatsService, UserStatsDataContainer dataContainer)
         : base("EOC stats")
     {
-        Preferences = preferences ?? new InMemoryPreferencesProvider();
-        Logger = logger ?? NullLogger.Instance;
-        StatsService = userStatsService ?? throw new ArgumentNullException(nameof(userStatsService));
+        _preferences = preferences ?? new InMemoryPreferencesProvider();
+        _logger = logger ?? NullLogger.Instance;
+        _statsService = userStatsService ?? throw new ArgumentNullException(nameof(userStatsService));
         DataContainer = dataContainer ?? throw new ArgumentNullException(nameof(dataContainer));
         Interval = CalculateInterval(DataContainer.Data.LastUpdated);
         Changed += TaskChanged;
 
-        Preferences.PreferenceChanged += (s, e) =>
+        SubscribeToPreferenceChangedEvent();
+    }
+
+    private void SubscribeToPreferenceChangedEvent() =>
+        _preferences.PreferenceChanged += (s, e) =>
         {
             if (e.Preference == Preference.EnableUserStats)
             {
-                bool enableUserStats = Preferences.Get<bool>(Preference.EnableUserStats);
+                bool enableUserStats = _preferences.Get<bool>(Preference.EnableUserStats);
                 if (enableUserStats)
                 {
                     Start();
@@ -41,7 +43,9 @@ public class UserStatsScheduledTask : ScheduledTask
             }
         };
 
-        if (Preferences.Get<bool>(Preference.EnableUserStats))
+    public void RunOrStartIfEnabled()
+    {
+        if (_preferences.Get<bool>(Preference.EnableUserStats))
         {
             if (TimeForNextUpdate(DataContainer.Data.LastUpdated))
             {
@@ -59,16 +63,16 @@ public class UserStatsScheduledTask : ScheduledTask
         switch (e.Action)
         {
             case ScheduledTaskChangedAction.Started:
-                Logger.Info(e.ToString(i => $"{(int)TimeSpan.FromMilliseconds(i.GetValueOrDefault()).TotalMinutes} minutes"));
+                _logger.Info(e.ToString(i => $"{(int)TimeSpan.FromMilliseconds(i.GetValueOrDefault()).TotalMinutes} minutes"));
                 break;
             case ScheduledTaskChangedAction.Faulted:
-                Logger.Error(e.ToString());
+                _logger.Error(e.ToString());
                 break;
             case ScheduledTaskChangedAction.AlreadyInProgress:
-                Logger.Warn(e.ToString());
+                _logger.Warn(e.ToString());
                 break;
             default:
-                Logger.Info(e.ToString());
+                _logger.Info(e.ToString());
                 break;
         }
     }
@@ -77,7 +81,7 @@ public class UserStatsScheduledTask : ScheduledTask
     {
         try
         {
-            var newStatsData = StatsService.GetStatsData();
+            var newStatsData = _statsService.GetStatsData();
 
             // if the new data is not equal to the previous data, we updated... otherwise, if the update
             // status is current we should assume the data is current but did not change
