@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -25,8 +23,8 @@ namespace HFM.Forms.Models
 
         public UserStatsDataModel(ISynchronizeInvoke synchronizeInvoke, IPreferences preferences, EocStatsScheduledTask scheduledTask)
         {
-            _preferences = preferences;
-            _scheduledTask = scheduledTask;
+            _preferences = preferences ?? new InMemoryPreferencesProvider();
+            _scheduledTask = scheduledTask ?? throw new ArgumentNullException(nameof(scheduledTask));
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<UserStatsDataModelProfile>()).CreateMapper();
 
             _preferences.PreferenceChanged += (s, e) =>

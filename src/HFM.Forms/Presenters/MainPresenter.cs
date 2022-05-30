@@ -41,11 +41,11 @@ namespace HFM.Forms.Presenters
                              EocStatsScheduledTask eocStatsScheduledTask)
             : base(model)
         {
-            Model = model;
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             Logger = logger ?? NullLogger.Instance;
             ServiceScopeFactory = serviceScopeFactory ?? NullServiceScopeFactory.Instance;
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
-            ClientConfiguration = clientConfiguration;
+            ClientConfiguration = clientConfiguration ?? throw new ArgumentNullException(nameof(clientConfiguration));
             ProteinService = proteinService ?? NullProteinService.Instance;
 
             UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
@@ -143,8 +143,8 @@ namespace HFM.Forms.Presenters
             }
         }
 
-        private readonly object _checkForUpdateLock = new object();
-        private ApplicationUpdateModel _applicationUpdateModel;
+        private readonly object _checkForUpdateLock = new();
+        internal ApplicationUpdateModel ApplicationUpdateModel { get; set; }
 
         private bool? CheckForUpdateInternal(IApplicationUpdateService service, ApplicationUpdatePresenterFactory presenterFactory)
         {
@@ -160,12 +160,12 @@ namespace HFM.Forms.Presenters
                 if (update is null) return false;
                 if (!update.VersionIsGreaterThan(Core.Application.VersionNumber)) return false;
 
-                _applicationUpdateModel = new ApplicationUpdateModel(update);
-                using (var presenter = presenterFactory.Create(_applicationUpdateModel))
+                ApplicationUpdateModel = new ApplicationUpdateModel(update);
+                using (var presenter = presenterFactory.Create(ApplicationUpdateModel))
                 {
                     if (presenter.ShowDialog(Form) == DialogResult.OK)
                     {
-                        if (_applicationUpdateModel.SelectedUpdateFileIsReadyToBeExecuted)
+                        if (ApplicationUpdateModel.SelectedUpdateFileIsReadyToBeExecuted)
                         {
                             string text = String.Format(CultureInfo.CurrentCulture,
                                 "{0} will install the new version when you exit the application.", Core.Application.Name);
@@ -190,14 +190,14 @@ namespace HFM.Forms.Presenters
                 return true;
             }
 
-            CheckForAndFireUpdateProcess(_applicationUpdateModel, process);
+            CheckForAndFireUpdateProcess(ApplicationUpdateModel, process);
 
             return false;
         }
 
         private void CheckForAndFireUpdateProcess(ApplicationUpdateModel update, LocalProcessService process)
         {
-            if (update != null && update.SelectedUpdateFileIsReadyToBeExecuted)
+            if (update is { SelectedUpdateFileIsReadyToBeExecuted: true })
             {
                 string path = update.SelectedUpdateFileLocalFilePath;
                 Logger.Info($"Firing update file '{path}'...");

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 
 using HFM.Core.Client;
 using HFM.Forms.Internal;
@@ -28,7 +23,7 @@ namespace HFM.Forms.Models
         {
             _synchronizeInvoke = synchronizeInvoke;
             Preferences = preferences ?? new InMemoryPreferencesProvider();
-            ClientConfiguration = clientConfiguration;
+            ClientConfiguration = clientConfiguration ?? throw new ArgumentNullException(nameof(clientConfiguration));
 
             _slotList = new SlotModelSortableBindingList();
             _slotList.RaiseListChangedEvents = false;

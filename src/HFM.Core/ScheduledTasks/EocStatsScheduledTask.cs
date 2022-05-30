@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-using HFM.Core.Data;
+﻿using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Core.Services;
 using HFM.Preferences;
