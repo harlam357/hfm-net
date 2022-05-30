@@ -11,8 +11,5 @@ internal class CompositionRoot : ICompositionRoot
 
         serviceRegistry.Register<UserStatsDataContainer>(new PerContainerLifetime());
         serviceRegistry.Initialize<UserStatsDataContainer>((_, instance) => instance.Read());
-
-        serviceRegistry.Register<ProteinDataContainer>(new PerContainerLifetime());
-        serviceRegistry.Initialize<ProteinDataContainer>((_, instance) => instance.Read());
     }
 }

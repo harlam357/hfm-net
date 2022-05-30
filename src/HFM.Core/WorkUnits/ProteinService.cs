@@ -1,5 +1,4 @@
-﻿using HFM.Core.Data;
-using HFM.Core.Logging;
+﻿using HFM.Core.Logging;
 using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits;

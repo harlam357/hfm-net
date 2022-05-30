@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
+﻿using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Preferences;
 using HFM.Proteins;
 
-namespace HFM.Core.Data
+namespace HFM.Core.WorkUnits
 {
     public class ProteinDataContainer : DataContainer<List<Protein>>
     {
