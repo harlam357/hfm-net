@@ -1,9 +1,9 @@
 ﻿using HFM.Core.Data;
 using HFM.Core.Logging;
-using HFM.Core.Services;
+using HFM.Core.ScheduledTasks;
 using HFM.Preferences;
 
-namespace HFM.Core.ScheduledTasks;
+namespace HFM.Core.UserStats;
 
 public class UserStatsScheduledTask : ScheduledTask
 {

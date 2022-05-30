@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿
+using NUnit.Framework;
 
-namespace HFM.Core.ScheduledTasks;
+namespace HFM.Core.UserStats;
 
 [TestFixture]
 public class UserStatsScheduledTaskTests

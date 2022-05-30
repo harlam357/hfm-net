@@ -1,8 +1,7 @@
-﻿using HFM.Core.Services;
-
+﻿
 using NUnit.Framework;
 
-namespace HFM.Core.Data;
+namespace HFM.Core.UserStats;
 
 [TestFixture]
 public class UserStatsDataContainerTests

@@ -2,7 +2,7 @@
 
 using HFM.Preferences;
 
-namespace HFM.Core.Services;
+namespace HFM.Core.UserStats;
 
 public interface IUserStatsService
 {

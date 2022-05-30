@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using AutoMapper;
 
 using HFM.Core.ScheduledTasks;
+using HFM.Core.UserStats;
 using HFM.Preferences;
 
 namespace HFM.Forms.Models

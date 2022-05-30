@@ -3,6 +3,7 @@
 using HFM.Core;
 using HFM.Core.Logging;
 using HFM.Core.Services;
+using HFM.Core.UserStats;
 using HFM.Forms.Models;
 using HFM.Forms.Services;
 using HFM.Forms.Views;

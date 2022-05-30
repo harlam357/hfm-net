@@ -8,8 +8,5 @@ internal class CompositionRoot : ICompositionRoot
     {
         serviceRegistry.Register<WorkUnitQueryDataContainer>(new PerContainerLifetime());
         serviceRegistry.Initialize<WorkUnitQueryDataContainer>((_, instance) => instance.Read());
-
-        serviceRegistry.Register<UserStatsDataContainer>(new PerContainerLifetime());
-        serviceRegistry.Initialize<UserStatsDataContainer>((_, instance) => instance.Read());
     }
 }

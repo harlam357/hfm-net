@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace HFM.Core.Services;
+namespace HFM.Core.UserStats;
 
 [DataContract]
 public record UserStatsData

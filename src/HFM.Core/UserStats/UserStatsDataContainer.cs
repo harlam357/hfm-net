@@ -1,8 +1,8 @@
-﻿using HFM.Core.Logging;
-using HFM.Core.Services;
+﻿using HFM.Core.Data;
+using HFM.Core.Logging;
 using HFM.Preferences;
 
-namespace HFM.Core.Data;
+namespace HFM.Core.UserStats;
 
 public class UserStatsDataContainer : DataContainer<UserStatsData>
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using HFM.Core.Services;
+using HFM.Core.UserStats;
 
 namespace HFM.Forms.Models;
 

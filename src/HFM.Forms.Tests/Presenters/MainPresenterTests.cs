@@ -1,7 +1,7 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.Data;
 using HFM.Core.ScheduledTasks;
-using HFM.Core.Services;
+using HFM.Core.UserStats;
 using HFM.Forms.Models;
 using HFM.Forms.Services.Mocks;
 using HFM.Preferences;
