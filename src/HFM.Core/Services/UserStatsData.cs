@@ -3,7 +3,7 @@
 namespace HFM.Core.Services;
 
 [DataContract]
-public record EocStatsData
+public record UserStatsData
 {
     [DataMember(Order = 1)]
     public DateTime LastUpdated { get; set; }
@@ -67,41 +67,4 @@ public record EocStatsData
 
     // not serialized
     public string Status { get; set; }
-
-    /// <summary>
-    /// Gets the time for the next stats update time in UTC.
-    /// </summary>
-    public static DateTime GetNextUpdateTime(DateTime lastUpdated, DateTime utcNow, bool isDaylightSavingsTime)
-    {
-        // if last updated is either MinValue (no value) or is in the future,
-        // update to either set a value or correct a bad (future) value
-        if (lastUpdated == DateTime.MinValue || lastUpdated > utcNow)
-        {
-            return utcNow;
-        }
-
-        // What I really need to know is if it is Daylight Savings Time
-        // in the Central Time Zone, not the local machines Time Zone.
-        int offset = 0;
-        if (isDaylightSavingsTime)
-        {
-            offset = 1;
-        }
-
-        DateTime nextUpdateTime = lastUpdated.Date;
-
-        int hours = 24;
-        for (int i = 0; i < 9; i++)
-        {
-            if (lastUpdated.TimeOfDay >= TimeSpan.FromHours(hours - offset))
-            {
-                nextUpdateTime = nextUpdateTime.Add(TimeSpan.FromHours(hours + 3 - offset));
-                break;
-            }
-
-            hours -= 3;
-        }
-
-        return nextUpdateTime;
-    }
 }

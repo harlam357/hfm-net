@@ -38,7 +38,7 @@ public class MainPresenterTests
     {
         var preferences = new InMemoryPreferencesProvider();
         var clientConfiguration = new ClientConfiguration(null, preferences, new ClientFactory());
-        var userStatsScheduledTask = new EocStatsScheduledTask(preferences, null, Mock.Of<IEocStatsService>(), new EocStatsDataContainer());
+        var userStatsScheduledTask = new UserStatsScheduledTask(preferences, null, Mock.Of<IUserStatsService>(), new UserStatsDataContainer());
         return new MainPresenter(new MainModel(preferences), null, null, null, clientConfiguration, null, userStatsScheduledTask);
     }
 }

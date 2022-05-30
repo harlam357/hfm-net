@@ -38,7 +38,7 @@ namespace HFM.Forms.Presenters
                              MessageBoxPresenter messageBox,
                              ClientConfiguration clientConfiguration,
                              IProteinService proteinService,
-                             EocStatsScheduledTask eocStatsScheduledTask)
+                             UserStatsScheduledTask userStatsScheduledTask)
             : base(model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
@@ -48,7 +48,7 @@ namespace HFM.Forms.Presenters
             ClientConfiguration = clientConfiguration ?? throw new ArgumentNullException(nameof(clientConfiguration));
             ProteinService = proteinService ?? NullProteinService.Instance;
 
-            UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, eocStatsScheduledTask);
+            UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, userStatsScheduledTask);
             Preferences = Model.Preferences;
             SlotsModel = new SlotCollectionModel(Form, Model.Preferences, clientConfiguration);
             SlotsModel.Load();
@@ -707,7 +707,7 @@ namespace HFM.Forms.Presenters
         // Web Menu Handling Methods
         public void ShowEocUserPage(LocalProcessService localProcess)
         {
-            string fileName = new Uri(String.Concat(EocStatsService.UserBaseUrl, Preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
+            string fileName = new Uri(String.Concat(UserStatsService.UserBaseUrl, Preferences.Get<int>(Preference.EocUserId))).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the EOC user stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }
@@ -724,7 +724,7 @@ namespace HFM.Forms.Presenters
 
         public void ShowEocTeamPage(LocalProcessService localProcess)
         {
-            string fileName = new Uri(String.Concat(EocStatsService.TeamBaseUrl, Preferences.Get<int>(Preference.TeamId))).AbsoluteUri;
+            string fileName = new Uri(String.Concat(UserStatsService.TeamBaseUrl, Preferences.Get<int>(Preference.TeamId))).AbsoluteUri;
             const string errorMessage = "An error occurred while attempting to open the EOC team stats page.";
             localProcess.StartAndNotifyError(fileName, errorMessage, Logger, MessageBox);
         }

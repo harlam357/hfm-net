@@ -1,17 +1,15 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 
 using HFM.Core.Services;
 
-namespace HFM.Forms.Models
+namespace HFM.Forms.Models;
+
+public class UserStatsDataModelProfile : Profile
 {
-    public class UserStatsDataModelProfile : Profile
+    public UserStatsDataModelProfile()
     {
-        public UserStatsDataModelProfile()
-        {
-            CreateMap<EocStatsData, UserStatsDataModel>()
-                .DisableCtorValidation()
-                .ForMember(dest => dest.ControlsVisible, opt => opt.Ignore());
-        }
+        CreateMap<UserStatsData, UserStatsDataModel>()
+            .DisableCtorValidation()
+            .ForMember(dest => dest.ControlsVisible, opt => opt.Ignore());
     }
 }

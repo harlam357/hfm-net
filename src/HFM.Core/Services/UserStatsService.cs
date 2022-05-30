@@ -4,12 +4,12 @@ using HFM.Preferences;
 
 namespace HFM.Core.Services;
 
-public interface IEocStatsService
+public interface IUserStatsService
 {
-    EocStatsData GetStatsData();
+    UserStatsData GetStatsData();
 }
 
-public class EocStatsService : IEocStatsService
+public class UserStatsService : IUserStatsService
 {
     public const string UserBaseUrl = "https://folding.extremeoverclocking.com/user_summary.php?s=&u=";
     public const string TeamBaseUrl = "https://folding.extremeoverclocking.com/team_summary.php?s=&t=";
@@ -17,12 +17,12 @@ public class EocStatsService : IEocStatsService
 
     private readonly IPreferences _preferences;
 
-    public EocStatsService(IPreferences preferences)
+    public UserStatsService(IPreferences preferences)
     {
         _preferences = preferences;
     }
 
-    public EocStatsData GetStatsData()
+    public UserStatsData GetStatsData()
     {
         string eocXmlDataUrl = String.Concat(UserXmlBaseUrl, _preferences.Get<int>(Preference.EocUserId));
 
@@ -41,12 +41,12 @@ public class EocStatsService : IEocStatsService
     /// Updates the data container
     /// </summary>
     /// <param name="eocNode">EOC Stats XmlNode</param>
-    private static EocStatsData CreateStatsDataFromXmlNode(XmlNode eocNode)
+    private static UserStatsData CreateStatsDataFromXmlNode(XmlNode eocNode)
     {
         XmlNode teamNode = eocNode.SelectSingleNode("team");
         XmlNode userNode = eocNode.SelectSingleNode("user");
 
-        var data = new EocStatsData { LastUpdated = DateTime.UtcNow };
+        var data = new UserStatsData { LastUpdated = DateTime.UtcNow };
         data.UserTwentyFourHourAverage = Convert.ToInt64(GetXmlNode(userNode, "Points_24hr_Avg").InnerText);
         data.UserPointsToday = Convert.ToInt64(GetXmlNode(userNode, "Points_Today").InnerText);
         data.UserPointsWeek = Convert.ToInt64(GetXmlNode(userNode, "Points_Week").InnerText);

@@ -88,7 +88,7 @@ namespace HFM.Forms.Presenters
 
         public void TestExtremeOverclockingUser(LocalProcessService localProcess)
         {
-            string url = String.Concat(EocStatsService.UserBaseUrl, Model.OptionsModel.EocUserID);
+            string url = String.Concat(UserStatsService.UserBaseUrl, Model.OptionsModel.EocUserID);
             string caption = "EOC User Stats page";
             TestUrl(localProcess, url, caption);
         }
@@ -104,7 +104,7 @@ namespace HFM.Forms.Presenters
 
         public void TestExtremeOverclockingTeam(LocalProcessService localProcess)
         {
-            string url = String.Concat(EocStatsService.TeamBaseUrl, Model.OptionsModel.TeamID);
+            string url = String.Concat(UserStatsService.TeamBaseUrl, Model.OptionsModel.TeamID);
             string caption = "EOC Team Stats page";
             TestUrl(localProcess, url, caption);
         }
