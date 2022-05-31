@@ -5,47 +5,14 @@
 //   http://www.codinghorror.com/
 //   http://www.codeproject.com/KB/security/SimpleEncryption.aspx
 
-using System.Globalization;
 using System.Security.Cryptography;
-using System.Text;
 
-namespace HFM.Core;
-
-/// <summary>
-/// Specifies the type of hash.
-/// </summary>
-public enum HashProvider
-{
-    // ReSharper disable InconsistentNaming
-
-    /// <summary>
-    /// Secure Hashing Algorithm provider, SHA-1 variant, 160-bit.
-    /// </summary>
-    SHA1,
-    /// <summary>
-    /// Secure Hashing Algorithm provider, SHA-2 variant, 256-bit.
-    /// </summary>
-    SHA256,
-    /// <summary>
-    /// Secure Hashing Algorithm provider, SHA-2 variant, 384-bit.
-    /// </summary>
-    SHA384,
-    /// <summary>
-    /// Secure Hashing Algorithm provider, SHA-2 variant, 512-bit.
-    /// </summary>
-    SHA512,
-    /// <summary>
-    /// Message Digest algorithm 5, 128-bit.
-    /// </summary>
-    MD5
-
-    // ReSharper restore InconsistentNaming
-}
+namespace HFM.Core.ApplicationUpdates.Internal;
 
 /// <summary>
 /// Provides access to factory methods for creating HashAlgorithm instances.
 /// </summary>
-public static class HashAlgorithmFactory
+internal static class HashAlgorithmFactory
 {
     /// <summary>
     /// Creates a new instance of the HashAlgorithm class based on the specified provider.
@@ -86,7 +53,7 @@ public static class HashAlgorithmFactory
 /// <summary>
 /// Represents an object that performs hashing.
 /// </summary>
-public class Hash : IDisposable
+internal class Hash : IDisposable
 {
     private readonly HashAlgorithm _hash;
 
@@ -180,26 +147,4 @@ public class Hash : IDisposable
     }
 
     private bool _disposed;
-}
-
-public static class ByteArrayExtensions
-{
-    /// <summary>
-    /// Converts an array of bytes to a Hex string representation.
-    /// </summary>
-    public static string ToHex(this byte[] value)
-    {
-        if (value == null || value.Length == 0)
-        {
-            return String.Empty;
-        }
-
-        const string hexFormat = "{0:X2}";
-        var sb = new StringBuilder();
-        foreach (byte b in value)
-        {
-            sb.Append(String.Format(CultureInfo.InvariantCulture, hexFormat, b));
-        }
-        return sb.ToString();
-    }
 }
