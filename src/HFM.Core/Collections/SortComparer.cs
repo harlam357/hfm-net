@@ -1,9 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace HFM.Core
+namespace HFM.Core.Collections
 {
     /// <summary>
     /// Specifies the sorting mode.
@@ -55,18 +52,12 @@ namespace HFM.Core
         /// <summary>
         /// Gets a value indicating whether the comparer supports simple sorting.
         /// </summary>
-        public virtual bool SupportsSorting
-        {
-            get { return true; }
-        }
+        public virtual bool SupportsSorting => true;
 
         /// <summary>
         /// Gets a value indicating whether the comparer supports advanced sorting.
         /// </summary>
-        public virtual bool SupportsAdvancedSorting
-        {
-            get { return true; }
-        }
+        public virtual bool SupportsAdvancedSorting => true;
 
         /// <summary>
         /// Gets the property descriptor used in a simple sort.
@@ -112,7 +103,7 @@ namespace HFM.Core
         /// <param name="y">The second object to compare.</param>
         public int Compare(T x, T y)
         {
-            /* Knowing how to sort is dependent on what sorting properties are set */
+            // Knowing how to sort is dependent on what sorting properties are set
             if (SupportsSorting && Property != null)
             {
                 return CompareInternal(x, y);
@@ -125,8 +116,6 @@ namespace HFM.Core
             return 0;
         }
 
-        #region protected virtual
-
         /// <summary>
         /// Single property compare method.
         /// </summary>
@@ -134,17 +123,12 @@ namespace HFM.Core
         /// <param name="y">The second object to compare.</param>
         protected virtual int CompareInternal(T x, T y)
         {
-            /* Get property values */
             object xValue = GetPropertyValue(x, Property);
             object yValue = GetPropertyValue(y, Property);
 
-            /* Determine sort order */
-            if (Direction == ListSortDirection.Ascending)
-            {
-                return CompareAscending(xValue, yValue);
-            }
-
-            return CompareDescending(xValue, yValue);
+            return Direction == ListSortDirection.Ascending
+                ? CompareAscending(xValue, yValue)
+                : CompareDescending(xValue, yValue);
         }
 
         /// <summary>
@@ -160,29 +144,19 @@ namespace HFM.Core
                 return 0; // termination condition
             }
 
-            /* Get property values */
+            // Get property values
             ListSortDescription listSortDesc = SortDescriptions[index];
             object xValue = listSortDesc.PropertyDescriptor.GetValue(x);
             object yValue = listSortDesc.PropertyDescriptor.GetValue(y);
 
-            int result;
-            /* Determine sort order */
-            if (listSortDesc.SortDirection == ListSortDirection.Ascending)
-            {
-                result = CompareAscending(xValue, yValue);
-            }
-            else
-            {
-                result = CompareDescending(xValue, yValue);
-            }
+            int result = listSortDesc.SortDirection == ListSortDirection.Ascending
+                ? CompareAscending(xValue, yValue)
+                : CompareDescending(xValue, yValue);
 
-            /* If the properties are equal, compare the next property */
-            if (result == 0)
-            {
-                return RecursiveCompareInternal(x, y, ++index);
-            }
-
-            return result;
+            // If the properties are equal, compare the next property
+            return result == 0
+                ? RecursiveCompareInternal(x, y, ++index)
+                : result;
         }
 
         /// <summary>
@@ -206,22 +180,19 @@ namespace HFM.Core
             {
                 result = 1;
             }
-            else if (xValue is IComparable)
+            else if (xValue is IComparable xComparable)
             {
-                /* If values implement IComparable */
-                result = ((IComparable)xValue).CompareTo(yValue);
+                // If values implement IComparable
+                result = xComparable.CompareTo(yValue);
             }
             else if (xValue.Equals(yValue))
             {
-                /* If values don't implement IComparable but are equivalent */
+                // If values don't implement IComparable but are equivalent
                 result = 0;
             }
             else
             {
-                /* Values don't implement IComparable and are not equivalent, so compare as string values */
-                // old comparison
-                //result = xValue.ToString().CompareTo(yValue.ToString());
-                // use Ordinal rules instead
+                // Values don't implement IComparable and are not equivalent, so compare as string values
                 result = String.CompareOrdinal(xValue.ToString(), yValue.ToString());
             }
 
@@ -233,12 +204,10 @@ namespace HFM.Core
         /// </summary>
         /// <param name="xValue">The first property value to compare.</param>
         /// <param name="yValue">The second property value to compare.</param>
-        protected virtual int CompareDescending(object xValue, object yValue)
-        {
-            /* Return result adjusted for ascending or descending sort order ie
-               multiplied by 1 for ascending or -1 for descending */
-            return CompareAscending(xValue, yValue) * -1;
-        }
+        protected virtual int CompareDescending(object xValue, object yValue) =>
+            // Return result adjusted for ascending or descending sort order
+            // multiplied by 1 for ascending or -1 for descending
+            CompareAscending(xValue, yValue) * -1;
 
         /// <summary>
         /// Get the property value from the object.
@@ -246,11 +215,7 @@ namespace HFM.Core
         /// <param name="value">Object instance.</param>
         /// <param name="propertyDescriptor">The property descriptor.</param>
         /// <returns>The property value.</returns>
-        protected virtual object GetPropertyValue(T value, PropertyDescriptor propertyDescriptor)
-        {
-            return propertyDescriptor == null ? null : propertyDescriptor.GetValue(value);
-        }
-
-        #endregion
+        protected virtual object GetPropertyValue(T value, PropertyDescriptor propertyDescriptor) =>
+            propertyDescriptor?.GetValue(value);
     }
 }

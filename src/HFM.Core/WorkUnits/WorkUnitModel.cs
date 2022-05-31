@@ -2,6 +2,7 @@
 using System.Text;
 
 using HFM.Core.Client;
+using HFM.Core.Collections;
 using HFM.Core.Logging;
 using HFM.Proteins;
 

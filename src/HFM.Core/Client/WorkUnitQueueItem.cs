@@ -1,5 +1,6 @@
 ﻿using System;
 
+using HFM.Core.Collections;
 using HFM.Core.WorkUnits;
 
 namespace HFM.Core.Client

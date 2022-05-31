@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+using HFM.Core.Collections;
+
 namespace HFM.Core.Client
 {
     public class SlotModelSortComparer : SortComparer<SlotModel>

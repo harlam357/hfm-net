@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-using HFM.Core;
+using HFM.Core.Collections;
 using HFM.Core.Data;
 
 namespace HFM.Forms

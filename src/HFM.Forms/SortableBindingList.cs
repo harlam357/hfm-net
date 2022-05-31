@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using HFM.Core;
+using HFM.Core.Collections;
 
 namespace HFM.Forms
 {

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 
+using HFM.Core.Collections;
 using HFM.Log;
 
 namespace HFM.Core.WorkUnits;

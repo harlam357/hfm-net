@@ -1,9 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace HFM.Core
+namespace HFM.Core.Collections
 {
     public interface IQueueItem
     {
@@ -12,7 +10,7 @@ namespace HFM.Core
 
     public abstract class QueueItemCollection<T> : IEnumerable<T> where T : IQueueItem
     {
-        private readonly QueueItemKeyedCollection _inner = new QueueItemKeyedCollection();
+        private readonly QueueItemKeyedCollection _inner = new();
 
         public int DefaultID => _inner.Count > 0 ? _inner.First().ID : NoID;
 
