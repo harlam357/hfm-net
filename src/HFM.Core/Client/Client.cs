@@ -18,8 +18,6 @@ public interface IClient
     /// </summary>
     event EventHandler RetrieveFinished;
 
-    ILogger Logger { get; }
-
     IPreferences Preferences { get; }
 
     IProteinBenchmarkRepository Benchmarks { get; }
