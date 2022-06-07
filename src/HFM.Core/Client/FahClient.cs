@@ -53,7 +53,7 @@ namespace HFM.Core.Client
         {
             ProteinService = proteinService;
             WorkUnitRepository = workUnitRepository;
-            Messages = new FahClientMessages(this);
+            Messages = new FahClientMessages(Logger, Preferences);
             _messageActions = new List<FahClientMessageAction>
             {
                 new DelegateFahClientMessageAction(FahClientMessageType.SlotInfo, RefreshSlots),
@@ -70,7 +70,7 @@ namespace HFM.Core.Client
 
             Logger.Debug(String.Format(Logging.Logger.NameFormat, Settings.Name, $"{message.Identifier} - Length: {message.MessageText.Length}"));
 
-            bool updated = await Messages.UpdateMessageAsync(message).ConfigureAwait(false);
+            bool updated = await Messages.UpdateMessageAsync(message, this).ConfigureAwait(false);
             if (updated)
             {
                 _messageActions.ForEach(x => x.Execute(message.Identifier.MessageType));

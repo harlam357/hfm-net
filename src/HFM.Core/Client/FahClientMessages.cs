@@ -4,7 +4,9 @@ using System.Text;
 
 using HFM.Client;
 using HFM.Client.ObjectModel;
+using HFM.Core.Logging;
 using HFM.Log;
+using HFM.Preferences;
 
 namespace HFM.Core.Client
 {
@@ -21,19 +23,21 @@ namespace HFM.Core.Client
 
     public class FahClientMessages : IWorkUnitMessageSource
     {
-        public IFahClient Client { get; }
+        private readonly ILogger _logger;
+        private readonly IPreferences _preferences;
+        private readonly IFahClientLogFileWriter _logFileWriter;
 
-        public FahClientLogFileWriter LogFileWriter { get; }
-
-        public FahClientMessages(IFahClient client) : this(client, new FahClientLogFileWriter(client))
+        public FahClientMessages(ILogger logger, IPreferences preferences)
+            : this(logger, preferences, new FahClientLogFileWriter())
         {
 
         }
 
-        public FahClientMessages(IFahClient client, FahClientLogFileWriter logFileWriter)
+        public FahClientMessages(ILogger logger, IPreferences preferences, IFahClientLogFileWriter logFileWriter)
         {
-            Client = client;
-            LogFileWriter = logFileWriter;
+            _logger = logger ?? NullLogger.Instance;
+            _preferences = preferences ?? new InMemoryPreferencesProvider();
+            _logFileWriter = logFileWriter ?? NullFahClientLogFileWriter.Instance;
         }
 
         public FahClientMessage Heartbeat { get; private set; }
@@ -96,7 +100,7 @@ namespace HFM.Core.Client
         /// Updates the cached messages with a message received from the client.
         /// </summary>
         /// <param name="message">The message received from the client.</param>
-        public async Task<bool> UpdateMessageAsync(FahClientMessage message)
+        public async Task<bool> UpdateMessageAsync(FahClientMessage message, IFahClient client)
         {
             bool logIsRetrieved = LogIsRetrieved;
 
@@ -112,7 +116,7 @@ namespace HFM.Core.Client
                     Options = Options.Load(message.MessageText);
                     return true;
                 case FahClientMessageType.SlotInfo:
-                    await UpdateSlotCollectionFromMessage(message).ConfigureAwait(false);
+                    await UpdateSlotCollectionFromMessage(message, client?.Connection).ConfigureAwait(false);
                     return true;
                 case FahClientMessageType.SlotOptions:
                     UpdateSlotOptionsFromMessage(message);
@@ -121,7 +125,7 @@ namespace HFM.Core.Client
                     return UpdateUnitCollectionFromMessage(message);
                 case FahClientMessageType.LogRestart:
                 case FahClientMessageType.LogUpdate:
-                    await UpdateLogFromMessage(message).ConfigureAwait(false);
+                    await UpdateLogFromMessage(message, client?.Settings.ClientLogFileName, client?.Connection).ConfigureAwait(false);
                     return logIsRetrieved != LogIsRetrieved;
                 default:
                     return false;
@@ -130,10 +134,9 @@ namespace HFM.Core.Client
 
         public const string DefaultSlotOptions = "slot-options {0} cpus client-type client-subtype cpu-usage machine-id max-packet-size core-priority next-unit-percentage max-units checkpoint pause-on-start gpu-index gpu-usage";
 
-        private async Task UpdateSlotCollectionFromMessage(FahClientMessage message)
+        private async Task UpdateSlotCollectionFromMessage(FahClientMessage message, FahClientConnection connection)
         {
             SlotCollection = SlotCollection.Load(message.MessageText);
-            var connection = Client.Connection;
 
             foreach (var slot in SlotCollection)
             {
@@ -167,7 +170,7 @@ namespace HFM.Core.Client
             return existingUnitCollection is null || !UnitCollectionEqualityComparer.Instance.Equals(existingUnitCollection, UnitCollection);
         }
 
-        private async Task UpdateLogFromMessage(FahClientMessage message)
+        private async Task UpdateLogFromMessage(FahClientMessage message, string clientLogFileName, FahClientConnection connection)
         {
             bool messageIsLogRestart = message.Identifier.MessageType == FahClientMessageType.LogRestart;
             if (messageIsLogRestart)
@@ -178,14 +181,14 @@ namespace HFM.Core.Client
             var logUpdate = LogUpdate.Load(message.MessageText);
             if (LogIsRetrieved)
             {
-                await UpdateLogAssetsFromStringBuilder(logUpdate.Value, FileMode.Append).ConfigureAwait(false);
+                await UpdateLogAssetsFromStringBuilder(logUpdate.Value, FileMode.Append, clientLogFileName, connection).ConfigureAwait(false);
             }
             else
             {
                 AppendToLogBuffer(logUpdate.Value);
                 if (message.MessageText.Length < UInt16.MaxValue)
                 {
-                    await UpdateLogAssetsFromStringBuilder(LogBuffer, FileMode.Create).ConfigureAwait(false);
+                    await UpdateLogAssetsFromStringBuilder(LogBuffer, FileMode.Create, clientLogFileName, connection).ConfigureAwait(false);
                     LogBuffer = null;
                 }
             }
@@ -199,21 +202,29 @@ namespace HFM.Core.Client
             }
         }
 
-        private async Task UpdateLogAssetsFromStringBuilder(StringBuilder value, FileMode mode)
+        private async Task UpdateLogAssetsFromStringBuilder(StringBuilder value, FileMode mode, string clientLogFileName, FahClientConnection connection)
         {
             await UpdateLogFromStringBuilder(value).ConfigureAwait(false);
 
-            if (LogFileWriter != null)
+            if (clientLogFileName is not null)
             {
-                await LogFileWriter.WriteAsync(value, mode).ConfigureAwait(false);
+                var cacheDirectory = _preferences.Get<string>(Preference.CacheDirectory);
+                string fahLogPath = Path.Combine(cacheDirectory, clientLogFileName);
+                try
+                {
+                    await _logFileWriter.WriteAsync(fahLogPath, mode, value).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn($"Failed to write to {fahLogPath}", ex);
+                }
             }
 
-            var connection = Client.Connection;
             // not an expected situation at application runtime but when running some
             // tests the Connection will be null and that's fine in those scenarios
             if (connection != null)
             {
-                await Client.Connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
+                await connection.CreateCommand("queue-info").ExecuteAsync().ConfigureAwait(false);
             }
         }
 

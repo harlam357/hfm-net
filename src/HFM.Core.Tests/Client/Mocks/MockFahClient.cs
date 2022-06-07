@@ -12,7 +12,7 @@ public class MockFahClient : FahClient
 {
     public MockFahClient() : base(null, null, null, null, Mock.Of<IWorkUnitRepository>())
     {
-        Messages = new FahClientMessages(this, null);
+        Messages = new FahClientMessages(null, null);
     }
 
     protected override async Task OnConnect()
@@ -55,7 +55,7 @@ public class MockFahClient : FahClient
                 await Messages.UpdateMessageAsync(
                     extractor.Extract(
                         new StringBuilder(
-                            await File.ReadAllTextAsync(file))));
+                            await File.ReadAllTextAsync(file))), null);
             }
         }
     }
@@ -66,6 +66,6 @@ public class MockFahClient : FahClient
     public async Task LoadMessage(StringBuilder buffer)
     {
         var extractor = new FahClientJsonMessageExtractor();
-        await Messages.UpdateMessageAsync(extractor.Extract(buffer));
+        await Messages.UpdateMessageAsync(extractor.Extract(buffer), null);
     }
 }
