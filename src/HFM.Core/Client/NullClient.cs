@@ -1,17 +1,16 @@
-﻿using HFM.Core.Data;
-using HFM.Core.Logging;
+﻿using HFM.Core.Logging;
 using HFM.Preferences;
 
 namespace HFM.Core.Client;
 
 public class NullClient : Client
 {
-    public NullClient() : base(null, null, null)
+    public NullClient() : base(null, null)
     {
     }
 
-    public NullClient(ILogger logger, IPreferences preferences, IProteinBenchmarkRepository benchmarks)
-        : base(logger, preferences, benchmarks)
+    public NullClient(ILogger logger, IPreferences preferences)
+        : base(logger, preferences)
     {
     }
 

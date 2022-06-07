@@ -219,7 +219,7 @@ public class ProteinBenchmarkRepositoryTests
                     { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.FromMinutes(3) } }
                 }
             };
-            var workUnitModel = new WorkUnitModel(slotModel, workUnit)
+            var workUnitModel = new WorkUnitModel(slotModel, workUnit, null)
             {
                 CurrentProtein = new Protein
                 {

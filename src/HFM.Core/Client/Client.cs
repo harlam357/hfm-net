@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 
-using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -19,8 +18,6 @@ public interface IClient
     event EventHandler RetrieveFinished;
 
     IPreferences Preferences { get; }
-
-    IProteinBenchmarkRepository Benchmarks { get; }
 
     /// <summary>
     /// Settings that define this client's behavior.
@@ -65,14 +62,13 @@ public abstract class Client : IClient
     protected virtual void OnRetrieveFinished() => RetrieveFinished?.Invoke(this, EventArgs.Empty);
 
     public ILogger Logger { get; }
-    public IPreferences Preferences { get; }
-    public IProteinBenchmarkRepository Benchmarks { get; }
 
-    protected Client(ILogger logger, IPreferences preferences, IProteinBenchmarkRepository benchmarks)
+    public IPreferences Preferences { get; }
+
+    protected Client(ILogger logger, IPreferences preferences)
     {
         Logger = logger ?? NullLogger.Instance;
         Preferences = preferences ?? new InMemoryPreferencesProvider();
-        Benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
 
         RefreshSlots();
     }

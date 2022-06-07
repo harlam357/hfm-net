@@ -955,7 +955,7 @@ public class WorkUnitContextRepositoryTests
                 CPUThreads = threads
             }
         };
-        var workUnitModel = new WorkUnitModel(slotModel, workUnit)
+        var workUnitModel = new WorkUnitModel(slotModel, workUnit, null)
         {
             CurrentProtein = protein
         };

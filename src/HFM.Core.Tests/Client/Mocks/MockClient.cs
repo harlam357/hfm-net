@@ -4,12 +4,12 @@ namespace HFM.Core.Client.Mocks;
 
 public class MockClient : Client
 {
-    public MockClient() : base(null, null, null)
+    public MockClient() : base(null, null)
     {
 
     }
 
-    public MockClient(ILogger logger) : base(logger, null, null)
+    public MockClient(ILogger logger) : base(logger, null)
     {
 
     }

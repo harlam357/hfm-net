@@ -3,6 +3,7 @@ using System.Text;
 
 using HFM.Core.Client;
 using HFM.Core.Collections;
+using HFM.Core.Data;
 using HFM.Core.Logging;
 using HFM.Proteins;
 
@@ -18,15 +19,16 @@ public class WorkUnitModel : IQueueItem
 
     public Protein CurrentProtein { get; set; } = new();
 
-    public WorkUnitModel(SlotModel slotModel) : this(slotModel, new WorkUnit())
-    {
+    private readonly IProteinBenchmarkRepository _benchmarks;
 
-    }
+    public static WorkUnitModel Empty(SlotModel slotModel) =>
+        new(slotModel, new WorkUnit(), null);
 
-    public WorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
+    public WorkUnitModel(SlotModel slotModel, WorkUnit workUnit, IProteinBenchmarkRepository benchmarks)
     {
         SlotModel = slotModel ?? throw new ArgumentNullException(nameof(slotModel));
         WorkUnit = workUnit ?? throw new ArgumentNullException(nameof(workUnit));
+        _benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
     }
 
     public ProteinBenchmarkIdentifier BenchmarkIdentifier =>
@@ -190,7 +192,7 @@ public class WorkUnitModel : IQueueItem
             return TimeSpan.FromSeconds(rawTime);
         }
 
-        var benchmark = SlotModel.Client.Benchmarks.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
+        var benchmark = _benchmarks.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
         return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
     }
 
