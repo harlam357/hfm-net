@@ -128,7 +128,7 @@ namespace HFM.Core.SlotXml
             slotData.ETA = ToETAString(slot);
             slotData.Core = slot.Core ?? String.Empty;
             slotData.CoreId = slot.CoreID ?? String.Empty;
-            slotData.ProjectIsDuplicate = slot.ProjectIsDuplicate;
+            slotData.ProjectIsDuplicate = slot.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key);
             slotData.ProjectRunCloneGen = slot.ProjectRunCloneGen;
             slotData.Credit = slot.Credit;
             slotData.Completed = slot.Completed;
@@ -140,7 +140,7 @@ namespace HFM.Core.SlotXml
                 slotData.TotalRunFailedUnits = unitsSource.TotalRunFailedUnits;
                 slotData.TotalFailedUnits = unitsSource.TotalFailedUnits;
             }
-            slotData.UsernameOk = slot.UsernameOk;
+            slotData.UsernameOk = slot.Errors.GetValue<bool>(ClientUsernameValidationRule.Key);
             slotData.Username = slot.Username;
             slotData.DownloadTime = slot.Assigned.ToShortStringOrEmpty();
             slotData.PreferredDeadline = slot.PreferredDeadline.ToShortStringOrEmpty();

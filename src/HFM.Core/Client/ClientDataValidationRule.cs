@@ -10,6 +10,8 @@ public interface IClientDataValidationRule
 
 public class ClientUsernameValidationRule : IClientDataValidationRule
 {
+    public const string Key = "UsernameOk";
+
     private readonly IPreferences _preferences;
 
     public ClientUsernameValidationRule(IPreferences preferences)
@@ -21,12 +23,12 @@ public class ClientUsernameValidationRule : IClientDataValidationRule
     {
         if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit) || !slotModel.Status.IsOnline())
         {
-            slotModel.UsernameOk = true;
+            slotModel.Errors[Key] = true;
         }
         else
         {
-            slotModel.UsernameOk = slotModel.WorkUnitModel.WorkUnit.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
-                                   slotModel.WorkUnitModel.WorkUnit.Team == _preferences.Get<int>(Preference.TeamId);
+            slotModel.Errors[Key] = slotModel.WorkUnitModel.WorkUnit.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
+                                    slotModel.WorkUnitModel.WorkUnit.Team == _preferences.Get<int>(Preference.TeamId);
         }
     }
 
@@ -36,6 +38,8 @@ public class ClientUsernameValidationRule : IClientDataValidationRule
 
 public class ClientProjectIsDuplicateValidationRule : IClientDataValidationRule
 {
+    public const string Key = "ProjectIsDuplicate";
+
     private readonly ICollection<string> _duplicateProjects;
 
     public ClientProjectIsDuplicateValidationRule(ICollection<string> duplicateProjects)
@@ -50,5 +54,10 @@ public class ClientProjectIsDuplicateValidationRule : IClientDataValidationRule
             .ToList();
 
     public void Validate(SlotModel slotModel) =>
-        slotModel.ProjectIsDuplicate = _duplicateProjects.Contains(slotModel.WorkUnitModel.WorkUnit.ToShortProjectString());
+        slotModel.Errors[Key] = _duplicateProjects.Contains(slotModel.WorkUnitModel.WorkUnit.ToShortProjectString());
+}
+
+public class ValidationRuleErrors : Dictionary<string, object>
+{
+    public T GetValue<T>(string key) => TryGetValue(key, out object value) ? (T)value : default;
 }

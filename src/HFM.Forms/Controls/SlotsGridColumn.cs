@@ -20,18 +20,18 @@ public class SlotsGridColumnCollection : Collection<SlotsGridColumn>
     {
         Add(new SlotsGridStatusColumn());
         Add(new SlotsGridProgressColumn());
-        Add(new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(SlotModel.Name)));
-        Add(new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(SlotModel.SlotTypeString)));
-        Add(new SlotsGridDefaultColumn("Processor", "Processor", "CPU or GPU processor name", nameof(SlotModel.Processor)));
+        Add(new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(IClientData.Name)));
+        Add(new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(IClientData.SlotTypeString)));
+        Add(new SlotsGridDefaultColumn("Processor", "Processor", "CPU or GPU processor name", nameof(IClientData.Processor)));
         Add(new SlotsGridTPFColumn());
         Add(new SlotsGridPPDColumn());
         Add(new SlotsGridETAColumn());
-        Add(new SlotsGridDefaultColumn("Core", "Core", "Engine used to process the work unit", nameof(SlotModel.Core)));
-        Add(new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)));
+        Add(new SlotsGridDefaultColumn("Core", "Core", "Engine used to process the work unit", nameof(IClientData.Core)));
+        Add(new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(IClientData.CoreID)));
         Add(new SlotsGridProjectColumn());
         Add(new SlotsGridCreditColumn());
-        Add(new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(SlotModel.Completed)));
-        Add(new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(SlotModel.Failed)));
+        Add(new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(IClientData.Completed)));
+        Add(new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(IClientData.Failed)));
         Add(new SlotsGridUsernameColumn());
         Add(new SlotsGridAssignedColumn());
         Add(new SlotsGridTimeoutColumn());
@@ -94,32 +94,32 @@ public abstract class SlotsGridColumn
         return null;
     }
 
-    public string GetMouseOverText(SlotModel slotModel)
+    public string GetMouseOverText(IClientData clientData)
     {
-        if (slotModel is null) return null;
-        return OnGetMouseOverText(slotModel);
+        if (clientData is null) return null;
+        return OnGetMouseOverText(clientData);
     }
 
-    protected virtual string OnGetMouseOverText(SlotModel slotModel)
+    protected virtual string OnGetMouseOverText(IClientData clientData)
     {
         return null;
     }
 
-    public void PaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    public void PaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
         if (e.Value is null) return;
-        if (slotModel is null) return;
-        OnPaintCell(grid, e, slotModel);
+        if (clientData is null) return;
+        OnPaintCell(grid, e, clientData);
     }
 
-    protected virtual void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    protected virtual void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
-        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(slotModel) ? WarningColor : e.CellStyle.BackColor);
+        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(clientData) ? WarningColor : e.CellStyle.BackColor);
         FillCellBackColor(e, backColor);
         PaintGridLines(e, grid.GridColor);
 
         var textColor = GetTextColorOrSelectionTextColor(grid, e);
-        DrawLeftJustifiedText(e, textColor, GetCellText(e, slotModel));
+        DrawLeftJustifiedText(e, textColor, GetCellText(e, clientData));
 
         e.Handled = true;
     }
@@ -177,37 +177,37 @@ public abstract class SlotsGridColumn
         TextRenderer.DrawText(e.Graphics, value, e.CellStyle.Font, pt, color);
     }
 
-    public string GetCellText(DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    public string GetCellText(DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
-        return OnGetCellText(e.Value, slotModel);
+        return OnGetCellText(e.Value, clientData);
     }
 
-    protected virtual string OnGetCellText(object value, SlotModel slotModel)
+    protected virtual string OnGetCellText(object value, IClientData clientData)
     {
         return value?.ToString();
     }
 
-    public bool HasWarning(SlotModel slotModel)
+    public bool HasWarning(IClientData clientData)
     {
-        return OnHasWarning(slotModel);
+        return OnHasWarning(clientData);
     }
 
-    protected virtual bool OnHasWarning(SlotModel slotModel)
+    protected virtual bool OnHasWarning(IClientData clientData)
     {
         return false;
     }
 
     protected static Color WarningColor => Color.Orange;
 
-    public int GetAutoSizeWidth(DataGridView grid, SlotModel slotModel, int rowIndex, int columnIndex)
+    public int GetAutoSizeWidth(DataGridView grid, IClientData clientData, int rowIndex, int columnIndex)
     {
-        return OnGetAutoSizeWidth(grid, slotModel, rowIndex, columnIndex);
+        return OnGetAutoSizeWidth(grid, clientData, rowIndex, columnIndex);
     }
 
-    protected virtual int OnGetAutoSizeWidth(DataGridView grid, SlotModel slotModel, int rowIndex, int columnIndex)
+    protected virtual int OnGetAutoSizeWidth(DataGridView grid, IClientData clientData, int rowIndex, int columnIndex)
     {
         var value = grid.Rows[rowIndex].Cells[columnIndex].Value;
-        var cellText = OnGetCellText(value, slotModel);
+        var cellText = OnGetCellText(value, clientData);
         return TextRenderer.MeasureText(cellText, grid.DefaultCellStyle.Font).Width;
     }
 }
@@ -235,26 +235,26 @@ public class SlotsGridInt32Column : SlotsGridColumn
 
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.Status.IsOnline()) return String.Empty;
-        return base.OnGetCellText(value, slotModel);
+        if (!clientData.Status.IsOnline()) return String.Empty;
+        return base.OnGetCellText(value, clientData);
     }
 }
 
 public class SlotsGridStatusColumn : SlotsGridColumn
 {
-    public SlotsGridStatusColumn() : base("Status", "Status", "Status of the client or slot", nameof(SlotModel.Status))
+    public SlotsGridStatusColumn() : base("Status", "Status", "Status of the client or slot", nameof(IClientData.Status))
     {
 
     }
 
-    protected override string OnGetMouseOverText(SlotModel slotModel)
+    protected override string OnGetMouseOverText(IClientData clientData)
     {
-        return slotModel.Status.ToUserString();
+        return clientData.Status.ToUserString();
     }
 
-    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
         FillCellBackColor(e, e.CellStyle.BackColor);
         PaintGridLines(e, grid.GridColor);
@@ -279,7 +279,7 @@ public class SlotsGridStatusColumn : SlotsGridColumn
         return new SolidBrush(status.GetStatusColor());
     }
 
-    protected override int OnGetAutoSizeWidth(DataGridView grid, SlotModel slotModel, int rowIndex, int columnIndex)
+    protected override int OnGetAutoSizeWidth(DataGridView grid, IClientData clientData, int rowIndex, int columnIndex)
     {
         return 40;
     }
@@ -287,7 +287,7 @@ public class SlotsGridStatusColumn : SlotsGridColumn
 
 public class SlotsGridProgressColumn : SlotsGridColumn
 {
-    public SlotsGridProgressColumn() : base("Progress", "Progress", "Work unit progress", nameof(SlotModel.PercentComplete))
+    public SlotsGridProgressColumn() : base("Progress", "Progress", "Work unit progress", nameof(IClientData.PercentComplete))
     {
 
     }
@@ -297,12 +297,12 @@ public class SlotsGridProgressColumn : SlotsGridColumn
         return new DataGridViewProgressColumn();
     }
 
-    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
         e.Handled = false;
     }
 
-    protected override int OnGetAutoSizeWidth(DataGridView grid, SlotModel slotModel, int rowIndex, int columnIndex)
+    protected override int OnGetAutoSizeWidth(DataGridView grid, IClientData clientData, int rowIndex, int columnIndex)
     {
         return 50;
     }
@@ -310,14 +310,14 @@ public class SlotsGridProgressColumn : SlotsGridColumn
 
 public class SlotsGridTPFColumn : SlotsGridColumn
 {
-    public SlotsGridTPFColumn() : base("TPF", "TPF", "Time per frame (1% of progress)", nameof(SlotModel.TPF))
+    public SlotsGridTPFColumn() : base("TPF", "TPF", "Time per frame (1% of progress)", nameof(IClientData.TPF))
     {
 
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.Status.IsOnline())
+        if (!clientData.Status.IsOnline())
         {
             return String.Empty;
         }
@@ -336,33 +336,33 @@ public class SlotsGridTPFColumn : SlotsGridColumn
         }
 
         return timeSpan.Hours > 0
-            ? base.OnGetCellText(value, slotModel)
+            ? base.OnGetCellText(value, clientData)
             : timeSpan.ToString(@"mm\:ss");
     }
 }
 
 public class SlotsGridPPDColumn : SlotsGridColumn
 {
-    public SlotsGridPPDColumn() : base("PPD", "PPD", "Points per day", nameof(SlotModel.PPD))
+    public SlotsGridPPDColumn() : base("PPD", "PPD", "Points per day", nameof(IClientData.PPD))
     {
 
     }
 
-    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
-        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(slotModel) ? WarningColor : e.CellStyle.BackColor);
+        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(clientData) ? WarningColor : e.CellStyle.BackColor);
         FillCellBackColor(e, backColor);
         PaintGridLines(e, grid.GridColor);
 
         var textColor = GetTextColorOrSelectionTextColor(grid, e);
-        DrawRightJustifiedText(e, textColor, GetCellText(e, slotModel));
+        DrawRightJustifiedText(e, textColor, GetCellText(e, clientData));
 
         e.Handled = true;
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.Status.IsOnline())
+        if (!clientData.Status.IsOnline())
         {
             return String.Empty;
         }
@@ -376,14 +376,14 @@ public class SlotsGridPPDColumn : SlotsGridColumn
 
 public class SlotsGridETAColumn : SlotsGridColumn
 {
-    public SlotsGridETAColumn() : base("ETA", "ETA", "Estimated completion of the work unit", nameof(SlotModel.ETA))
+    public SlotsGridETAColumn() : base("ETA", "ETA", "Estimated completion of the work unit", nameof(IClientData.ETA))
     {
 
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.Status.IsOnline())
+        if (!clientData.Status.IsOnline())
         {
             return String.Empty;
         }
@@ -404,65 +404,63 @@ public class SlotsGridETAColumn : SlotsGridColumn
         var etaAsDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
         if (etaAsDate)
         {
-            return slotModel.ETADate.ToString(CultureInfo.CurrentCulture);
+            return clientData.ETADate.ToString(CultureInfo.CurrentCulture);
         }
 
-        return base.OnGetCellText(value, slotModel);
+        return base.OnGetCellText(value, clientData);
     }
 }
 
 public class SlotsGridProjectColumn : SlotsGridColumn
 {
-    public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", "Work unit identifier", nameof(SlotModel.ProjectRunCloneGen))
+    public SlotsGridProjectColumn() : base("Project", "Project (Run, Clone, Gen)", "Work unit identifier", nameof(IClientData.ProjectRunCloneGen))
     {
 
     }
 
-    protected override string OnGetMouseOverText(SlotModel slotModel)
+    protected override string OnGetMouseOverText(IClientData clientData)
     {
-        return HasWarning(slotModel)
+        return HasWarning(clientData)
             ? "Client is working on the same work unit as another client."
-            : base.OnGetMouseOverText(slotModel);
+            : base.OnGetMouseOverText(clientData);
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.WorkUnitModel.WorkUnit.HasProject())
+        if (!clientData.ProjectInfo.HasProject())
         {
             return String.Empty;
         }
 
-        return base.OnGetCellText(value, slotModel);
+        return base.OnGetCellText(value, clientData);
     }
 
-    protected override bool OnHasWarning(SlotModel slotModel)
-    {
-        return slotModel.ProjectIsDuplicate && Preferences.Get<bool>(Preference.DuplicateProjectCheck);
-    }
+    protected override bool OnHasWarning(IClientData clientData) =>
+        clientData.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key) && Preferences.Get<bool>(Preference.DuplicateProjectCheck);
 }
 
 public class SlotsGridCreditColumn : SlotsGridColumn
 {
-    public SlotsGridCreditColumn() : base("Credit", "Credit", "Estimated points for this work unit", nameof(SlotModel.Credit))
+    public SlotsGridCreditColumn() : base("Credit", "Credit", "Estimated points for this work unit", nameof(IClientData.Credit))
     {
 
     }
 
-    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, SlotModel slotModel)
+    protected override void OnPaintCell(DataGridView grid, DataGridViewCellPaintingEventArgs e, IClientData clientData)
     {
-        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(slotModel) ? WarningColor : e.CellStyle.BackColor);
+        var backColor = GetBackColorOrSelectionBackColor(grid, e, HasWarning(clientData) ? WarningColor : e.CellStyle.BackColor);
         FillCellBackColor(e, backColor);
         PaintGridLines(e, grid.GridColor);
 
         var textColor = GetTextColorOrSelectionTextColor(grid, e);
-        DrawRightJustifiedText(e, textColor, GetCellText(e, slotModel));
+        DrawRightJustifiedText(e, textColor, GetCellText(e, clientData));
 
         e.Handled = true;
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
-        if (!slotModel.Status.IsOnline())
+        if (!clientData.Status.IsOnline())
         {
             return String.Empty;
         }
@@ -476,32 +474,30 @@ public class SlotsGridCreditColumn : SlotsGridColumn
 
 public class SlotsGridUsernameColumn : SlotsGridColumn
 {
-    public SlotsGridUsernameColumn() : base("Username", "Username", "Username and team number", nameof(SlotModel.Username))
+    public SlotsGridUsernameColumn() : base("Username", "Username", "Username and team number", nameof(IClientData.Username))
     {
 
     }
 
-    protected override string OnGetMouseOverText(SlotModel slotModel)
+    protected override string OnGetMouseOverText(IClientData clientData)
     {
-        return HasWarning(slotModel)
+        return HasWarning(clientData)
             ? $"Client's username does not match the username configured in {Core.Application.Name} preferences."
-            : base.OnGetMouseOverText(slotModel);
+            : base.OnGetMouseOverText(clientData);
     }
 
-    protected override bool OnHasWarning(SlotModel slotModel)
-    {
-        return !slotModel.UsernameOk;
-    }
+    protected override bool OnHasWarning(IClientData clientData) =>
+        !clientData.Errors.GetValue<bool>(ClientUsernameValidationRule.Key);
 }
 
 public class SlotsGridAssignedColumn : SlotsGridColumn
 {
-    public SlotsGridAssignedColumn() : base("Assigned", "Assigned", "When this work unit was assigned", nameof(SlotModel.Assigned))
+    public SlotsGridAssignedColumn() : base("Assigned", "Assigned", "When this work unit was assigned", nameof(IClientData.Assigned))
     {
 
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
         var dateTime = (DateTime)value;
         if (dateTime.IsMinValue())
@@ -529,12 +525,12 @@ public class SlotsGridAssignedColumn : SlotsGridColumn
 public class SlotsGridTimeoutColumn : SlotsGridColumn
 {
     // NOTE: still using HFM calculated PreferredDeadline value
-    public SlotsGridTimeoutColumn() : base("Timeout", "Timeout", "When this work unit must be completed to achieve bonus points", nameof(SlotModel.PreferredDeadline))
+    public SlotsGridTimeoutColumn() : base("Timeout", "Timeout", "When this work unit must be completed to achieve bonus points", nameof(IClientData.PreferredDeadline))
     {
 
     }
 
-    protected override string OnGetCellText(object value, SlotModel slotModel)
+    protected override string OnGetCellText(object value, IClientData clientData)
     {
         var dateTime = (DateTime)value;
         if (dateTime.IsMinValue())

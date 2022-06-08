@@ -20,8 +20,8 @@ public class ClientProjectIsDuplicateValidationRuleTests
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert
-        Assert.IsTrue(slotModel1.ProjectIsDuplicate);
-        Assert.IsTrue(slotModel2.ProjectIsDuplicate);
+        Assert.IsTrue(slotModel1.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
+        Assert.IsTrue(slotModel2.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
     }
 
     [Test]
@@ -37,8 +37,8 @@ public class ClientProjectIsDuplicateValidationRuleTests
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert
-        Assert.IsFalse(slotModel1.ProjectIsDuplicate);
-        Assert.IsFalse(slotModel2.ProjectIsDuplicate);
+        Assert.IsFalse(slotModel1.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
+        Assert.IsFalse(slotModel2.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
     }
 
     [Test]
@@ -56,9 +56,9 @@ public class ClientProjectIsDuplicateValidationRuleTests
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert
-        Assert.IsTrue(slotModel1.ProjectIsDuplicate);
-        Assert.IsFalse(slotModel2.ProjectIsDuplicate);
-        Assert.IsTrue(slotModel3.ProjectIsDuplicate);
+        Assert.IsTrue(slotModel1.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
+        Assert.IsFalse(slotModel2.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
+        Assert.IsTrue(slotModel3.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
     }
 
     private static WorkUnitModel CreateWorkUnitModel(SlotModel slotModel, WorkUnit workUnit) =>

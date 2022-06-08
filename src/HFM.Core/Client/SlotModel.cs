@@ -20,13 +20,39 @@ public enum UnitTotalsType
     ClientStart
 }
 
-public class SlotModel : IProteinBenchmarkDetailSource
+public interface IClientData
+{
+    SlotStatus Status { get; }
+    int PercentComplete { get; }
+    string Name { get; }
+    string SlotTypeString { get; }
+    string Processor { get; }
+    TimeSpan TPF { get; }
+    double PPD { get; }
+    TimeSpan ETA { get; }
+    DateTime ETADate { get; }
+    string Core { get; }
+    string CoreID { get; }
+    string ProjectRunCloneGen { get; }
+    double Credit { get; }
+    int Completed { get; }
+    int Failed { get; }
+    string Username { get; }
+    DateTime Assigned { get; }
+    DateTime PreferredDeadline { get; }
+    IProjectInfo ProjectInfo { get; }
+    ValidationRuleErrors Errors { get; }
+}
+
+public class SlotModel : IClientData, IProteinBenchmarkDetailSource
 {
     public SlotIdentifier SlotIdentifier => new(Client.Settings.ClientIdentifier, SlotID);
 
     public IClient Client { get; }
 
     public WorkUnitModel WorkUnitModel { get; set; }
+
+    public IProjectInfo ProjectInfo => WorkUnitModel.WorkUnit;
 
     public SlotModel(IClient client)
     {
@@ -90,9 +116,7 @@ public class SlotModel : IProteinBenchmarkDetailSource
 
     public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
 
-    public bool ProjectIsDuplicate { get; set; }
-
-    public bool UsernameOk { get; set; }
+    public ValidationRuleErrors Errors { get; } = new();
 
     public static SlotModel CreateOfflineSlotModel(IClient client) =>
         new(client) { Status = SlotStatus.Offline };
@@ -277,5 +301,3 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
 
     public override DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
 }
-
-
