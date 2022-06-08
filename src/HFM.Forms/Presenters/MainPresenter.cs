@@ -27,8 +27,8 @@ namespace HFM.Forms.Presenters
         public MessageBoxPresenter MessageBox { get; }
         public ClientConfiguration ClientConfiguration { get; }
         public IProteinService ProteinService { get; }
+        public IPreferences Preferences { get; }
         public UserStatsDataModel UserStatsDataModel { get; }
-        private IPreferences Preferences { get; }
         public SlotCollectionModel SlotsModel { get; }
 
         private readonly ClientSettingsManager _settingsManager;
@@ -48,9 +48,9 @@ namespace HFM.Forms.Presenters
             MessageBox = messageBox ?? NullMessageBoxPresenter.Instance;
             ClientConfiguration = clientConfiguration ?? throw new ArgumentNullException(nameof(clientConfiguration));
             ProteinService = proteinService ?? NullProteinService.Instance;
+            Preferences = Model.Preferences;
 
             UserStatsDataModel = new UserStatsDataModel(Form, Model.Preferences, userStatsScheduledTask);
-            Preferences = Model.Preferences;
             SlotsModel = new SlotCollectionModel(Form, Model.Preferences, clientConfiguration);
             SlotsModel.Load();
 

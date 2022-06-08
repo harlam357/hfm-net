@@ -7,31 +7,43 @@ using HFM.Preferences;
 
 namespace HFM.Forms.Controls;
 
-public class SlotsGridColumnCollection : ReadOnlyCollection<SlotsGridColumn>
+public class SlotsGridColumnCollection : Collection<SlotsGridColumn>
 {
-    public SlotsGridColumnCollection()
-        : base(new SlotsGridColumn[]
-        {
-            new SlotsGridStatusColumn(),
-            new SlotsGridProgressColumn(),
-            new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(SlotModel.Name)),
-            new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(SlotModel.SlotTypeString)),
-            new SlotsGridDefaultColumn("Processor", "Processor", "CPU or GPU processor name", nameof(SlotModel.Processor)),
-            new SlotsGridTPFColumn(),
-            new SlotsGridPPDColumn(),
-            new SlotsGridETAColumn(),
-            new SlotsGridDefaultColumn("Core", "Core", "Engine used to process the work unit", nameof(SlotModel.Core)),
-            new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)),
-            new SlotsGridProjectColumn(),
-            new SlotsGridCreditColumn(),
-            new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(SlotModel.Completed)),
-            new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(SlotModel.Failed)),
-            new SlotsGridUsernameColumn(),
-            new SlotsGridAssignedColumn(),
-            new SlotsGridTimeoutColumn()
-        })
-    {
+    public IPreferences Preferences { get; }
 
+    public SlotsGridColumnCollection(IPreferences preferences)
+    {
+        Preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
+    }
+
+    public void PopulateCollection()
+    {
+        Add(new SlotsGridStatusColumn());
+        Add(new SlotsGridProgressColumn());
+        Add(new SlotsGridDefaultColumn("Name", "Name", "Client name and slot ID", nameof(SlotModel.Name)));
+        Add(new SlotsGridDefaultColumn("SlotType", "Slot Type", "Client slot type (CPU:N or GPU) where N is the number of cpu threads", nameof(SlotModel.SlotTypeString)));
+        Add(new SlotsGridDefaultColumn("Processor", "Processor", "CPU or GPU processor name", nameof(SlotModel.Processor)));
+        Add(new SlotsGridTPFColumn());
+        Add(new SlotsGridPPDColumn());
+        Add(new SlotsGridETAColumn());
+        Add(new SlotsGridDefaultColumn("Core", "Core", "Engine used to process the work unit", nameof(SlotModel.Core)));
+        Add(new SlotsGridDefaultColumn("CoreID", "Core ID", nameof(SlotModel.CoreID)));
+        Add(new SlotsGridProjectColumn());
+        Add(new SlotsGridCreditColumn());
+        Add(new SlotsGridInt32Column("Completed", "Completed", "Number of completed work units", nameof(SlotModel.Completed)));
+        Add(new SlotsGridInt32Column("Failed", "Failed", "Number of failed/incomplete work units", nameof(SlotModel.Failed)));
+        Add(new SlotsGridUsernameColumn());
+        Add(new SlotsGridAssignedColumn());
+        Add(new SlotsGridTimeoutColumn());
+    }
+
+    protected override void InsertItem(int index, SlotsGridColumn item)
+    {
+        base.InsertItem(index, item);
+        if (item is not null)
+        {
+            item.Preferences = Preferences;
+        }
     }
 
     public SlotsGridColumn Find(string name)
@@ -46,6 +58,7 @@ public abstract class SlotsGridColumn
     public string HeaderText { get; }
     public string MouseOverHeaderText { get; }
     public string DataPropertyName { get; }
+    public IPreferences Preferences { get; set; }
 
     protected SlotsGridColumn(string columnName, string headerText, string mouseOverHeaderText, string dataPropertyName)
     {
@@ -310,7 +323,7 @@ public class SlotsGridTPFColumn : SlotsGridColumn
         }
 
         var timeSpan = (TimeSpan)value;
-        var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+        var timeFormatting = Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
         if (timeFormatting == TimeFormatting.Format1)
         {
             string format = "{1:00}min {2:00}sec";
@@ -354,7 +367,7 @@ public class SlotsGridPPDColumn : SlotsGridColumn
             return String.Empty;
         }
 
-        var decimalPlaces = slotModel.Client.Preferences.Get<int>(Preference.DecimalPlaces);
+        var decimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
         string format = NumberFormat.Get(decimalPlaces);
         var number = (double)value;
         return number.ToString(format);
@@ -375,7 +388,7 @@ public class SlotsGridETAColumn : SlotsGridColumn
             return String.Empty;
         }
 
-        var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+        var timeFormatting = Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
         if (timeFormatting == TimeFormatting.Format1)
         {
             var timeSpan = (TimeSpan)value;
@@ -388,7 +401,7 @@ public class SlotsGridETAColumn : SlotsGridColumn
             return String.Format(format, timeSpan.Days, timeSpan.Hours, timeSpan.Minutes);
         }
 
-        var etaAsDate = slotModel.Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+        var etaAsDate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
         if (etaAsDate)
         {
             return slotModel.ETADate.ToString(CultureInfo.CurrentCulture);
@@ -424,7 +437,7 @@ public class SlotsGridProjectColumn : SlotsGridColumn
 
     protected override bool OnHasWarning(SlotModel slotModel)
     {
-        return slotModel.ProjectIsDuplicate && slotModel.Client.Preferences.Get<bool>(Preference.DuplicateProjectCheck);
+        return slotModel.ProjectIsDuplicate && Preferences.Get<bool>(Preference.DuplicateProjectCheck);
     }
 }
 
@@ -454,7 +467,7 @@ public class SlotsGridCreditColumn : SlotsGridColumn
             return String.Empty;
         }
 
-        var decimalPlaces = slotModel.Client.Preferences.Get<int>(Preference.DecimalPlaces);
+        var decimalPlaces = Preferences.Get<int>(Preference.DecimalPlaces);
         string format = NumberFormat.Get(decimalPlaces);
         var number = (double)value;
         return number.ToString(format);
@@ -496,7 +509,7 @@ public class SlotsGridAssignedColumn : SlotsGridColumn
             return String.Empty;
         }
 
-        var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+        var timeFormatting = Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
         if (timeFormatting == TimeFormatting.Format1)
         {
             var timeSpan = DateTime.Now.Subtract(dateTime);
@@ -529,7 +542,7 @@ public class SlotsGridTimeoutColumn : SlotsGridColumn
             return String.Empty;
         }
 
-        var timeFormatting = slotModel.Client.Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
+        var timeFormatting = Preferences.Get<TimeFormatting>(Preference.TimeFormatting);
         if (timeFormatting == TimeFormatting.Format1)
         {
             var timeSpan = dateTime.Subtract(DateTime.Now);

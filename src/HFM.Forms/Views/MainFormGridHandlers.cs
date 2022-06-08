@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-using HFM.Core.Client;
+﻿using HFM.Core.Client;
 using HFM.Forms.Controls;
 
 namespace HFM.Forms.Views
@@ -113,11 +109,11 @@ namespace HFM.Forms.Views
             return (SlotModel)dataGridView1.Rows[index].DataBoundItem;
         }
 
-        private static SlotsGridColumnCollection SlotsGridColumns { get; } = new SlotsGridColumnCollection();
+        private SlotsGridColumnCollection SlotsGridColumns { get; }
 
-        public static int NumberOfDisplayFields => SlotsGridColumns.Count + 1;
+        public int NumberOfDisplayFields => SlotsGridColumns.Count + 1;
 
-        public static void SetupDataGridViewColumns(DataGridView dgv)
+        public void SetupDataGridViewColumns(DataGridView dgv)
         {
             SlotsGridColumns.Find("Status").AddToDataGridView(dgv);
             SlotsGridColumns.Find("Progress").AddToDataGridView(dgv);

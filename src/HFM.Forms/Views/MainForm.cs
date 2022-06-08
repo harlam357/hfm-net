@@ -28,6 +28,8 @@ namespace HFM.Forms.Views
             // This call is Required by the Windows Form Designer
             InitializeComponent();
 
+            SlotsGridColumns = new SlotsGridColumnCollection(_presenter.Preferences);
+            SlotsGridColumns.PopulateCollection();
             SetupDataGridView();
             SubscribeToUserStatsControlEvents();
             SubscribeToFileMenuControlEvents();
