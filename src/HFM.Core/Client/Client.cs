@@ -5,23 +5,28 @@ using HFM.Preferences;
 
 namespace HFM.Core.Client;
 
+public record ClientPlatform(string ClientVersion, string OperatingSystem);
+
 public interface IClient
 {
     /// <summary>
-    /// Fired when the client slot collection has changed.
+    /// Raised when the client slot collection has changed.
     /// </summary>
     event EventHandler SlotsChanged;
 
     /// <summary>
-    /// Fired when the client data retrieval process is finished.
+    /// Raised when the client data retrieval process is finished.
     /// </summary>
     event EventHandler RetrieveFinished;
 
     /// <summary>
-    /// Settings that define this client's behavior.
+    /// Gets or sets the settings that define this client's behavior.
     /// </summary>
     ClientSettings Settings { get; set; }
 
+    /// <summary>
+    /// Gets the values that define this client's platform (version, operating system, etc).
+    /// </summary>
     ClientPlatform Platform { get; }
 
     /// <summary>
@@ -29,25 +34,26 @@ public interface IClient
     /// </summary>
     IReadOnlyCollection<SlotModel> Slots { get; }
 
+    /// <summary>
+    /// Closes the client connection.
+    /// </summary>
     void Close();
 
     /// <summary>
-    /// Gets a value indicating whether the client is connected.
+    /// Gets the value indicating if the client is connected.
     /// </summary>
     bool Connected { get; }
 
     /// <summary>
-    /// Asynchronously connects the client to the resources defined by <see cref="Settings"/>.
+    /// Asynchronously connects the client using the defined <see cref="Settings"/>.
     /// </summary>
     Task Connect();
 
     /// <summary>
-    /// Starts the client data retrieval process.
+    /// Asynchronously retrieves data from the client.
     /// </summary>
     Task Retrieve();
 }
-
-public record ClientPlatform(string ClientVersion, string OperatingSystem);
 
 public abstract class Client : IClient
 {
