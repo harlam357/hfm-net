@@ -17,8 +17,6 @@ public interface IClient
     /// </summary>
     event EventHandler RetrieveFinished;
 
-    IPreferences Preferences { get; }
-
     /// <summary>
     /// Settings that define this client's behavior.
     /// </summary>

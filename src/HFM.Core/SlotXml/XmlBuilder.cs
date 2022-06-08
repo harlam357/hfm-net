@@ -150,9 +150,9 @@ namespace HFM.Core.SlotXml
             return slotData;
         }
 
-        private static string ToETAString(SlotModel slotModel)
+        private string ToETAString(SlotModel slotModel)
         {
-            var showETADate = slotModel.Client.Preferences.Get<bool>(Preference.DisplayEtaAsDate);
+            var showETADate = Preferences.Get<bool>(Preference.DisplayEtaAsDate);
             return showETADate ? slotModel.ETADate.ToShortStringOrEmpty() : slotModel.ETA.ToString();
         }
 

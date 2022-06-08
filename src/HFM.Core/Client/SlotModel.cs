@@ -95,13 +95,13 @@ public class SlotModel : IProteinBenchmarkDetailSource
     public bool UsernameOk { get; set; }
 
     public static SlotModel CreateOfflineSlotModel(IClient client) =>
-        new SlotModel(client) { Status = SlotStatus.Offline };
+        new(client) { Status = SlotStatus.Offline };
 
-    public static void ValidateRules(ICollection<SlotModel> slots)
+    public static void ValidateRules(ICollection<SlotModel> slots, IPreferences preferences)
     {
         var rules = new ISlotModelRule[]
         {
-            new SlotModelUsernameRule(),
+            new SlotModelUsernameRule(preferences),
             new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots))
         };
 
@@ -285,20 +285,23 @@ public interface ISlotModelRule
 
 public class SlotModelUsernameRule : ISlotModelRule
 {
+    private readonly IPreferences _preferences;
+
+    public SlotModelUsernameRule(IPreferences preferences)
+    {
+        _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
+    }
+
     public void Validate(SlotModel slotModel)
     {
-        if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit))
-        {
-            slotModel.UsernameOk = true;
-        }
-        else if (!slotModel.Status.IsOnline())
+        if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit) || !slotModel.Status.IsOnline())
         {
             slotModel.UsernameOk = true;
         }
         else
         {
-            slotModel.UsernameOk = slotModel.WorkUnitModel.WorkUnit.FoldingID == slotModel.Client.Preferences.Get<string>(Preference.StanfordId) &&
-                                   slotModel.WorkUnitModel.WorkUnit.Team == slotModel.Client.Preferences.Get<int>(Preference.TeamId);
+            slotModel.UsernameOk = slotModel.WorkUnitModel.WorkUnit.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
+                                   slotModel.WorkUnitModel.WorkUnit.Team == _preferences.Get<int>(Preference.TeamId);
         }
     }
 

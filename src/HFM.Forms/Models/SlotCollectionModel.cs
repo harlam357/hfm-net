@@ -179,7 +179,7 @@ namespace HFM.Forms.Models
 
                 SortInternal();
                 ResetSelectedSlot();
-                SlotModel.ValidateRules(slots);
+                SlotModel.ValidateRules(slots, Preferences);
                 SlotTotals = SlotTotals.Create(slots);
 
                 BindingSource.ResetBindings(false);
