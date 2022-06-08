@@ -5,10 +5,10 @@ using HFM.Core.WorkUnits;
 namespace HFM.Core.Client;
 
 [TestFixture]
-public class SlotModelProjectIsDuplicateRuleTests
+public class ClientProjectIsDuplicateValidationRuleTests
 {
     [Test]
-    public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenProjectsAreDuplicates()
+    public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenProjectsAreDuplicates()
     {
         // Arrange
         var slotModel1 = new SlotModel(new NullClient());
@@ -16,7 +16,7 @@ public class SlotModelProjectIsDuplicateRuleTests
         var slotModel2 = new SlotModel(new NullClient());
         slotModel2.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
         var slots = new List<SlotModel> { slotModel1, slotModel2 };
-        var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
+        var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(slots));
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert
@@ -25,7 +25,7 @@ public class SlotModelProjectIsDuplicateRuleTests
     }
 
     [Test]
-    public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
+    public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
     {
         // Arrange
         var slotModel1 = new SlotModel(new NullClient());
@@ -33,7 +33,7 @@ public class SlotModelProjectIsDuplicateRuleTests
         var slotModel2 = new SlotModel(new NullClient());
         slotModel2.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 2 });
         var slots = new List<SlotModel> { slotModel1, slotModel2 };
-        var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
+        var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(slots));
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert
@@ -42,7 +42,7 @@ public class SlotModelProjectIsDuplicateRuleTests
     }
 
     [Test]
-    public void SlotModelProjectIsDuplicateRule_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
+    public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
     {
         // Arrange
         var slotModel1 = new SlotModel(new NullClient());
@@ -52,7 +52,7 @@ public class SlotModelProjectIsDuplicateRuleTests
         var slotModel3 = new SlotModel(new NullClient());
         slotModel3.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
         var slots = new List<SlotModel> { slotModel1, slotModel2, slotModel3 };
-        var rule = new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots));
+        var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(slots));
         // Act
         slots.ForEach(x => rule.Validate(x));
         // Assert

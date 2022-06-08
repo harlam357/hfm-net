@@ -99,10 +99,10 @@ public class SlotModel : IProteinBenchmarkDetailSource
 
     public static void ValidateRules(ICollection<SlotModel> slots, IPreferences preferences)
     {
-        var rules = new ISlotModelRule[]
+        var rules = new IClientDataValidationRule[]
         {
-            new SlotModelUsernameRule(preferences),
-            new SlotModelProjectIsDuplicateRule(SlotModelProjectIsDuplicateRule.FindDuplicateProjects(slots))
+            new ClientUsernameValidationRule(preferences),
+            new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(slots))
         };
 
         foreach (var slot in slots)
@@ -278,56 +278,4 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
     public override DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
 }
 
-public interface ISlotModelRule
-{
-    void Validate(SlotModel slotModel);
-}
 
-public class SlotModelUsernameRule : ISlotModelRule
-{
-    private readonly IPreferences _preferences;
-
-    public SlotModelUsernameRule(IPreferences preferences)
-    {
-        _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
-    }
-
-    public void Validate(SlotModel slotModel)
-    {
-        if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit) || !slotModel.Status.IsOnline())
-        {
-            slotModel.UsernameOk = true;
-        }
-        else
-        {
-            slotModel.UsernameOk = slotModel.WorkUnitModel.WorkUnit.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
-                                   slotModel.WorkUnitModel.WorkUnit.Team == _preferences.Get<int>(Preference.TeamId);
-        }
-    }
-
-    private static bool FoldingIdentityIsDefault(WorkUnit workUnit) =>
-        (String.IsNullOrWhiteSpace(workUnit.FoldingID) || workUnit.FoldingID == Unknown.Value) && workUnit.Team == default;
-}
-
-public class SlotModelProjectIsDuplicateRule : ISlotModelRule
-{
-    private readonly ICollection<string> _duplicateProjects;
-
-    public SlotModelProjectIsDuplicateRule(ICollection<string> duplicateProjects)
-    {
-        _duplicateProjects = duplicateProjects ?? throw new ArgumentNullException(nameof(duplicateProjects));
-    }
-
-    public static ICollection<string> FindDuplicateProjects(ICollection<SlotModel> slots)
-    {
-        return slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
-            .Where(g => g.Count() > 1 && g.First().WorkUnitModel.WorkUnit.HasProject())
-            .Select(g => g.Key)
-            .ToList();
-    }
-
-    public void Validate(SlotModel slotModel)
-    {
-        slotModel.ProjectIsDuplicate = _duplicateProjects.Contains(slotModel.WorkUnitModel.WorkUnit.ToShortProjectString());
-    }
-}
