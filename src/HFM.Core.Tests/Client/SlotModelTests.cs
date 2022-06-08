@@ -19,9 +19,10 @@ public class SlotModelTests
         public void BeforeEach()
         {
             var client = new NullClient();
-            client.Preferences.Set(Preference.DisplayVersions, true);
+            var preferences = new InMemoryPreferencesProvider();
+            preferences.Set(Preference.DisplayVersions, true);
 
-            _slotModel = new FahClientSlotModel(client, default, SlotIdentifier.NoSlotID);
+            _slotModel = new FahClientSlotModel(preferences, client, default, SlotIdentifier.NoSlotID);
             _slotModel.Description = new GPUSlotDescription { Processor = "GeForce RTX 3070 Ti" };
             _slotModel.WorkUnitModel.WorkUnit.Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA)
             {

@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using HFM.Preferences;
+
+using NUnit.Framework;
 
 namespace HFM.Core.Client;
 
@@ -10,7 +12,7 @@ public class FahClientSlotModelTests
     {
         // Arrange
         var client = new NullClient();
-        var slotModel = new FahClientSlotModel(client, SlotStatus.Running, 0);
+        var slotModel = CreateFahClientSlotModel(client, SlotStatus.Running, 0);
         // Act
         var status = slotModel.Status;
         // Assert
@@ -22,11 +24,14 @@ public class FahClientSlotModelTests
     {
         // Arrange
         var client = new NullClient();
-        var slotModel = new FahClientSlotModel(client, SlotStatus.Running, 0);
+        var slotModel = CreateFahClientSlotModel(client, SlotStatus.Running, 0);
         slotModel.WorkUnitModel.WorkUnit.ProjectID = 1;
         // Act
         var status = slotModel.Status;
         // Assert
         Assert.AreEqual(SlotStatus.RunningNoFrameTimes, status);
     }
+
+    private static FahClientSlotModel CreateFahClientSlotModel(IClient client, SlotStatus status, int slotID) =>
+        new(new InMemoryPreferencesProvider(), client, status, slotID);
 }

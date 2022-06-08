@@ -89,7 +89,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
                 var slotDescription = SlotDescription.Parse(slot.Description);
                 var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
                 var slotID = slot.ID.GetValueOrDefault();
-                var slotModel = new FahClientSlotModel(this, status, slotID);
+                var slotModel = new FahClientSlotModel(Preferences, this, status, slotID);
                 slotModel.Description = slotDescription;
                 slots.Add(slotModel);
             }

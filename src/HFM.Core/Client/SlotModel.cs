@@ -117,18 +117,21 @@ public class SlotModel : IProteinBenchmarkDetailSource
 
 public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
 {
-    private PPDCalculation PPDCalculation => Client.Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
+    private PPDCalculation PPDCalculation => Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
 
-    private BonusCalculation BonusCalculation => Client.Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
+    private BonusCalculation BonusCalculation => Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
 
-    private bool ShowVersions => Client.Preferences.Get<bool>(Preference.DisplayVersions);
+    private bool ShowVersions => Preferences.Get<bool>(Preference.DisplayVersions);
 
-    private int DecimalPlaces => Client.Preferences.Get<int>(Preference.DecimalPlaces);
+    private int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
+
+    private IPreferences Preferences { get; }
 
     private readonly SlotStatus _status;
 
-    public FahClientSlotModel(IClient client, SlotStatus status, int slotID) : base(client)
+    public FahClientSlotModel(IPreferences preferences, IClient client, SlotStatus status, int slotID) : base(client)
     {
+        Preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
         _status = status;
         SlotID = slotID;
     }
@@ -233,12 +236,12 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
     public override double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
 
     public override int Completed =>
-        Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
+        Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
             ? TotalCompletedUnits
             : TotalRunCompletedUnits;
 
     public override int Failed =>
-        Client.Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
+        Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
             ? TotalFailedUnits
             : TotalRunFailedUnits;
 
