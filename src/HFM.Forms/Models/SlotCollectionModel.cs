@@ -11,7 +11,7 @@ namespace HFM.Forms.Models
     public sealed class SlotCollectionModel : ViewModelBase
     {
         private readonly ISynchronizeInvoke _synchronizeInvoke;
-        private readonly SlotModelSortableBindingList _slotList;
+        private readonly ClientDataSortableBindingList _clientDataList;
 
         public IPreferences Preferences { get; }
 
@@ -21,12 +21,12 @@ namespace HFM.Forms.Models
 
         public SlotCollectionModel(ISynchronizeInvoke synchronizeInvoke, IPreferences preferences, ClientConfiguration clientConfiguration)
         {
-            _synchronizeInvoke = synchronizeInvoke;
+            _synchronizeInvoke = synchronizeInvoke ?? throw new ArgumentNullException(nameof(synchronizeInvoke));
             Preferences = preferences ?? new InMemoryPreferencesProvider();
             ClientConfiguration = clientConfiguration ?? throw new ArgumentNullException(nameof(clientConfiguration));
 
-            _slotList = new SlotModelSortableBindingList();
-            _slotList.RaiseListChangedEvents = false;
+            _clientDataList = new ClientDataSortableBindingList();
+            _clientDataList.RaiseListChangedEvents = false;
             BindingSource = new BindingSource();
         }
 
@@ -35,15 +35,15 @@ namespace HFM.Forms.Models
             SortColumnName = Preferences.Get<string>(Preference.FormSortColumn);
             SortColumnOrder = Preferences.Get<ListSortDirection>(Preference.FormSortOrder);
 
-            _slotList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
-            _slotList.Sorted += (sender, e) =>
+            _clientDataList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
+            _clientDataList.Sorted += (sender, e) =>
             {
                 SortColumnName = e.Name;
                 Preferences.Set(Preference.FormSortColumn, SortColumnName);
                 SortColumnOrder = e.Direction;
                 Preferences.Set(Preference.FormSortOrder, SortColumnOrder);
             };
-            BindingSource.DataSource = _slotList;
+            BindingSource.DataSource = _clientDataList;
             BindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)BindingSource.Current;
 
             // subscribe to services raising events that require a view action
@@ -107,7 +107,7 @@ namespace HFM.Forms.Models
             switch (e.Preference)
             {
                 case Preference.OfflineLast:
-                    _slotList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
+                    _clientDataList.OfflineClientsLast = Preferences.Get<bool>(Preference.OfflineLast);
                     Sort();
                     break;
                 case Preference.PPDCalculation:
@@ -166,12 +166,11 @@ namespace HFM.Forms.Models
 
             lock (_slotsListLock)
             {
-                // get slots from the dictionary
-                var slots = FilterSlotModels(ClientConfiguration.GetSlots());
+                var collection = FilterCollection(ClientConfiguration.GetClientDataCollection());
 
                 // refresh the underlying binding list
                 BindingSource.Clear();
-                foreach (var slot in slots)
+                foreach (var slot in collection)
                 {
                     BindingSource.Add(slot);
                 }
@@ -179,8 +178,8 @@ namespace HFM.Forms.Models
 
                 SortInternal();
                 ResetSelectedSlot();
-                SlotModel.ValidateRules(slots, Preferences);
-                SlotTotals = SlotTotals.Create(slots);
+                SlotModel.ValidateRules(collection, Preferences);
+                SlotTotals = SlotTotals.Create(collection);
 
                 BindingSource.ResetBindings(false);
             }
@@ -196,13 +195,13 @@ namespace HFM.Forms.Models
             set => Preferences.Set(Preference.HideInactiveSlots, value);
         }
 
-        private ICollection<SlotModel> FilterSlotModels(ICollection<SlotModel> slots)
+        private ICollection<IClientData> FilterCollection(ICollection<IClientData> collection)
         {
             if (HideInactiveSlots)
             {
-                slots = slots.Where(x => x.Status != SlotStatus.Offline && x.Status != SlotStatus.Paused).ToList();
+                collection = collection.Where(x => x.Status != SlotStatus.Offline && x.Status != SlotStatus.Paused).ToList();
             }
-            return slots;
+            return collection;
         }
 
         private void Sort()
@@ -216,7 +215,7 @@ namespace HFM.Forms.Models
         private void SortInternal()
         {
             BindingSource.Sort = $"{SortColumnName} {SortColumnOrder.ToBindingSourceSortString()}";
-            if (_slotList is IBindingList bindingList)
+            if (_clientDataList is IBindingList bindingList)
             {
                 bindingList.ApplySort(bindingList.SortProperty, bindingList.SortDirection);
             }

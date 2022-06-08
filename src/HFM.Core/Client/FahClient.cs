@@ -79,7 +79,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         }
     }
 
-    protected override void OnRefreshSlots(ICollection<SlotModel> slots)
+    protected override void OnRefreshSlots(ICollection<IClientData> collection)
     {
         var slotCollection = Messages?.SlotCollection;
         if (slotCollection is { Count: > 0 })
@@ -91,12 +91,12 @@ public class FahClient : Client, IFahClient, IFahClientCommand
                 var slotID = slot.ID.GetValueOrDefault();
                 var slotModel = new FahClientSlotModel(Preferences, this, status, slotID);
                 slotModel.Description = slotDescription;
-                slots.Add(slotModel);
+                collection.Add(slotModel);
             }
         }
         else
         {
-            base.OnRefreshSlots(slots);
+            base.OnRefreshSlots(collection);
         }
     }
 
@@ -213,7 +213,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
             Messages.UnitCollection, Messages.Info?.System);
 
-        foreach (var slotModel in Slots.OfType<FahClientSlotModel>())
+        foreach (var slotModel in ClientDataCollection.OfType<FahClientSlotModel>())
         {
             var previousWorkUnitModel = slotModel.WorkUnitModel;
             var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.Description, previousWorkUnitModel.WorkUnit);

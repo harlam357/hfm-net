@@ -4,16 +4,13 @@ using HFM.Core.Collections;
 
 namespace HFM.Core.Client
 {
-    public class SlotModelSortComparer : SortComparer<SlotModel>
+    public class ClientDataSortComparer : SortComparer<IClientData>
     {
         public bool OfflineClientsLast { get; set; }
 
-        public override bool SupportsAdvancedSorting
-        {
-            get { return false; }
-        }
+        public override bool SupportsAdvancedSorting => false;
 
-        protected override int CompareInternal(SlotModel x, SlotModel y)
+        protected override int CompareInternal(IClientData x, IClientData y)
         {
             /* Get property values */
             object xValue = GetPropertyValue(x, Property);

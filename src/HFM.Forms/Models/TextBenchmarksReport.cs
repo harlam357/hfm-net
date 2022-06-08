@@ -65,7 +65,7 @@ namespace HFM.Forms.Models
                 {
                     benchmarkText
                         .AddRange(EnumerateBenchmarkInformation(protein, b, numberFormat, calculateBonus)
-                            .Concat(EnumerateSlotInformation(FindRunningSlot(b), numberFormat, bonusCalculation))
+                            .Concat(EnumerateClientInformation(FindRunningClient(b), numberFormat, bonusCalculation))
                             .Concat(Enumerable.Repeat(String.Empty, 2)));
                 }
             }
@@ -92,33 +92,33 @@ namespace HFM.Forms.Models
                 benchmark.AverageFrameTime, GetPPD(protein, benchmark.AverageFrameTime, calculateBonus).ToString(numberFormat));
         }
 
-        private static IEnumerable<string> EnumerateSlotInformation(SlotModel slot, string numberFormat, BonusCalculation bonusCalculation)
+        private static IEnumerable<string> EnumerateClientInformation(IClientData clientData, string numberFormat, BonusCalculation bonusCalculation)
         {
-            if (slot is null)
+            if (clientData is null)
             {
                 yield break;
             }
 
-            var workUnit = slot.WorkUnitModel;
-            var status = slot.Status;
+            var provider = clientData.ProductionProvider;
+            var status = clientData.Status;
 
             yield return String.Format(CultureInfo.InvariantCulture, " Cur. Time / Frame : {0} - {1} PPD",
-                workUnit.GetFrameTime(PPDCalculation.LastFrame), workUnit.GetPPD(status, PPDCalculation.LastFrame, bonusCalculation).ToString(numberFormat));
+                provider.GetFrameTime(PPDCalculation.LastFrame), provider.GetPPD(status, PPDCalculation.LastFrame, bonusCalculation).ToString(numberFormat));
             yield return String.Format(CultureInfo.InvariantCulture, " R3F. Time / Frame : {0} - {1} PPD",
-                workUnit.GetFrameTime(PPDCalculation.LastThreeFrames), workUnit.GetPPD(status, PPDCalculation.LastThreeFrames, bonusCalculation).ToString(numberFormat));
+                provider.GetFrameTime(PPDCalculation.LastThreeFrames), provider.GetPPD(status, PPDCalculation.LastThreeFrames, bonusCalculation).ToString(numberFormat));
             yield return String.Format(CultureInfo.InvariantCulture, " All  Time / Frame : {0} - {1} PPD",
-                workUnit.GetFrameTime(PPDCalculation.AllFrames), workUnit.GetPPD(status, PPDCalculation.AllFrames, bonusCalculation).ToString(numberFormat));
+                provider.GetFrameTime(PPDCalculation.AllFrames), provider.GetPPD(status, PPDCalculation.AllFrames, bonusCalculation).ToString(numberFormat));
             yield return String.Format(CultureInfo.InvariantCulture, " Eff. Time / Frame : {0} - {1} PPD",
-                workUnit.GetFrameTime(PPDCalculation.EffectiveRate), workUnit.GetPPD(status, PPDCalculation.EffectiveRate, bonusCalculation).ToString(numberFormat));
+                provider.GetFrameTime(PPDCalculation.EffectiveRate), provider.GetPPD(status, PPDCalculation.EffectiveRate, bonusCalculation).ToString(numberFormat));
         }
 
-        private SlotModel FindRunningSlot(ProteinBenchmark benchmark)
+        private IClientData FindRunningClient(ProteinBenchmark benchmark)
         {
             if (ClientConfiguration is null) return null;
 
-            var slot = ClientConfiguration.GetSlots().FirstOrDefault(x =>
+            var slot = ClientConfiguration.GetClientDataCollection().FirstOrDefault(x =>
                 x.SlotIdentifier.Equals(benchmark.SlotIdentifier) &&
-                x.WorkUnitModel.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
+                x.BenchmarkIdentifier.Equals(benchmark.BenchmarkIdentifier));
 
             return slot != null && slot.Status.IsRunning() ? slot : null;
         }

@@ -9,7 +9,13 @@ using HFM.Proteins;
 
 namespace HFM.Core.WorkUnits;
 
-public class WorkUnitModel : IQueueItem
+public interface IProductionProvider
+{
+    TimeSpan GetFrameTime(PPDCalculation ppdCalculation);
+    double GetPPD(SlotStatus status, PPDCalculation ppdCalculation, BonusCalculation calculateBonus);
+}
+
+public class WorkUnitModel : IQueueItem, IProductionProvider
 {
     public int ID => WorkUnit.ID;
 

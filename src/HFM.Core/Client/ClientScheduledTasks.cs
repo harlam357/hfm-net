@@ -206,9 +206,9 @@ namespace HFM.Core.Client
             string artifactPath = null;
             try
             {
-                var slots = ClientConfiguration.GetSlots();
+                var collection = ClientConfiguration.GetClientDataCollection();
                 var artifactBuilder = new WebArtifactBuilder(Logger, Preferences);
-                artifactPath = artifactBuilder.Build(slots);
+                artifactPath = artifactBuilder.Build(collection);
 
                 ct.ThrowIfCancellationRequested();
                 var deploymentType = Preferences.Get<WebDeploymentType>(Preference.WebDeploymentType);

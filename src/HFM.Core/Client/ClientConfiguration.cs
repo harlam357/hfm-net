@@ -84,12 +84,12 @@ namespace HFM.Core.Client
             }
         }
 
-        public ICollection<SlotModel> GetSlots()
+        public ICollection<IClientData> GetClientDataCollection()
         {
             _syncLock.EnterReadLock();
             try
             {
-                return _clientDictionary.Values.SelectMany(client => client.Slots).ToList();
+                return _clientDictionary.Values.SelectMany(client => client.ClientDataCollection).ToList();
             }
             finally
             {

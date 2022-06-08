@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace HFM.Core.Client
 {
@@ -59,18 +58,17 @@ namespace HFM.Core.Client
         /// Get the totals for all slots.
         /// </summary>
         /// <returns>The totals for all slots.</returns>
-        public static SlotTotals Create(ICollection<SlotModel> slots)
+        public static SlotTotals Create(ICollection<IClientData> collection)
         {
             var totals = new SlotTotals();
 
-            // If no slots return initialized totals.
-            if (slots == null)
+            if (collection == null)
             {
                 return totals;
             }
 
-            totals.TotalSlots = slots.Count;
-            foreach (var slot in slots)
+            totals.TotalSlots = collection.Count;
+            foreach (var slot in collection)
             {
                 totals.PPD += slot.PPD;
                 totals.UPD += slot.UPD;

@@ -361,9 +361,9 @@ namespace HFM.Core.Client
                 .Select(_ => Task.Run(() =>
                 {
                     Thread.Sleep(10);
-                    foreach (var x in configuration.GetSlots())
+                    foreach (var x in configuration.GetClientDataCollection())
                     {
-                        // enumeration of client slots
+                        // enumeration of client data
                     }
                 }))
                 .ToArray();
@@ -413,14 +413,14 @@ namespace HFM.Core.Client
 
             private static readonly Random _Random = new();
 
-            protected override void OnRefreshSlots(ICollection<SlotModel> slots)
+            protected override void OnRefreshSlots(ICollection<IClientData> collection)
             {
-                slots.Clear();
+                collection.Clear();
 
                 int count = _Random.Next(1, 5);
                 for (int i = 0; i < count; i++)
                 {
-                    slots.Add(new SlotModel(this));
+                    collection.Add(new SlotModel(this));
                 }
             }
         }

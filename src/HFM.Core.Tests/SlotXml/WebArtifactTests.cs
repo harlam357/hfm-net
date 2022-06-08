@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 using HFM.Core.Client;
 using HFM.Log;
@@ -20,11 +15,11 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, false);
 
-            var slots = CreateSlotModelCollection();
+            var collection = CreateClientDataCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
-                var path = artifactBuilder.Build(slots);
+                var path = artifactBuilder.Build(collection);
 
                 Assert.IsTrue(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".xml"));
                 Assert.IsFalse(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".html"));
@@ -38,11 +33,11 @@ namespace HFM.Core.SlotXml
             var preferences = CreatePreferences();
             preferences.Set(Preference.WebGenCopyHtml, true);
 
-            var slots = CreateSlotModelCollection();
+            var collection = CreateClientDataCollection();
             using (var artifacts = new ArtifactFolder())
             {
                 var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
-                var path = artifactBuilder.Build(slots);
+                var path = artifactBuilder.Build(collection);
 
                 Assert.IsTrue(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".xml"));
                 Assert.IsTrue(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".html"));
@@ -62,8 +57,8 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection();
-                foreach (var slot in slots)
+                var collection = CreateClientDataCollection();
+                foreach (var slot in collection)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
                     using (var writer = new StreamWriter(stream))
@@ -75,7 +70,7 @@ namespace HFM.Core.SlotXml
                 using (var artifacts = new ArtifactFolder())
                 {
                     var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
-                    var path = artifactBuilder.Build(slots);
+                    var path = artifactBuilder.Build(collection);
 
                     Assert.IsTrue(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".xml"));
                     Assert.IsTrue(Directory.EnumerateFiles(path).Any(x => Path.GetExtension(x) == ".html"));
@@ -98,8 +93,8 @@ namespace HFM.Core.SlotXml
                 string cacheDirectory = preferences.Get<string>(Preference.CacheDirectory);
                 Directory.CreateDirectory(cacheDirectory);
 
-                var slots = CreateSlotModelCollection();
-                foreach (var slot in slots)
+                var collection = CreateClientDataCollection();
+                foreach (var slot in collection)
                 {
                     using (var stream = File.Create(Path.Combine(cacheDirectory, $"{slot.Name}-log.txt")))
                     using (var writer = new StreamWriter(stream))
@@ -111,7 +106,7 @@ namespace HFM.Core.SlotXml
                 using (var artifacts = new ArtifactFolder())
                 {
                     var artifactBuilder = new WebArtifactBuilder(null, preferences, artifacts.Path);
-                    var path = artifactBuilder.Build(slots);
+                    var path = artifactBuilder.Build(collection);
 
                     using (var deployFolder = new ArtifactFolder())
                     {
@@ -153,27 +148,27 @@ namespace HFM.Core.SlotXml
             return preferences;
         }
 
-        private static ICollection<SlotModel> CreateSlotModelCollection()
+        private static ICollection<IClientData> CreateClientDataCollection()
         {
-            var slots = new List<SlotModel>();
+            var collection = new List<IClientData>();
 
             // setup slot
             var client = new NullClient { Settings = new ClientSettings { Name = "Test2" } };
             var slot = new SlotModel(client);
             var logLines = new List<Log.LogLine>
             {
-                new Log.LogLine { LineType = LogLineType.LogOpen, Index = 1, Raw = "Open" }
+                new() { LineType = LogLineType.LogOpen, Index = 1, Raw = "Open" }
             };
             slot.CurrentLogLines = logLines;
             slot.WorkUnitModel.WorkUnit.LogLines = logLines;
-            slots.Add(slot);
+            collection.Add(slot);
 
             // setup slot
             client = new NullClient { Settings = new ClientSettings { Name = "Test1" } };
             slot = new SlotModel(client);
-            slots.Add(slot);
+            collection.Add(slot);
 
-            return slots;
+            return collection;
         }
     }
 }

@@ -30,9 +30,9 @@ public interface IClient
     ClientPlatform Platform { get; }
 
     /// <summary>
-    /// Gets the collection of client slots.
+    /// Gets the collection of client data.
     /// </summary>
-    IReadOnlyCollection<SlotModel> Slots { get; }
+    IReadOnlyCollection<IClientData> ClientDataCollection { get; }
 
     /// <summary>
     /// Closes the client connection.
@@ -100,22 +100,22 @@ public abstract class Client : IClient
 
     public ClientPlatform Platform { get; set; }
 
-    // Slots
-    private List<SlotModel> _slots = new();
+    // ClientData
+    private List<IClientData> _clientData = new();
 
-    public IReadOnlyCollection<SlotModel> Slots => _slots.ToArray();
+    public IReadOnlyCollection<IClientData> ClientDataCollection => _clientData.ToArray();
 
     public void RefreshSlots()
     {
-        var slots = new List<SlotModel>();
+        var slots = new List<IClientData>();
         OnRefreshSlots(slots);
-        Interlocked.Exchange(ref _slots, slots);
+        Interlocked.Exchange(ref _clientData, slots);
 
         OnSlotsChanged();
     }
 
-    protected virtual void OnRefreshSlots(ICollection<SlotModel> slots) =>
-        slots.Add(SlotModel.CreateOfflineSlotModel(this));
+    protected virtual void OnRefreshSlots(ICollection<IClientData> collection) =>
+        collection.Add(SlotModel.CreateOfflineSlotModel(this));
 
     // Retrieve
     public DateTime LastRetrieveTime { get; protected set; } = DateTime.MinValue;

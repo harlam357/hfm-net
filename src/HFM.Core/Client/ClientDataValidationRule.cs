@@ -5,7 +5,7 @@ namespace HFM.Core.Client;
 
 public interface IClientDataValidationRule
 {
-    void Validate(SlotModel slotModel);
+    void Validate(IClientData clientData);
 }
 
 public class ClientUsernameValidationRule : IClientDataValidationRule
@@ -19,21 +19,21 @@ public class ClientUsernameValidationRule : IClientDataValidationRule
         _preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
     }
 
-    public void Validate(SlotModel slotModel)
+    public void Validate(IClientData clientData)
     {
-        if (FoldingIdentityIsDefault(slotModel.WorkUnitModel.WorkUnit) || !slotModel.Status.IsOnline())
+        if (FoldingIdentityIsDefault(clientData) || !clientData.Status.IsOnline())
         {
-            slotModel.Errors[Key] = true;
+            clientData.Errors[Key] = true;
         }
         else
         {
-            slotModel.Errors[Key] = slotModel.WorkUnitModel.WorkUnit.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
-                                    slotModel.WorkUnitModel.WorkUnit.Team == _preferences.Get<int>(Preference.TeamId);
+            clientData.Errors[Key] = clientData.FoldingID == _preferences.Get<string>(Preference.StanfordId) &&
+                                     clientData.Team == _preferences.Get<int>(Preference.TeamId);
         }
     }
 
-    private static bool FoldingIdentityIsDefault(WorkUnit workUnit) =>
-        (String.IsNullOrWhiteSpace(workUnit.FoldingID) || workUnit.FoldingID == Unknown.Value) && workUnit.Team == default;
+    private static bool FoldingIdentityIsDefault(IClientData clientData) =>
+        (String.IsNullOrWhiteSpace(clientData.FoldingID) || clientData.FoldingID == Unknown.Value) && clientData.Team == default;
 }
 
 public class ClientProjectIsDuplicateValidationRule : IClientDataValidationRule
@@ -47,14 +47,14 @@ public class ClientProjectIsDuplicateValidationRule : IClientDataValidationRule
         _duplicateProjects = duplicateProjects ?? throw new ArgumentNullException(nameof(duplicateProjects));
     }
 
-    public static ICollection<string> FindDuplicateProjects(ICollection<SlotModel> slots) =>
-        slots.GroupBy(x => x.WorkUnitModel.WorkUnit.ToShortProjectString())
-            .Where(g => g.Count() > 1 && g.First().WorkUnitModel.WorkUnit.HasProject())
+    public static ICollection<string> FindDuplicateProjects(ICollection<IClientData> collection) =>
+        collection.GroupBy(x => x.ProjectInfo.ToShortProjectString())
+            .Where(g => g.Count() > 1 && g.First().ProjectInfo.HasProject())
             .Select(g => g.Key)
             .ToList();
 
-    public void Validate(SlotModel slotModel) =>
-        slotModel.Errors[Key] = _duplicateProjects.Contains(slotModel.WorkUnitModel.WorkUnit.ToShortProjectString());
+    public void Validate(IClientData clientData) =>
+        clientData.Errors[Key] = _duplicateProjects.Contains(clientData.ProjectInfo.ToShortProjectString());
 }
 
 public class ValidationRuleErrors : Dictionary<string, object>

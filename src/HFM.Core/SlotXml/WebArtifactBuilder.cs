@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-using HFM.Core.Client;
+﻿using HFM.Core.Client;
 using HFM.Core.Logging;
 using HFM.Preferences;
 
@@ -28,9 +23,9 @@ namespace HFM.Core.SlotXml
             Path = path;
         }
 
-        public string Build(ICollection<SlotModel> slots)
+        public string Build(ICollection<IClientData> collection)
         {
-            if (slots == null) throw new ArgumentNullException(nameof(slots));
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
 
             Directory.CreateDirectory(Path);
 
@@ -38,7 +33,7 @@ namespace HFM.Core.SlotXml
             var copyLogs = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
 
             var xmlBuilder = new XmlBuilder(Preferences);
-            var result = xmlBuilder.Build(slots, Path);
+            var result = xmlBuilder.Build(collection, Path);
 
             if (copyHtml)
             {
@@ -48,16 +43,16 @@ namespace HFM.Core.SlotXml
 
             if (copyLogs)
             {
-                CopyLogs(slots);
+                CopyLogs(collection);
             }
 
             return Path;
         }
 
-        private void CopyLogs(IEnumerable<SlotModel> slots)
+        private void CopyLogs(IEnumerable<IClientData> slots)
         {
             var logCache = Preferences.Get<string>(Preference.CacheDirectory);
-            var logPaths = slots.Select(x => System.IO.Path.Combine(logCache, x.Client.Settings.ClientLogFileName)).Distinct();
+            var logPaths = slots.Select(x => System.IO.Path.Combine(logCache, x.ClientLogFileName)).Distinct();
             int maximumLength = Preferences.Get<bool>(Preference.WebGenLimitLogSize)
                 ? Preferences.Get<int>(Preference.WebGenLimitLogSizeLength) * 1024
                 : -1;

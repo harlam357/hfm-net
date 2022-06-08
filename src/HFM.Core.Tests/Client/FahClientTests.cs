@@ -55,14 +55,14 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var slots = _fahClient.Slots.Cast<FahClientSlotModel>().ToList();
-                Assert.AreEqual(2, slots.Count);
-                Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
-                Assert.AreEqual(4, slots[0].Threads);
-                Assert.AreEqual(null, slots[0].Processor);
-                Assert.AreEqual(SlotType.GPU, slots[1].SlotType);
-                Assert.AreEqual(null, slots[1].Threads);
-                Assert.AreEqual("GeForce GTX 285", slots[1].Processor);
+                var collection = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
+                Assert.AreEqual(2, collection.Count);
+                Assert.AreEqual(SlotType.CPU, collection[0].SlotType);
+                Assert.AreEqual(4, collection[0].Threads);
+                Assert.AreEqual(null, collection[0].Processor);
+                Assert.AreEqual(SlotType.GPU, collection[1].SlotType);
+                Assert.AreEqual(null, collection[1].Threads);
+                Assert.AreEqual("GeForce GTX 285", collection[1].Processor);
             }
 
             [Test]
@@ -72,11 +72,11 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var slots = _fahClient.Slots.Cast<FahClientSlotModel>().ToList();
-                Assert.AreEqual(1, slots.Count);
-                Assert.AreEqual(SlotType.CPU, slots[0].SlotType);
-                Assert.AreEqual(4, slots[0].Threads);
-                Assert.AreEqual(null, slots[0].Processor);
+                var collection = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
+                Assert.AreEqual(1, collection.Count);
+                Assert.AreEqual(SlotType.CPU, collection[0].SlotType);
+                Assert.AreEqual(4, collection[0].Threads);
+                Assert.AreEqual(null, collection[0].Processor);
             }
 
             [Test]
@@ -99,7 +99,7 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var slots = _fahClient.Slots.Cast<FahClientSlotModel>().ToList();
+                var slots = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
                 Assert.AreEqual(1, slots.Count);
                 Assert.AreEqual(SlotType.Unknown, slots[0].SlotType);
                 Assert.AreEqual(SlotStatus.Disabled, slots[0].Status);
@@ -126,13 +126,13 @@ namespace HFM.Core.Client
             [Test]
             public void ThenSlotsAreUpdated()
             {
-                var slot00 = _fahClient.Slots.ElementAt(0);
+                var slot00 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(0);
                 Assert.AreEqual("AMD Ryzen 7 3700X 8-Core Processor", slot00.Processor);
                 Assert.IsNull(slot00.WorkUnitQueue);
                 Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
                 Assert.AreEqual(-1, slot00.WorkUnitModel.ID);
 
-                var slot01 = _fahClient.Slots.ElementAt(1);
+                var slot01 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Geforce RTX 2060", slot01.Processor);
                 Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
@@ -143,7 +143,7 @@ namespace HFM.Core.Client
             public void ThenGpuSlotProcessorShowsPlatformImplementationAndDriverVersion()
             {
                 _fahClient.Preferences.Set(Preference.DisplayVersions, true);
-                var slot01 = _fahClient.Slots.ElementAt(1);
+                var slot01 = _fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Geforce RTX 2060 (CUDA 456.71)", slot01.Processor);
             }
 
@@ -175,13 +175,13 @@ namespace HFM.Core.Client
             [Test]
             public void ThenSlotsAreUpdated()
             {
-                var slot00 = _fahClient.Slots.ElementAt(0);
+                var slot00 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(0);
                 Assert.AreEqual("Tesla T4", slot00.Processor);
                 Assert.AreEqual(1, slot00.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
                 Assert.AreEqual(1, slot00.WorkUnitModel.ID);
 
-                var slot01 = _fahClient.Slots.ElementAt(1);
+                var slot01 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Tesla T4", slot01.Processor);
                 Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
@@ -192,11 +192,11 @@ namespace HFM.Core.Client
             public void ThenGpuSlotProcessorShowsPlatformImplementationAndDriverVersion()
             {
                 _fahClient.Preferences.Set(Preference.DisplayVersions, true);
-                var slot00 = _fahClient.Slots.ElementAt(0);
+                var slot00 = _fahClient.ClientDataCollection.ElementAt(0);
                 Assert.AreEqual("Tesla T4 (CUDA 470.82)", slot00.Processor);
 
                 _fahClient.Preferences.Set(Preference.DisplayVersions, true);
-                var slot01 = _fahClient.Slots.ElementAt(1);
+                var slot01 = _fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Tesla T4 (CUDA 470.82)", slot01.Processor);
             }
 

@@ -51,11 +51,11 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_Slots_ContainsOneOfflineSlot()
+        public void Client_ClientDataCollection_ContainsOneOfflineSlot()
         {
             var client = new MockClient();
-            Assert.AreEqual(1, client.Slots.Count);
-            Assert.AreEqual(SlotStatus.Offline, client.Slots.First().Status);
+            Assert.AreEqual(1, client.ClientDataCollection.Count);
+            Assert.AreEqual(SlotStatus.Offline, client.ClientDataCollection.First().Status);
         }
 
         [Test]
@@ -263,9 +263,9 @@ namespace HFM.Core.Client
 
                     Thread.Sleep(10);
                     // ReSharper disable once AccessToDisposedClosure
-                    foreach (var x in client.Slots)
+                    foreach (var x in client.ClientDataCollection)
                     {
-                        // enumeration of client slots
+                        // enumeration of client data
                     }
                 }, token))
                 .ToArray();
@@ -374,14 +374,14 @@ namespace HFM.Core.Client
 
             private static readonly Random _Random = new();
 
-            protected override void OnRefreshSlots(ICollection<SlotModel> slots)
+            protected override void OnRefreshSlots(ICollection<IClientData> collection)
             {
-                slots.Clear();
+                collection.Clear();
 
                 int count = _Random.Next(1, 5);
                 for (int i = 0; i < count; i++)
                 {
-                    slots.Add(new SlotModel(this));
+                    collection.Add(new SlotModel(this));
                 }
             }
         }
