@@ -30,7 +30,7 @@ public class FahClientDataTests
         }
 
         [Test]
-        public void ThenSlotModelProcessorIncludesVersionInformation() =>
+        public void ThenClientDataProcessorIncludesVersionInformation() =>
             Assert.AreEqual("GeForce RTX 3070 Ti (CUDA 511.79)", _clientData.Processor);
 
         [Test]

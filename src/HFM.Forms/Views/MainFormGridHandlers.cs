@@ -68,13 +68,13 @@ namespace HFM.Forms.Views
             {
                 for (int rowIndex = 0; rowIndex < dataGridView1.Rows.Count; rowIndex++)
                 {
-                    var slotModel = GetRowClient(rowIndex);
-                    if (slotModel is null)
+                    var clientData = GetRowClient(rowIndex);
+                    if (clientData is null)
                     {
                         continue;
                     }
 
-                    int width = column.GetAutoSizeWidth(dataGridView1, slotModel, rowIndex, columnIndex);
+                    int width = column.GetAutoSizeWidth(dataGridView1, clientData, rowIndex, columnIndex);
                     if (columnWidth < width)
                     {
                         columnWidth = width + (int)(10 * GetDpiScale(g));

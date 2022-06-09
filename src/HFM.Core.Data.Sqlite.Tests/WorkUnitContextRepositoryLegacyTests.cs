@@ -58,8 +58,8 @@ public class WorkUnitContextRepositoryLegacyTests
             Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Environment.CurrentManagedThreadId);
 
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            var slotModel = new FahClientData(new InMemoryPreferencesProvider(), new NullClient { Settings = settings }, default, SlotIdentifier.NoSlotID);
-            var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i), null)
+            var clientData = new FahClientData(new InMemoryPreferencesProvider(), new NullClient { Settings = settings }, default, SlotIdentifier.NoSlotID);
+            var workUnitModel = new WorkUnitModel(clientData, BuildWorkUnit1(i), null)
             {
                 CurrentProtein = BuildProtein1()
             };

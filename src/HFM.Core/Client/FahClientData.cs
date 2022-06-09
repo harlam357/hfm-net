@@ -7,7 +7,7 @@ using HFM.Proteins;
 
 namespace HFM.Core.Client;
 
-// TODO: TimeFormatting should be a function of SlotModel, not view grid painting
+// TODO: TimeFormatting should be a function of ClientData, not view grid painting
 public enum TimeFormatting
 {
     None,

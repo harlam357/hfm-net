@@ -221,7 +221,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
             var workUnits = workUnitsBuilder.BuildForSlot(clientData.SlotID, clientData.Description, previousWorkUnitModel.WorkUnit);
             var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(clientData, x)));
 
-            await PopulateSlotModel(clientData, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
+            await PopulateClientData(clientData, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
             foreach (var m in workUnitModels)
             {
                 await UpdateWorkUnitRepository(m).ConfigureAwait(false);
@@ -239,7 +239,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         Logger.Info(String.Format(Logging.Logger.NameFormat, Settings.Name, message));
     }
 
-    private IReadOnlyCollection<LogLine> EnumerateSlotModelLogLines(int slotID, WorkUnitCollection workUnits)
+    private IReadOnlyCollection<LogLine> EnumerateLogLines(int slotID, WorkUnitCollection workUnits)
     {
         IEnumerable<LogLine> logLines = workUnits.Current?.LogLines;
 
@@ -276,10 +276,10 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         };
     }
 
-    private async Task PopulateSlotModel(FahClientData clientData,
-                                         WorkUnitCollection workUnits,
-                                         WorkUnitModelCollection workUnitModels,
-                                         WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
+    private async Task PopulateClientData(FahClientData clientData,
+                                          WorkUnitCollection workUnits,
+                                          WorkUnitModelCollection workUnitModels,
+                                          WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
     {
         Debug.Assert(clientData != null);
         Debug.Assert(workUnits != null);
@@ -291,7 +291,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
             clientData.Description.Processor = Messages.Info?.System?.CPU;
         }
         clientData.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(clientData.SlotID);
-        clientData.CurrentLogLines = EnumerateSlotModelLogLines(clientData.SlotID, workUnits);
+        clientData.CurrentLogLines = EnumerateLogLines(clientData.SlotID, workUnits);
 
         if (WorkUnitRepository is not null && Messages.ClientRun is not null)
         {
