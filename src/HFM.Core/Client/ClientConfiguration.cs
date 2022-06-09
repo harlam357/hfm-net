@@ -14,8 +14,6 @@ public class ClientConfiguration : IDisposable
 
     public bool IsDirty { get; set; }
 
-    public ILogger Logger { get; }
-    public IPreferences Preferences { get; }
     public ClientFactory ClientFactory { get; }
     public ClientScheduledTasks ScheduledTasks { get; }
 
@@ -30,8 +28,11 @@ public class ClientConfiguration : IDisposable
 
     internal ClientConfiguration(ILogger logger, IPreferences preferences, ClientFactory clientFactory, ClientScheduledTasksFactory clientScheduledTasksFactory)
     {
-        Logger = logger ?? NullLogger.Instance;
-        Preferences = preferences;
+        if (logger == null) throw new ArgumentNullException(nameof(logger));
+        if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+        if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
+        if (clientScheduledTasksFactory == null) throw new ArgumentNullException(nameof(clientScheduledTasksFactory));
+
         ClientFactory = clientFactory;
         ScheduledTasks = clientScheduledTasksFactory(logger, preferences, this);
 

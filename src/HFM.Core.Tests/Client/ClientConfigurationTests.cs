@@ -404,7 +404,7 @@ namespace HFM.Core.Client
         }
 
         private static ClientConfiguration CreateConfiguration() =>
-            new(null,
+            new(NullLogger.Instance,
                 new InMemoryPreferencesProvider(),
                 new ClientFactory(),
                 (l, p, c) => new ClientScheduledTasksWithoutEvents(l, p, c));

@@ -1,5 +1,6 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.Data;
+using HFM.Core.Logging;
 using HFM.Core.ScheduledTasks;
 using HFM.Core.UserStats;
 using HFM.Forms.Models;
@@ -37,7 +38,7 @@ public class MainPresenterTests
     private static MainPresenter CreatePresenter()
     {
         var preferences = new InMemoryPreferencesProvider();
-        var clientConfiguration = new ClientConfiguration(null, preferences, new ClientFactory());
+        var clientConfiguration = new ClientConfiguration(NullLogger.Instance, preferences, new ClientFactory());
         var userStatsScheduledTask = new UserStatsScheduledTask(preferences, null, Mock.Of<IUserStatsService>(), new UserStatsDataContainer());
         return new MainPresenter(new MainModel(preferences), null, null, null, clientConfiguration, null, userStatsScheduledTask);
     }

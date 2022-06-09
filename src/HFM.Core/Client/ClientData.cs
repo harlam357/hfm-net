@@ -82,7 +82,7 @@ public class ClientData : IClientData
         new()
         {
             Status = SlotStatus.Offline,
-            Name = settings.Name,
+            Name = settings?.Name,
             Settings = settings
         };
 
