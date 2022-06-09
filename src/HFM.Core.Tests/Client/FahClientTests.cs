@@ -229,5 +229,97 @@ namespace HFM.Core.Client
                 Assert.IsTrue(connection.Commands.All(x => x.Executed));
             }
         }
+
+        [TestFixture]
+        public class FahClientRefreshSlots
+        {
+            [Test]
+            public void RaisesClientDataCollectionChangedEvent()
+            {
+                // Arrange
+                var client = new MockFahClient();
+                bool raised = false;
+                client.ClientDataCollectionChanged += (s, e) => raised = true;
+                // Act
+                client.RefreshSlots();
+                // Assert
+                Assert.IsTrue(raised);
+            }
+        }
+
+        [TestFixture]
+        public class FahClientDataCollectionProperty
+        {
+            [Test]
+            public async Task IsThreadSafe()
+            {
+                // Arrange
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                var token = cts.Token;
+
+                var client = new TestClientRefreshesSlots();
+                await client.Connect();
+
+                _ = Task.Run(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    // ReSharper disable once AccessToDisposedClosure
+                    client.RefreshSlots();
+                }, token);
+
+                const int count = 10;
+
+                var tasks = Enumerable.Range(0, count)
+                    .Select(_ => Task.Run(() =>
+                    {
+                        token.ThrowIfCancellationRequested();
+
+                        Thread.Sleep(10);
+                        // ReSharper disable once AccessToDisposedClosure
+                        foreach (var x in client.ClientDataCollection)
+                        {
+                            // enumeration of client data
+                        }
+                    }, token))
+                    .ToArray();
+
+                try
+                {
+                    Task.WaitAll(tasks);
+                }
+                catch (AggregateException aggEx)
+                {
+                    if (!aggEx.InnerExceptions.Any(x => x is OperationCanceledException))
+                    {
+                        Assert.Fail("Enumeration failed");
+                    }
+                }
+                catch (Exception)
+                {
+                    Assert.Fail("Enumeration failed");
+                }
+                finally
+                {
+                    cts.Cancel();
+                }
+            }
+        }
+
+        private class TestClientRefreshesSlots : MockFahClient
+        {
+            private static readonly Random _Random = new();
+
+            protected override void OnRefreshSlots(ICollection<IClientData> collection)
+            {
+                collection.Clear();
+
+                int count = _Random.Next(1, 5);
+                for (int i = 0; i < count; i++)
+                {
+                    collection.Add(new ClientData());
+                }
+            }
+        }
     }
 }

@@ -334,47 +334,72 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void ClientConfiguration_GetSlots_IsThreadSafe()
+        public async Task ClientConfiguration_GetClientDataCollection_IsThreadSafe()
         {
             // Arrange
+            var test1 = new MockFahClientRefreshesSlots();
+            await test1.Connect();
+            var test2 = new MockFahClientRefreshesSlots();
+            await test2.Connect();
+            var test3 = new MockFahClientRefreshesSlots();
+            await test3.Connect();
+
             var configuration = CreateConfiguration();
-            configuration.Add("test1", new MockClientRefreshesSlots());
-            configuration.Add("test2", new MockClientRefreshesSlots());
-            configuration.Add("test3", new MockClientRefreshesSlots());
+            configuration.Add("test1", test1);
+            configuration.Add("test2", test2);
+            configuration.Add("test3", test3);
             var clients = configuration.GetClients();
 
-            Task.Run(() =>
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var token = cts.Token;
+
+            _ = Task.Run(() =>
             {
                 while (true)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     Parallel.ForEach(clients, x =>
                     {
-                        var client = (Client)x;
+                        var client = (FahClient)x;
                         client.RefreshSlots();
                     });
                 }
-            });
+            }, token);
 
             const int count = 2000;
 
             var tasks = Enumerable.Range(0, count)
                 .Select(_ => Task.Run(() =>
                 {
+                    token.ThrowIfCancellationRequested();
+
                     Thread.Sleep(10);
                     foreach (var x in configuration.GetClientDataCollection())
                     {
                         // enumeration of client data
                     }
-                }))
+                }, token))
                 .ToArray();
 
             try
             {
                 Task.WaitAll(tasks);
             }
+            catch (AggregateException aggEx)
+            {
+                if (!aggEx.InnerExceptions.Any(x => x is OperationCanceledException))
+                {
+                    Assert.Fail("Enumeration failed");
+                }
+            }
             catch (Exception)
             {
                 Assert.Fail("Enumeration failed");
+            }
+            finally
+            {
+                cts.Cancel();
             }
         }
 
@@ -404,13 +429,8 @@ namespace HFM.Core.Client
             }
         }
 
-        private class MockClientRefreshesSlots : MockClient
+        private class MockFahClientRefreshesSlots : MockFahClient
         {
-            public MockClientRefreshesSlots()
-            {
-                Connected = true;
-            }
-
             private static readonly Random _Random = new();
 
             protected override void OnRefreshSlots(ICollection<IClientData> collection)

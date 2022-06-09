@@ -62,6 +62,8 @@ public class FahClient : Client, IFahClient, IFahClientCommand
             new DelegateFahClientMessageAction(FahClientMessageType.Info, RefreshClientPlatform),
             new ExecuteRetrieveMessageAction(Messages, async () => await Retrieve().ConfigureAwait(false))
         };
+
+        RefreshSlots();
     }
 
     private readonly List<FahClientMessageAction> _messageActions;
@@ -79,7 +81,18 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         }
     }
 
-    protected override void OnRefreshSlots(ICollection<IClientData> collection)
+    private List<IClientData> _clientData = new();
+
+    public void RefreshSlots()
+    {
+        var slots = new List<IClientData>();
+        OnRefreshSlots(slots);
+        Interlocked.Exchange(ref _clientData, slots);
+
+        OnClientDataCollectionChanged();
+    }
+
+    protected virtual void OnRefreshSlots(ICollection<IClientData> collection)
     {
         var slotCollection = Messages?.SlotCollection;
         if (slotCollection is { Count: > 0 })
@@ -96,11 +109,12 @@ public class FahClient : Client, IFahClient, IFahClientCommand
                 collection.Add(clientData);
             }
         }
-        else
-        {
-            base.OnRefreshSlots(collection);
-        }
     }
+
+    protected override IReadOnlyCollection<IClientData> OnGetClientDataCollection() =>
+        _clientData.Count > 0
+            ? _clientData
+            : base.OnGetClientDataCollection();
 
     private void RefreshClientPlatform()
     {

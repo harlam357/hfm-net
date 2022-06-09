@@ -80,8 +80,6 @@ public abstract class Client : IClient
     {
         Logger = logger ?? NullLogger.Instance;
         Preferences = preferences ?? new InMemoryPreferencesProvider();
-
-        RefreshSlots();
     }
 
     // ClientSettings
@@ -108,21 +106,15 @@ public abstract class Client : IClient
     public ClientPlatform Platform { get; set; }
 
     // ClientData
-    private List<IClientData> _clientData = new();
+    private IReadOnlyCollection<IClientData> _clientData;
 
-    public IReadOnlyCollection<IClientData> ClientDataCollection => _clientData.ToArray();
+    public IReadOnlyCollection<IClientData> ClientDataCollection => OnGetClientDataCollection();
 
-    public void RefreshSlots()
+    protected virtual IReadOnlyCollection<IClientData> OnGetClientDataCollection()
     {
-        var slots = new List<IClientData>();
-        OnRefreshSlots(slots);
-        Interlocked.Exchange(ref _clientData, slots);
-
-        OnClientDataCollectionChanged();
+        _clientData ??= new[] { ClientData.CreateOfflineClientData() };
+        return _clientData;
     }
-
-    protected virtual void OnRefreshSlots(ICollection<IClientData> collection) =>
-        collection.Add(ClientData.CreateOfflineClientData());
 
     // Retrieve
     public DateTime LastRetrieveTime { get; protected set; } = DateTime.MinValue;

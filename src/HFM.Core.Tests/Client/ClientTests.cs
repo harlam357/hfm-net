@@ -59,19 +59,6 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_RefreshSlots_RaisesClientDataCollectionChangedEvent()
-        {
-            // Arrange
-            var client = new MockClient();
-            bool raised = false;
-            client.ClientDataCollectionChanged += (s, e) => raised = true;
-            // Act
-            client.RefreshSlots();
-            // Assert
-            Assert.IsTrue(raised);
-        }
-
-        [Test]
         public async Task Client_Connect_ConnectsTheClient()
         {
             // Arrange
@@ -237,60 +224,6 @@ namespace HFM.Core.Client
             Assert.AreEqual(count, client.RetrieveInProgressCount + client.RetrieveCount);
         }
 
-        [Test]
-        public void Client_Slots_IsThreadSafe()
-        {
-            // Arrange
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var token = cts.Token;
-
-            var client = new TestClientRefreshesSlots();
-
-            _ = Task.Run(() =>
-            {
-                token.ThrowIfCancellationRequested();
-
-                // ReSharper disable once AccessToDisposedClosure
-                client.RefreshSlots();
-            }, token);
-
-            const int count = 10;
-
-            var tasks = Enumerable.Range(0, count)
-                .Select(_ => Task.Run(() =>
-                {
-                    token.ThrowIfCancellationRequested();
-
-                    Thread.Sleep(10);
-                    // ReSharper disable once AccessToDisposedClosure
-                    foreach (var x in client.ClientDataCollection)
-                    {
-                        // enumeration of client data
-                    }
-                }, token))
-                .ToArray();
-
-            try
-            {
-                Task.WaitAll(tasks);
-            }
-            catch (AggregateException aggEx)
-            {
-                if (!aggEx.InnerExceptions.Any(x => x is OperationCanceledException))
-                {
-                    Assert.Fail("Enumeration failed");
-                }
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Enumeration failed");
-            }
-            finally
-            {
-                cts.Cancel();
-            }
-        }
-
         private class TestClientSettingsChanged : MockClient
         {
             public ClientSettings OldSettings { get; private set; }
@@ -362,27 +295,6 @@ namespace HFM.Core.Client
             {
                 await Task.Delay(10);
                 Interlocked.Increment(ref _retrieveCount);
-            }
-        }
-
-        private class TestClientRefreshesSlots : MockClient
-        {
-            public TestClientRefreshesSlots()
-            {
-                Connected = true;
-            }
-
-            private static readonly Random _Random = new();
-
-            protected override void OnRefreshSlots(ICollection<IClientData> collection)
-            {
-                collection.Clear();
-
-                int count = _Random.Next(1, 5);
-                for (int i = 0; i < count; i++)
-                {
-                    collection.Add(new ClientData());
-                }
             }
         }
     }
