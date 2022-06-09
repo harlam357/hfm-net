@@ -66,7 +66,7 @@ namespace HFM.Core.Client
                 {
                     if (client != null)
                     {
-                        client.SlotsChanged += OnInvalidate;
+                        client.ClientDataCollectionChanged += OnInvalidate;
                         client.RetrieveFinished += OnInvalidate;
                         _clientDictionary.Add(client.Settings.Name, client);
                         added++;
@@ -132,7 +132,7 @@ namespace HFM.Core.Client
 
                 client = _clientDictionary[key];
 
-                client.SlotsChanged -= OnInvalidate;
+                client.ClientDataCollectionChanged -= OnInvalidate;
                 client.RetrieveFinished -= OnInvalidate;
                 // update the settings
                 client.Settings = settings;
@@ -142,7 +142,7 @@ namespace HFM.Core.Client
                     _clientDictionary.Remove(key);
                     _clientDictionary.Add(settings.Name, client);
                 }
-                client.SlotsChanged += OnInvalidate;
+                client.ClientDataCollectionChanged += OnInvalidate;
                 client.RetrieveFinished += OnInvalidate;
             }
             finally
@@ -162,7 +162,7 @@ namespace HFM.Core.Client
             _syncLock.EnterWriteLock();
             try
             {
-                value.SlotsChanged += OnInvalidate;
+                value.ClientDataCollectionChanged += OnInvalidate;
                 value.RetrieveFinished += OnInvalidate;
                 _clientDictionary.Add(key, value);
             }
@@ -188,7 +188,7 @@ namespace HFM.Core.Client
                 if (_clientDictionary.ContainsKey(key))
                 {
                     client = _clientDictionary[key];
-                    client.SlotsChanged -= OnInvalidate;
+                    client.ClientDataCollectionChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
                     client.Close();
                 }
@@ -236,7 +236,7 @@ namespace HFM.Core.Client
                 var clients = _clientDictionary.Values.ToList();
                 foreach (var client in clients)
                 {
-                    client.SlotsChanged -= OnInvalidate;
+                    client.ClientDataCollectionChanged -= OnInvalidate;
                     client.RetrieveFinished -= OnInvalidate;
                     client.Close();
                 }

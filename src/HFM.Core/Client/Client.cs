@@ -15,9 +15,9 @@ public interface IClient
     ClientIdentifier ClientIdentifier { get; }
 
     /// <summary>
-    /// Raised when the client slot collection has changed.
+    /// Raised when the client data collection has changed.
     /// </summary>
-    event EventHandler SlotsChanged;
+    event EventHandler ClientDataCollectionChanged;
 
     /// <summary>
     /// Raised when the client data retrieval process is finished.
@@ -64,9 +64,9 @@ public abstract class Client : IClient
 {
     public ClientIdentifier ClientIdentifier => new(Settings.Name, Settings.Server, Settings.Port, Settings.Guid);
 
-    public event EventHandler SlotsChanged;
+    public event EventHandler ClientDataCollectionChanged;
 
-    protected virtual void OnSlotsChanged() => SlotsChanged?.Invoke(this, EventArgs.Empty);
+    protected virtual void OnClientDataCollectionChanged() => ClientDataCollectionChanged?.Invoke(this, EventArgs.Empty);
 
     public event EventHandler RetrieveFinished;
 
@@ -118,7 +118,7 @@ public abstract class Client : IClient
         OnRefreshSlots(slots);
         Interlocked.Exchange(ref _clientData, slots);
 
-        OnSlotsChanged();
+        OnClientDataCollectionChanged();
     }
 
     protected virtual void OnRefreshSlots(ICollection<IClientData> collection) =>

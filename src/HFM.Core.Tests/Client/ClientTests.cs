@@ -59,12 +59,12 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public void Client_RefreshSlots_RaisesSlotsChangedEvent()
+        public void Client_RefreshSlots_RaisesClientDataCollectionChangedEvent()
         {
             // Arrange
             var client = new MockClient();
             bool raised = false;
-            client.SlotsChanged += (s, e) => raised = true;
+            client.ClientDataCollectionChanged += (s, e) => raised = true;
             // Act
             client.RefreshSlots();
             // Assert

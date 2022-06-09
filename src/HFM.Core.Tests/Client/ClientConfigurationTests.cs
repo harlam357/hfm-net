@@ -105,17 +105,17 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             var mockClient = new Mock<IClient>();
-            mockClient.SetupAdd(x => x.SlotsChanged += It.IsAny<EventHandler>());
+            mockClient.SetupAdd(x => x.ClientDataCollectionChanged += It.IsAny<EventHandler>());
             mockClient.SetupAdd(x => x.RetrieveFinished += It.IsAny<EventHandler>());
             // Act
             configuration.Add("test", mockClient.Object);
             // Assert
-            mockClient.VerifyAdd(x => x.SlotsChanged += It.IsAny<EventHandler>());
+            mockClient.VerifyAdd(x => x.ClientDataCollectionChanged += It.IsAny<EventHandler>());
             mockClient.VerifyAdd(x => x.RetrieveFinished += It.IsAny<EventHandler>());
         }
 
         [Test]
-        public void ClientConfiguration_ClientSlotsChangedRaisesConfigurationChanged()
+        public void ClientConfiguration_ClientDataCollectionChangedRaisesConfigurationChanged()
         {
             // Arrange
             var configuration = CreateConfiguration();
@@ -127,7 +127,7 @@ namespace HFM.Core.Client
             };
             configuration.Add("test", mockClient.Object);
             // Act
-            mockClient.Raise(x => x.SlotsChanged += null, this, EventArgs.Empty);
+            mockClient.Raise(x => x.ClientDataCollectionChanged += null, this, EventArgs.Empty);
             // Assert
             Assert.IsTrue(clientInvalidateFired);
         }
