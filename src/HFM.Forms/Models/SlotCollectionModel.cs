@@ -44,7 +44,7 @@ namespace HFM.Forms.Models
                 Preferences.Set(Preference.FormSortOrder, SortColumnOrder);
             };
             BindingSource.DataSource = _clientDataList;
-            BindingSource.CurrentItemChanged += (sender, args) => SelectedSlot = (SlotModel)BindingSource.Current;
+            BindingSource.CurrentItemChanged += (sender, args) => SelectedClient = (IClientData)BindingSource.Current;
 
             // subscribe to services raising events that require a view action
             Preferences.PreferenceChanged += (s, e) => OnPreferenceChanged(e);
@@ -74,29 +74,29 @@ namespace HFM.Forms.Models
             }
         }
 
-        // SortColumnName stores the actual SlotModel property name
-        // this method guards against SlotModel property name changes
+        // SortColumnName stores the actual IClientData property name
+        // this method guards against IClientData property name changes
         private string ValidateSortColumnNameOrDefault(string name)
         {
-            var properties = TypeDescriptor.GetProperties(typeof(SlotModel));
+            var properties = TypeDescriptor.GetProperties(typeof(IClientData));
             var property = properties.Find(name, true);
             return property is null ? DefaultSortColumnName : name;
         }
 
-        private string DefaultSortColumnName { get; } = nameof(SlotModel.Name);
+        private string DefaultSortColumnName => nameof(IClientData.Name);
 
         public ListSortDirection SortColumnOrder { get; set; }
 
-        private SlotModel _selectedSlot;
+        private IClientData _selectedClient;
 
-        public SlotModel SelectedSlot
+        public IClientData SelectedClient
         {
-            get => _selectedSlot;
+            get => _selectedClient;
             set
             {
-                if (!ReferenceEquals(_selectedSlot, value))
+                if (!ReferenceEquals(_selectedClient, value))
                 {
-                    _selectedSlot = value;
+                    _selectedClient = value;
                     OnPropertyChanged();
                 }
             }
@@ -119,7 +119,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        private readonly object _resetBindingsLock = new object();
+        private readonly object _resetBindingsLock = new();
 
         private void ResetBindings()
         {
@@ -138,7 +138,7 @@ namespace HFM.Forms.Models
             }
         }
 
-        private readonly object _slotsListLock = new object();
+        private readonly object _slotsListLock = new();
 
         private SlotTotals _slotTotals;
 
@@ -178,14 +178,14 @@ namespace HFM.Forms.Models
 
                 SortInternal();
                 ResetSelectedSlot();
-                SlotModel.ValidateRules(collection, Preferences);
+                ClientData.ValidateRules(collection, Preferences);
                 SlotTotals = SlotTotals.Create(collection);
 
                 BindingSource.ResetBindings(false);
             }
-            OnReset(new SlotCollectionModelResetEventArgs(SelectedSlot,
-                                                          SelectedSlot?.WorkUnitQueue,
-                                                          SelectedSlot?.CurrentLogLines,
+            OnReset(new SlotCollectionModelResetEventArgs(SelectedClient,
+                                                          (SelectedClient as FahClientData)?.WorkUnitQueue,
+                                                          SelectedClient?.CurrentLogLines,
                                                           SlotTotals));
         }
 
@@ -223,9 +223,9 @@ namespace HFM.Forms.Models
 
         public void ResetSelectedSlot()
         {
-            if (SelectedSlot == null) return;
+            if (SelectedClient == null) return;
 
-            int row = BindingSource.Find(nameof(SlotModel.Name), SelectedSlot.Name);
+            int row = BindingSource.Find(nameof(IClientData.Name), SelectedClient.Name);
             if (row > -1)
             {
                 BindingSource.Position = row;
@@ -239,18 +239,18 @@ namespace HFM.Forms.Models
 
     public class SlotCollectionModelResetEventArgs : EventArgs
     {
-        public SlotCollectionModelResetEventArgs(SlotModel selectedSlot,
+        public SlotCollectionModelResetEventArgs(IClientData selectedClient,
                                                  WorkUnitQueueItemCollection workUnitQueue,
                                                  IReadOnlyCollection<LogLine> logLines,
                                                  SlotTotals slotTotals)
         {
-            SelectedSlot = selectedSlot;
+            SelectedClient = selectedClient;
             WorkUnitQueue = workUnitQueue;
             LogLines = logLines;
             SlotTotals = slotTotals;
         }
 
-        public SlotModel SelectedSlot { get; }
+        public IClientData SelectedClient { get; }
         public WorkUnitQueueItemCollection WorkUnitQueue { get; }
         public IReadOnlyCollection<LogLine> LogLines { get; }
         public SlotTotals SlotTotals { get; }

@@ -10,6 +10,11 @@ public record ClientPlatform(string ClientVersion, string OperatingSystem);
 public interface IClient
 {
     /// <summary>
+    /// Gets the value that uniquely identifies this client.
+    /// </summary>
+    ClientIdentifier ClientIdentifier { get; }
+
+    /// <summary>
     /// Raised when the client slot collection has changed.
     /// </summary>
     event EventHandler SlotsChanged;
@@ -57,6 +62,8 @@ public interface IClient
 
 public abstract class Client : IClient
 {
+    public ClientIdentifier ClientIdentifier => new(Settings.Name, Settings.Server, Settings.Port, Settings.Guid);
+
     public event EventHandler SlotsChanged;
 
     protected virtual void OnSlotsChanged() => SlotsChanged?.Invoke(this, EventArgs.Empty);
@@ -115,7 +122,7 @@ public abstract class Client : IClient
     }
 
     protected virtual void OnRefreshSlots(ICollection<IClientData> collection) =>
-        collection.Add(SlotModel.CreateOfflineSlotModel(this));
+        collection.Add(ClientData.CreateOfflineClientData());
 
     // Retrieve
     public DateTime LastRetrieveTime { get; protected set; } = DateTime.MinValue;

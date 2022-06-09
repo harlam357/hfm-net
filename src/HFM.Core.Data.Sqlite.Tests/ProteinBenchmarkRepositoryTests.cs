@@ -2,6 +2,7 @@
 using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 using HFM.Log;
+using HFM.Preferences;
 using HFM.Proteins;
 
 using Microsoft.Data.Sqlite;
@@ -204,7 +205,7 @@ public class ProteinBenchmarkRepositoryTests
                 Settings = settings,
                 Platform = new ClientPlatform("7", "Windows")
             };
-            var slotModel = new SlotModel(client)
+            var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID)
             {
                 Description = new UnknownSlotDescription()
             };
@@ -219,7 +220,7 @@ public class ProteinBenchmarkRepositoryTests
                     { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.FromMinutes(3) } }
                 }
             };
-            var workUnitModel = new WorkUnitModel(slotModel, workUnit, null)
+            var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
             {
                 CurrentProtein = new Protein
                 {

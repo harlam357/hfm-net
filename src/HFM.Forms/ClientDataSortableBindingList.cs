@@ -17,12 +17,7 @@ namespace HFM.Forms
             SortComparer = new ClientDataSortComparer();
         }
 
-        #region BindingList<T> Find Overrides
-
-        protected override bool SupportsSearchingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSearchingCore => true;
 
         protected override int FindCore(PropertyDescriptor prop, object key)
         {
@@ -31,17 +26,9 @@ namespace HFM.Forms
 
             if (key is string)
             {
-                var list = Items as List<SlotModel>;
-                if ((null != list))
+                if (Items is List<IClientData> list)
                 {
-                    return list.FindIndex(item =>
-                                          {
-                                              if (prop.GetValue(item).Equals(key))
-                                              {
-                                                  return true;
-                                              }
-                                              return false;
-                                          });
+                    return list.FindIndex(item => prop.GetValue(item).Equals(key));
                 }
 
                 return -1;
@@ -49,7 +36,5 @@ namespace HFM.Forms
 
             throw new NotSupportedException("Key must be of Type System.String.");
         }
-
-        #endregion
     }
 }

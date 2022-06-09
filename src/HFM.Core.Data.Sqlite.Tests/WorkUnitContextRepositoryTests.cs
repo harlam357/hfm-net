@@ -1,6 +1,7 @@
 ﻿using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Log;
+using HFM.Preferences;
 using HFM.Proteins;
 
 using Microsoft.Data.Sqlite;
@@ -946,16 +947,15 @@ public class WorkUnitContextRepositoryTests
             Settings = settings,
             Platform = new ClientPlatform("7", "Windows")
         };
-        var slotModel = new SlotModel(client)
+        var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, slotID)
         {
-            SlotID = slotID,
             Description = new CPUSlotDescription
             {
                 Processor = processor,
                 CPUThreads = threads
             }
         };
-        var workUnitModel = new WorkUnitModel(slotModel, workUnit, null)
+        var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
         {
             CurrentProtein = protein
         };

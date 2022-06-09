@@ -140,7 +140,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
     {
         ClientEntity client = null;
 
-        var identifier = workUnitModel.SlotModel.SlotIdentifier.ClientIdentifier;
+        var identifier = workUnitModel.ClientData.SlotIdentifier.ClientIdentifier;
         string connectionString = identifier.ToConnectionString();
         string guid = identifier.HasGuid ? identifier.Guid.ToString() : null;
 
@@ -251,7 +251,7 @@ public class WorkUnitContextRepository : IWorkUnitRepository
 
     private static PlatformEntity CreatePlatformEntity(WorkUnitModel workUnitModel)
     {
-        var clientPlatform = workUnitModel.SlotModel.Client.Platform;
+        var clientPlatform = workUnitModel.ClientData.Platform;
         var clientVersion = clientPlatform?.ClientVersion;
         var operatingSystem = clientPlatform?.OperatingSystem;
 
@@ -309,9 +309,9 @@ public class WorkUnitContextRepository : IWorkUnitRepository
         workUnit.ProteinID = proteinID;
         workUnit.ClientID = clientID;
         workUnit.PlatformID = platformID;
-        workUnit.ClientSlot = workUnitModel.SlotModel.SlotID == SlotIdentifier.NoSlotID
+        workUnit.ClientSlot = workUnitModel.ClientData.SlotIdentifier.SlotID == SlotIdentifier.NoSlotID
             ? null
-            : workUnitModel.SlotModel.SlotID;
+            : workUnitModel.ClientData.SlotIdentifier.SlotID;
 
         if (insert)
         {

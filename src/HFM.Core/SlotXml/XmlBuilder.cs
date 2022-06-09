@@ -96,7 +96,7 @@ namespace HFM.Core.SlotXml
             slotDetail.NumberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces), XsltNumberFormat);
             slotDetail.UpdateDateTime = updateDateTime;
             slotDetail.LogFileAvailable = Preferences.Get<bool>(Preference.WebGenCopyFAHlog);
-            slotDetail.LogFileName = clientData.ClientLogFileName;
+            slotDetail.LogFileName = clientData.Settings.ClientLogFileName;
             if (clientData is ICompletedFailedUnitsSource unitsSource)
             {
                 slotDetail.TotalRunCompletedUnits = unitsSource.TotalRunCompletedUnits;

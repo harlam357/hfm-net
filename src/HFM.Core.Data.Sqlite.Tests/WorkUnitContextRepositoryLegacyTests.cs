@@ -6,6 +6,7 @@ using NUnit.Framework;
 using HFM.Core.Client;
 using HFM.Core.WorkUnits;
 using HFM.Log;
+using HFM.Preferences;
 using HFM.Proteins;
 
 namespace HFM.Core.Data;
@@ -57,7 +58,7 @@ public class WorkUnitContextRepositoryLegacyTests
             Debug.WriteLine("Writing unit {0:00} on thread id: {1:00}", i, Environment.CurrentManagedThreadId);
 
             var settings = new ClientSettings { Name = "Owner", Server = "Path", Port = ClientSettings.NoPort };
-            var slotModel = new SlotModel(new NullClient { Settings = settings });
+            var slotModel = new FahClientData(new InMemoryPreferencesProvider(), new NullClient { Settings = settings }, default, SlotIdentifier.NoSlotID);
             var workUnitModel = new WorkUnitModel(slotModel, BuildWorkUnit1(i), null)
             {
                 CurrentProtein = BuildProtein1()
@@ -110,8 +111,8 @@ public class WorkUnitContextRepositoryLegacyTests
     {
         Initialize(_testScratchFile);
 
-        var slotModel = new SlotModel(new NullClient { Settings = settings }) { SlotID = slotID };
-        var workUnitModel = new WorkUnitModel(slotModel, workUnit, null)
+        var clientData = new FahClientData(new InMemoryPreferencesProvider(), new NullClient { Settings = settings }, default, slotID);
+        var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
         {
             CurrentProtein = protein
         };

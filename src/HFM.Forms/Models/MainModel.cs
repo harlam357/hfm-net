@@ -70,16 +70,16 @@ public class MainModel : ViewModelBase
         Preferences.Save();
     }
 
-    public void GridModelSelectedSlotChanged(SlotModel selectedSlot)
+    public void GridModelSelectedClientChanged(IClientData selectedClient)
     {
-        if (selectedSlot is null)
+        if (selectedClient is null)
         {
             ClientDetails = null;
         }
         else
         {
-            ClientDetails = selectedSlot.SlotIdentifier.ClientIdentifier.ToConnectionString();
-            var settings = selectedSlot.Client?.Settings;
+            ClientDetails = selectedClient.SlotIdentifier.ClientIdentifier.ToConnectionString();
+            var settings = selectedClient.Settings;
             if (settings != null && settings.Disabled)
             {
                 ClientDetails += " (Disabled)";

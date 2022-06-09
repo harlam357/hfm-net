@@ -59,7 +59,7 @@ namespace HFM.Forms.Presenters
                 // run asynchronously so binding operation can finish
                 Form.BeginInvoke(new Action(() =>
                 {
-                    Model.GridModelSelectedSlotChanged(e.SelectedSlot);
+                    Model.GridModelSelectedClientChanged(e.SelectedClient);
                     Model.GridModelSlotTotalsChanged(e.SlotTotals);
                 }), null);
             };
@@ -67,13 +67,13 @@ namespace HFM.Forms.Presenters
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(SlotCollectionModel.SelectedSlot):
+                    case nameof(SlotCollectionModel.SelectedClient):
                         // Create a local reference before handing off to BeginInvoke.
                         // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
                         // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
-                        var selectedSlot = SlotsModel.SelectedSlot;
+                        var selectedClient = SlotsModel.SelectedClient;
                         // run asynchronously so binding operation can finish
-                        Form.BeginInvoke(new Action(() => Model.GridModelSelectedSlotChanged(selectedSlot)), null);
+                        Form.BeginInvoke(new Action(() => Model.GridModelSelectedClientChanged(selectedClient)), null);
                         break;
                 }
             };
@@ -414,10 +414,10 @@ namespace HFM.Forms.Presenters
 
         public void ClientsEditClick(FahClientSettingsPresenterFactory presenterFactory)
         {
-            var selectedSlot = SlotsModel.SelectedSlot;
-            if (selectedSlot == null) return;
+            var selectedClient = SlotsModel.SelectedClient;
+            if (selectedClient == null) return;
 
-            var originalSettings = selectedSlot.Client.Settings;
+            var originalSettings = selectedClient.Settings;
             Debug.Assert(originalSettings.ClientType == ClientType.FahClient);
 
             var model = new FahClientSettingsModel(originalSettings);
@@ -444,17 +444,22 @@ namespace HFM.Forms.Presenters
         public void ClientsDeleteClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            ClientConfiguration.Remove(SlotsModel.SelectedSlot.Client.Settings.Name);
+            ClientConfiguration.Remove(SlotsModel.SelectedClient.Settings.Name);
         }
 
         public void ClientsRefreshSelectedClick()
         {
             // Check for SelectedSlot, and get out if not found
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            Task.Run(SlotsModel.SelectedSlot.Client.Retrieve);
+            var clientIdentifier = SlotsModel.SelectedClient.SlotIdentifier.ClientIdentifier;
+            var client = ClientConfiguration.GetClients().FirstOrDefault(x => x.ClientIdentifier.Equals(clientIdentifier));
+            if (client is not null)
+            {
+                Task.Run(client.Retrieve);
+            }
         }
 
         public void ClientsRefreshAllClick()
@@ -465,9 +470,9 @@ namespace HFM.Forms.Presenters
         public void ClientsViewCachedLogClick(LocalProcessService localProcess)
         {
             // Check for SelectedSlot, and get out if not found
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), SlotsModel.SelectedSlot.Client.Settings.ClientLogFileName);
+            string path = Path.Combine(Preferences.Get<string>(Preference.CacheDirectory), SlotsModel.SelectedClient.Settings.ClientLogFileName);
             if (File.Exists(path))
             {
                 string errorMessage = String.Format(CultureInfo.CurrentCulture,
@@ -480,7 +485,7 @@ namespace HFM.Forms.Presenters
             }
             else
             {
-                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", SlotsModel.SelectedSlot.Client.Settings.Name);
+                string message = String.Format(CultureInfo.CurrentCulture, "The log file for '{0}' does not exist.", SlotsModel.SelectedClient.Settings.Name);
                 MessageBox.ShowInformation(Form, message, Core.Application.NameAndVersion);
             }
         }
@@ -488,39 +493,39 @@ namespace HFM.Forms.Presenters
         // Grid Context Menu Handling Methods
         public void ClientsFoldSlotClick()
         {
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedClient is IFahClientCommand client)
             {
-                client.Fold(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Fold(SlotsModel.SelectedClient.SlotIdentifier.SlotID);
             }
         }
 
         public void ClientsPauseSlotClick()
         {
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedClient is IFahClientCommand client)
             {
-                client.Pause(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Pause(SlotsModel.SelectedClient.SlotIdentifier.SlotID);
             }
         }
 
         public void ClientsFinishSlotClick()
         {
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            if (SlotsModel.SelectedSlot.Client is IFahClientCommand client)
+            if (SlotsModel.SelectedClient is IFahClientCommand client)
             {
-                client.Finish(SlotsModel.SelectedSlot.SlotIdentifier.SlotID);
+                client.Finish(SlotsModel.SelectedClient.SlotIdentifier.SlotID);
             }
         }
 
         public void CopyPRCGToClipboardClicked()
         {
-            if (SlotsModel.SelectedSlot == null) return;
+            if (SlotsModel.SelectedClient == null) return;
 
-            string projectString = SlotsModel.SelectedSlot.WorkUnitModel.WorkUnit.ToProjectString();
+            string projectString = SlotsModel.SelectedClient.ProjectInfo.ToProjectString();
 
             // TODO: Replace ClipboardWrapper.SetText() with abstraction
             ClipboardWrapper.SetText(projectString);
@@ -668,10 +673,9 @@ namespace HFM.Forms.Presenters
         {
             int projectID = 0;
 
-            // Check for SelectedSlot, and if found... load its ProjectID.
-            if (SlotsModel.SelectedSlot != null)
+            if (SlotsModel.SelectedClient != null)
             {
-                projectID = SlotsModel.SelectedSlot.WorkUnitModel.WorkUnit.ProjectID;
+                projectID = SlotsModel.SelectedClient.ProjectInfo.ProjectID;
             }
 
             presenter.Model.DefaultProjectID = projectID;

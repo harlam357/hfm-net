@@ -381,7 +381,7 @@ namespace HFM.Core.Client
                 int count = _Random.Next(1, 5);
                 for (int i = 0; i < count; i++)
                 {
-                    collection.Add(new SlotModel(this));
+                    collection.Add(new ClientData());
                 }
             }
         }

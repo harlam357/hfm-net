@@ -607,8 +607,8 @@ public class WorkUnitModelTests
 
     private static WorkUnitModel CreateWorkUnitModel(Protein protein, WorkUnit workUnit, IProteinBenchmarkRepository benchmarks = null)
     {
-        var slotModel = new SlotModel(new NullClient(null, null) { Settings = new ClientSettings() });
-        return new WorkUnitModel(slotModel, workUnit, benchmarks)
+        var clientData = new ClientData();
+        return new WorkUnitModel(clientData, workUnit, benchmarks)
         {
             CurrentProtein = protein ?? new Protein()
         };

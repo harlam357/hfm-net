@@ -101,45 +101,45 @@ public class MainModelTests
     }
 
     [Test]
-    public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsNullWhenSenderIsMainGridModelWithNullSelectedSlot()
+    public void MainModel_GridModelSelectedClientChanged_SetsClientDetailsNullWhenSenderIsMainGridModelWithNullSelectedSlot()
     {
         // Arrange
         var model = CreateModel();
         model.ClientDetails = "foo";
-        SlotModel selectedSlot = null;
+        ClientData selectedClient = null;
         // Act
         // ReSharper disable once ExpressionIsAlwaysNull
-        model.GridModelSelectedSlotChanged(selectedSlot);
+        model.GridModelSelectedClientChanged(selectedClient);
         // Assert
         Assert.IsNull(model.ClientDetails);
     }
 
     [Test]
-    public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlot()
+    public void MainModel_GridModelSelectedClientChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlot()
     {
         // Arrange
         var model = CreateModel();
-        var selectedSlot = new SlotModel(new NullClient
+        var selectedClient = new FahClientData(new InMemoryPreferencesProvider(), new NullClient
         {
             Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort }
-        });
+        }, default, SlotIdentifier.NoSlotID);
         // Act
-        model.GridModelSelectedSlotChanged(selectedSlot);
+        model.GridModelSelectedClientChanged(selectedClient);
         // Assert
         Assert.AreEqual("test:36330", model.ClientDetails);
     }
 
     [Test]
-    public void MainModel_GridModelSelectedSlotChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlotClientDisabled()
+    public void MainModel_GridModelSelectedClientChanged_SetsClientDetailsWhenSenderIsMainGridModelWithSelectedSlotClientDisabled()
     {
         // Arrange
         var model = CreateModel();
-        var selectedSlot = new SlotModel(new NullClient
+        var selectedClient = new FahClientData(new InMemoryPreferencesProvider(), new NullClient
         {
             Settings = new ClientSettings { Server = "test", Port = ClientSettings.DefaultPort, Disabled = true }
-        });
+        }, default, SlotIdentifier.NoSlotID);
         // Act
-        model.GridModelSelectedSlotChanged(selectedSlot);
+        model.GridModelSelectedClientChanged(selectedClient);
         // Assert
         Assert.AreEqual("test:36330 (Disabled)", model.ClientDetails);
     }

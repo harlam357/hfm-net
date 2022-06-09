@@ -11,9 +11,9 @@ namespace HFM.Core.Client;
 public class SlotModelTests
 {
     [TestFixture]
-    public class GivenFahClientSlotModelThatDisplaysVersions
+    public class GivenFahClientDataThatDisplaysVersions
     {
-        private FahClientSlotModel _slotModel;
+        private FahClientData _clientData;
 
         [SetUp]
         public void BeforeEach()
@@ -22,9 +22,9 @@ public class SlotModelTests
             var preferences = new InMemoryPreferencesProvider();
             preferences.Set(Preference.DisplayVersions, true);
 
-            _slotModel = new FahClientSlotModel(preferences, client, default, SlotIdentifier.NoSlotID);
-            _slotModel.Description = new GPUSlotDescription { Processor = "GeForce RTX 3070 Ti" };
-            _slotModel.WorkUnitModel.WorkUnit.Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA)
+            _clientData = new FahClientData(preferences, client, default, SlotIdentifier.NoSlotID);
+            _clientData.Description = new GPUSlotDescription { Processor = "GeForce RTX 3070 Ti" };
+            _clientData.WorkUnitModel.WorkUnit.Platform = new WorkUnitPlatform(WorkUnitPlatformImplementation.CUDA)
             {
                 DriverVersion = "511.79"
             };
@@ -32,12 +32,12 @@ public class SlotModelTests
 
         [Test]
         public void ThenSlotModelProcessorIncludesVersionInformation() =>
-            Assert.AreEqual("GeForce RTX 3070 Ti (CUDA 511.79)", _slotModel.Processor);
+            Assert.AreEqual("GeForce RTX 3070 Ti (CUDA 511.79)", _clientData.Processor);
 
         [Test]
         public void ThenProteinBenchmarkDetailSourceProcessorDoesNotIncludeVersionInformation()
         {
-            var source = (IProteinBenchmarkDetailSource)_slotModel;
+            var source = (IProteinBenchmarkDetailSource)_clientData;
             Assert.AreEqual("GeForce RTX 3070 Ti", source.Processor);
         }
     }
@@ -48,7 +48,7 @@ public class SlotModelTests
         [Test]
         public void IsThreadSafe()
         {
-            var slot = new SlotModel(new MockClient());
+            var clientData = new ClientData();
             var random = new Random();
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             var token = cts.Token;
@@ -57,7 +57,7 @@ public class SlotModelTests
             {
                 while (true)
                 {
-                    slot.CurrentLogLines = Enumerable.Repeat(new LogLine(), random.Next(1, 5)).ToList();
+                    clientData.CurrentLogLines = Enumerable.Repeat(new LogLine(), random.Next(1, 5)).ToList();
                     if (token.IsCancellationRequested)
                     {
                         break;
@@ -71,7 +71,7 @@ public class SlotModelTests
                 .Select(i => Task.Run(() =>
                 {
                     Thread.Sleep(10);
-                    _ = slot.CurrentLogLines.ToList();
+                    _ = clientData.CurrentLogLines.ToList();
                 }))
                 .ToArray();
 

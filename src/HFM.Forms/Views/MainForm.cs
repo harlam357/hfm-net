@@ -127,23 +127,23 @@ namespace HFM.Forms.Views
             slotsModel.Reset += (s, e) =>
             {
                 // run asynchronously so binding operation can finish
-                BeginInvoke(new Action(() => LoadSelectedSlot(e.SelectedSlot, e.WorkUnitQueue, e.LogLines)));
+                BeginInvoke(new Action(() => LoadSelectedClient(e.SelectedClient, e.WorkUnitQueue, e.LogLines)));
             };
 
             slotsModel.PropertyChanged += (s, e) =>
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(SlotCollectionModel.SelectedSlot):
+                    case nameof(SlotCollectionModel.SelectedClient):
                         // Create a local reference before handing off to BeginInvoke.
                         // This ensures that the BeginInvoke action uses the state of SlotsModel properties available now,
                         // not the state of SlotsModel properties when the BeginInvoke action is executed (at a later time).
-                        var selectedSlot = slotsModel.SelectedSlot;
-                        var workUnitQueue = selectedSlot?.WorkUnitQueue;
-                        var logLines = selectedSlot?.CurrentLogLines;
+                        var selectedClient = slotsModel.SelectedClient;
+                        var workUnitQueue = (selectedClient as FahClientData)?.WorkUnitQueue;
+                        var logLines = selectedClient?.CurrentLogLines;
 
                         // run asynchronously so binding operation can finish
-                        BeginInvoke(new Action(() => LoadSelectedSlot(selectedSlot, workUnitQueue, logLines)));
+                        BeginInvoke(new Action(() => LoadSelectedClient(selectedClient, workUnitQueue, logLines)));
                         break;
                 }
             };
@@ -259,10 +259,10 @@ namespace HFM.Forms.Views
                 .ToList();
         }
 
-        private void LoadSelectedSlot(SlotModel selectedSlot, WorkUnitQueueItemCollection workUnitQueue, IReadOnlyCollection<LogLine> logLines)
+        private void LoadSelectedClient(IClientData selectedClient, WorkUnitQueueItemCollection workUnitQueue, IReadOnlyCollection<LogLine> logLines)
         {
             queueControl.SetWorkUnitQueue(workUnitQueue);
-            txtLogFile.SetLogLines(selectedSlot, logLines);
+            txtLogFile.SetLogLines(selectedClient, logLines);
             if (_presenter.Model.FollowLog)
             {
                 txtLogFile.ScrollToBottom();

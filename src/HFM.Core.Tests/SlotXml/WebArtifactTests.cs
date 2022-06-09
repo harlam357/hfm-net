@@ -154,7 +154,7 @@ namespace HFM.Core.SlotXml
 
             // setup slot
             var client = new NullClient { Settings = new ClientSettings { Name = "Test2" } };
-            var slot = new SlotModel(client);
+            var slot = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID);
             var logLines = new List<Log.LogLine>
             {
                 new() { LineType = LogLineType.LogOpen, Index = 1, Raw = "Open" }
@@ -165,7 +165,7 @@ namespace HFM.Core.SlotXml
 
             // setup slot
             client = new NullClient { Settings = new ClientSettings { Name = "Test1" } };
-            slot = new SlotModel(client);
+            slot = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID);
             collection.Add(slot);
 
             return collection;

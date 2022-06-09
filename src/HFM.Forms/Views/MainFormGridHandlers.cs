@@ -29,7 +29,7 @@ namespace HFM.Forms.Views
             }
             else
             {
-                tooltipText = column?.GetMouseOverText(GetRowSlotModel(info.RowIndex));
+                tooltipText = column?.GetMouseOverText(GetRowClient(info.RowIndex));
             }
 
             if (String.IsNullOrWhiteSpace(tooltipText))
@@ -45,7 +45,7 @@ namespace HFM.Forms.Views
         private void DataGridViewCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             var column = SlotsGridColumns.Find(GetColumnName(e.ColumnIndex));
-            column?.PaintCell(dataGridView1, e, GetRowSlotModel(e.RowIndex));
+            column?.PaintCell(dataGridView1, e, GetRowClient(e.RowIndex));
         }
 
         private void DataGridViewColumnDividerDoubleClick(object sender, DataGridViewColumnDividerDoubleClickEventArgs e)
@@ -68,7 +68,7 @@ namespace HFM.Forms.Views
             {
                 for (int rowIndex = 0; rowIndex < dataGridView1.Rows.Count; rowIndex++)
                 {
-                    var slotModel = GetRowSlotModel(rowIndex);
+                    var slotModel = GetRowClient(rowIndex);
                     if (slotModel is null)
                     {
                         continue;
@@ -102,11 +102,11 @@ namespace HFM.Forms.Views
             return dataGridView1.Columns[index].Name;
         }
 
-        private SlotModel GetRowSlotModel(int index)
+        private IClientData GetRowClient(int index)
         {
             if (0 > index || index >= dataGridView1.Rows.Count) return null;
 
-            return (SlotModel)dataGridView1.Rows[index].DataBoundItem;
+            return (IClientData)dataGridView1.Rows[index].DataBoundItem;
         }
 
         private SlotsGridColumnCollection SlotsGridColumns { get; }

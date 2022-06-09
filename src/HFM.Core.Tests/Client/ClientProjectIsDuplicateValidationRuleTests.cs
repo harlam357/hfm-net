@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 
 using HFM.Core.WorkUnits;
+using HFM.Preferences;
 
 namespace HFM.Core.Client;
 
@@ -11,9 +12,9 @@ public class ClientProjectIsDuplicateValidationRuleTests
     public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenProjectsAreDuplicates()
     {
         // Arrange
-        var slotModel1 = new SlotModel(new NullClient());
+        var slotModel1 = CreateFahClientData(new NullClient());
         slotModel1.WorkUnitModel = CreateWorkUnitModel(slotModel1, new WorkUnit { ProjectID = 1 });
-        var slotModel2 = new SlotModel(new NullClient());
+        var slotModel2 = CreateFahClientData(new NullClient());
         slotModel2.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
         var collection = new List<IClientData> { slotModel1, slotModel2 };
         var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(collection));
@@ -28,9 +29,9 @@ public class ClientProjectIsDuplicateValidationRuleTests
     public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenProjectsAreNotDuplicates()
     {
         // Arrange
-        var slotModel1 = new SlotModel(new NullClient());
+        var slotModel1 = CreateFahClientData(new NullClient());
         slotModel1.WorkUnitModel = CreateWorkUnitModel(slotModel1, new WorkUnit { ProjectID = 1 });
-        var slotModel2 = new SlotModel(new NullClient());
+        var slotModel2 = CreateFahClientData(new NullClient());
         slotModel2.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 2 });
         var collection = new List<IClientData> { slotModel1, slotModel2 };
         var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(collection));
@@ -45,11 +46,11 @@ public class ClientProjectIsDuplicateValidationRuleTests
     public void ClientProjectIsDuplicateValidationRule_FindDuplicateProjects_WhenSomeProjectsAreDuplicates()
     {
         // Arrange
-        var slotModel1 = new SlotModel(new NullClient());
+        var slotModel1 = CreateFahClientData(new NullClient());
         slotModel1.WorkUnitModel = CreateWorkUnitModel(slotModel1, new WorkUnit { ProjectID = 1 });
-        var slotModel2 = new SlotModel(new NullClient());
+        var slotModel2 = CreateFahClientData(new NullClient());
         slotModel2.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 2 });
-        var slotModel3 = new SlotModel(new NullClient());
+        var slotModel3 = CreateFahClientData(new NullClient());
         slotModel3.WorkUnitModel = CreateWorkUnitModel(slotModel2, new WorkUnit { ProjectID = 1 });
         var collection = new List<IClientData> { slotModel1, slotModel2, slotModel3 };
         var rule = new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(collection));
@@ -61,6 +62,9 @@ public class ClientProjectIsDuplicateValidationRuleTests
         Assert.IsTrue(slotModel3.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key));
     }
 
-    private static WorkUnitModel CreateWorkUnitModel(SlotModel slotModel, WorkUnit workUnit) =>
-        new(slotModel, workUnit, null);
+    private static FahClientData CreateFahClientData(IClient client) =>
+        new(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID);
+
+    private static WorkUnitModel CreateWorkUnitModel(IClientData clientData, WorkUnit workUnit) =>
+        new(clientData, workUnit, null);
 }

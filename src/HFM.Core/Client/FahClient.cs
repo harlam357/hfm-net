@@ -46,10 +46,10 @@ public class FahClient : Client, IFahClient, IFahClientCommand
     public FahClientConnection Connection { get; protected set; }
 
     public FahClient(ILogger logger,
-        IPreferences preferences,
-        IProteinBenchmarkRepository benchmarks,
-        IProteinService proteinService,
-        IWorkUnitRepository workUnitRepository)
+                     IPreferences preferences,
+                     IProteinBenchmarkRepository benchmarks,
+                     IProteinService proteinService,
+                     IWorkUnitRepository workUnitRepository)
         : base(logger, preferences)
     {
         Benchmarks = benchmarks;
@@ -89,9 +89,11 @@ public class FahClient : Client, IFahClient, IFahClientCommand
                 var slotDescription = SlotDescription.Parse(slot.Description);
                 var status = (SlotStatus)Enum.Parse(typeof(SlotStatus), slot.Status, true);
                 var slotID = slot.ID.GetValueOrDefault();
-                var slotModel = new FahClientSlotModel(Preferences, this, status, slotID);
-                slotModel.Description = slotDescription;
-                collection.Add(slotModel);
+                var clientData = new FahClientData(Preferences, this, status, slotID)
+                {
+                    Description = slotDescription
+                };
+                collection.Add(clientData);
             }
         }
         else
@@ -213,24 +215,24 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         var workUnitQueueBuilder = new WorkUnitQueueItemCollectionBuilder(
             Messages.UnitCollection, Messages.Info?.System);
 
-        foreach (var slotModel in ClientDataCollection.OfType<FahClientSlotModel>())
+        foreach (var clientData in ClientDataCollection.Cast<FahClientData>())
         {
-            var previousWorkUnitModel = slotModel.WorkUnitModel;
-            var workUnits = workUnitsBuilder.BuildForSlot(slotModel.SlotID, slotModel.Description, previousWorkUnitModel.WorkUnit);
-            var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(slotModel, x)));
+            var previousWorkUnitModel = clientData.WorkUnitModel;
+            var workUnits = workUnitsBuilder.BuildForSlot(clientData.SlotID, clientData.Description, previousWorkUnitModel.WorkUnit);
+            var workUnitModels = new WorkUnitModelCollection(workUnits.Select(x => BuildWorkUnitModel(clientData, x)));
 
-            await PopulateSlotModel(slotModel, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
+            await PopulateSlotModel(clientData, workUnits, workUnitModels, workUnitQueueBuilder).ConfigureAwait(false);
             foreach (var m in workUnitModels)
             {
                 await UpdateWorkUnitRepository(m).ConfigureAwait(false);
             }
 
-            slotModel.WorkUnitModel.ShowProductionTrace(Logger, slotModel.Name, slotModel.Status,
+            clientData.WorkUnitModel.ShowProductionTrace(Logger, clientData.Name, clientData.Status,
                 Preferences.Get<PPDCalculation>(Preference.PPDCalculation),
                 Preferences.Get<BonusCalculation>(Preference.BonusCalculation));
 
-            string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", slotModel.Status);
-            Logger.Info(String.Format(Logging.Logger.NameFormat, slotModel.Name, statusMessage));
+            string statusMessage = String.Format(CultureInfo.CurrentCulture, "Slot Status: {0}", clientData.Status);
+            Logger.Info(String.Format(Logging.Logger.NameFormat, clientData.Name, statusMessage));
         }
 
         string message = String.Format(CultureInfo.CurrentCulture, "Retrieval finished: {0}", sw.GetExecTime());
@@ -262,51 +264,51 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         return logLines is null ? Array.Empty<LogLine>() : logLines.ToList();
     }
 
-    private WorkUnitModel BuildWorkUnitModel(SlotModel slotModel, WorkUnit workUnit)
+    private WorkUnitModel BuildWorkUnitModel(IClientData clientData, WorkUnit workUnit)
     {
-        Debug.Assert(slotModel != null);
+        Debug.Assert(clientData != null);
         Debug.Assert(workUnit != null);
 
         var protein = ProteinService?.GetOrRefresh(workUnit.ProjectID) ?? new Protein();
-        return new WorkUnitModel(slotModel, workUnit, Benchmarks)
+        return new WorkUnitModel(clientData, workUnit, Benchmarks)
         {
             CurrentProtein = protein
         };
     }
 
-    private async Task PopulateSlotModel(FahClientSlotModel slotModel,
-        WorkUnitCollection workUnits,
-        WorkUnitModelCollection workUnitModels,
-        WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
+    private async Task PopulateSlotModel(FahClientData clientData,
+                                         WorkUnitCollection workUnits,
+                                         WorkUnitModelCollection workUnitModels,
+                                         WorkUnitQueueItemCollectionBuilder workUnitQueueBuilder)
     {
-        Debug.Assert(slotModel != null);
+        Debug.Assert(clientData != null);
         Debug.Assert(workUnits != null);
         Debug.Assert(workUnitModels != null);
         Debug.Assert(workUnitQueueBuilder != null);
 
-        if (slotModel.SlotType == SlotType.CPU)
+        if (clientData.SlotType == SlotType.CPU)
         {
-            slotModel.Description.Processor = Messages.Info?.System?.CPU;
+            clientData.Description.Processor = Messages.Info?.System?.CPU;
         }
-        slotModel.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(slotModel.SlotID);
-        slotModel.CurrentLogLines = EnumerateSlotModelLogLines(slotModel.SlotID, workUnits);
+        clientData.WorkUnitQueue = workUnitQueueBuilder.BuildForSlot(clientData.SlotID);
+        clientData.CurrentLogLines = EnumerateSlotModelLogLines(clientData.SlotID, workUnits);
 
         if (WorkUnitRepository is not null && Messages.ClientRun is not null)
         {
             var r = WorkUnitRepository;
-            var slotIdentifier = slotModel.SlotIdentifier;
+            var slotIdentifier = clientData.SlotIdentifier;
             var clientStartTime = Messages.ClientRun.Data.StartTime;
 
-            slotModel.TotalRunCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
-            slotModel.TotalCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, null).ConfigureAwait(false);
-            slotModel.TotalRunFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
-            slotModel.TotalFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, null).ConfigureAwait(false);
+            clientData.TotalRunCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
+            clientData.TotalCompletedUnits = (int)await r.CountCompletedAsync(slotIdentifier, null).ConfigureAwait(false);
+            clientData.TotalRunFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, clientStartTime).ConfigureAwait(false);
+            clientData.TotalFailedUnits = (int)await r.CountFailedAsync(slotIdentifier, null).ConfigureAwait(false);
         }
 
         // Update the WorkUnitModel if we have a current unit index
         if (workUnits.CurrentID != WorkUnitCollection.NoID && workUnitModels.ContainsID(workUnits.CurrentID))
         {
-            slotModel.WorkUnitModel = workUnitModels[workUnits.CurrentID];
+            clientData.WorkUnitModel = workUnitModels[workUnits.CurrentID];
         }
     }
 
@@ -321,7 +323,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
                     if (Logger.IsDebugEnabled)
                     {
                         string message = $"Updated {workUnitModel.WorkUnit.ToProjectString()} in database.";
-                        Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.SlotModel.SlotIdentifier.Name, message));
+                        Logger.Debug(String.Format(Logging.Logger.NameFormat, workUnitModel.ClientData.SlotIdentifier.Name, message));
                     }
                 }
             }
@@ -332,33 +334,33 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         }
     }
 
-    public void Fold(int? slotId)
+    public void Fold(int? slotID)
     {
         if (!Connected)
         {
             return;
         }
-        string command = slotId.HasValue ? "unpause " + slotId.Value : "unpause";
+        string command = slotID.HasValue ? "unpause " + slotID.Value : "unpause";
         Connection.CreateCommand(command).Execute();
     }
 
-    public void Pause(int? slotId)
+    public void Pause(int? slotID)
     {
         if (!Connected)
         {
             return;
         }
-        string command = slotId.HasValue ? "pause " + slotId.Value : "pause";
+        string command = slotID.HasValue ? "pause " + slotID.Value : "pause";
         Connection.CreateCommand(command).Execute();
     }
 
-    public void Finish(int? slotId)
+    public void Finish(int? slotID)
     {
         if (!Connected)
         {
             return;
         }
-        string command = slotId.HasValue ? "finish " + slotId.Value : "finish";
+        string command = slotID.HasValue ? "finish " + slotID.Value : "finish";
         Connection.CreateCommand(command).Execute();
     }
 }

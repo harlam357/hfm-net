@@ -19,7 +19,7 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
 {
     public int ID => WorkUnit.ID;
 
-    public SlotModel SlotModel { get; }
+    public IClientData ClientData { get; }
 
     public WorkUnit WorkUnit { get; }
 
@@ -27,18 +27,18 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
 
     private readonly IProteinBenchmarkRepository _benchmarks;
 
-    public static WorkUnitModel Empty(SlotModel slotModel) =>
-        new(slotModel, new WorkUnit(), null);
+    public static WorkUnitModel Empty(IClientData clientData) =>
+        new(clientData, new WorkUnit(), null);
 
-    public WorkUnitModel(SlotModel slotModel, WorkUnit workUnit, IProteinBenchmarkRepository benchmarks)
+    public WorkUnitModel(IClientData clientData, WorkUnit workUnit, IProteinBenchmarkRepository benchmarks)
     {
-        SlotModel = slotModel ?? throw new ArgumentNullException(nameof(slotModel));
+        ClientData = clientData ?? throw new ArgumentNullException(nameof(clientData));
         WorkUnit = workUnit ?? throw new ArgumentNullException(nameof(workUnit));
         _benchmarks = benchmarks ?? NullProteinBenchmarkRepository.Instance;
     }
 
     public ProteinBenchmarkIdentifier BenchmarkIdentifier =>
-        SlotModel is IProteinBenchmarkDetailSource detailSource
+        ClientData is IProteinBenchmarkDetailSource detailSource
             ? new ProteinBenchmarkIdentifier(WorkUnit.ProjectID, detailSource.Processor, detailSource.Threads.GetValueOrDefault())
             : new ProteinBenchmarkIdentifier(WorkUnit.ProjectID);
 
@@ -198,7 +198,7 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
             return TimeSpan.FromSeconds(rawTime);
         }
 
-        var benchmark = _benchmarks.GetBenchmark(SlotModel.SlotIdentifier, BenchmarkIdentifier);
+        var benchmark = _benchmarks.GetBenchmark(ClientData.SlotIdentifier, BenchmarkIdentifier);
         return benchmark?.AverageFrameTime ?? TimeSpan.Zero;
     }
 

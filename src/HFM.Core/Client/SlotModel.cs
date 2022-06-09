@@ -2,7 +2,6 @@
 using System.Text;
 
 using HFM.Core.WorkUnits;
-using HFM.Log;
 using HFM.Preferences;
 using HFM.Proteins;
 
@@ -21,146 +20,7 @@ public enum UnitTotalsType
     ClientStart
 }
 
-public interface IClientData
-{
-    SlotStatus Status { get; }
-    int PercentComplete { get; }
-    string Name { get; }
-    string SlotTypeString { get; }
-    string Processor { get; }
-    TimeSpan TPF { get; }
-    double PPD { get; }
-    double UPD { get; }
-    TimeSpan ETA { get; }
-    DateTime ETADate { get; }
-    string Core { get; }
-    string CoreID { get; }
-    string ProjectRunCloneGen { get; }
-    double Credit { get; }
-    int Completed { get; }
-    int Failed { get; }
-    string Username { get; }
-    DateTime Assigned { get; }
-    DateTime PreferredDeadline { get; }
-    IProjectInfo ProjectInfo { get; }
-    IProductionProvider ProductionProvider { get; }
-    IReadOnlyCollection<LogLine> CurrentLogLines { get; }
-    ValidationRuleErrors Errors { get; }
-
-    string FoldingID { get; }
-    int Team { get; }
-    string ClientLogFileName { get; }
-    ClientPlatform Platform { get; }
-    Protein CurrentProtein { get; }
-
-    SlotIdentifier SlotIdentifier { get; }
-    ProteinBenchmarkIdentifier BenchmarkIdentifier { get; }
-}
-
-public class ClientData : IClientData
-{
-    public virtual SlotStatus Status { get; set; }
-    public virtual int PercentComplete { get; set; }
-    public virtual string Name { get; set; }
-    public virtual string SlotTypeString { get; set; }
-    public virtual string Processor { get; set; }
-    public virtual TimeSpan TPF { get; set; }
-    public virtual double PPD { get; set; }
-    public virtual double UPD { get; set; }
-    public virtual TimeSpan ETA { get; set; }
-    public virtual DateTime ETADate { get; set; }
-    public virtual string Core { get; set; }
-    public virtual string CoreID { get; set; }
-    public virtual string ProjectRunCloneGen { get; set; }
-    public virtual double Credit { get; set; }
-    public virtual int Completed { get; set; }
-    public virtual int Failed { get; set; }
-    public virtual string Username { get; set; }
-    public virtual DateTime Assigned { get; set; }
-    public virtual DateTime PreferredDeadline { get; set; }
-    public virtual IProjectInfo ProjectInfo { get; set; }
-    public virtual IProductionProvider ProductionProvider { get; set; }
-    public virtual IReadOnlyCollection<LogLine> CurrentLogLines { get; set; } = new List<LogLine>();
-    public ValidationRuleErrors Errors { get; } = new();
-
-    public virtual string FoldingID { get; set; }
-    public virtual int Team { get; set; }
-    public virtual string ClientLogFileName { get; set; }
-    public virtual ClientPlatform Platform { get; set; }
-    public virtual Protein CurrentProtein { get; set; }
-
-    public virtual SlotIdentifier SlotIdentifier { get; set; }
-    public virtual ProteinBenchmarkIdentifier BenchmarkIdentifier { get; set; }
-}
-
-public class SlotModel : ClientData, IProteinBenchmarkDetailSource
-{
-    public IClient Client { get; }
-
-    public WorkUnitModel WorkUnitModel { get; set; }
-
-    public SlotModel(IClient client)
-    {
-        Client = client ?? throw new ArgumentNullException(nameof(client));
-        WorkUnitModel = WorkUnitModel.Empty(this);
-    }
-
-    public int SlotID { get; set; } = SlotIdentifier.NoSlotID;
-
-    public override string Name => SlotIdentifier.Name;
-
-    public SlotType SlotType => Description?.SlotType ?? default;
-
-    string IProteinBenchmarkDetailSource.Processor => Description?.Processor;
-
-    public override string Processor => Description?.Processor;
-
-    public int? Threads => Description is CPUSlotDescription cpu ? cpu.CPUThreads : null;
-
-    public SlotDescription Description { get; set; }
-
-    public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
-
-    public override IProjectInfo ProjectInfo => WorkUnitModel.WorkUnit;
-
-    public override IProductionProvider ProductionProvider => WorkUnitModel;
-
-    public override string FoldingID => WorkUnitModel.WorkUnit.FoldingID;
-
-    public override int Team => WorkUnitModel.WorkUnit.Team;
-
-    public override string ClientLogFileName => Client.Settings.ClientLogFileName;
-
-    public override ClientPlatform Platform => Client.Platform;
-
-    public override Protein CurrentProtein => WorkUnitModel.CurrentProtein;
-
-    public override SlotIdentifier SlotIdentifier => new(Client.Settings.ClientIdentifier, SlotID);
-
-    public override ProteinBenchmarkIdentifier BenchmarkIdentifier => WorkUnitModel.BenchmarkIdentifier;
-
-    public static SlotModel CreateOfflineSlotModel(IClient client) =>
-        new(client) { Status = SlotStatus.Offline };
-
-    public static void ValidateRules(ICollection<IClientData> collection, IPreferences preferences)
-    {
-        var rules = new IClientDataValidationRule[]
-        {
-            new ClientUsernameValidationRule(preferences),
-            new ClientProjectIsDuplicateValidationRule(ClientProjectIsDuplicateValidationRule.FindDuplicateProjects(collection))
-        };
-
-        foreach (var slot in collection)
-        {
-            foreach (var rule in rules)
-            {
-                rule.Validate(slot);
-            }
-        }
-    }
-}
-
-public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
+public class FahClientData : ClientData, IProteinBenchmarkDetailSource, ICompletedFailedUnitsSource, IFahClientCommand
 {
     private PPDCalculation PPDCalculation => Preferences.Get<PPDCalculation>(Preference.PPDCalculation);
 
@@ -170,31 +30,49 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
 
     private int DecimalPlaces => Preferences.Get<int>(Preference.DecimalPlaces);
 
-    private IPreferences Preferences { get; }
+    public IPreferences Preferences { get; }
 
-    private readonly SlotStatus _status;
+    public IClient Client { get; }
 
-    public FahClientSlotModel(IPreferences preferences, IClient client, SlotStatus status, int slotID) : base(client)
+    public int SlotID { get; }
+
+    public WorkUnitModel WorkUnitModel { get; set; }
+
+    public FahClientData(IPreferences preferences, IClient client, SlotStatus status, int slotID)
     {
         Preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
-        _status = status;
+        Client = client ?? throw new ArgumentNullException(nameof(client));
+        base.Status = status;
         SlotID = slotID;
+        WorkUnitModel = WorkUnitModel.Empty(this);
     }
 
+    public SlotDescription Description { get; set; }
+
+    public WorkUnitQueueItemCollection WorkUnitQueue { get; set; }
+
+    public SlotType SlotType => Description?.SlotType ?? default;
+
+    string IProteinBenchmarkDetailSource.Processor => Description?.Processor;
+
+    public int? Threads => Description is CPUSlotDescription cpu ? cpu.CPUThreads : null;
+
     public override SlotStatus Status =>
-        _status == SlotStatus.Running
+        base.Status == SlotStatus.Running
             ? IsUsingBenchmarkFrameTime
                 ? SlotStatus.RunningNoFrameTimes
                 : SlotStatus.Running
-            : _status;
+            : base.Status;
 
-    /// <summary>
-    /// Current progress (percentage) of the unit
-    /// </summary>
+    private bool IsUsingBenchmarkFrameTime =>
+        WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+
     public override int PercentComplete =>
         Status.IsRunning() || Status == SlotStatus.Paused
             ? WorkUnitModel.PercentComplete
             : 0;
+
+    public override string Name => SlotIdentifier.Name;
 
     public override string SlotTypeString
     {
@@ -222,55 +100,53 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
     {
         get
         {
-            if (ShowVersions && WorkUnitModel.WorkUnit.Platform?.Implementation
-                    is WorkUnitPlatformImplementation.CUDA
-                    or WorkUnitPlatformImplementation.OpenCL)
-            {
-                var platform = WorkUnitModel.WorkUnit.Platform;
-                var sb = new StringBuilder(base.Processor);
-                sb.Append($" ({platform.Implementation} {platform.DriverVersion})");
-                return sb.ToString();
-            }
-            return base.Processor;
+            string processor = Description?.Processor;
+            var platform = WorkUnitModel.WorkUnit.Platform;
+            bool showPlatform = platform?.Implementation
+                is WorkUnitPlatformImplementation.CUDA
+                or WorkUnitPlatformImplementation.OpenCL;
+
+            return ShowVersions && showPlatform
+                ? $"{processor} ({platform.Implementation} {platform.DriverVersion})"
+                : processor;
         }
     }
 
-    private bool IsUsingBenchmarkFrameTime => WorkUnitModel.WorkUnit.HasProject() && WorkUnitModel.IsUsingBenchmarkFrameTime(PPDCalculation);
+    public override TimeSpan TPF =>
+        Status.IsRunning()
+            ? WorkUnitModel.GetFrameTime(PPDCalculation)
+            : TimeSpan.Zero;
 
-    /// <summary>
-    /// Time per frame (TPF) of the unit
-    /// </summary>
-    public override TimeSpan TPF => Status.IsRunning() ? WorkUnitModel.GetFrameTime(PPDCalculation) : TimeSpan.Zero;
+    public override double PPD =>
+        Status.IsRunning()
+            ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces)
+            : 0;
 
-    /// <summary>
-    /// Points per day (PPD) rating for this instance
-    /// </summary>
-    public override double PPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetPPD(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : 0;
+    public override double UPD =>
+        Status.IsRunning()
+            ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3)
+            : 0;
 
-    /// <summary>
-    /// Units per day (UPD) rating for this instance
-    /// </summary>
-    public override double UPD => Status.IsRunning() ? Math.Round(WorkUnitModel.GetUPD(PPDCalculation), 3) : 0;
+    public override TimeSpan ETA =>
+        Status.IsRunning()
+            ? WorkUnitModel.GetEta(PPDCalculation)
+            : TimeSpan.Zero;
 
-    /// <summary>
-    /// Estimated time of arrival (ETA) for this protein
-    /// </summary>
-    public override TimeSpan ETA => Status.IsRunning() ? WorkUnitModel.GetEta(PPDCalculation) : TimeSpan.Zero;
-
-    /// <summary>
-    /// Estimated time of arrival (ETA) for this protein
-    /// </summary>
-    public override DateTime ETADate => Status.IsRunning() ? WorkUnitModel.GetEtaDate(PPDCalculation) : DateTime.MinValue;
+    public override DateTime ETADate =>
+        Status.IsRunning()
+            ? WorkUnitModel.GetEtaDate(PPDCalculation)
+            : DateTime.MinValue;
 
     public override string Core
     {
         get
         {
-            if (ShowVersions && WorkUnitModel.WorkUnit.CoreVersion != null)
-            {
-                return String.Format(CultureInfo.InvariantCulture, "{0} ({1})", WorkUnitModel.CurrentProtein.Core, WorkUnitModel.WorkUnit.CoreVersion);
-            }
-            return WorkUnitModel.CurrentProtein.Core;
+            string core = WorkUnitModel.CurrentProtein.Core;
+            Version coreVersion = WorkUnitModel.WorkUnit.CoreVersion;
+
+            return ShowVersions && coreVersion is not null
+                ? String.Format(CultureInfo.InvariantCulture, "{0} ({1})", core, coreVersion)
+                : core;
         }
     }
 
@@ -278,7 +154,10 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
 
     public override string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
-    public override double Credit => Status.IsRunning() ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces) : WorkUnitModel.CurrentProtein.Credit;
+    public override double Credit =>
+        Status.IsRunning()
+            ? Math.Round(WorkUnitModel.GetCredit(Status, PPDCalculation, BonusCalculation), DecimalPlaces)
+            : WorkUnitModel.CurrentProtein.Credit;
 
     public override int Completed =>
         Preferences.Get<UnitTotalsType>(Preference.UnitTotals) == UnitTotalsType.All
@@ -290,29 +169,6 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
             ? TotalFailedUnits
             : TotalRunFailedUnits;
 
-    /// <summary>
-    /// Gets or sets the number of completed units since the last client start.
-    /// </summary>
-    public int TotalRunCompletedUnits { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total number of completed units.
-    /// </summary>
-    public int TotalCompletedUnits { get; set; }
-
-    /// <summary>
-    /// Gets or sets the number of failed units since the last client start.
-    /// </summary>
-    public int TotalRunFailedUnits { get; set; }
-
-    /// <summary>
-    /// Gets or sets the total number of failed units.
-    /// </summary>
-    public int TotalFailedUnits { get; set; }
-
-    /// <summary>
-    /// Combined Folding ID and Team String
-    /// </summary>
     public override string Username =>
         String.IsNullOrWhiteSpace(WorkUnitModel.WorkUnit.FoldingID)
             ? String.Empty
@@ -321,4 +177,38 @@ public class FahClientSlotModel : SlotModel, ICompletedFailedUnitsSource
     public override DateTime Assigned => WorkUnitModel.Assigned;
 
     public override DateTime PreferredDeadline => WorkUnitModel.PreferredDeadline;
+
+    // ICompletedFailedUnitsSource
+    public int TotalRunCompletedUnits { get; set; }
+
+    public int TotalCompletedUnits { get; set; }
+
+    public int TotalRunFailedUnits { get; set; }
+
+    public int TotalFailedUnits { get; set; }
+
+    public override IProjectInfo ProjectInfo => WorkUnitModel.WorkUnit;
+
+    public override IProductionProvider ProductionProvider => WorkUnitModel;
+
+    public override string FoldingID => WorkUnitModel.WorkUnit.FoldingID;
+
+    public override int Team => WorkUnitModel.WorkUnit.Team;
+
+    public override ClientSettings Settings => Client.Settings;
+
+    public override ClientPlatform Platform => Client.Platform;
+
+    public override Protein CurrentProtein => WorkUnitModel.CurrentProtein;
+
+    public override SlotIdentifier SlotIdentifier => new(Client.Settings.ClientIdentifier, SlotID);
+
+    public override ProteinBenchmarkIdentifier BenchmarkIdentifier => WorkUnitModel.BenchmarkIdentifier;
+
+    // IFahClientCommand
+    public void Fold(int? slotID) => (Client as IFahClientCommand)?.Fold(slotID);
+
+    public void Pause(int? slotID) => (Client as IFahClientCommand)?.Pause(slotID);
+
+    public void Finish(int? slotID) => (Client as IFahClientCommand)?.Finish(slotID);
 }

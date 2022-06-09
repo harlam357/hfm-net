@@ -55,7 +55,7 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var collection = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
+                var collection = _fahClient.ClientDataCollection.Cast<FahClientData>().ToList();
                 Assert.AreEqual(2, collection.Count);
                 Assert.AreEqual(SlotType.CPU, collection[0].SlotType);
                 Assert.AreEqual(4, collection[0].Threads);
@@ -72,7 +72,7 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var collection = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
+                var collection = _fahClient.ClientDataCollection.Cast<FahClientData>().ToList();
                 Assert.AreEqual(1, collection.Count);
                 Assert.AreEqual(SlotType.CPU, collection[0].SlotType);
                 Assert.AreEqual(4, collection[0].Threads);
@@ -99,7 +99,7 @@ namespace HFM.Core.Client
 
                 _fahClient.RefreshSlots();
 
-                var slots = _fahClient.ClientDataCollection.Cast<FahClientSlotModel>().ToList();
+                var slots = _fahClient.ClientDataCollection.Cast<FahClientData>().ToList();
                 Assert.AreEqual(1, slots.Count);
                 Assert.AreEqual(SlotType.Unknown, slots[0].SlotType);
                 Assert.AreEqual(SlotStatus.Disabled, slots[0].Status);
@@ -126,13 +126,13 @@ namespace HFM.Core.Client
             [Test]
             public void ThenSlotsAreUpdated()
             {
-                var slot00 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(0);
+                var slot00 = (FahClientData)_fahClient.ClientDataCollection.ElementAt(0);
                 Assert.AreEqual("AMD Ryzen 7 3700X 8-Core Processor", slot00.Processor);
                 Assert.IsNull(slot00.WorkUnitQueue);
                 Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
                 Assert.AreEqual(-1, slot00.WorkUnitModel.ID);
 
-                var slot01 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(1);
+                var slot01 = (FahClientData)_fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Geforce RTX 2060", slot01.Processor);
                 Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
@@ -175,13 +175,13 @@ namespace HFM.Core.Client
             [Test]
             public void ThenSlotsAreUpdated()
             {
-                var slot00 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(0);
+                var slot00 = (FahClientData)_fahClient.ClientDataCollection.ElementAt(0);
                 Assert.AreEqual("Tesla T4", slot00.Processor);
                 Assert.AreEqual(1, slot00.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot00.CurrentLogLines.Count);
                 Assert.AreEqual(1, slot00.WorkUnitModel.ID);
 
-                var slot01 = (SlotModel)_fahClient.ClientDataCollection.ElementAt(1);
+                var slot01 = (FahClientData)_fahClient.ClientDataCollection.ElementAt(1);
                 Assert.AreEqual("Tesla T4", slot01.Processor);
                 Assert.AreEqual(1, slot01.WorkUnitQueue.Count);
                 Assert.AreNotEqual(0, slot01.CurrentLogLines.Count);
