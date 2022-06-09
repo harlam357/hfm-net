@@ -62,8 +62,6 @@ public class FahClient : Client, IFahClient, IFahClientCommand
             new DelegateFahClientMessageAction(FahClientMessageType.Info, RefreshClientPlatform),
             new ExecuteRetrieveMessageAction(Messages, async () => await Retrieve().ConfigureAwait(false))
         };
-
-        RefreshSlots();
     }
 
     private readonly List<FahClientMessageAction> _messageActions;

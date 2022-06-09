@@ -78,7 +78,13 @@ public class ClientData : IClientData
     public virtual SlotIdentifier SlotIdentifier { get; set; }
     public virtual ProteinBenchmarkIdentifier BenchmarkIdentifier { get; set; }
 
-    public static ClientData CreateOfflineClientData() => new() { Status = SlotStatus.Offline };
+    public static ClientData Offline(ClientSettings settings) =>
+        new()
+        {
+            Status = SlotStatus.Offline,
+            Name = settings.Name,
+            Settings = settings
+        };
 
     public static void ValidateRules(ICollection<IClientData> collection, IPreferences preferences)
     {

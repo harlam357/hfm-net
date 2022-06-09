@@ -112,7 +112,7 @@ public abstract class Client : IClient
 
     protected virtual IReadOnlyCollection<IClientData> OnGetClientDataCollection()
     {
-        _clientData ??= new[] { ClientData.CreateOfflineClientData() };
+        _clientData ??= new[] { ClientData.Offline(Settings) };
         return _clientData;
     }
 
