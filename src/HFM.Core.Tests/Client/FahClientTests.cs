@@ -239,7 +239,7 @@ namespace HFM.Core.Client
                 // Arrange
                 var client = new MockFahClient();
                 bool raised = false;
-                client.ClientDataCollectionChanged += (s, e) => raised = true;
+                client.ClientDataChanged += (s, e) => raised = true;
                 // Act
                 client.RefreshSlots();
                 // Assert

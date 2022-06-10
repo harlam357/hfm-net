@@ -15,14 +15,9 @@ public interface IClient
     ClientIdentifier ClientIdentifier { get; }
 
     /// <summary>
-    /// Raised when the client data collection has changed.
+    /// Raised when the client data has changed.
     /// </summary>
-    event EventHandler ClientDataCollectionChanged;
-
-    /// <summary>
-    /// Raised when the client data retrieval process is finished.
-    /// </summary>
-    event EventHandler RetrieveFinished;
+    event EventHandler ClientDataChanged;
 
     /// <summary>
     /// Gets or sets the settings that define this client's behavior.
@@ -64,13 +59,15 @@ public abstract class Client : IClient
 {
     public ClientIdentifier ClientIdentifier => new(Settings.Name, Settings.Server, Settings.Port, Settings.Guid);
 
-    public event EventHandler ClientDataCollectionChanged;
+    public event EventHandler ClientDataChanged;
 
-    protected virtual void OnClientDataCollectionChanged() => ClientDataCollectionChanged?.Invoke(this, EventArgs.Empty);
-
-    public event EventHandler RetrieveFinished;
-
-    protected virtual void OnRetrieveFinished() => RetrieveFinished?.Invoke(this, EventArgs.Empty);
+    protected virtual void OnClientDataChanged()
+    {
+        if (!IsCancellationRequested)
+        {
+            ClientDataChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
     public ILogger Logger { get; }
 
@@ -173,7 +170,7 @@ public abstract class Client : IClient
         }
         finally
         {
-            OnRetrieveFinished();
+            OnClientDataChanged();
 
             Interlocked.Exchange(ref _retrieveLock, 0);
         }

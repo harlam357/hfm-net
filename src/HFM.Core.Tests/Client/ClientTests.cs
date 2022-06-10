@@ -192,12 +192,12 @@ namespace HFM.Core.Client
         }
 
         [Test]
-        public async Task Client_Retrieve_RaisesRetrieveFinishedEvent()
+        public async Task Client_Retrieve_RaisesClientDataChangedEvent()
         {
             // Arrange
             var client = new MockClient();
             bool raised = false;
-            client.RetrieveFinished += (s, e) => raised = true;
+            client.ClientDataChanged += (s, e) => raised = true;
             // Act
             await client.Retrieve();
             // Assert

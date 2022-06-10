@@ -87,7 +87,7 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         OnRefreshSlots(slots);
         Interlocked.Exchange(ref _clientData, slots);
 
-        OnClientDataCollectionChanged();
+        OnClientDataChanged();
     }
 
     protected virtual void OnRefreshSlots(ICollection<IClientData> collection)
@@ -212,11 +212,6 @@ public class FahClient : Client, IFahClient, IFahClientCommand
         }
 
         await Process().ConfigureAwait(false);
-    }
-
-    protected override void OnRetrieveFinished()
-    {
-        if (!IsCancellationRequested) base.OnRetrieveFinished();
     }
 
     private async Task Process()

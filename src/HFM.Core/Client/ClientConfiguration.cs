@@ -59,8 +59,7 @@ public class ClientConfiguration : IDisposable
             {
                 if (client != null)
                 {
-                    client.ClientDataCollectionChanged += OnInvalidate;
-                    client.RetrieveFinished += OnInvalidate;
+                    client.ClientDataChanged += OnInvalidate;
                     _clientDictionary.Add(client.Settings.Name, client);
                     added++;
                 }
@@ -125,8 +124,7 @@ public class ClientConfiguration : IDisposable
 
             client = _clientDictionary[key];
 
-            client.ClientDataCollectionChanged -= OnInvalidate;
-            client.RetrieveFinished -= OnInvalidate;
+            client.ClientDataChanged -= OnInvalidate;
             // update the settings
             client.Settings = settings;
             // if the key changed the client object needs removed and re-added with the correct key
@@ -135,8 +133,7 @@ public class ClientConfiguration : IDisposable
                 _clientDictionary.Remove(key);
                 _clientDictionary.Add(settings.Name, client);
             }
-            client.ClientDataCollectionChanged += OnInvalidate;
-            client.RetrieveFinished += OnInvalidate;
+            client.ClientDataChanged += OnInvalidate;
         }
         finally
         {
@@ -155,8 +152,7 @@ public class ClientConfiguration : IDisposable
         _syncLock.EnterWriteLock();
         try
         {
-            value.ClientDataCollectionChanged += OnInvalidate;
-            value.RetrieveFinished += OnInvalidate;
+            value.ClientDataChanged += OnInvalidate;
             _clientDictionary.Add(key, value);
         }
         finally
@@ -181,8 +177,7 @@ public class ClientConfiguration : IDisposable
             if (_clientDictionary.ContainsKey(key))
             {
                 client = _clientDictionary[key];
-                client.ClientDataCollectionChanged -= OnInvalidate;
-                client.RetrieveFinished -= OnInvalidate;
+                client.ClientDataChanged -= OnInvalidate;
                 client.Close();
             }
             result = _clientDictionary.Remove(key);
@@ -229,8 +224,7 @@ public class ClientConfiguration : IDisposable
             var clients = _clientDictionary.Values.ToList();
             foreach (var client in clients)
             {
-                client.ClientDataCollectionChanged -= OnInvalidate;
-                client.RetrieveFinished -= OnInvalidate;
+                client.ClientDataChanged -= OnInvalidate;
                 client.Close();
             }
             _clientDictionary.Clear();

@@ -70,7 +70,7 @@ namespace HFM.Core.Client
             var configuration = CreateConfiguration();
             var settings = new[] { new ClientSettings { Name = "test", Server = "foo" } };
             ClientConfigurationChangedEventArgs eventArgs = null;
-            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ClientConfigurationChanged += (s, e) => { eventArgs = e; };
             // Act
             configuration.Load(settings);
             // Assert
@@ -105,49 +105,29 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             var mockClient = new Mock<IClient>();
-            mockClient.SetupAdd(x => x.ClientDataCollectionChanged += It.IsAny<EventHandler>());
-            mockClient.SetupAdd(x => x.RetrieveFinished += It.IsAny<EventHandler>());
+            mockClient.SetupAdd(x => x.ClientDataChanged += It.IsAny<EventHandler>());
             // Act
             configuration.Add("test", mockClient.Object);
             // Assert
-            mockClient.VerifyAdd(x => x.ClientDataCollectionChanged += It.IsAny<EventHandler>());
-            mockClient.VerifyAdd(x => x.RetrieveFinished += It.IsAny<EventHandler>());
+            mockClient.VerifyAdd(x => x.ClientDataChanged += It.IsAny<EventHandler>());
         }
 
         [Test]
-        public void ClientConfiguration_ClientDataCollectionChangedRaisesConfigurationChanged()
+        public void ClientConfiguration_ClientDataChangedRaisesConfigurationChanged()
         {
             // Arrange
             var configuration = CreateConfiguration();
             var mockClient = new Mock<IClient>();
             bool clientInvalidateFired = false;
-            configuration.ClientConfigurationChanged += (sender, args) =>
+            configuration.ClientConfigurationChanged += (s, e) =>
             {
-                if (args.Action == ClientConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
+                if (e.Action == ClientConfigurationChangedAction.Invalidate) clientInvalidateFired = true;
             };
             configuration.Add("test", mockClient.Object);
             // Act
-            mockClient.Raise(x => x.ClientDataCollectionChanged += null, this, EventArgs.Empty);
+            mockClient.Raise(x => x.ClientDataChanged += null, this, EventArgs.Empty);
             // Assert
             Assert.IsTrue(clientInvalidateFired);
-        }
-
-        [Test]
-        public void ClientConfiguration_ClientRetrieveFinishedRaisesConfigurationChanged()
-        {
-            // Arrange
-            var configuration = CreateConfiguration();
-            var mockClient = new Mock<IClient>();
-            bool clientDataInvalidatedFired = false;
-            configuration.ClientConfigurationChanged += (sender, args) =>
-            {
-                if (args.Action == ClientConfigurationChangedAction.Invalidate) clientDataInvalidatedFired = true;
-            };
-            configuration.Add("test", mockClient.Object);
-            // Act
-            mockClient.Raise(x => x.RetrieveFinished += null, this, EventArgs.Empty);
-            // Assert
-            Assert.IsTrue(clientDataInvalidatedFired);
         }
 
         [Test]
@@ -175,7 +155,7 @@ namespace HFM.Core.Client
             var configuration = CreateConfiguration();
             configuration.Add("test", new NullClient { Settings = new ClientSettings { Name = "test", Server = "server", Port = ClientSettings.DefaultPort } });
             ClientConfigurationChangedEventArgs changedEventArgs = null;
-            configuration.ClientConfigurationChanged += (sender, e) => { changedEventArgs = e; };
+            configuration.ClientConfigurationChanged += (s, e) => { changedEventArgs = e; };
             // Act
             configuration.Edit("test", new ClientSettings { Name = "test2", Server = "server1", Port = 36331 });
             // Assert
@@ -225,7 +205,7 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             ClientConfigurationChangedEventArgs eventArgs = null;
-            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ClientConfigurationChanged += (s, e) => { eventArgs = e; };
             configuration.Add("test", new NullClient());
             // Act
             bool result = configuration.Remove("test");
@@ -285,7 +265,7 @@ namespace HFM.Core.Client
             // Arrange
             var configuration = CreateConfiguration();
             ClientConfigurationChangedEventArgs eventArgs = null;
-            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ClientConfigurationChanged += (s, e) => { eventArgs = e; };
             // Act
             configuration.Clear();
             // Assert
@@ -299,7 +279,7 @@ namespace HFM.Core.Client
             var configuration = CreateConfiguration();
             configuration.Add("test", new NullClient());
             ClientConfigurationChangedEventArgs eventArgs = null;
-            configuration.ClientConfigurationChanged += (sender, e) => { eventArgs = e; };
+            configuration.ClientConfigurationChanged += (s, e) => { eventArgs = e; };
             // Act
             configuration.Clear();
             // Assert
