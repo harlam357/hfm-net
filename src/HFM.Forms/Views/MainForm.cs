@@ -611,6 +611,7 @@ namespace HFM.Forms.Views
         private void SetupDataGridView()
         {
             dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             SetupDataGridViewColumns(dataGridView1);
 
             _columnSelector = new DataGridViewColumnSelector(dataGridView1);
