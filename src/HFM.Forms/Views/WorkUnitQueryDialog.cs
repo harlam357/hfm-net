@@ -46,6 +46,7 @@ namespace HFM.Forms.Views
         private void SetupDataGridViewColumns()
         {
             dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
 
             var queryColumn = new DataGridViewComboBoxColumn();
             var columnChoices = GetQueryFieldChoices();

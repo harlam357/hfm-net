@@ -190,6 +190,7 @@ namespace HFM.Forms.Views
             string numberFormat = NumberFormat.Get(preferences.Get<int>(Preference.DecimalPlaces));
 
             dgv.AutoGenerateColumns = false;
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             AddColumn(WorkUnitRowColumn.ProjectID, names);
             AddColumn(WorkUnitRowColumn.SlotName, names);
             AddColumn(WorkUnitRowColumn.ConnectionString, names);
