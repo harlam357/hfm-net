@@ -77,10 +77,10 @@ Function Test-Build
     Write-Host " ArtifactsPath: $ArtifactsPath"
     Write-Host "---------------------------------------------------"
     
-    Exec { & dotnet test .\HFM.Core.Data.Sqlite.Tests\HFM.Core.Data.Sqlite.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Core.Data.Sqlite.Tests.Results.trx" -r $ArtifactsPath }
-    Exec { & dotnet test .\HFM.Core.Tests\HFM.Core.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Core.Tests.Results.trx" -r $ArtifactsPath }
-    Exec { & dotnet test .\HFM.Forms.Tests\HFM.Forms.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Forms.Tests.Results.trx" -r $ArtifactsPath }
-    Exec { & dotnet test .\HFM.Preferences.Tests\HFM.Preferences.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Preferences.Tests.Results.trx" -r $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Core.Data.Sqlite.Tests\HFM.Core.Data.Sqlite.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Core.Data.Sqlite.Tests.Results.trx" --results-directory $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Core.Tests\HFM.Core.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Core.Tests.Results.trx" --results-directory $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Forms.Tests\HFM.Forms.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Forms.Tests.Results.trx" --results-directory $ArtifactsPath }
+    Exec { & dotnet test .\HFM.Preferences.Tests\HFM.Preferences.Tests.csproj --no-build -c $Configuration -l "trx;LogFileName=HFM.Preferences.Tests.Results.trx" --results-directory $ArtifactsPath }
 }
 
 Function Clean-Artifacts
