@@ -37,6 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Core.Data.Sqlite", "HFM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HFM.Core.Data.Sqlite.Tests", "HFM.Core.Data.Sqlite.Tests\HFM.Core.Data.Sqlite.Tests.csproj", "{C1A6B59C-68A6-4693-B3BA-A13A7F11E08D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{6B6E7329-9FD3-43F9-846C-CD12E45BD39E}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
