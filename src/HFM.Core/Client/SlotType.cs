@@ -12,8 +12,11 @@ public enum SlotType
 
 public static class ConvertToSlotType
 {
-    public static IEnumerable<string> CPUCoreNames { get; } = new[]
+    public static HashSet<string> CPUCoreNames { get; } = new(new[]
     {
+        "0xa7",
+        "0xa8",
+        "0xa9",
         "GROMACS",
         "DGROMACS",
         "GBGROMACS",
@@ -35,10 +38,11 @@ public static class ConvertToSlotType
         "GRO-A6",
         "GRO_A7",
         "GRO_A8"
-    };
+    }, StringComparer.OrdinalIgnoreCase);
 
-    public static IEnumerable<string> GPUCoreNames { get; } = new[]
+    public static HashSet<string> GPUCoreNames { get; } = new(new[]
     {
+        "0x22",
         "GROGPU2",
         "GROGPU2-MT",
         "OPENMM_21",
@@ -49,7 +53,7 @@ public static class ConvertToSlotType
         "NVIDIA-DEV",
         "ZETA",
         "ZETA_DEV"
-    };
+    }, StringComparer.OrdinalIgnoreCase);
 
     public static SlotType FromCoreName(string coreName)
     {
@@ -58,12 +62,12 @@ public static class ConvertToSlotType
             return SlotType.Unknown;
         }
 
-        if (GPUCoreNames.Contains(coreName, StringComparer.OrdinalIgnoreCase))
+        if (GPUCoreNames.Contains(coreName))
         {
             return SlotType.GPU;
         }
 
-        if (CPUCoreNames.Contains(coreName, StringComparer.OrdinalIgnoreCase))
+        if (CPUCoreNames.Contains(coreName))
         {
             return SlotType.CPU;
         }
