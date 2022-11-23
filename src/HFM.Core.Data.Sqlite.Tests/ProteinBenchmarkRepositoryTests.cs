@@ -14,11 +14,12 @@ namespace HFM.Core.Data;
 [TestFixture]
 public class ProteinBenchmarkRepositoryTests
 {
+    private IProteinBenchmarkRepository _repository;
+
     [TestFixture]
     public class GivenPopulatedDatabase : ProteinBenchmarkRepositoryTests
     {
         private string _connectionString;
-        private IProteinBenchmarkRepository _repository;
 
         [SetUp]
         public virtual void BeforeEach()
@@ -178,73 +179,133 @@ public class ProteinBenchmarkRepositoryTests
     }
 
     [TestFixture]
-    public class GivenCompletedWorkUnitWithNoPlatform : ProteinBenchmarkRepositoryTests
+    public class GivenWorkUnit : ProteinBenchmarkRepositoryTests
     {
         private SqliteConnection _connection;
-        private IProteinBenchmarkRepository _repository;
 
-        private readonly string _clientName = "GTX3090";
+        private const string ClientName = "GTX3090";
+        private const int ProjectID = 1;
         private readonly Guid _clientGuid = Guid.NewGuid();
-        private readonly int _projectID = 1;
         private readonly DateTime _utcNow = DateTime.UtcNow;
 
-        [SetUp]
-        public async Task BeforeEach()
+        [TestFixture]
+        public class GivenCompletedWorkUnitWithNoPlatform : GivenWorkUnit
         {
-            _connection = new SqliteConnection("Data Source=:memory:");
-            _connection.Open();
-            _repository = new TestableProteinBenchmarkRepository(_connection);
+            [SetUp]
+            public async Task BeforeEach()
+            {
+                _connection = new SqliteConnection("Data Source=:memory:");
+                _connection.Open();
+                _repository = new TestableProteinBenchmarkRepository(_connection);
 
-            var settings = new ClientSettings
-            {
-                Name = _clientName,
-                Guid = _clientGuid
-            };
-            var client = new NullClient
-            {
-                Settings = settings,
-                Platform = new ClientPlatform("7", "Windows")
-            };
-            var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID)
-            {
-                Description = new UnknownSlotDescription()
-            };
-            var workUnit = new WorkUnit
-            {
-                ProjectID = _projectID,
-                Assigned = _utcNow,
-                Finished = _utcNow.AddHours(6),
-                UnitResult = WorkUnitResult.FinishedUnit,
-                Frames = new Dictionary<int, LogLineFrameData>
+                var settings = new ClientSettings
+                {
+                    Name = ClientName,
+                    Guid = _clientGuid
+                };
+                var client = new NullClient
+                {
+                    Settings = settings,
+                    Platform = new ClientPlatform("7", "Windows")
+                };
+                var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID)
+                {
+                    Description = new UnknownSlotDescription()
+                };
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = ProjectID,
+                    Assigned = _utcNow,
+                    Finished = _utcNow.AddHours(6),
+                    UnitResult = WorkUnitResult.FinishedUnit,
+                    Frames = new Dictionary<int, LogLineFrameData>
                 {
                     { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.FromMinutes(3) } }
                 }
-            };
-            var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
-            {
-                CurrentProtein = new Protein
+                };
+                var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
                 {
-                    ProjectNumber = 1
+                    CurrentProtein = new Protein
+                    {
+                        ProjectNumber = 1
+                    }
+                };
+
+                var workUnitRepository = new TestableWorkUnitContextRepository(_connection);
+                await workUnitRepository.UpdateAsync(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _connection?.Dispose();
+
+            [Test]
+            public void ThenBenchmarksWithoutPlatformDoNotThrowOnRetrieval()
+            {
+                var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
+                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, ProjectID));
+            }
+        }
+
+        [TestFixture]
+        public class GivenWorkUnitWithNoFrameDurations : GivenWorkUnit
+        {
+            [SetUp]
+            public async Task BeforeEach()
+            {
+                _connection = new SqliteConnection("Data Source=:memory:");
+                _connection.Open();
+                _repository = new TestableProteinBenchmarkRepository(_connection);
+
+                var settings = new ClientSettings
+                {
+                    Name = ClientName,
+                    Guid = _clientGuid
+                };
+                var client = new NullClient
+                {
+                    Settings = settings,
+                    Platform = new ClientPlatform("7", "Windows")
+                };
+                var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID)
+                {
+                    Description = new UnknownSlotDescription()
+                };
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = ProjectID,
+                    Assigned = _utcNow,
+                    UnitResult = WorkUnitResult.Unknown,
+                    Frames = new Dictionary<int, LogLineFrameData>
+                {
+                    { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.Zero } }
                 }
-            };
+                };
+                var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
+                {
+                    CurrentProtein = new Protein
+                    {
+                        ProjectNumber = 1
+                    }
+                };
 
-            var workUnitRepository = new TestableWorkUnitContextRepository(_connection);
-            await workUnitRepository.UpdateAsync(workUnitModel);
+                var workUnitRepository = new TestableWorkUnitContextRepository(_connection);
+                await workUnitRepository.UpdateAsync(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _connection?.Dispose();
+
+            [Test]
+            public void ThenBenchmarksWithoutFrameDurationsDoNotThrowOnRetrieval()
+            {
+                var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
+                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, ProjectID));
+            }
         }
+    }
 
-        private class UnknownSlotDescription : SlotDescription
-        {
-            public override SlotType SlotType => SlotType.Unknown;
-        }
-
-        [TearDown]
-        public void AfterEach() => _connection?.Dispose();
-
-        [Test]
-        public void ThenBenchmarksWithoutPlatformDoNotThrowOnRetrieval()
-        {
-            var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
-            Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, _projectID));
-        }
+    private class UnknownSlotDescription : SlotDescription
+    {
+        public override SlotType SlotType => SlotType.Unknown;
     }
 }

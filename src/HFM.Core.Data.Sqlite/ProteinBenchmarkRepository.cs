@@ -202,7 +202,7 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                     SlotIdentifier = x.Key.SlotIdentifier,
                     BenchmarkIdentifier = x.Key.BenchmarkIdentifier,
                     FrameTimes = frames,
-                    MinimumFrameTime = frames.Min(y => y.Duration)
+                    MinimumFrameTime = frames.Any() ? frames.Min(y => y.Duration) : TimeSpan.Zero
                 };
             })
             .TakeWhile((_, i) => !count.HasValue || i < count)
