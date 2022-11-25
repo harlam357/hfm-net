@@ -141,7 +141,7 @@ namespace HFM.Core.Client
             workUnit.FoldingID = options?[Options.User] ?? Unknown.Value;
             workUnit.Team = ToNullableInt32(options?[Options.Team]).GetValueOrDefault();
 
-            workUnit.CoreID = unit.Core?.Replace("0x", String.Empty).ToUpperInvariant();
+            workUnit.Core = unit.Core;
             workUnit.UnitID = unit.UnitHex;
         }
 

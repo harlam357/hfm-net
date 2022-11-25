@@ -45,7 +45,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
             UnitResult = UnitResult,
             FramesObserved = FramesObserved,
             LogLines = LogLines,
-            CoreID = CoreID,
+            Core = Core,
             UnitID = UnitID,
             ID = ID
         };
@@ -146,7 +146,7 @@ public class WorkUnit : IQueueItem, IProjectInfo
     /// <summary>
     /// Gets or sets the core hex identifier.
     /// </summary>
-    public string CoreID { get; set; }
+    public string Core { get; set; }
 
     /// <summary>
     /// Gets or sets the work unit hex identifier.

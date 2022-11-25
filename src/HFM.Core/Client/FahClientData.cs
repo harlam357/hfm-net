@@ -150,8 +150,6 @@ public class FahClientData : ClientData, IProteinBenchmarkDetailSource, IComplet
         }
     }
 
-    public override string CoreID => WorkUnitModel.WorkUnit.CoreID;
-
     public override string ProjectRunCloneGen => WorkUnitModel.WorkUnit.ToShortProjectString();
 
     public override double Credit =>

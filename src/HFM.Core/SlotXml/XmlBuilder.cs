@@ -127,7 +127,7 @@ namespace HFM.Core.SlotXml
             slotData.UPD = clientData.UPD;
             slotData.ETA = ToETAString(clientData);
             slotData.Core = clientData.Core ?? String.Empty;
-            slotData.CoreId = clientData.CoreID ?? String.Empty;
+            slotData.CoreId = clientData.Core?.Replace("0x", String.Empty).ToUpperInvariant() ?? String.Empty;
             slotData.ProjectIsDuplicate = clientData.Errors.GetValue<bool>(ClientProjectIsDuplicateValidationRule.Key);
             slotData.ProjectRunCloneGen = clientData.ProjectRunCloneGen;
             slotData.Credit = clientData.Credit;

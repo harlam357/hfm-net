@@ -85,7 +85,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(new TimeSpan(4, 46, 8), workUnit.CurrentFrame.TimeStamp);
         Assert.AreEqual(new TimeSpan(0, 8, 31), workUnit.CurrentFrame.Duration);
         Assert.AreEqual(39, workUnit.LogLines.Count);
-        Assert.AreEqual("A4", workUnit.CoreID);
+        Assert.AreEqual("0xa4", workUnit.Core);
         Assert.AreEqual("0x00000050664f2dd04de6d4f93deb418d", workUnit.UnitID);
     }
 
@@ -130,7 +130,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(0, workUnit.FramesObserved);
         Assert.IsNull(workUnit.CurrentFrame);
         Assert.IsNull(workUnit.LogLines);
-        Assert.AreEqual("A4", workUnit.CoreID);
+        Assert.AreEqual("0xa4", workUnit.Core);
         Assert.AreEqual("0x00000050664f2dd04de6d4f93deb418d", workUnit.UnitID);
     }
 
@@ -176,7 +176,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(new TimeSpan(4, 51, 53), workUnit.CurrentFrame.TimeStamp);
         Assert.AreEqual(new TimeSpan(0, 0, 42), workUnit.CurrentFrame.Duration);
         Assert.AreEqual(98, workUnit.LogLines.Count);
-        Assert.AreEqual("11", workUnit.CoreID);
+        Assert.AreEqual("0x11", workUnit.Core);
         Assert.AreEqual("0x241a68704f0d0e3a00fc016c0007168c", workUnit.UnitID);
     }
 
@@ -222,7 +222,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(new TimeSpan(4, 21, 39), workUnit.CurrentFrame.TimeStamp);
         Assert.AreEqual(new TimeSpan(0, 0, 33), workUnit.CurrentFrame.Duration);
         Assert.AreEqual(186, workUnit.LogLines.Count);
-        Assert.AreEqual(null, workUnit.CoreID);
+        Assert.AreEqual(null, workUnit.Core);
         Assert.AreEqual(null, workUnit.UnitID);
     }
 
@@ -268,7 +268,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(new TimeSpan(6, 46, 16), workUnit.CurrentFrame.TimeStamp);
         Assert.AreEqual(new TimeSpan(0, 4, 50), workUnit.CurrentFrame.Duration);
         Assert.AreEqual(32, workUnit.LogLines.Count);
-        Assert.AreEqual("A4", workUnit.CoreID);
+        Assert.AreEqual("0xa4", workUnit.Core);
         Assert.AreEqual("0x0000004e664f2dd04de6d35869ac2ae3", workUnit.UnitID);
     }
 
@@ -319,7 +319,7 @@ public class WorkUnitCollectionBuilderTests
         Assert.AreEqual(new TimeSpan(20, 53, 54), workUnit.CurrentFrame.TimeStamp);
         Assert.AreEqual(new TimeSpan(0, 2, 24), workUnit.CurrentFrame.Duration);
         Assert.AreEqual(181, workUnit.LogLines.Count);
-        Assert.AreEqual("22", workUnit.CoreID);
+        Assert.AreEqual("0x22", workUnit.Core);
         Assert.AreEqual("0x0000000300000002000047190000ae97", workUnit.UnitID);
     }
 

@@ -31,7 +31,7 @@ namespace HFM.Core.WorkUnits
             Assert.IsNull(workUnit.CurrentFrame);
             Assert.IsNull(workUnit.LogLines);
             Assert.IsNull(workUnit.Frames);
-            Assert.IsNull(workUnit.CoreID);
+            Assert.IsNull(workUnit.Core);
             Assert.AreEqual(WorkUnitCollection.NoID, workUnit.ID);
         }
 

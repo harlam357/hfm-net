@@ -18,7 +18,6 @@ public interface IClientData
     TimeSpan ETA { get; }
     DateTime ETADate { get; }
     string Core { get; }
-    string CoreID { get; }
     string ProjectRunCloneGen { get; }
     double Credit { get; }
     int Completed { get; }
@@ -55,7 +54,6 @@ public class ClientData : IClientData
     public virtual TimeSpan ETA { get; set; }
     public virtual DateTime ETADate { get; set; }
     public virtual string Core { get; set; }
-    public virtual string CoreID { get; set; }
     public virtual string ProjectRunCloneGen { get; set; }
     public virtual double Credit { get; set; }
     public virtual int Completed { get; set; }
