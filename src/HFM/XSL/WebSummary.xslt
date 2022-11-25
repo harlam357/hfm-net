@@ -40,7 +40,6 @@
                 <th>PPD</th>
                 <th>ETA</th>
                 <th>Core</th>
-                <th>Core ID</th>
                 <th>Project (Run, Clone, Gen)</th>
                 <th>Credit</th>
                 <th>Completed</th>
@@ -128,9 +127,6 @@
       </td>
       <td class="table-column">
         <xsl:value-of select="Core"/>
-      </td>
-      <td class="table-column">
-        <xsl:value-of select="CoreId"/>
       </td>
       <td class="table-column">
         <xsl:choose>
