@@ -10,6 +10,7 @@ internal class CompositionRoot : ICompositionRoot
 
         serviceRegistry.Register<IWorkUnitRepository, ScopedWorkUnitContextRepositoryProxy>(new PerContainerLifetime());
         serviceRegistry.Register<IProteinBenchmarkRepository, ScopedProteinBenchmarkRepositoryProxy>(new PerContainerLifetime());
+        serviceRegistry.Decorate<IProteinBenchmarkRepository, CachedProteinBenchmarkRepository>();
 
         serviceRegistry.AddDbContext(CreateWorkUnitContext);
     }

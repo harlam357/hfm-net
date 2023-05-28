@@ -33,7 +33,8 @@ namespace HFM
                 {
                     container.RegisterAssembly(Assembly.GetExecutingAssembly());
                     // wires up IServiceProvider and IServiceScopeFactory
-                    _ = container.CreateServiceProvider(new EmptyServiceCollection());
+                    _ = container.CreateServiceProvider(new EmptyServiceCollection()
+                        .AddMemoryCache());
                     bootStrapper.Execute();
                 }
                 catch (Exception ex)
