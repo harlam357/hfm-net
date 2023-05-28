@@ -25,5 +25,9 @@ internal static class CollectionExtensions
         }
     }
 
-    internal static double MaxOrDefault(this ICollection<double> source) => source.Count > 0 ? source.Max() : default;
+    internal static double MaxOrDefault(this ICollection<double> source) =>
+        source.Count > 0 ? source.Max() : default;
+
+    internal static double MaxOrDefault<T>(this ICollection<T> source, Func<T, double> selector) =>
+        source.Count > 0 ? source.Max(selector) : default;
 }

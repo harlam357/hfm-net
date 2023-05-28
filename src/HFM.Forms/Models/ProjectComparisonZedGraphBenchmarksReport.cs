@@ -57,7 +57,7 @@ public class ProjectComparisonZedGraphBenchmarksReport : ZedGraphBenchmarksRepor
             var slotPoints = benchmarks
                 .GroupBy(x => (x.SlotIdentifier, x.BenchmarkIdentifier.Processor, x.BenchmarkIdentifier.Threads))
                 .Select(g => BuildSlotPoints(g.OrderBy(x => x.BenchmarkIdentifier.ProjectID), projectToXAxisOrdinal))
-                .OrderByDescending(x => x.Points.Max(y => y.Y))
+                .OrderByDescending(x => x.Points.MaxOrDefault(y => y.Y))
                 .Take(colors.Count);
 
             foreach (var x in slotPoints)
