@@ -673,7 +673,7 @@ namespace HFM.Forms.Presenters
         {
             int projectID = 0;
 
-            if (SlotsModel.SelectedClient != null)
+            if (SlotsModel.SelectedClient?.ProjectInfo is not null)
             {
                 projectID = SlotsModel.SelectedClient.ProjectInfo.ProjectID;
             }
