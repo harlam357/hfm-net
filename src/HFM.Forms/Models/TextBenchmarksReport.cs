@@ -42,9 +42,15 @@ namespace HFM.Forms.Models
             string numberFormat = NumberFormat.Get(Preferences.Get<int>(Preference.DecimalPlaces));
             var bonusCalculation = Preferences.Get<BonusCalculation>(Preference.BonusCalculation);
             bool calculateBonus = bonusCalculation != BonusCalculation.None;
+            var benchmarks = (await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, projects).ConfigureAwait(true))
+                .OrderBy(x => x.SlotIdentifier.Name)
+                .ThenBy(x => x.BenchmarkIdentifier.Threads)
+                .GroupBy(x => x.BenchmarkIdentifier.ProjectID)
+                .OrderBy(x => x.Key);
 
-            foreach (var projectID in projects)
+            foreach (var group in benchmarks)
             {
+                int projectID = group.Key;
                 var protein = ProteinService.Get(projectID);
                 if (protein is null)
                 {
@@ -53,15 +59,11 @@ namespace HFM.Forms.Models
                     continue;
                 }
 
-                var benchmarks = (await Benchmarks.GetBenchmarksAsync(slotIdentifier.Value, protein.ProjectNumber).ConfigureAwait(true))
-                    .OrderBy(x => x.SlotIdentifier.Name)
-                    .ThenBy(x => x.BenchmarkIdentifier.Threads);
-
                 benchmarkText
                     .AddRange(EnumerateProjectInformation(protein)
                         .Concat(Enumerable.Repeat(String.Empty, 2)));
 
-                foreach (var b in benchmarks)
+                foreach (var b in group)
                 {
                     benchmarkText
                         .AddRange(EnumerateBenchmarkInformation(protein, b, numberFormat, calculateBonus)

@@ -38,17 +38,6 @@ public class CachedProteinBenchmarkRepository : IProteinBenchmarkRepository
 
     private const int ExpirationInSeconds = 5;
 
-    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID)
-    {
-        var key = (slotIdentifier, projectID);
-        return await _memoryCache.GetOrCreateAsync(key, async entry =>
-        {
-            var benchmarks = await _repository.GetBenchmarksAsync(slotIdentifier, projectID).ConfigureAwait(false);
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ExpirationInSeconds);
-            return benchmarks;
-        }).ConfigureAwait(false);
-    }
-
     public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID, int count)
     {
         var key = (slotIdentifier, projectID, count);
@@ -114,17 +103,6 @@ public class ScopedProteinBenchmarkRepositoryProxy : IProteinBenchmarkRepository
         {
             var repository = new ProteinBenchmarkRepository(_logger, context);
             return repository.GetBenchmark(slotIdentifier, benchmarkIdentifier);
-        }
-    }
-
-    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID)
-    {
-        using var scope = _serviceScopeFactory.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<WorkUnitContext>();
-        await using (context.ConfigureAwait(false))
-        {
-            var repository = new ProteinBenchmarkRepository(_logger, context);
-            return await repository.GetBenchmarksAsync(slotIdentifier, projectID).ConfigureAwait(false);
         }
     }
 
@@ -224,9 +202,6 @@ public class ProteinBenchmarkRepository : IProteinBenchmarkRepository
                 MinimumFrameTime = frames.Any() ? frames.Min(x => x.Duration) : TimeSpan.Zero
             };
     }
-
-    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID) =>
-        await GetBenchmarksAsync(slotIdentifier, new[] { projectID }, null).ConfigureAwait(false);
 
     public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID, int count) =>
         await GetBenchmarksAsync(slotIdentifier, new[] { projectID }, count).ConfigureAwait(false);

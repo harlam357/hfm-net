@@ -101,7 +101,7 @@ public class ProteinBenchmarkRepositoryTests
             [Test]
             public async Task ThenBenchmarksAreReturnedForAllSlots()
             {
-                var actual = await _repository.GetBenchmarksAsync(SlotIdentifier.AllSlots, 18213);
+                var actual = await _repository.GetBenchmarksAsync(SlotIdentifier.AllSlots, new[] { 18213 });
                 Assert.AreEqual(2, actual.Count);
 
                 var x = actual.ElementAt(0);
@@ -144,7 +144,7 @@ public class ProteinBenchmarkRepositoryTests
                 var c = ClientIdentifier.FromGuid(Guid.Parse("4e39610d-f40b-409a-baea-9e78a8c78e7c"));
                 var s = new SlotIdentifier(c, 2);
 
-                var actual = await _repository.GetBenchmarksAsync(s, 18213);
+                var actual = await _repository.GetBenchmarksAsync(s, new[] { 18213 });
                 Assert.AreEqual(1, actual.Count);
 
                 var b = actual.ElementAt(0);
@@ -242,7 +242,7 @@ public class ProteinBenchmarkRepositoryTests
             public void ThenBenchmarksWithoutPlatformDoNotThrowOnRetrieval()
             {
                 var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
-                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, ProjectID));
+                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, new[] { ProjectID }));
             }
         }
 
@@ -299,7 +299,7 @@ public class ProteinBenchmarkRepositoryTests
             public void ThenBenchmarksWithoutFrameDurationsDoNotThrowOnRetrieval()
             {
                 var slotIdentifier = SlotIdentifier.FromName("GTX3090", null, _clientGuid);
-                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, ProjectID));
+                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, new[] { ProjectID }));
             }
         }
     }
