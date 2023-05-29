@@ -31,7 +31,7 @@ public class CachedProteinBenchmarkRepository : IProteinBenchmarkRepository
         return _memoryCache.GetOrCreate(key, entry =>
         {
             var benchmark = _repository.GetBenchmark(slotIdentifier, benchmarkIdentifier);
-            entry.AbsoluteExpirationRelativeToNow = benchmark.AverageFrameTime;
+            entry.AbsoluteExpirationRelativeToNow = benchmark?.AverageFrameTime ?? TimeSpan.Zero;
             return benchmark;
         });
     }
