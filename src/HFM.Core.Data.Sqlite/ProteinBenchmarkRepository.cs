@@ -3,67 +3,9 @@ using HFM.Core.Logging;
 using HFM.Core.WorkUnits;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HFM.Core.Data;
-
-public class CachedProteinBenchmarkRepository : IProteinBenchmarkRepository
-{
-    private readonly IProteinBenchmarkRepository _repository;
-    private readonly IMemoryCache _memoryCache;
-
-    public CachedProteinBenchmarkRepository(IProteinBenchmarkRepository repository, IMemoryCache memoryCache)
-    {
-        _repository = repository;
-        _memoryCache = memoryCache;
-    }
-
-    public Task<ICollection<SlotIdentifier>> GetSlotIdentifiersAsync() =>
-        _repository.GetSlotIdentifiersAsync();
-
-    public Task<ICollection<int>> GetBenchmarkProjectsAsync(SlotIdentifier slotIdentifier) =>
-        _repository.GetBenchmarkProjectsAsync(slotIdentifier);
-
-    public ProteinBenchmark GetBenchmark(SlotIdentifier slotIdentifier, ProteinBenchmarkIdentifier benchmarkIdentifier)
-    {
-        var key = (slotIdentifier, benchmarkIdentifier);
-        return _memoryCache.GetOrCreate(key, entry =>
-        {
-            var benchmark = _repository.GetBenchmark(slotIdentifier, benchmarkIdentifier);
-            if (benchmark is not null && benchmark.AverageFrameTime > TimeSpan.Zero)
-            {
-                entry.AbsoluteExpirationRelativeToNow = benchmark.AverageFrameTime;
-            }
-            return benchmark;
-        });
-    }
-
-    private const int ExpirationInSeconds = 5;
-
-    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, int projectID, int count)
-    {
-        var key = (slotIdentifier, projectID, count);
-        return await _memoryCache.GetOrCreateAsync(key, async entry =>
-        {
-            var benchmarks = await _repository.GetBenchmarksAsync(slotIdentifier, projectID, count).ConfigureAwait(false);
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ExpirationInSeconds);
-            return benchmarks;
-        }).ConfigureAwait(false);
-    }
-
-    public async Task<ICollection<ProteinBenchmark>> GetBenchmarksAsync(SlotIdentifier slotIdentifier, IEnumerable<int> projects)
-    {
-        ICollection<int> projectsCollection = projects as ICollection<int> ?? projects.ToList();
-        var key = (slotIdentifier, String.Join(',', projectsCollection));
-        return await _memoryCache.GetOrCreateAsync(key, async entry =>
-        {
-            var benchmarks = await _repository.GetBenchmarksAsync(slotIdentifier, projectsCollection).ConfigureAwait(false);
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ExpirationInSeconds);
-            return benchmarks;
-        }).ConfigureAwait(false);
-    }
-}
 
 public class ScopedProteinBenchmarkRepositoryProxy : IProteinBenchmarkRepository
 {
