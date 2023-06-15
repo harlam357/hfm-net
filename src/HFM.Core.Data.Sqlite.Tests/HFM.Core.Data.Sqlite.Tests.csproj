@@ -39,9 +39,4 @@
     <ProjectReference Include="..\HFM.Core.Data.Sqlite\HFM.Core.Data.Sqlite.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logging\" />
-    <Folder Include="WorkUnits\" />
-  </ItemGroup>
-
 </Project>
