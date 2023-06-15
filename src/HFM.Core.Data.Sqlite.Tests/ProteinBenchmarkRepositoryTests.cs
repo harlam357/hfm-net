@@ -189,6 +189,57 @@ public class ProteinBenchmarkRepositoryTests
         private readonly DateTime _utcNow = DateTime.UtcNow;
 
         [TestFixture]
+        public class GivenWorkUnitWithNoClientGuid : GivenWorkUnit
+        {
+            [SetUp]
+            public async Task BeforeEach()
+            {
+                _connection = new SqliteConnection("Data Source=:memory:");
+                _connection.Open();
+                _repository = new TestableProteinBenchmarkRepository(_connection);
+
+                var settings = new ClientSettings
+                {
+                    Name = ClientName
+                };
+                var client = new NullClient
+                {
+                    Settings = settings
+                };
+                var clientData = new FahClientData(new InMemoryPreferencesProvider(), client, default, SlotIdentifier.NoSlotID);
+                var workUnit = new WorkUnit
+                {
+                    ProjectID = ProjectID,
+                    Assigned = _utcNow,
+                    Frames = new Dictionary<int, LogLineFrameData>
+                    {
+                        { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.FromMinutes(3) } }
+                    }
+                };
+                var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
+                {
+                    CurrentProtein = new Protein
+                    {
+                        ProjectNumber = 1
+                    }
+                };
+
+                var workUnitRepository = new TestableWorkUnitContextRepository(_connection);
+                await workUnitRepository.UpdateAsync(workUnitModel);
+            }
+
+            [TearDown]
+            public void AfterEach() => _connection?.Dispose();
+
+            [Test]
+            public void ThenBenchmarksWithoutClientGuidDoNotThrowOnRetrieval()
+            {
+                var slotIdentifier = SlotIdentifier.AllSlots;
+                Assert.DoesNotThrowAsync(() => _repository.GetBenchmarksAsync(slotIdentifier, new[] { ProjectID }));
+            }
+        }
+
+        [TestFixture]
         public class GivenCompletedWorkUnitWithNoPlatform : GivenWorkUnit
         {
             [SetUp]
@@ -276,9 +327,9 @@ public class ProteinBenchmarkRepositoryTests
                     Assigned = _utcNow,
                     UnitResult = WorkUnitResult.Unknown,
                     Frames = new Dictionary<int, LogLineFrameData>
-                {
-                    { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.Zero } }
-                }
+                    {
+                        { 0, new LogLineFrameData { ID = 0, Duration = TimeSpan.Zero } }
+                    }
                 };
                 var workUnitModel = new WorkUnitModel(clientData, workUnit, null)
                 {
