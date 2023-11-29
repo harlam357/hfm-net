@@ -43,6 +43,7 @@ public static class ConvertToSlotType
     public static HashSet<string> GPUCoreNames { get; } = new(new[]
     {
         "0x22",
+        "0x23",
         "GROGPU2",
         "GROGPU2-MT",
         "OPENMM_21",
