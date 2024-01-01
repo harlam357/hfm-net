@@ -23,9 +23,9 @@
       },
       "HFM.Log": {
         "type": "Direct",
-        "requested": "[0.4.0, )",
-        "resolved": "0.4.0",
-        "contentHash": "Lb0QT05Bu8PctDeMZ6yQPtSn4HLyZG/FQf1mCfAMPFa2N07dRWDRfhFFdQlF7+soX+yyChdDqXWSsIrsy6he/g=="
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "IS3JBYRJVGwVQ7H+CPojF5uu3emywlRFCICnI6qSeNF53I6Ww5X4ARvClPd3DnN6xamri3kFIBhdT8r2P8EIsw=="
       },
       "HFM.Proteins": {
         "type": "Direct",
