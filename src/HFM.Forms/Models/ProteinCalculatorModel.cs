@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using HFM.Core.Client;
@@ -49,9 +46,9 @@ namespace HFM.Forms.Models
             }
 
             var decimalPlaces = _preferences.Get<int>(Preference.DecimalPlaces);
-            var noBonus = protein.GetProteinProduction(frameTime, TimeSpan.Zero);
-            var bonusByUserSpecifiedTime = protein.GetProteinProduction(frameTime, totalTimeByUser);
-            var bonusByFrameTime = protein.GetProteinProduction(frameTime, totalTimeByFrame);
+            var noBonus = protein.CalculateProteinProduction(frameTime, TimeSpan.Zero);
+            var bonusByUserSpecifiedTime = protein.CalculateProteinProduction(frameTime, totalTimeByUser);
+            var bonusByFrameTime = protein.CalculateProteinProduction(frameTime, totalTimeByFrame);
             CoreName = protein.Core;
             SlotType = ConvertToSlotType.FromCoreName(protein.Core).ToString();
             NumberOfAtoms = protein.NumberOfAtoms;
@@ -59,11 +56,11 @@ namespace HFM.Forms.Models
             PreferredDeadline = protein.PreferredDays;
             FinalDeadline = protein.MaximumDays;
             KFactor = protein.KFactor;
-            BonusMultiplier = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.Multiplier : bonusByFrameTime.Multiplier, decimalPlaces);
+            BonusMultiplier = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.BonusMultiplier : bonusByFrameTime.BonusMultiplier, decimalPlaces);
             BaseCredit = noBonus.Credit;
             TotalCredit = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.Credit : bonusByFrameTime.Credit, decimalPlaces);
-            BasePpd = noBonus.PPD;
-            TotalPpd = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.PPD : bonusByFrameTime.PPD, decimalPlaces);
+            BasePpd = noBonus.PointsPerDay;
+            TotalPpd = Math.Round(TotalWuTimeEnabled ? bonusByUserSpecifiedTime.PointsPerDay : bonusByFrameTime.PointsPerDay, decimalPlaces);
         }
 
         public ICollection<int> Projects => _proteinService.GetProjects().OrderBy(x => x).ToList();

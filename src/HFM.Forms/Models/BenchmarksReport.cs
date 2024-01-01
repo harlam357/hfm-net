@@ -40,8 +40,8 @@ public abstract class BenchmarksReport
         if (calculateBonus)
         {
             var unitTime = TimeSpan.FromSeconds(frameTime.TotalSeconds * protein.Frames);
-            return protein.GetBonusPPD(frameTime, unitTime);
+            return protein.CalculateBonusPointsPerDay(frameTime, unitTime);
         }
-        return protein.GetPPD(frameTime);
+        return protein.CalculatePointsPerDay(frameTime);
     }
 }

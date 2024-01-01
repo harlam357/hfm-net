@@ -53,7 +53,7 @@ public partial class WorkUnitContext
     {
         TimeSpan unitTime = GetUnitTime(frameTime, frames, expirationDays, assigned, finished, bonus);
 
-        return ProductionCalculator.GetBonusPPD(
+        return ProductionCalculator.CalculateBonusPointsPerDay(
             TimeSpan.FromSeconds(frameTime),
             frames,
             credit,
@@ -76,7 +76,7 @@ public partial class WorkUnitContext
     {
         TimeSpan unitTime = GetUnitTime(frameTime, frames, expirationDays, assigned, finished, bonus);
 
-        return ProductionCalculator.GetBonusCredit(
+        return ProductionCalculator.CalculateBonusCredit(
             credit,
             kFactor,
             timeoutDays,

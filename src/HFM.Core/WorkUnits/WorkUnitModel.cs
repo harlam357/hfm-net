@@ -216,7 +216,7 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
     /// </summary>
     public double GetUPD(PPDCalculation ppdCalculation)
     {
-        return ProductionCalculator.GetUPD(GetFrameTime(ppdCalculation), CurrentProtein.Frames);
+        return ProductionCalculator.CalculateUnitsPerDay(GetFrameTime(ppdCalculation), CurrentProtein.Frames);
     }
 
     /// <summary>
@@ -299,11 +299,11 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
         switch (calculateBonus)
         {
             case BonusCalculation.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
-                return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
+                return CurrentProtein.CalculateBonusCredit(unitTimeByFrameTime);
             case BonusCalculation.DownloadTime:
-                return CurrentProtein.GetBonusCredit(unitTimeByDownloadTime);
+                return CurrentProtein.CalculateBonusCredit(unitTimeByDownloadTime);
             case BonusCalculation.FrameTime:
-                return CurrentProtein.GetBonusCredit(unitTimeByFrameTime);
+                return CurrentProtein.CalculateBonusCredit(unitTimeByFrameTime);
             default:
                 return CurrentProtein.Credit;
         }
@@ -319,13 +319,13 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
         switch (calculateBonus)
         {
             case BonusCalculation.DownloadTime when status == SlotStatus.RunningNoFrameTimes:
-                return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
+                return CurrentProtein.CalculateBonusPointsPerDay(frameTime, unitTimeByFrameTime);
             case BonusCalculation.DownloadTime:
-                return CurrentProtein.GetBonusPPD(frameTime, unitTimeByDownloadTime);
+                return CurrentProtein.CalculateBonusPointsPerDay(frameTime, unitTimeByDownloadTime);
             case BonusCalculation.FrameTime:
-                return CurrentProtein.GetBonusPPD(frameTime, unitTimeByFrameTime);
+                return CurrentProtein.CalculateBonusPointsPerDay(frameTime, unitTimeByFrameTime);
             default:
-                return CurrentProtein.GetPPD(frameTime);
+                return CurrentProtein.CalculatePointsPerDay(frameTime);
         }
     }
 
@@ -357,11 +357,11 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
         }
 
         TimeSpan frameTime = GetFrameTime(ppdCalculation);
-        var noBonus = CurrentProtein.GetProteinProduction(frameTime, TimeSpan.Zero);
+        var noBonus = CurrentProtein.CalculateProteinProduction(frameTime, TimeSpan.Zero);
         TimeSpan unitTimeByDownloadTime = GetUnitTimeByDownloadTime(frameTime);
-        var bonusByDownload = CurrentProtein.GetProteinProduction(frameTime, unitTimeByDownloadTime);
+        var bonusByDownload = CurrentProtein.CalculateProteinProduction(frameTime, unitTimeByDownloadTime);
         TimeSpan unitTimeByFrameTime = GetUnitTimeByFrameTime(frameTime);
-        var bonusByFrame = CurrentProtein.GetProteinProduction(frameTime, unitTimeByFrameTime);
+        var bonusByFrame = CurrentProtein.CalculateProteinProduction(frameTime, unitTimeByFrameTime);
         logger.Debug(CreateProductionDebugOutput(WorkUnit.ToShortProjectString(), frameTime, CurrentProtein, noBonus,
             unitTimeByDownloadTime, bonusByDownload,
             unitTimeByFrameTime, bonusByFrame));
@@ -380,18 +380,18 @@ public class WorkUnitModel : IQueueItem, IProductionProvider
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "    Maximum Time: {0}", TimeSpan.FromDays(protein.MaximumDays)));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "No Bonus"));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "      Frame Time: {0}", frameTime));
-        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             UPD: {0}", noBonus.UPD));
-        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", noBonus.PPD));
+        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             UPD: {0}", noBonus.UnitsPerDay));
+        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", noBonus.PointsPerDay));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Download Time"));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByDownloadTime));
-        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByDownload.Multiplier));
+        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByDownload.BonusMultiplier));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByDownload.Credit));
-        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByDownload.PPD));
+        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByDownload.PointsPerDay));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, " **** Production: {0} ****", "Bonus by Frame Time"));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "       Unit Time: {0}", unitTimeByFrameTime));
-        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByFrame.Multiplier));
+        sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "           Multi: {0}", bonusByFrame.BonusMultiplier));
         sb.AppendLine(String.Format(CultureInfo.CurrentCulture, "          Credit: {0}", bonusByFrame.Credit));
-        sb.Append(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByFrame.PPD));
+        sb.Append(String.Format(CultureInfo.CurrentCulture, "             PPD: {0}", bonusByFrame.PointsPerDay));
         return sb.ToString();
     }
 
