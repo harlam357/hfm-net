@@ -29,12 +29,9 @@
       },
       "HFM.Proteins": {
         "type": "Direct",
-        "requested": "[0.3.0, )",
-        "resolved": "0.3.0",
-        "contentHash": "RSr0vRdqll00U2u0EeKCERah9IRb/+wZGONJVSzu7PtLEhD4Bf9+2IK0y+OmEYcVTseJneT+jgHg5cLJK3KRBQ==",
-        "dependencies": {
-          "Newtonsoft.Json": "11.0.1"
-        }
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "+aeJXyemUp1nnzhOXrxc9RLHvcSc9coEIDSk5AbdOeHgliCSgiXUtOC+2LLgqe45G4+1h+L0esCidqkZt2wGcA=="
       },
       "protobuf-net": {
         "type": "Direct",
