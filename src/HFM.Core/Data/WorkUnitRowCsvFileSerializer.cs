@@ -21,8 +21,7 @@ namespace HFM.Core.Data
 
         internal static void Serialize(TextWriter writer, List<WorkUnitRow> value)
         {
-            string line = String.Join(",", new[]
-            {
+            string line = String.Join(",",
                 "DatabaseID",
                 "ProjectID",
                 "ProjectRun",
@@ -45,15 +44,22 @@ namespace HFM.Core.Data
                 "SlotType",
                 "PPD",
                 "Credit",
-                "BaseCredit"
-            });
+                "BaseCredit",
+                "ClientVersion",
+                "OperatingSystem",
+                "PlatformImplementation",
+                "PlatformProcessor",
+                "PlatformThreads",
+                "DriverVersion",
+                "ComputeVersion",
+                "CUDAVersion");
+
             writer.WriteLine(line);
 
             var provider = CultureInfo.InvariantCulture;
             foreach (var h in value)
             {
-                line = String.Join(",", new object[]
-                {
+                line = String.Join(",",
                     h.ID,
                     h.ProjectID,
                     h.ProjectRun,
@@ -76,8 +82,16 @@ namespace HFM.Core.Data
                     h.SlotType,
                     h.PPD.ToString(provider),
                     h.Credit.ToString(provider),
-                    h.BaseCredit.ToString(provider)
-                });
+                    h.BaseCredit.ToString(provider),
+                    h.ClientVersion,
+                    h.OperatingSystem,
+                    h.PlatformImplementation,
+                    h.PlatformProcessor,
+                    h.PlatformThreads?.ToString(provider),
+                    h.DriverVersion,
+                    h.ComputeVersion,
+                    h.CUDAVersion);
+
                 writer.WriteLine(line);
             }
         }
