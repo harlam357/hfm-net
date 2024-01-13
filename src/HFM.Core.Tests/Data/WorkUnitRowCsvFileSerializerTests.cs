@@ -15,9 +15,9 @@ public class WorkUnitRowCsvFileSerializerTests
     {
         // Arrange
         _value = new List<WorkUnitRow> { new() };
-        _expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,SlotName,ConnectionString,DonorName,DonorTeam,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,KFactor,Core,Frames,Atoms,SlotType,PPD,Credit,BaseCredit";
+        _expected = "DatabaseID,ProjectID,ProjectRun,ProjectClone,ProjectGen,SlotName,ConnectionString,DonorName,DonorTeam,CoreVersion,FramesCompleted,FrameTime,Result,Assigned,Finished,KFactor,Core,Frames,Atoms,SlotType,PPD,Credit,BaseCredit,ClientVersion,OperatingSystem,PlatformImplementation,PlatformProcessor,PlatformThreads,DriverVersion,ComputeVersion,CUDAVersion";
         _expected += Environment.NewLine;
-        _expected += "0,0,0,0,0,,,,0,,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,0,,0,0,,0,0,0";
+        _expected += "0,0,0,0,0,,,,0,,0,00:00:00,,01/01/0001 00:00:00,01/01/0001 00:00:00,0,,0,0,,0,0,0,,,,,,,,";
         _expected += Environment.NewLine;
     }
 
