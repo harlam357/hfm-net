@@ -50,7 +50,6 @@
       <ComponentRef Id="comp_B2753CA20A42415FBCD8FD619AE1FAF1" />
       <ComponentRef Id="comp_0E02F605D9E24BA09C7F4A8125E61D0E" />
       <ComponentRef Id="comp_11FAAB304FE840C98E6824A9061C1C95" />
-      <ComponentRef Id="comp_F275AF025B88427FA70B1449126836D8" />
       <ComponentRef Id="comp_18C039C6B3DF46E78C386B3FC2ACC7AA" />
       <ComponentRef Id="comp_DB69D69BEC064E9AB8D8ACAA532EC2BD" />
       <ComponentRef Id="comp_57D30C8EA5BB412EA6CC0163548A22F0" />
@@ -173,9 +172,6 @@
       </Component>
       <Component Id="comp_11FAAB304FE840C98E6824A9061C1C95" Guid="AAD1DE88-A282-4333-9356-494F37BFC19E">
         <File Id="file_54BE7A5F974E41FEAC3B6911BA5A7B3A" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\Microsoft.Extensions.Primitives.dll" />
-      </Component>
-      <Component Id="comp_F275AF025B88427FA70B1449126836D8" Guid="B91FC2AF-36AA-46BF-B196-4290E7C9097A">
-        <File Id="file_64721CCB129A433E821D67B1E7572C07" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="comp_18C039C6B3DF46E78C386B3FC2ACC7AA" Guid="C021DEB0-AADD-4730-82C2-7E5B1862E320">
         <File Id="file_490878F8A4D24A378B90AA240BBC74A9" Checksum="yes" KeyPath="yes" Source="..\..\..\Artifacts\net6.0-windows\HFM.NET\protobuf-net.Core.dll" />

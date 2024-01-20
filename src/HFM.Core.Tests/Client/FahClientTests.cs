@@ -1,12 +1,11 @@
 ﻿using System.Text;
+using System.Text.Json;
 
 using HFM.Core.Client.Mocks;
 using HFM.Core.WorkUnits;
 using HFM.Preferences;
 
 using Moq;
-
-using Newtonsoft.Json;
 
 using NUnit.Framework;
 
@@ -85,7 +84,7 @@ namespace HFM.Core.Client
                 // Arrange
                 var buffer = new StringBuilder();
                 buffer.AppendLine("PyON 1 slots");
-                buffer.AppendLine(JsonConvert.SerializeObject(
+                buffer.AppendLine(JsonSerializer.Serialize(
                     new[]
                     {
                         new

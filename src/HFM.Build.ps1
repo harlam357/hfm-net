@@ -1,4 +1,4 @@
-﻿$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+﻿$MSBuild = "${Env:ProgramFiles}\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
 $SolutionFileName = 'HFM.All.sln'
 $SetupSolutionFileName = 'HFM.Setup.sln'
 $EntryProjectPath = ".\HFM\HFM.csproj"
@@ -159,7 +159,6 @@ Function Deploy-Build
         "Microsoft.Extensions.Logging.dll",
         "Microsoft.Extensions.Options.dll",
         "Microsoft.Extensions.Primitives.dll",
-        "Newtonsoft.Json.dll",
         "protobuf-net.Core.dll",
         "protobuf-net.dll",
         "SQLitePCLRaw.batteries_v2.dll",
