@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="HFM.Client" Version="0.6.0" />
+    <PackageReference Include="HFM.Client" Version="1.0.1" />
     <PackageReference Include="HFM.Log" Version="1.0.0" />
     <PackageReference Include="HFM.Proteins" Version="1.0.2" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />

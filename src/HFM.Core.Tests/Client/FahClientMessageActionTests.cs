@@ -167,5 +167,5 @@ public class FahClientMessageActionTests
     }
 
     private static FahClientMessage CreateMessage(string type, string text) =>
-        new(new FahClientMessageIdentifier(type, DateTime.UtcNow), new StringBuilder(text));
+        new(new FahClientMessageIdentifier(type, DateTime.UtcNow), new StringBuilder(text), FahClientMessage.JsonMessageFormat);
 }

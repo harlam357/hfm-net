@@ -1,16 +1,15 @@
 ﻿using System.Globalization;
 using System.Net.Http.Json;
-
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace HFM.Core.Services;
 
 public class FahUser
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int ID { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 }
 

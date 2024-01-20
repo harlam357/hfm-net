@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using HFM.Client;
+﻿using HFM.Client;
 using HFM.Core.Client.Mocks;
 using HFM.Preferences;
 
@@ -78,7 +76,12 @@ namespace HFM.Core.Client
         {
             // Arrange
             var messages = CreateFahClientMessages();
-            var heartbeat = new FahClientMessage(new FahClientMessageIdentifier(FahClientMessageType.Heartbeat, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5))), null);
+            var heartbeat = new FahClientMessage(
+                new FahClientMessageIdentifier(
+                    FahClientMessageType.Heartbeat,
+                    DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(5))),
+                new(0),
+                FahClientMessage.JsonMessageFormat);
             await messages.UpdateMessageAsync(heartbeat, null);
             // Act
             var overdue = messages.IsHeartbeatOverdue();
@@ -263,10 +266,10 @@ namespace HFM.Core.Client
 
         private static FahClientMessages CreateFahClientMessages() => new(null, null, null);
 
-        private static FahClientMessage CreateMessage(string type, string text)
-        {
-            return new FahClientMessage(new FahClientMessageIdentifier(type, DateTime.UtcNow), new StringBuilder(text));
-        }
+        private static FahClientMessage CreateMessage(string type, string text) => new(
+            new(type, DateTime.UtcNow),
+            new(text),
+            FahClientMessage.JsonMessageFormat);
 
         private static IFahClient SetupFahClientForSendingMockCommands()
         {
@@ -287,9 +290,7 @@ namespace HFM.Core.Client
             return mockClient.Object;
         }
 
-        private static IPreferences SetupPreferencesProviderForHandlingLogMessages(string path)
-        {
-            return new InMemoryPreferencesProvider(null, path, null);
-        }
+        private static IPreferences SetupPreferencesProviderForHandlingLogMessages(string path) =>
+            new InMemoryPreferencesProvider(null, path, null);
     }
 }

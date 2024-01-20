@@ -61,11 +61,8 @@
       },
       "HFM.Client": {
         "type": "Transitive",
-        "resolved": "0.6.0",
-        "contentHash": "RzE+hO4p8vQwLU+Ho6BImX1UMxjQNVEOG1C1V3VdJ2P7Is8Gsb++Ih7gCwxzKEE3IbHn33xpfIW1YCACXhS4EA==",
-        "dependencies": {
-          "Newtonsoft.Json": "11.0.1"
-        }
+        "resolved": "1.0.1",
+        "contentHash": "r0hS6wropVXGSWf/qPOLGCFlHAwj0l4FkQUTUNTUycOl9G4YHysK4MIms51L20b4TtMEsvvrxT2lp12N0dwimQ=="
       },
       "HFM.Log": {
         "type": "Transitive",
@@ -395,7 +392,7 @@
         "type": "Project",
         "dependencies": {
           "AutoMapper": "[10.1.1, )",
-          "HFM.Client": "[0.6.0, )",
+          "HFM.Client": "[1.0.1, )",
           "HFM.Log": "[1.0.0, )",
           "HFM.Preferences": "[1.0.0, )",
           "HFM.Proteins": "[1.0.2, )",
